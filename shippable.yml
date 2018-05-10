@@ -18,8 +18,11 @@ env:
 build:
 
   ci:
+    - cd boardgamewe-ui
     - npm install
     - npm run build
+    - echo $SHIPPABLE_BUILD_DIR
+    - ls $SHIPPABLE_BUILD_DIR
 
   on_success:
   - aws s3 sync $SHIPPABLE_BUILD_DIR $AWS_S3_BUCKET --region $AWS_S3_REGION
