@@ -28,4 +28,4 @@ build:
     - ls $SHIPPABLE_BUILD_DIR
 
   on_success:
-  - aws s3 sync $SHIPPABLE_BUILD_DIR $AWS_S3_BUCKET --region $AWS_S3_REGION
+  - aws s3 sync $SHIPPABLE_BUILD_DIR/boardgamewe-ui/build/* $AWS_S3_BUCKET --region $AWS_S3_REGION
