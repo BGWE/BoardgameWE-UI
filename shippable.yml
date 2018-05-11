@@ -16,6 +16,7 @@ env:
     - MOD_LOC=$SHIPPABLE_REPO_DIR/node_modules/.bin/
     - AWS_S3_BUCKET='s3://www.boardgameweekend.party'
     - AWS_S3_REGION='eu-west-1'
+    - CI=false
     - secure: Za/C0aeDGUeaAv2Pr5AgWqY4+8j7eH63J0YwF/HD7h2mR1gAKIjgFPe0u6Rj09fqrohoVplWhAIwM5DU9o9cw67W+EYjth1nI0bpN0FlgvOxDrhJ8siJoygd3Mf4/XqQNJbjSiUTGJHDHkfl2LsM/2CDxzlGERru0RQJ/88wH5vwGeSkgnulWyD35PRSDIGb8z+BLmkytaK5+ohS3wGOsd0GvvgwxkmRSUfpJ4yWw9MIZwRGYVvswC73dJEJ8xsbS0Ob6fQqu3x2ufCzyasAi0Clem1RGYJIv/gc/pxiNdyzeOK4S3TLj/3mUIionk0cIGMw1yYqo1wXGCy0GvZj3g==
 
 build:
