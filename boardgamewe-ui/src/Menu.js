@@ -8,7 +8,7 @@ import Divider from 'material-ui/Divider';
 import { menuItems } from './menuItems';
 
 import Home from './Home/Home'
-import { BrowserRouter, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import Boardgames from "./Boardgames/Boardgames";
 
 const drawerWidth = 240;

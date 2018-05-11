@@ -1,9 +1,13 @@
 import React from 'react';
+import BoardgamesList from "./BoardgamesList/BoardgamesList";
 
 class Boardgames extends React.Component {
     render() {
         return (
-            <h1>Boardgames</h1>
+            <div>
+                <h1>Boardgames</h1>
+                <BoardgamesList></BoardgamesList>
+            </div>
         );
     }
 }

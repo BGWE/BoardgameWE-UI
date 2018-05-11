@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppBar, Toolbar, Typography, withStyles} from "material-ui";
+import {AppBar, withStyles} from "material-ui";
 
 const styles = {
     appBar: {
