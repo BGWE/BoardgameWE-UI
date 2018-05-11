@@ -5,6 +5,7 @@ import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
 import Subheader from 'material-ui/List/ListSubheader';
 import IconButton from 'material-ui/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
+import GamesToolBar from "./GamesToolBar";
 
 const styles = theme => ({
     root: {
@@ -63,7 +64,7 @@ class TitlebarGridList extends React.Component {
 
         return (
             <div className={classes.root}>
-                <ButtonAppBar></ButtonAppBar>
+                <GamesToolBar></GamesToolBar>
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.n_cols} spacing={this.spacing}>
                     <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
                         <Subheader component="div">All</Subheader>

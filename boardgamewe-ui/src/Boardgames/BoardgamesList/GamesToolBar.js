@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
-import Subheader from 'material-ui/List/ListSubheader';
-import IconButton from 'material-ui/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
+import {AppBar, Toolbar} from "material-ui";
 
 const styles = {
     root: {
@@ -20,7 +17,7 @@ const styles = {
 };
 
 
-class ButtonAppBar extends React.Component {
+class GamesToolBar extends React.Component {
 
     render() {
         const { classes } = this.props;
@@ -28,15 +25,7 @@ class ButtonAppBar extends React.Component {
         return (
             <div className={classes.root}>
                 <AppBar position="static">
-                    <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>
-                            Title
-                        </Typography>
-                        <Button color="inherit">Login</Button>
-                    </Toolbar>
+                    <h1>Hey</h1>
                 </AppBar>
             </div>
         );
@@ -44,13 +33,9 @@ class ButtonAppBar extends React.Component {
 
 }
 
-TitlebarGridList.propTypes = {
+
+GamesToolBar.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-ButtonAppBar.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(TitlebarGridList);
-// export default withStyles(bar_styles)(ButtonAppBar);
+export default withStyles(styles)(GamesToolBar);
