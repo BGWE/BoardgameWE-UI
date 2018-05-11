@@ -63,6 +63,7 @@ class TitlebarGridList extends React.Component {
 
         return (
             <div className={classes.root}>
+                <ButtonAppBar></ButtonAppBar>
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.n_cols} spacing={this.spacing}>
                     <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
                         <Subheader component="div">All</Subheader>
