@@ -6,6 +6,8 @@ import Subheader from 'material-ui/List/ListSubheader';
 import IconButton from 'material-ui/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import GamesToolBar from "./GamesToolBar";
+import {Button} from "material-ui";
+import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
     root: {
@@ -16,7 +18,9 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
     },
     gridList: {
-        width: 600
+        width: 'auto',
+        'padding-left': 100,
+        'padding-right': 100,
     },
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
@@ -44,7 +48,7 @@ class TitlebarGridList extends React.Component {
             order: 'alphabetical'
         };
 
-        this.n_cols = 3;
+        this.n_cols = 4;
         this.cellHeight = 180;
         this.spacing = 10;
     }
@@ -66,6 +70,14 @@ class TitlebarGridList extends React.Component {
         return (
             <div className={classes.root}>
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.n_cols} spacing={this.spacing}>
+                    <GridListTile key="Subheader" cols={this.n_cols} style={{ height: 'auto' }}>
+                        <Subheader component="div">All</Subheader>
+                    </GridListTile>
+                    <GridListTile key="add">
+                        <Button variant="fab" color="primary" aria-label="add" className={classes.button}>
+                            <AddIcon />
+                        </Button>
+                    </GridListTile>
                     {this.state.hits.map(tile => (
                         <GridListTile key={tile.id} >
                             <img src={tile.thumbnail} alt={tile.name} />
