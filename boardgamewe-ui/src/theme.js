@@ -12,7 +12,7 @@ export default createMuiTheme({
             light: '#ffa040',
             main: '#ff6f00',
             dark: '#c43e00',
-            contrastText: '#000000',
+            contrastText: '#fafafa',
         },
     }
 });
