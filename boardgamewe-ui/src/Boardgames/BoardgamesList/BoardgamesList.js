@@ -55,7 +55,7 @@ class TitlebarGridList extends React.Component {
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
-                this.setState({ hits: data, isLoading: false })
+                this.setState({ hits: data.board_games, isLoading: false })
             }.bind(this));
     }
 
@@ -69,7 +69,7 @@ class TitlebarGridList extends React.Component {
                     <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
                         <Subheader component="div">All</Subheader>
                     </GridListTile>
-                    {tileData.map(tile => (
+                    {this.state.hits.map(tile => (
                         <GridListTile key={tile.id} >
                             <img src={tile.thumbnail} alt={tile.name} />
                             {

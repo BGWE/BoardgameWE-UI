@@ -42,12 +42,50 @@ class SearchResults extends React.Component {
         fetch(url)
             .then(response => response.json())
             .then(function (data) {
-                console.log(data);
-                this.setState({ hits: data, isLoading: false })
+                this.setState({ hits: data.map((bg) => {bg['isLoading'] = false; return bg;}), isLoading: false });
+                console.log(this.state);
             }.bind(this))
             .catch(function (error) {
                 console.log(error);
             });
+    }
+
+    addBoardGame(game_id) {
+        let url = new URL('http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/board_game/' + game_id);
+
+        fetch(url, {
+            method: 'PUT'
+        })
+            .then(response => response.json())
+            .then(function (data) {
+                console.log(data);
+                this.props.history.push('/boardgames')
+            }.bind(this))
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    test(test_id) {
+        console.log(test_id);
+        console.log(this.state);
+        
+        // this.props.history.push('/boardgames')
+    }
+    
+    setLoadingStateForTile(tile_id, state) {
+        let mod_state = this.state;
+
+        mod_state.hits = mod_state.hits.map((hit) => {
+           if (hit.id === tile_id) {
+               let mod_hit = hit;
+               mod_hit.isLoading = state;
+               return mod_hit;
+           }
+           return hit;
+        });
+
+        this.setState(mod_state)
     }
 
     render() {
@@ -81,7 +119,9 @@ class SearchResults extends React.Component {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">Select</Button>
+                                    <Button size="small" onClick={() => {this.setLoadingStateForTile(tile.id, true); this.addBoardGame(tile.id);}}>
+                                        {tile.isLoading? (<CircularProgress thickness={4} size={20} />) : "Select"}
+                                    </Button>
                                 </CardActions>
                             </Card>
                         </Grid>
