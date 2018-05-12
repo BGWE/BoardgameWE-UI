@@ -171,7 +171,7 @@ class PersistentDrawer extends React.Component {
                                 <MenuIcon />
                             </IconButton>
                             <Typography variant="title" color="inherit" noWrap>
-                                Persistent drawer
+                                Week-end jeux de société : 18-21.05.2018
                             </Typography>
                         </Toolbar>
                     </AppBar>
