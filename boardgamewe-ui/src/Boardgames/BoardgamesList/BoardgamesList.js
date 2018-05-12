@@ -8,6 +8,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import GamesToolBar from "./GamesToolBar";
 import {Button} from "material-ui";
 import AddIcon from '@material-ui/icons/Add';
+import AddGame from "../AddGame/AddGameModal";
 
 const styles = theme => ({
     root: {
@@ -69,15 +70,12 @@ class TitlebarGridList extends React.Component {
 
         return (
             <div className={classes.root}>
-                <GamesToolBar></GamesToolBar>
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.n_cols} spacing={this.spacing}>
                     <GridListTile key="Subheader" cols={this.n_cols} style={{ height: 'auto' }}>
                         <Subheader component="div">All</Subheader>
                     </GridListTile>
                     <GridListTile key="add">
-                        <Button variant="fab" color="primary" aria-label="add" className={classes.button}>
-                            <AddIcon />
-                        </Button>
+                        <AddGame/>
                     </GridListTile>
                     {this.state.hits.map(tile => (
                         <GridListTile key={tile.id} >

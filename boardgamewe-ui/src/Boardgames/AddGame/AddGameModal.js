@@ -8,6 +8,7 @@ import Dialog, {
     DialogTitle,
 } from 'material-ui/Dialog';
 import {Link} from "react-router-dom";
+import AddIcon from '@material-ui/icons/Add';
 
 export default class FormDialog extends React.Component {
     state = {
@@ -36,7 +37,9 @@ export default class FormDialog extends React.Component {
     render() {
         return (
             <div>
-                <Button onClick={this.handleClickOpen} variant="raised" color="secondary">Add</Button>
+                <Button onClick={this.handleClickOpen} variant="fab" color="primary" aria-label="add">
+                    <AddIcon />
+                </Button>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
