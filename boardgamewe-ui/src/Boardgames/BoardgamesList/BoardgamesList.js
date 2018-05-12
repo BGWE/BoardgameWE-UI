@@ -10,6 +10,7 @@ import {Button} from "material-ui";
 import AddIcon from '@material-ui/icons/Add';
 import AddGame from "../AddGame/AddGameModal";
 
+
 const styles = theme => ({
     root: {
         display: 'flex',
