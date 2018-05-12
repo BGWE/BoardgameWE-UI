@@ -4,17 +4,17 @@ import {
     Button,
     Card,
     CardActions,
-    CardContent,
-    Grid,
-    GridList,
-    GridListTile,
-    GridListTileBar,
+    CardContent, CircularProgress,
+    Grid, LinearProgress,
     Typography
 } from "material-ui";
 import Subheader from 'material-ui/List/ListSubheader';
 
 
 const styles = theme => ({
+    root: {
+        flexGrow: 1,
+    },
     card: {
         raised: true,
         width: 200,
@@ -27,6 +27,7 @@ class SearchResults extends React.Component {
 
         this.state = {
             hits: [],
+            isLoading: true
         };
     }
 
@@ -51,6 +52,19 @@ class SearchResults extends React.Component {
 
     render() {
         const { classes } = this.props;
+        if (this.state.isLoading) {
+            return (
+                <div className={classes.root}>
+                    <CircularProgress thickness={7} />
+                </div>
+            )
+        }
+
+        else if (!this.state.isLoading && this.state.hits.length <= 0) {
+            return (
+                <h1>No Game found</h1>
+            )
+        }
 
         return (
             <div>

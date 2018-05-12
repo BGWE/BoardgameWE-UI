@@ -12,6 +12,7 @@ import {Link} from "react-router-dom";
 export default class FormDialog extends React.Component {
     state = {
         open: false,
+        gamename: ""
     };
 
     handleClickOpen = () => {
@@ -21,6 +22,16 @@ export default class FormDialog extends React.Component {
     handleClose = () => {
         this.setState({ open: false });
     };
+
+    handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+    };
+
+    build_uri(q){
+        return '/search/' + q;
+    }
 
     render() {
         return (
@@ -44,6 +55,8 @@ export default class FormDialog extends React.Component {
                             id="name"
                             label=" Board Game"
                             type="text"
+                            value={this.state.gamename}
+                            onChange={this.handleChange('gamename')}
                             fullWidth
                         />
                     </DialogContent>
@@ -51,7 +64,7 @@ export default class FormDialog extends React.Component {
                         <Button onClick={this.handleClose} color="primary">
                             Cancel
                         </Button>
-                        <Link to="/search/test">
+                        <Link to={this.build_uri(this.state.gamename)}>
                             <Button onClick={this.handleClose} color="primary">
                                 Search
                             </Button>
