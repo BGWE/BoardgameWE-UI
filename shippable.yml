@@ -18,7 +18,7 @@ env:
     - AWS_S3_REGION='eu-west-1'
     - CI=false
     - secure: kSh4V9lh+e4WUMNPpPiPzH8/Np8okjd50uAF5uQdmaeMvy6MUTaM/WfRQ0rqE8cjdm6G7yk7KhtwDzQOgiA0DQXzF+bdjJJm7OJLOowDGmRMr6fKzezJFU2662RraJLFjQWhQYnlETpMv++PCsizwST65cRDbMdwOMj+9HEXS593BqIYbLYUrtXIWB8TylNtB6Fn8y4e8FtwhdBR0X1qG8jtDjl8hUuBZtCTHYjlMP/UlPsBBHg4RjEFUB21JQCOKzXHvXZDUYmpVgzsR4hxJ8LsSeGZfXDu/Eo1zwz8gulOy/8aJMlRFwJ3THfOa6EX1hgXfEhsFE9pBT/nGG7pdw==
-    
+
 build:
 
   ci:

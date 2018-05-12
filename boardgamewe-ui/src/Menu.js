@@ -10,6 +10,7 @@ import { menuItems } from './menuItems';
 import Home from './Home/Home'
 import { Route } from "react-router-dom";
 import Boardgames from "./Boardgames/Boardgames";
+import SearchResults from "./Boardgames/SearchResults/SearchResults";
 
 const drawerWidth = 240;
 
@@ -80,7 +81,9 @@ class PermanentDrawer extends React.Component {
                         {/*<div className={classes.toolbar} />*/}
                         {/*<Typography>{'You think water moves fast? You should see ice.'}</Typography>*/}
                         <Route exact={true} path="/" component={Home}/>
+                        <Route path="/search/:name" component={SearchResults}/>
                         <Route path="/boardgames" component={Boardgames}/>
+
                     </main>
                 </div>
             </div>

@@ -69,7 +69,7 @@ class TitlebarGridList extends React.Component {
                     <GridListTile key="Subheader" cols={3} style={{ height: 'auto' }}>
                         <Subheader component="div">All</Subheader>
                     </GridListTile>
-                    {this.state.hits.map(tile => (
+                    {tileData.map(tile => (
                         <GridListTile key={tile.id} >
                             <img src={tile.thumbnail} alt={tile.name} />
                             {

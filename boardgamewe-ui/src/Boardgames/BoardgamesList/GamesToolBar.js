@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import {AppBar, Toolbar} from "material-ui";
+import {AppBar, Button, IconButton, Toolbar, Typography} from "material-ui";
+import AddGame from "../AddGame/AddGameModal";
 
 const styles = {
     root: {
@@ -11,8 +12,8 @@ const styles = {
         flex: 1,
     },
     menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
+        "margin-left": "auto",
+        "margin-right": "10px",
     },
 };
 
@@ -23,11 +24,12 @@ class GamesToolBar extends React.Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
                 <AppBar position="static">
-                    <h1>Hey</h1>
+                    <Toolbar>
+                        {/*<Button variant="raised" color="secondary" className={classes.menuButton}>Add</Button>*/}
+                        <AddGame ></AddGame>
+                    </Toolbar>
                 </AppBar>
-            </div>
         );
     }
 
