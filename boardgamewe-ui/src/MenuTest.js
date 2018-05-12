@@ -18,6 +18,7 @@ import Boardgames from "./Boardgames/Boardgames";
 import SearchResults from "./Boardgames/SearchResults/SearchResults";
 import Home from "./Home/Home";
 import {Route} from "react-router";
+import { menuItems } from './menuItems';
 
 const drawerWidth = 240;
 
@@ -102,7 +103,7 @@ const styles = theme => ({
 
 class PersistentDrawer extends React.Component {
     state = {
-        open: false,
+        open: true,
         anchor: 'left',
     };
 
@@ -139,6 +140,7 @@ class PersistentDrawer extends React.Component {
                     </IconButton>
                 </div>
                 <Divider />
+                <List>{menuItems}</List>
             </Drawer>
         );
 
