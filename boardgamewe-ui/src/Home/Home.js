@@ -12,12 +12,13 @@ class Home extends React.Component {
     render() {
         return (
             <div>
-                <AppBar
-                    position="absolute"
-                    className={this.props.classes.appBar}
-                >
-                    <h1>Coucou</h1>
-                </AppBar>
+
+                <div>
+                    <p>11111</p>
+                    <p>2222</p>
+                    <p>33333</p>
+                    <p>44444</p>
+                </div>
             </div>
 
 

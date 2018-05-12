@@ -6,11 +6,13 @@ import List from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 
 import { menuItems } from './menuItems';
+import MenuIcon from '@material-ui/icons/Menu';
 
 import Home from './Home/Home'
 import { Route } from "react-router-dom";
 import Boardgames from "./Boardgames/Boardgames";
 import SearchResults from "./Boardgames/SearchResults/SearchResults";
+import {AppBar, IconButton, Toolbar, Typography} from "material-ui";
 
 const drawerWidth = 240;
 
@@ -65,6 +67,19 @@ class PermanentDrawer extends React.Component {
         return (
             <div className={classes.root}>
                 <div className={classes.appFrame}>
+                    <AppBar>
+                        <Toolbar>
+                            <IconButton
+                                color="inherit"
+                                aria-label="open drawer"
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Typography variant="title" color="inherit" noWrap>
+                                Persistent drawer
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
 
                     <Drawer
                         variant="permanent"
@@ -77,14 +92,17 @@ class PermanentDrawer extends React.Component {
                         <Divider />
                         <List>{menuItems}</List>
                     </Drawer>
-                    <main className={classes.content}>
-                        {/*<div className={classes.toolbar} />*/}
-                        {/*<Typography>{'You think water moves fast? You should see ice.'}</Typography>*/}
-                        <Route exact={true} path="/" component={Home}/>
-                        <Route path="/search/:name" component={SearchResults}/>
-                        <Route path="/boardgames" component={Boardgames}/>
+                    <div style={{width: '100%', height: '100%'}}>
+                        <main className={classes.content}>
+                            {/*<div className={classes.toolbar} />*/}
+                            {/*<Typography>{'You think water moves fast? You should see ice.'}</Typography>*/}
+                            <Route exact={true} path="/" component={Home}/>
+                            <Route path="/search/:name" component={SearchResults}/>
+                            <Route path="/boardgames" component={Boardgames}/>
 
-                    </main>
+                        </main>
+                    </div>
+
                 </div>
             </div>
         );

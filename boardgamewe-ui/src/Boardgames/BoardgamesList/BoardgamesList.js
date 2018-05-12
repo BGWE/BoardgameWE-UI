@@ -41,6 +41,7 @@ class TitlebarGridList extends React.Component {
 
         this.state = {
             hits: [],
+            order: 'alphabetical'
         };
 
         this.n_cols = 3;

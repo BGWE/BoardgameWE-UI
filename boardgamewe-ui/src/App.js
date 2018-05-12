@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PermanentDrawer from './Menu';
+import PermanentDrawer from './MenuTest';
 import {MuiThemeProvider} from "material-ui";
 
 import theme from './theme'
