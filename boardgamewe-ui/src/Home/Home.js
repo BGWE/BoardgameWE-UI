@@ -1,5 +1,6 @@
 import React from 'react';
 import {AppBar, withStyles} from "material-ui";
+import {Redirect} from "react-router";
 
 const styles = {
     appBar: {
@@ -11,17 +12,7 @@ class Home extends React.Component {
 
     render() {
         return (
-            <div>
-
-                <div>
-                    <p>11111</p>
-                    <p>2222</p>
-                    <p>33333</p>
-                    <p>44444</p>
-                </div>
-            </div>
-
-
+            <Redirect to="/boardgames"/>
         );
     }
 }

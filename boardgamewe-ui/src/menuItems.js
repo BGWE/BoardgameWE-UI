@@ -4,12 +4,6 @@ import {Link} from "react-router-dom";
 
 export const menuItems = (
     <div>
-        <Link style={{ textDecoration: 'none' }} to="/">
-            <ListItem button>
-                <ListItemText primary="Home" />
-            </ListItem>
-        </Link>
-
         <Link style={{ textDecoration: 'none' }} to="/boardgames">
             <ListItem button>
                  <ListItemText primary="Board Games" />
