@@ -48,12 +48,17 @@ class TitlebarGridList extends React.Component {
 
         this.state = {
             hits: [],
-            order: 'alphabetical'
+            order: 'alphabetical',
+            width: window.innerWidth,
+            n_cols: 4
         };
 
-        this.n_cols = 4;
         this.cellHeight = 180;
         this.spacing = 10;
+    }
+
+    componentWillMount() {
+        window.addEventListener('resize', this.handleWindowSizeChange);
     }
 
     componentDidMount() {
@@ -67,15 +72,21 @@ class TitlebarGridList extends React.Component {
             }.bind(this));
     }
 
+    handleWindowSizeChange = () => {
+        this.setState({ width: window.innerWidth });
+        console.log(this.state);
+
+        if (this.state.width <= 500) {
+            this.setState({n_cols: 1})
+        }
+    };
+
     render () {
         const { classes } = this.props;
 
         return (
-            <div className={classes.root}>
-                <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.n_cols} spacing={this.spacing}>
-                    <GridListTile key="Subheader" cols={this.n_cols} style={{ height: 'auto' }}>
-                        <Subheader component="div">All</Subheader>
-                    </GridListTile>
+            <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
+                <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
                     <GridListTile key="add">
                         <AddGame/>
                     </GridListTile>
