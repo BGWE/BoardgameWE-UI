@@ -22,9 +22,11 @@ export const menuItems = (
             </ListItem>
         </Link>
 
-        <ListItem button>
-            <ListItemText primary="Games" />
-        </ListItem>
+        <Link style={{ textDecoration: 'none' }} to="/games">
+            <ListItem button>
+                <ListItemText primary="Games" />
+            </ListItem>
+        </Link>
         <ListItem button>
             <ListItemText primary="Stats" />
         </ListItem>

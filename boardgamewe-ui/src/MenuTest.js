@@ -6,9 +6,7 @@ import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import List from 'material-ui/List';
-import { MenuItem } from 'material-ui/Menu';
 import Typography from 'material-ui/Typography';
-import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -21,6 +19,7 @@ import Boardgame from "./Boardgames/Boardgame/Boardgame";
 import {Route} from "react-router";
 import { menuItems } from './menuItems';
 import Players from "./Players/Players";
+import Games from "./Games/Games";
 
 const drawerWidth = 240;
 
@@ -190,6 +189,7 @@ class PersistentDrawer extends React.Component {
                         <Route path="/boardgame/:bgid" component={Boardgame}/>
                         <Route path="/boardgames" component={Boardgames}/>
                         <Route path="/players" component={Players}/>
+                        <Route path="/games" component={Games}/>
                     </main>
                 </div>
             </div>
