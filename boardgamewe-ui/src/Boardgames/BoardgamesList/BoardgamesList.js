@@ -8,7 +8,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import GamesToolBar from "./GamesToolBar";
 import {Button} from "material-ui";
 import AddIcon from '@material-ui/icons/Add';
-import AddGame from "../AddGame/AddGameModal";
+import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
 
 
