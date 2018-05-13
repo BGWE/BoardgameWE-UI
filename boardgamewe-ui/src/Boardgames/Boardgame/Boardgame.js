@@ -348,6 +348,13 @@ class Boardgame extends React.Component {
                 <Typography variant="display2">
                     {this.state.data.name}
                 </Typography>
+                {
+                    this.state.data.year_published ?
+                        (<Typography variant="title">
+                            ({this.state.data.year_published})
+                        </Typography>) :
+                        null
+                }
                 <br/>
                 <img src={this.state.data.image} alt="Board game image" className={classes.image}/>
                 <br/>
