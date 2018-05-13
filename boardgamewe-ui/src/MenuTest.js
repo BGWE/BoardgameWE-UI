@@ -17,6 +17,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Boardgames from "./Boardgames/Boardgames";
 import SearchResults from "./Boardgames/SearchResults/SearchResults";
 import Home from "./Home/Home";
+import Boardgame from "./Boardgames/Boardgame/Boardgame";
 import {Route} from "react-router";
 import { menuItems } from './menuItems';
 
@@ -185,6 +186,7 @@ class PersistentDrawer extends React.Component {
                         <div className={classes.drawerHeader} />
                         <Route exact={true} path="/" component={Home}/>
                         <Route path="/search/:name" component={SearchResults}/>
+                        <Route path="/boardgame/:bgid" component={Boardgame}/>
                         <Route path="/boardgames" component={Boardgames}/>
                     </main>
                 </div>

@@ -9,6 +9,7 @@ import GamesToolBar from "./GamesToolBar";
 import {Button} from "material-ui";
 import AddIcon from '@material-ui/icons/Add';
 import AddGame from "../AddGame/AddGameModal";
+import {Link} from "react-router-dom";
 
 
 const styles = theme => ({
@@ -86,9 +87,11 @@ class TitlebarGridList extends React.Component {
                                     title={tile.name}
                                     subtitle={tile.year_published ? (<span>({tile.year_published})</span>) : tile.year_published}
                                     actionIcon={
-                                        <IconButton className={classes.icon}>
-                                            <InfoIcon />
-                                        </IconButton>
+                                        <Link to={"/boardgame/" + tile.id} >
+                                            <IconButton className={classes.icon}>
+                                                <InfoIcon />
+                                            </IconButton>
+                                        </Link>
                                     }
                                 />
                             }
