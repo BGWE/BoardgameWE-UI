@@ -36,8 +36,8 @@ export default class FormDialog extends React.Component {
 
     render() {
         return (
-            <div>
-                <Button onClick={this.handleClickOpen} variant="fab" color="primary" aria-label="add">
+            <div style={{paddingTop: 60}}>
+                <Button onClick={this.handleClickOpen} variant="fab" color="secondary" aria-label="add">
                     <AddIcon />
                 </Button>
                 <Dialog

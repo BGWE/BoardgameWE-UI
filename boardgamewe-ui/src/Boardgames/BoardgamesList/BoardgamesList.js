@@ -96,7 +96,7 @@ class TitlebarGridList extends React.Component {
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
                     <GridListTile key="add">
-                        <AddGame/>
+                        <AddGame />
                     </GridListTile>
                     {this.state.hits.map(tile => (
                         <GridListTile key={tile.id} >
