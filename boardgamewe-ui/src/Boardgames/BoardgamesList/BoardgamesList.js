@@ -74,11 +74,20 @@ class TitlebarGridList extends React.Component {
 
     handleWindowSizeChange = () => {
         this.setState({ width: window.innerWidth });
-        console.log(this.state);
 
-        if (this.state.width <= 500) {
+        if (this.state.width <= 700) {
             this.setState({n_cols: 1})
         }
+        else if (this.state.width <= 830) {
+            this.setState({n_cols: 2})
+        }
+        else if (this.state.width <= 1000) {
+            this.setState({n_cols: 3})
+        }
+        else {
+            this.setState({n_cols: 4})
+        }
+
     };
 
     render () {
