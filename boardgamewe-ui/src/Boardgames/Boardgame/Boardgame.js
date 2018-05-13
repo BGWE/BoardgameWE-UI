@@ -124,6 +124,12 @@ class Boardgame extends React.Component {
             }.bind(this));
     }
 
+    unicodeToChar(text) {
+        return text.replace(/\\u[\dA-F]{4}/gi,
+            function (match) {
+                return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+            });
+    }
 
     render() {
         const { classes } = this.props;
@@ -267,6 +273,34 @@ class Boardgame extends React.Component {
             );
         }
 
+        // Description
+        let description_tag = null;
+
+        if (this.state.data.description) {
+            let description = this.state.data.description;
+            description_tag = (
+                <div>
+                    <Paper className={classes.paper}>
+                        <List component="nav">
+                            <ListItem>
+                                <Typography variant="headline">
+                                    Description
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                {description}
+                            </ListItem>
+                        </List>
+
+                    </Paper>
+                    <br/>
+                </div>
+            );
+        }
+
+
+
+
         // Video
         let gp_video = null;
         if (!this.state.data.gameplay_video_url) {
@@ -321,6 +355,7 @@ class Boardgame extends React.Component {
                     {misc_tag}
                     {mecanics_tag}
                     {categories_tag}
+                    {description_tag}
                     <Paper>
                         <Typography variant="headline">
                             Video
