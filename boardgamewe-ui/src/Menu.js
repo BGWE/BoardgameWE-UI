@@ -14,6 +14,7 @@ import Boardgames from "./Boardgames/Boardgames";
 import SearchResults from "./Boardgames/SearchResults/SearchResults";
 import {AppBar, IconButton, Toolbar, Typography} from "material-ui";
 import BoardgamesList from "./Boardgames/BoardgamesList/BoardgamesList";
+import Players from "./Players/Players";
 
 const drawerWidth = 240;
 
@@ -100,6 +101,7 @@ class PermanentDrawer extends React.Component {
                             <Route exact={true} path="/" component={Home}/>
                             <Route path="/search/:name" component={SearchResults}/>
                             <Route path="/boardgames" component={BoardgamesList}/>
+                            <Route path="/players" component={Players}/>
 
                         </main>
                     </div>
