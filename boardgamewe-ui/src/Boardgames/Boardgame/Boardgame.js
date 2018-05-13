@@ -1,16 +1,65 @@
 import React from 'react';
-import {Button, CircularProgress, Divider, TextField} from "material-ui";
+import {
+    Button, Card, CardContent,
+    Chip,
+    CircularProgress,
+    Divider,
+    Grid,
+    List,
+    ListItem,
+    Paper,
+    TextField,
+    Toolbar,
+    Typography
+} from "material-ui";
 import {withStyles} from "material-ui/styles/index";
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        padding: theme.spacing.unit / 2,
     },
     textField: {
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
         width: 200,
     },
+    toolbar: {
+        width: 500,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    },
+    buttonInToolbar: {
+        marginRight: 0,
+        marginLeft: 'auto'
+    },
+    chip: {
+        margin: theme.spacing.unit / 2,
+        backgroundColor: "#008ba2",
+        color: "white"
+    },
+    paper: {
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        padding: theme.spacing.unit / 2,
+    },
+    image: {
+        width: '30%'
+    },
+    title: {
+        marginBottom: 16,
+        fontSize: 14,
+    },
+    pos: {
+        marginBottom: 12,
+    },
+    card: {
+        height:140,
+        width:140
+    }
+
 });
 
 class Boardgame extends React.Component {
@@ -87,6 +136,138 @@ class Boardgame extends React.Component {
             )
         }
 
+        // Misc
+        let score = this.state.data.bgg_score;
+        let rounded_score = String(parseFloat(score).toFixed(1));
+        let misc_tag = (
+            <div style={{marginTop: 30, marginBottom: 30}}>
+                 <Grid container cols={3} className={classes.toolbar} justify="center" spacing={24}>
+                    <Grid item>
+                        <Card className={classes.card}>
+                            <CardContent>
+                                <Typography className={classes.title} color="textSecondary">
+                                    Playing Time
+                                </Typography>
+                                <Typography variant="headline" component="h2">
+                                    {this.state.data.playing_time}
+                                </Typography>
+                                <Typography className={classes.pos} color="textSecondary">
+                                    minutes
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                     <Grid item>
+                         <Card className={classes.card}>
+                             <CardContent>
+                                 <Typography className={classes.title} color="textSecondary">
+                                     Players
+                                 </Typography>
+                                 <Typography variant="headline" component="h2">
+                                     {this.state.data.min_players} - {this.state.data.max_players}
+                                 </Typography>
+                                 {/*<Typography className={classes.pos} color="textSecondary">*/}
+                                     {/*players*/}
+                                 {/*</Typography>*/}
+                             </CardContent>
+                         </Card>
+                     </Grid>
+
+                     <Grid item>
+                         <Card className={classes.card}>
+                             <CardContent>
+                                 <Typography className={classes.title} color="textSecondary">
+                                     Score
+                                 </Typography>
+                                 <Typography variant="headline" component="h2">
+                                     {rounded_score}
+                                 </Typography>
+                                 <Typography className={classes.pos} color="textSecondary">
+                                     out of 10
+                                 </Typography>
+                             </CardContent>
+                         </Card>
+                     </Grid>
+                </Grid>
+            </div>
+        );
+
+        // Mechanics
+        let mecanics_tag = null;
+        if (this.state.data.mechanic) {
+            let mechanics = this.state.data.mechanic.split(',');
+
+            mecanics_tag = (
+                <div>
+                    <Paper className={classes.paper}>
+                        <List component="nav">
+                            <ListItem>
+                                <Typography variant="headline">
+                                    Mechanics
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <div>
+                                    {
+                                        mechanics.map(data => {
+                                            return (
+                                                <Chip
+                                                    key={data.replace(/[^A-Z0-9]/ig, "_")}
+                                                    label={data}
+                                                    className={classes.chip}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </div>
+
+                            </ListItem>
+                        </List>
+                    </Paper>
+                    <br/>
+                </div>
+            );
+        }
+
+        // Categories
+        let categories_tag = null;
+        if (this.state.data.category) {
+            let categories = this.state.data.category.split(',');
+
+            categories_tag = (
+                <div>
+                    <Paper className={classes.paper}>
+                        <List component="nav">
+                            <ListItem>
+                                <Typography variant="headline">
+                                    Categories
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                <div>
+                                    {
+                                        categories.map(data => {
+                                            return (
+                                                <Chip
+                                                    key={data.replace(/[^A-Z0-9]/ig, "_")}
+                                                    label={data}
+                                                    className={classes.chip}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </ListItem>
+                        </List>
+
+                    </Paper>
+                    <br/>
+                </div>
+            );
+        }
+
+        // Video
         let gp_video = null;
         if (!this.state.data.gameplay_video_url) {
             let capt = "Add video";
@@ -99,7 +280,7 @@ class Boardgame extends React.Component {
                 <div>
                     <TextField
                         id="youtube_url"
-                        label="youtube_url"
+                        label="Youtube URL"
                         className={classes.textField}
                         value={this.state.url_video}
                         onChange={this.handleChange('url_video')}
@@ -116,16 +297,39 @@ class Boardgame extends React.Component {
             let regex = new RegExp('\\?v=(.*)');
             let match = regex.exec(parser.search);
             let y_id = match[1];
-            gp_video = (<iframe width="560" height="315" src={"https://www.youtube.com/embed/" + y_id + "?rel=0"} frameBorder="0"
-                allow="autoplay; encrypted-media" allowFullScreen></iframe>)
+            gp_video = (
+                <div>
+                    <iframe width="560" height="315" src={"https://www.youtube.com/embed/" + y_id + "?rel=0"} frameBorder="0"
+                            allow="autoplay; encrypted-media" allowFullScreen></iframe>
+                    {/*<Toolbar className={classes.toolbar}>*/}
+                        {/*<Button variant="raised" className={classes.buttonInToolbar} onClick={() => this.addVideo("")}>Reset</Button>*/}
+                    {/*</Toolbar>*/}
+                </div>
+
+            )
         }
 
         return (
             <div>
-                <h1>{this.state.data.name}</h1>
-                <Divider />
-                <h4>Video</h4>
-                {gp_video}
+                <Typography variant="display2">
+                    {this.state.data.name}
+                </Typography>
+                <br/>
+                <img src={this.state.data.image} alt="Board game image" className={classes.image}/>
+                <br/>
+                <div style={{width: '70%', marginLeft: 'auto', marginRight: 'auto'}}>
+                    {misc_tag}
+                    {mecanics_tag}
+                    {categories_tag}
+                    <Paper>
+                        <Typography variant="headline">
+                            Video
+                        </Typography>
+                        {gp_video}
+                    </Paper>
+                </div>
+
+
             </div>
         );
     }
