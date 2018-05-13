@@ -22,8 +22,7 @@ const styles = theme => ({
     },
     gridList: {
         width: 'auto',
-        'padding-left': 100,
-        'padding-right': 100,
+
     },
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
