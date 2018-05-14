@@ -36,7 +36,7 @@ class SearchResults extends React.Component {
 
         console.log(name);
 
-        let url = new URL('http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/board_game/search');
+        let url = new URL('http://api.boardgameweekend.party/board_game/search');
         url.searchParams.append('q', name);
 
         fetch(url)
@@ -51,7 +51,7 @@ class SearchResults extends React.Component {
     }
 
     addBoardGame(game_id) {
-        let url = new URL('http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/board_game/' + game_id);
+        let url = new URL('http://api.boardgameweekend.party/board_game/' + game_id);
 
         fetch(url, {
             method: 'PUT'

@@ -80,7 +80,7 @@ class Boardgame extends React.Component {
         const { bgid } = this.props.match.params;
 
 
-        fetch('http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/board_game/' + bgid)
+        fetch('http://api.boardgameweekend.party/board_game/' + bgid)
             .then(response => response.json())
             .then(function (data) {
                 this.setState({ data: data, isLoading: false });
@@ -103,7 +103,7 @@ class Boardgame extends React.Component {
 
     updateVideo(youtube_url) {
         console.log('Updating video');
-        let url = 'http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/board_game/' + this.state.data.id;
+        let url = 'http://api.boardgameweekend.party/board_game/' + this.state.data.id;
         fetch(url, {
             method: 'POST',
             headers: {'Content-Type':'application/json'},

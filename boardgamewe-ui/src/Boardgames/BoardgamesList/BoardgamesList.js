@@ -63,7 +63,7 @@ class TitlebarGridList extends React.Component {
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/board_games')
+        fetch('http://api.boardgameweekend.party/board_games')
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);

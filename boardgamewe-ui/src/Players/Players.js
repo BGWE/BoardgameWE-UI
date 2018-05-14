@@ -39,7 +39,7 @@ class Players extends React.Component {
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/players')
+        fetch('http://api.boardgameweekend.party/players')
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
