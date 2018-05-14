@@ -102,6 +102,7 @@ class Boardgame extends React.Component {
     }
 
     updateVideo(youtube_url) {
+        console.log('Updating video');
         let url = 'http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/board_game/' + this.state.data.id;
         fetch(url, {
             method: 'POST',
@@ -110,12 +111,14 @@ class Boardgame extends React.Component {
                 'video_url': youtube_url
             })
         })
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                // this.props.history.push('/boardgame/' + this.state.data.id);
-                window.location.reload();
-                this.setState({add_video_loading: false});
+            .then(function (_data_returned) {
+                console.log(_data_returned);
+                let current_data = this.state.data;
+                current_data.gameplay_video_url = youtube_url;
+                console.log(this.state);
+                console.log(current_data);
+                this.setState({data: current_data, add_video_loading: false});
+                console.log(this.state);
 
             }.bind(this))
             .catch(function (error) {
