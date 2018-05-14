@@ -83,8 +83,11 @@ class TitlebarGridList extends React.Component {
         else if (this.state.width <= 1000) {
             this.setState({n_cols: 3})
         }
-        else {
+        else if (this.state.width <= 1200) {
             this.setState({n_cols: 4})
+        }
+        else {
+            this.setState({n_cols: 5})
         }
 
     };
