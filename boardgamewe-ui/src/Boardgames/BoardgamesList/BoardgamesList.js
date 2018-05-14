@@ -49,7 +49,7 @@ class TitlebarGridList extends React.Component {
             hits: [],
             order: 'alphabetical',
             width: window.innerWidth,
-            n_cols: 4
+            n_cols: 5
         };
 
         this.cellHeight = 180;
