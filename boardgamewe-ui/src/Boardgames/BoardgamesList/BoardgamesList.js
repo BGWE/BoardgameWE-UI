@@ -10,6 +10,7 @@ import {Button} from "material-ui";
 import AddIcon from '@material-ui/icons/Add';
 import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
+import CloseIcon from '@material-ui/icons/Close';
 
 
 const styles = theme => ({
@@ -27,6 +28,9 @@ const styles = theme => ({
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
     },
+    deleteIcon: {
+        color: 'rgba(255, 255, 255, 0.7)',
+    }
 });
 
 
@@ -113,6 +117,19 @@ class TitlebarGridList extends React.Component {
                     {this.state.hits.map(tile => (
                         <GridListTile key={tile.id} >
                             <img src={tile.thumbnail} alt={tile.name} />
+                            {
+                                <GridListTileBar
+                                    titlePosition="top"
+                                    actionIcon={
+                                        <Link to={"/boardgame/" + tile.id} >
+                                            <IconButton className={classes.deleteIcon}>
+                                                <CloseIcon />
+                                            </IconButton>
+                                        </Link>
+                                    }
+                                    style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
+                                />
+                            }
                             {
                                 <GridListTileBar
                                     title={tile.name}

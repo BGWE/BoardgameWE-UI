@@ -9,6 +9,7 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import {Link} from "react-router-dom";
 import AddIcon from '@material-ui/icons/Add';
+import {Tooltip} from "material-ui";
 
 export default class BoardGameModal extends React.Component {
     state = {
@@ -37,9 +38,11 @@ export default class BoardGameModal extends React.Component {
     render() {
         return (
             <div style={{paddingTop: 60}}>
-                <Button onClick={this.handleClickOpen} variant="fab" color="secondary" aria-label="add">
-                    <AddIcon />
-                </Button>
+                <Tooltip id="tooltip-fab" title="Add" placement="bottom">
+                    <Button onClick={this.handleClickOpen} variant="fab" color="secondary" aria-label="add">
+                        <AddIcon />
+                    </Button>
+                </Tooltip>
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -64,11 +67,11 @@ export default class BoardGameModal extends React.Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this.handleClose} color="secondary" >
                             Cancel
                         </Button>
-                        <Link to={this.build_uri(this.state.gamename)}>
-                            <Button onClick={this.handleClose} color="primary">
+                        <Link to={this.build_uri(this.state.gamename)} style={{ textDecoration: 'none' }}>
+                            <Button onClick={this.handleClose} color="secondary" variant="raised">
                                 Search
                             </Button>
                         </Link>
