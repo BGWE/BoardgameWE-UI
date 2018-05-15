@@ -22,6 +22,11 @@ const styles = theme => ({
         overflow: 'hidden',
         backgroundColor: theme.palette.background.paper,
     },
+    div_root: {
+        width: '40%',
+        marginRight: 'auto',
+        marginLeft: 'auto'
+    },
     paper: {
         width: '80%'
     }
@@ -113,15 +118,14 @@ class Players extends React.Component {
                 <div style={{width: "100%"}}>
                     <h1>Players</h1>
                 </div>
-                <div style={{paddingBottom: 20}}>
-                    <AddPlayerModal reload={() => this.reload()}/>
+                <div style={{paddingBottom: 20, width: "80%"}}>
+                    <AddPlayerModal reload={this.reload}/>
                 </div>
-
 
                 {
                     this.state.players.length > 0 ?
-                        <div>
-                            <Paper className={classes.paper}>
+                        <div className={classes.div_root}>
+                            <Paper>
                                 <Table>
                                     <TableHead>
                                         <TableRow>
