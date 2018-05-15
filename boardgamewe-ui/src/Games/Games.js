@@ -3,8 +3,21 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {
     Button,
-    CircularProgress, Collapse, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-    GridList, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar,
+    CircularProgress,
+    Collapse,
+    Dialog,
+    DialogActions, DialogContent, DialogContentText,
+    DialogTitle,
+    ExpansionPanel,
+    ExpansionPanelDetails,
+    ExpansionPanelSummary,
+    GridList,
+    IconButton,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Snackbar, TextField,
 
     Typography
 } from "material-ui";
@@ -14,6 +27,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarIcon from '@material-ui/icons/Star';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import Link from "react-router-dom/es/Link";
+
+import AddGameModal from './AddGameModal'
 
 const styles = theme => ({
     root: {
@@ -49,12 +65,15 @@ class Games extends React.Component {
             n_cols: 4,
             isLoading: true,
             snackbar_error: false,
+            open_modal: false
         };
 
         this.spacing = 10;
 
         // Bind this
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
+        this.handleClickAdd = this.handleClickAdd.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
     }
 
     componentDidMount() {
@@ -93,8 +112,13 @@ class Games extends React.Component {
     // };
 
     handleClickAdd() {
-        console.log('Add');
-        console.log(this);
+        console.log('Opening modal');
+        this.setState({open_modal: true});
+    }
+
+    handleCloseModal() {
+        console.log('Closing modal');
+        this.setState({open_modal: false});
     }
 
     handleCloseSnack(event, reason) {
@@ -151,9 +175,49 @@ class Games extends React.Component {
                 <div style={{width: "100%"}}>
                     <h1>Games</h1>
                 </div>
-                <Button onClick={this.handleClickAdd} variant="fab" color="secondary" aria-label="add" style={{marginBottom: 20}}>
-                    <AddIcon />
-                </Button>
+                <div style={{paddingBottom: 20}}>
+                    <AddGameModal></AddGameModal>
+                </div>
+
+
+                {/*<Button onClick={this.handleClickAdd} variant="fab" color="secondary" aria-label="add" style={{marginBottom: 20}}>*/}
+                    {/*<AddIcon />*/}
+                {/*</Button>*/}
+                {/*<Dialog*/}
+                    {/*open={this.state.open_modal}*/}
+                    {/*onClose={this.handleClose}*/}
+                    {/*aria-labelledby="form-dialog-title"*/}
+                    {/*fullWidth={true}*/}
+                    {/*maxWidth = {'sm'}*/}
+                {/*>*/}
+                    {/*<DialogTitle id="form-dialog-title">Add a game</DialogTitle>*/}
+                    {/*<DialogContent>*/}
+                        {/*<DialogContentText>*/}
+                        {/*Let's add a game.*/}
+                        {/*</DialogContentText>*/}
+                        {/*<TextField*/}
+                        {/*autoFocus*/}
+                        {/*margin="dense"*/}
+                        {/*id="name"*/}
+                        {/*label=" Board Game"*/}
+                        {/*type="text"*/}
+                        {/*value={this.state.gamename}*/}
+                        {/*onChange={this.handleChange('gamename')}*/}
+                        {/*fullWidth*/}
+                        {/*/>*/}
+                    {/*</DialogContent>*/}
+                    {/*<DialogActions>*/}
+                        {/*<Button onClick={this.handleCloseModal} color="primary">*/}
+                            {/*Cancel*/}
+                        {/*</Button>*/}
+                        {/*<Link to='/games'>*/}
+                            {/*<Button onClick={this.handleCloseModal} color="secondary">*/}
+                                {/*Add*/}
+                            {/*</Button>*/}
+                        {/*</Link>*/}
+
+                    {/*</DialogActions>*/}
+                {/*</Dialog>*/}
                 {
                     this.state.games.length > 0 ? (
                         <div className={classes.root}>
