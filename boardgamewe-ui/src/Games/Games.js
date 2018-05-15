@@ -176,48 +176,9 @@ class Games extends React.Component {
                     <h1>Games</h1>
                 </div>
                 <div style={{paddingBottom: 20}}>
-                    <AddGameModal></AddGameModal>
+                    <AddGameModal />
                 </div>
 
-
-                {/*<Button onClick={this.handleClickAdd} variant="fab" color="secondary" aria-label="add" style={{marginBottom: 20}}>*/}
-                    {/*<AddIcon />*/}
-                {/*</Button>*/}
-                {/*<Dialog*/}
-                    {/*open={this.state.open_modal}*/}
-                    {/*onClose={this.handleClose}*/}
-                    {/*aria-labelledby="form-dialog-title"*/}
-                    {/*fullWidth={true}*/}
-                    {/*maxWidth = {'sm'}*/}
-                {/*>*/}
-                    {/*<DialogTitle id="form-dialog-title">Add a game</DialogTitle>*/}
-                    {/*<DialogContent>*/}
-                        {/*<DialogContentText>*/}
-                        {/*Let's add a game.*/}
-                        {/*</DialogContentText>*/}
-                        {/*<TextField*/}
-                        {/*autoFocus*/}
-                        {/*margin="dense"*/}
-                        {/*id="name"*/}
-                        {/*label=" Board Game"*/}
-                        {/*type="text"*/}
-                        {/*value={this.state.gamename}*/}
-                        {/*onChange={this.handleChange('gamename')}*/}
-                        {/*fullWidth*/}
-                        {/*/>*/}
-                    {/*</DialogContent>*/}
-                    {/*<DialogActions>*/}
-                        {/*<Button onClick={this.handleCloseModal} color="primary">*/}
-                            {/*Cancel*/}
-                        {/*</Button>*/}
-                        {/*<Link to='/games'>*/}
-                            {/*<Button onClick={this.handleCloseModal} color="secondary">*/}
-                                {/*Add*/}
-                            {/*</Button>*/}
-                        {/*</Link>*/}
-
-                    {/*</DialogActions>*/}
-                {/*</Dialog>*/}
                 {
                     this.state.games.length > 0 ? (
                         <div className={classes.root}>
