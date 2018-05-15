@@ -40,11 +40,16 @@ class Players extends React.Component {
         };
 
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
+        this.reload = this.reload.bind(this);
     }
 
     componentDidMount() {
         this.setState({ isLoading: true });
 
+        this.reload();
+    }
+
+    reload() {
         fetch('http://api.boardgameweekend.party/players')
             .then(response => response.json())
             .then(function (data) {
@@ -109,7 +114,7 @@ class Players extends React.Component {
                     <h1>Players</h1>
                 </div>
                 <div style={{paddingBottom: 20}}>
-                    <AddPlayerModal/>
+                    <AddPlayerModal reload={() => this.reload()}/>
                 </div>
 
 

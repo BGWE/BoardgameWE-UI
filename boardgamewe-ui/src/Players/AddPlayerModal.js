@@ -12,6 +12,8 @@ import AddIcon from '@material-ui/icons/Add';
 import {IconButton, Snackbar, Tooltip} from "material-ui";
 import CloseIcon from '@material-ui/icons/Close';
 
+import PropTypes from 'prop-types';
+
 export default class AddGameModal extends React.Component {
 
     constructor(props) {
@@ -71,12 +73,13 @@ export default class AddGameModal extends React.Component {
 
         fetch(url, {
             method: 'PUT',
-            body: payload
+            body: JSON.stringify(payload)
         })
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
                 this.setState({ open: false });
+                this.props.reload();
             }.bind(this))
             .catch(function (error) {
                 console.log(error);
@@ -169,3 +172,7 @@ export default class AddGameModal extends React.Component {
         );
     }
 }
+
+AddGameModal.propTypes = {
+    // reload: PropTypes.object.func,
+};
