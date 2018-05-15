@@ -12,10 +12,32 @@ import AddIcon from '@material-ui/icons/Add';
 import {Tooltip} from "material-ui";
 
 export default class AddGameModal extends React.Component {
-    state = {
-        open: false,
-        boardgame: "",
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            open: false,
+            boardgame: "",
+            isLoading: false,
+            fetch_bg_error: false,
+            fetch_players_error: false,
+        };
+    }
+
+    componentDidMount() {
+        this.setState({ isLoading: true });
+
+        fetch('http://api.boardgameweekend.party/board_games')
+            .then(response => response.json())
+            .then(function (data) {
+                console.log(data);
+                this.setState({ isLoading: false })
+            }.bind(this))
+            .catch(error => {
+                console.log(error);
+                this.setState({ isLoading: false })
+            });
+    }
 
     handleClickOpenModal = () => {
         this.setState({ open: true });
