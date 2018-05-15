@@ -10,7 +10,7 @@ import Dialog, {
 import {Link} from "react-router-dom";
 import AddIcon from '@material-ui/icons/Add';
 
-export default class FormDialog extends React.Component {
+export default class BoardGameModal extends React.Component {
     state = {
         open: false,
         gamename: ""
