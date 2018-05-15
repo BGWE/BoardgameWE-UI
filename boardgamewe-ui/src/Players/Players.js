@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import {Checkbox, CircularProgress, Paper, Tooltip} from "material-ui";
+import {Checkbox, CircularProgress, IconButton, Paper, Snackbar, Tooltip, Typography} from "material-ui";
 import Table, {
     TableBody,
     TableCell,
@@ -10,6 +10,9 @@ import Table, {
     TableRow,
     TableSortLabel,
 } from 'material-ui/Table';
+import CloseIcon from '@material-ui/icons/Close';
+
+import AddPlayerModal from './AddPlayerModal'
 
 const styles = theme => ({
     root: {
@@ -31,9 +34,12 @@ class Players extends React.Component {
         this.state = {
             players: [],
 
+            snackbar_error: false,
+
             isLoading: true
         };
 
+        this.handleCloseSnack = this.handleCloseSnack.bind(this);
     }
 
     componentDidMount() {
@@ -44,7 +50,19 @@ class Players extends React.Component {
             .then(function (data) {
                 console.log(data);
                 this.setState({players: data, isLoading: false})
-            }.bind(this));
+            }.bind(this))
+            .catch(error => {
+                console.log(error);
+                this.setState({snackbar_error: true, isLoading: false})
+            });
+    }
+
+    handleCloseSnack(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({snackbar_error: false})
     }
 
     render () {
@@ -58,43 +76,80 @@ class Players extends React.Component {
                 </div>
             )
         }
+        let empty_players = (<div style={{width: "100%"}}><Typography>No player found</Typography></div>);
+
 
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.snackbar_error}
+                    autoHideDuration={3000}
+                    onClose={this.handleCloseSnack}
+                    ContentProps={{
+                        'aria-describedby': "error_msg"
+                    }}
+                    message={<span id="error_msg">Error while fetching the players</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.handleCloseSnack}>
+                            <CloseIcon/>
+                        </IconButton>
+                    ]}>
+
+                </Snackbar>
+
                 <div style={{width: "100%"}}>
                     <h1>Players</h1>
                 </div>
-
-                <div>
-                    <Paper className={classes.paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>Played</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {this.state.players.map(column => {
-                                    return (
-                                        <TableRow key={column.id}>
-                                            <TableCell
-                                                numeric={column.numeric}
-                                                padding={column.disablePadding ? 'none' : 'default'}
-                                            >
-                                                {column.name}
-                                            </TableCell>
-                                            <TableCell numeric>
-                                                2
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                }, this)}
-
-                            </TableBody>
-                        </Table>
-                    </Paper>
+                <div style={{paddingBottom: 20}}>
+                    <AddPlayerModal/>
                 </div>
+
+
+                {
+                    this.state.players.length > 0 ?
+                        <div>
+                            <Paper className={classes.paper}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Name</TableCell>
+                                            <TableCell>Played</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {this.state.players.map(column => {
+                                            return (
+                                                <TableRow key={column.id}>
+                                                    <TableCell
+                                                        numeric={column.numeric}
+                                                        padding={column.disablePadding ? 'none' : 'default'}
+                                                    >
+                                                        {column.name}
+                                                    </TableCell>
+                                                    <TableCell numeric>
+                                                        2
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        }, this)}
+
+                                    </TableBody>
+                                </Table>
+                            </Paper>
+                        </div>
+
+                        :
+
+                        empty_players
+                }
 
             </div>
         );
