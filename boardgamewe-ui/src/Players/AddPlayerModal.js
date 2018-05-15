@@ -24,7 +24,8 @@ export default class AddGameModal extends React.Component {
             name: "",
             email: "",
             snackbar_error: false,
-            error_name: ""
+            error_name: "",
+            error_email: ""
         };
 
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
@@ -62,6 +63,13 @@ export default class AddGameModal extends React.Component {
             this.setState({error_name: ""});
         }
 
+        if (email === "") {
+            this.setState({error_email: "Email should not be empty."});
+            return
+        } else {
+            this.setState({error_email: ""});
+        }
+
         console.log("Adding " + name + " - " + email);
         this.setState({ open: false });
 
@@ -73,6 +81,7 @@ export default class AddGameModal extends React.Component {
 
         fetch(url, {
             method: 'PUT',
+            headers: {'Content-Type':'application/json'},
             body: JSON.stringify(payload)
         })
             .then(response => response.json())
@@ -156,6 +165,7 @@ export default class AddGameModal extends React.Component {
                             type="text"
                             value={this.state.email}
                             onChange={this.handleChange('email')}
+                            error={this.state.error_email!== ""}
                             fullWidth
                         />
                     </DialogContent>
