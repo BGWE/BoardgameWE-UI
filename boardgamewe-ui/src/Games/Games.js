@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {
+    Button,
     CircularProgress, Collapse, ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary,
-    GridList, List, ListItem, ListItemIcon, ListItemText,
+    GridList, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar,
 
     Typography
 } from "material-ui";
@@ -11,10 +12,14 @@ import {
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarIcon from '@material-ui/icons/Star';
+import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
     root: {
-        width: '90%'
+        width: '90%',
+        marginRight: 'auto',
+        marginLeft: 'auto'
     },
 
     gridList: {
@@ -43,15 +48,19 @@ class Games extends React.Component {
             games: [],
             n_cols: 4,
             isLoading: true,
+            snackbar_error: false,
         };
 
         this.spacing = 10;
+
+        // Bind this
+        this.handleCloseSnack = this.handleCloseSnack.bind(this);
     }
 
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://bgwe-env.uqr3gutmpk.eu-west-1.elasticbeanstalk.com/games')
+        fetch('http://api.boardgameweekend.party/games')
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
@@ -61,7 +70,11 @@ class Games extends React.Component {
                 // });
                 this.setState({games: data.games, isLoading: false});
                 console.log(this.state);
-            }.bind(this));
+            }.bind(this))
+            .catch(error => {
+                console.log(error);
+                this.setState({games: [], isLoading: false, snackbar_error: true});
+            })
     }
 
     // handleExpandClick = (_id) => {
@@ -79,6 +92,19 @@ class Games extends React.Component {
     //     this.setState(mod_state);
     // };
 
+    handleClickAdd() {
+        console.log('Add');
+        console.log(this);
+    }
+
+    handleCloseSnack(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({snackbar_error: false})
+    }
+
     sortByProp(data, prop) {
         return new Map([...data.entries()].sort((a, b) => a[1][prop] > b[1][prop]));
     };
@@ -95,11 +121,39 @@ class Games extends React.Component {
             )
         }
 
+        // if (this.state.games.length)
+
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.snackbar_error}
+                    autoHideDuration={3000}
+                    onClose={this.handleCloseSnack}
+                    ContentProps={{
+                        'aria-describedby': "error_msg"
+                    }}
+                    message={<span id="error_msg">Error while fetching the games </span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.handleCloseSnack}>
+                            <CloseIcon/>
+                        </IconButton>
+                    ]}>
+
+                </Snackbar>
                 <div style={{width: "100%"}}>
                     <h1>Games</h1>
                 </div>
+                <Button onClick={this.handleClickAdd} variant="fab" color="secondary" aria-label="add" style={{marginBottom: 20}}>
+                    <AddIcon />
+                </Button>
                 {
                     this.state.games.length > 0 ? (
                         <div className={classes.root}>
