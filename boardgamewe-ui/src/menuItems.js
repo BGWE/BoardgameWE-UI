@@ -21,8 +21,11 @@ export const menuItems = (
                 <ListItemText primary="Games" />
             </ListItem>
         </Link>
-        <ListItem button>
-            <ListItemText primary="Stats" />
-        </ListItem>
+
+        <Link style={{ textDecoration: 'none' }} to="/rankings">
+            <ListItem button>
+                <ListItemText primary="Rankings" />
+            </ListItem>
+        </Link>
     </div>
 );
