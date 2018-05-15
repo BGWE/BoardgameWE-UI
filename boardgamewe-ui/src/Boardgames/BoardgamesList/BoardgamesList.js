@@ -52,8 +52,7 @@ class TitlebarGridList extends React.Component {
         this.state = {
             hits: [],
             order: 'alphabetical',
-            width: window.innerWidth,
-            n_cols: 5
+            n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth)
         };
 
         this.cellHeight = 180;
@@ -75,34 +74,35 @@ class TitlebarGridList extends React.Component {
             }.bind(this));
     }
 
+    static get_number_of_columns_from_width(width) {
+        if (width <= 700) {
+            return 1
+        }
+        else if (width <= 830) {
+            return 2
+        }
+        else if (width <= 1000) {
+            return 3
+        }
+        else if (width <= 1200) {
+            return 4
+        }
+        else if (width <= 1400) {
+            return 5
+        }
+        else if (width <= 1600) {
+            return 6
+        }
+        else if (width <= 1800) {
+            return 7
+        }
+
+        return 8
+
+    }
+
     handleWindowSizeChange = () => {
-        this.setState({ width: window.innerWidth });
-
-        if (this.state.width <= 700) {
-            this.setState({n_cols: 1})
-        }
-        else if (this.state.width <= 830) {
-            this.setState({n_cols: 2})
-        }
-        else if (this.state.width <= 1000) {
-            this.setState({n_cols: 3})
-        }
-        else if (this.state.width <= 1200) {
-            this.setState({n_cols: 4})
-        }
-        else if (this.state.width <= 1400) {
-            this.setState({n_cols: 5})
-        }
-        else if (this.state.width <= 1600) {
-            this.setState({n_cols: 6})
-        }
-        else if (this.state.width <= 1800) {
-            this.setState({n_cols: 7})
-        }
-        else {
-            this.setState({n_cols: 5})
-        }
-
+        this.setState({n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth)})
     };
 
     render () {
