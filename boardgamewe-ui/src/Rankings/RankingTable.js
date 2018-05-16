@@ -18,8 +18,7 @@ class RankingTable extends React.Component {
 
     render () {
         const { classes } = this.props;
-        console.log("prop-render-rankingtable");
-        console.log(this.props);
+
         return (
             <Table>
                 <TableHead>
