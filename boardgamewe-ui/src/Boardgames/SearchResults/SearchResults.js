@@ -158,7 +158,10 @@ class SearchResults extends React.Component {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small" onClick={() => {this.setLoadingStateForTile(tile.id, true); this.addBoardGame(tile.id);}}>
+                                    <Button
+                                        size="small"
+                                        onClick={() => {this.setLoadingStateForTile(tile.id, true); this.addBoardGame(tile.id);}}
+                                        disabled={tile.isLoading}>
                                         {tile.isLoading? (<CircularProgress thickness={4} size={20} />) : "Select"}
                                     </Button>
                                 </CardActions>
