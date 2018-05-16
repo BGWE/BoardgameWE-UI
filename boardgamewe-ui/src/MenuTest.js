@@ -21,6 +21,7 @@ import { menuItems } from './menuItems';
 import Players from "./Players/Players";
 import Games from "./Games/Games";
 import Rankings from "./Rankings/Rankings";
+import AddGame from "./Games/AddGame";
 
 const drawerWidth = 240;
 
@@ -190,7 +191,8 @@ class PersistentDrawer extends React.Component {
                         <Route path="/boardgame/:bgid" component={Boardgame}/>
                         <Route path="/boardgames" component={Boardgames}/>
                         <Route path="/players" component={Players}/>
-                        <Route path="/games" component={Games}/>
+                        <Route exact path="/games/add" component={AddGame}/>
+                        <Route exact path="/games" component={Games}/>
                         <Route path="/rankings" component={Rankings}/>
                     </main>
                 </div>

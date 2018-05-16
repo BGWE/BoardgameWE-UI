@@ -17,7 +17,7 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    Snackbar, TextField,
+    Snackbar, TextField, Tooltip,
 
     Typography
 } from "material-ui";
@@ -183,7 +183,13 @@ class Games extends React.Component {
                     <h1>Games</h1>
                 </div>
                 <div style={{paddingBottom: 20}}>
-                    <AddGameModal />
+                    <Tooltip id="tooltip-fab" title="Add" placement="right">
+                        <Link to="/games/add">
+                            <Button variant="fab" color="secondary" aria-label="add">
+                                <AddIcon />
+                            </Button>
+                        </Link>
+                    </Tooltip>
                 </div>
 
                 {

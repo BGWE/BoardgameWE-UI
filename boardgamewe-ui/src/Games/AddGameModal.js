@@ -9,15 +9,40 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import {Link} from "react-router-dom";
 import AddIcon from '@material-ui/icons/Add';
-import {Tooltip} from "material-ui";
+import {MenuItem, Paper, Tooltip, withStyles} from "material-ui";
+import Downshift from "downshift";
 
-export default class AddGameModal extends React.Component {
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        height: 250,
+    },
+    container: {
+        flexGrow: 1,
+        position: 'relative',
+    },
+    paper: {
+        position: 'absolute',
+        zIndex: 1,
+        marginTop: theme.spacing.unit,
+        left: 0,
+        right: 0,
+    },
+    chip: {
+        margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+    },
+    inputRoot: {
+        flexWrap: 'wrap',
+    },
+});
+
+class AddGameModal extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             open: false,
-            boardgame: "",
+            board_games: [],
             isLoading: false,
             fetch_bg_error: false,
             fetch_players_error: false,
@@ -31,7 +56,7 @@ export default class AddGameModal extends React.Component {
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
-                this.setState({ isLoading: false })
+                this.setState({ board_games: data.board_games, isLoading: false })
             }.bind(this))
             .catch(error => {
                 console.log(error);
@@ -53,7 +78,61 @@ export default class AddGameModal extends React.Component {
         });
     };
 
+    renderInput(inputProps) {
+        const { InputProps, classes, ref, ...other } = inputProps;
+
+        return (
+            <TextField
+                InputProps={{
+                    inputRef: ref,
+                    classes: {
+                        root: classes.inputRoot,
+                    },
+                    ...InputProps,
+                }}
+                {...other}
+            />
+        );
+    }
+
+    getSuggestions(inputValue) {
+        let count = 0;
+
+        return this.state.board_games.filter(suggestion => {
+            const keep =
+                (!inputValue || suggestion.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1) &&
+                count < 2;
+
+            if (keep) {
+                count += 1;
+            }
+
+            return keep;
+        });
+    }
+
+    renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
+        const isHighlighted = highlightedIndex === index;
+        const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1;
+
+        return (
+            <MenuItem
+                {...itemProps}
+                key={suggestion.name}
+                selected={isHighlighted}
+                component="div"
+                style={{
+                    fontWeight: isSelected ? 500 : 400,
+                }}
+            >
+                {suggestion.label}
+            </MenuItem>
+        );
+    }
+
     render() {
+        const { classes } = this.props;
+
         return (
             <div>
                 <Tooltip id="tooltip-fab" title="Add" placement="right">
@@ -69,22 +148,44 @@ export default class AddGameModal extends React.Component {
                     maxWidth = {'sm'}
                 >
                     <DialogTitle id="form-dialog-title">Add a game</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Let's add a game.
-                        </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label=" Board Game"
-                            type="text"
-                            value={this.state.boardgame}
-                            onChange={this.handleChange('gamename')}
-                            fullWidth
-                        />
+
+                    <DialogContent style={{zIndex: 1}}>
+
+                        <Downshift>
+                            {
+                                ({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => {
+                                    return (
+                                        <div className={classes.container}>
+                                            {this.renderInput({
+                                                fullWidth: true,
+                                                classes,
+                                                InputProps: getInputProps({
+                                                    placeholder: 'Search a board game',
+                                                    id: 'integration-downshift-simple',
+                                                }),
+                                            })}
+                                            {isOpen ? (
+                                                <Paper className={classes.paper} square>
+                                                    {this.getSuggestions(inputValue).map((suggestion, index) =>
+                                                        this.renderSuggestion({
+                                                            suggestion,
+                                                            index,
+                                                            itemProps: getItemProps({ item: suggestion.name }),
+                                                            highlightedIndex,
+                                                            selectedItem,
+                                                        }),
+                                                    )}
+                                                </Paper>
+                                            ) : null}
+                                        </div>
+                                    )
+                                }
+                            }
+                        </Downshift>
+
                     </DialogContent>
-                    <DialogActions>
+
+                    <DialogActions style={{zIndex: 2}}>
                         <Button onClick={this.handleClose} color="secondary">
                             Cancel
                         </Button>
@@ -99,3 +200,5 @@ export default class AddGameModal extends React.Component {
         );
     }
 }
+
+export default withStyles(styles)(AddGameModal);
