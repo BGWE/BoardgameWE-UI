@@ -6,7 +6,7 @@ import Subheader from 'material-ui/List/ListSubheader';
 import IconButton from 'material-ui/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import GamesToolBar from "./GamesToolBar";
-import {Button} from "material-ui";
+import {Button, CircularProgress, Snackbar} from "material-ui";
 import AddIcon from '@material-ui/icons/Add';
 import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
@@ -15,12 +15,11 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
     root: {
-
-        backgroundColor: theme.palette.background.paper,
     },
     gridList: {
         width: 'auto',
-
+        paddingLeft: "40px",
+        paddingRight: "40px",
     },
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
@@ -48,12 +47,16 @@ class TitlebarGridList extends React.Component {
 
         this.state = {
             hits: [],
+            snackbar_error: false,
             order: 'alphabetical',
             n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth)
         };
 
         this.cellHeight = 180;
         this.spacing = 10;
+
+        this.handleCloseSnack = this.handleCloseSnack.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentWillMount() {
@@ -68,7 +71,11 @@ class TitlebarGridList extends React.Component {
             .then(function (data) {
                 console.log(data);
                 this.setState({ hits: data.board_games, isLoading: false })
-            }.bind(this));
+            }.bind(this))
+            .catch(error => {
+                console.log(error);
+                this.setState({ snackbar_error: true, isLoading: false })
+            });
     }
 
     static get_number_of_columns_from_width(width) {
@@ -102,11 +109,49 @@ class TitlebarGridList extends React.Component {
         this.setState({n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth)})
     };
 
+    handleCloseSnack(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({snackbar_error: false})
+    }
+
     render () {
         const { classes } = this.props;
 
+        if (this.state.isLoading) {
+            return (
+                <div className={classes.root}>
+                    <CircularProgress thickness={7} />
+                </div>
+            )
+        }
+
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.snackbar_error}
+                    autoHideDuration={3000}
+                    onClose={this.handleCloseSnack}
+                    ContentProps={{
+                        'aria-describedby': "error_msg"
+                    }}
+                    message={<span id="error_msg">Error while fetching the board games</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.handleCloseSnack}>
+                            <CloseIcon/>
+                        </IconButton>
+                    ]}/>
+
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
                     <GridListTile key="add">
                         <AddGame />
