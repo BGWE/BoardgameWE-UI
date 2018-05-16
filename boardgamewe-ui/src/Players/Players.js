@@ -111,9 +111,7 @@ class Players extends React.Component {
                             onClick={this.handleCloseSnack}>
                             <CloseIcon/>
                         </IconButton>
-                    ]}>
-
-                </Snackbar>
+                    ]}/>
 
                 <div style={{width: "100%"}}>
                     <h1>Players</h1>
