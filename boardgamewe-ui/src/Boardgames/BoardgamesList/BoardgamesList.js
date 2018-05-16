@@ -6,7 +6,16 @@ import Subheader from 'material-ui/List/ListSubheader';
 import IconButton from 'material-ui/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import GamesToolBar from "./GamesToolBar";
-import {Button, CircularProgress, Snackbar} from "material-ui";
+import {
+    Button,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Snackbar
+} from "material-ui";
 import AddIcon from '@material-ui/icons/Add';
 import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
@@ -49,7 +58,10 @@ class TitlebarGridList extends React.Component {
             hits: [],
             snackbar_error: false,
             order: 'alphabetical',
-            n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth)
+            n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth),
+            open_confirmation_dialog: false,
+            confirm_delete_game_id: "",
+            confirm_delete_game_name: "",
         };
 
         this.cellHeight = 180;
@@ -57,6 +69,10 @@ class TitlebarGridList extends React.Component {
 
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
+        this.handleCloseConfirm = this.handleCloseConfirm.bind(this);
+        this.handleDeleteBg = this.handleDeleteBg.bind(this);
+        this.reload = this.reload.bind(this);
+        this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
     }
 
     componentWillMount() {
@@ -65,7 +81,10 @@ class TitlebarGridList extends React.Component {
 
     componentDidMount() {
         this.setState({ isLoading: true });
+        this.reload()
+    }
 
+    reload() {
         fetch('http://api.boardgameweekend.party/board_games')
             .then(response => response.json())
             .then(function (data) {
@@ -117,6 +136,52 @@ class TitlebarGridList extends React.Component {
         this.setState({snackbar_error: false})
     }
 
+    handleCloseConfirm() {
+        console.log('Close confirmation dialog');
+        this.setState({
+            open_confirmation_dialog: false,
+            confirm_delete_game_id: "",
+            confirm_delete_game_name: ""
+        });
+    }
+
+    handleDeleteConfirm() {
+        console.log('Deleting');
+        let url = new URL('http://api.boardgameweekend.party/board_game/' + this.state.confirm_delete_game_id);
+
+        fetch(url, {
+            method: 'DELETE',
+        })
+            .then(response => response.json())
+            .then(function (data) {
+                console.log(data);
+                this.setState({
+                    open_confirmation_dialog: false,
+                    confirm_delete_game_id: "",
+                    confirm_delete_game_name: ""
+                });
+                this.reload()
+            }.bind(this))
+            .catch(function (error) {
+                console.log(error);
+                this.setState({
+                    open_confirmation_dialog: false,
+                    confirm_delete_game_id: "",
+                    confirm_delete_game_name: ""
+                });
+                this.reload()
+            }.bind(this));
+    }
+
+    handleDeleteBg(bg_id, bg_name) {
+        console.log('Confirming deletion of ' + bg_name + ' (' + bg_id + ')');
+        this.setState({
+            open_confirmation_dialog: true,
+            confirm_delete_game_id: bg_id,
+            confirm_delete_game_name: bg_name
+        });
+    }
+
     render () {
         const { classes } = this.props;
 
@@ -152,6 +217,26 @@ class TitlebarGridList extends React.Component {
                         </IconButton>
                     ]}/>
 
+                <Dialog
+                    open={this.state.open_confirmation_dialog}
+                    onClose={this.handleCloseConfirm}
+                >
+                    <DialogTitle id="alert-dialog-title">Confirm deletion</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Are you sure you want to delete {this.state.confirm_delete_game_name}?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleCloseConfirm} color="secondary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.handleDeleteConfirm} color="secondary" variant="raised" autoFocus>
+                            Delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
                     <GridListTile key="add">
                         <AddGame />
@@ -163,11 +248,11 @@ class TitlebarGridList extends React.Component {
                                 <GridListTileBar
                                     titlePosition="top"
                                     actionIcon={
-                                        <Link to={"/boardgame/" + tile.id} >
-                                            <IconButton className={classes.deleteIcon}>
-                                                <CloseIcon />
-                                            </IconButton>
-                                        </Link>
+                                        <IconButton
+                                            className={classes.deleteIcon}
+                                            onClick={() => this.handleDeleteBg(tile.id, tile.name)}>
+                                            <CloseIcon />
+                                        </IconButton>
                                     }
                                     style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
                                 />
