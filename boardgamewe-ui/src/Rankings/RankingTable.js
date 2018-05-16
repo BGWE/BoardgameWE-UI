@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Table from "material-ui/es/Table/Table";
-import TableHead from "material-ui/es/Table/TableHead";
-import TableRow from "material-ui/es/Table/TableRow";
-import TableCell from "material-ui/es/Table/TableCell";
-import TableBody from "material-ui/es/Table/TableBody";
+import {Table, TableBody, TableCell, TableHead, TableRow} from "material-ui";
+
 
 const styles = theme => ({
     root: {
@@ -34,7 +31,7 @@ class RankingTable extends React.Component {
                 </TableHead>
                 <TableBody>
                     {this.props.ranking.map(player => (
-                        <TableRow>
+                        <TableRow key={player.player.id}>
                             <TableCell>{player.rank}</TableCell>
                             <TableCell>{player.player.name}</TableCell>
                             <TableCell>{player.score}</TableCell>
