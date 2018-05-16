@@ -90,12 +90,7 @@ class Games extends React.Component {
                 //     game.expanded = false;
                 //     return game;
                 // });
-                if (typeof data === 'object' && data.hasOwnProperty('games')){
-                    this.setState({games: data.games, isLoading: false});
-                }
-                else {
-                    this.setState({games: [], isLoading: false});
-                }
+                this.setState({games: data, isLoading: false});
             }.bind(this))
             .catch(error => {
                 console.log(error);
