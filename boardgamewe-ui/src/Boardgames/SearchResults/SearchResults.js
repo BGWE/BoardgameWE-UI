@@ -5,11 +5,12 @@ import {
     Card,
     CardActions,
     CardContent, CircularProgress,
-    Grid, LinearProgress,
+    Grid, LinearProgress, Snackbar,
     Typography
 } from "material-ui";
 import Subheader from 'material-ui/List/ListSubheader';
-
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from 'material-ui/IconButton';
 
 const styles = theme => ({
     root: {
@@ -27,8 +28,12 @@ class SearchResults extends React.Component {
 
         this.state = {
             hits: [],
-            isLoading: true
+            isLoading: true,
+            snackbar_success: false
         };
+
+        this.handleCloseSnack = this.handleCloseSnack.bind(this);
+        this.addBoardGame = this.addBoardGame.bind(this);
     }
 
     componentDidMount() {
@@ -59,7 +64,10 @@ class SearchResults extends React.Component {
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
-                this.props.history.push('/boardgames')
+                this.setState({snackbar_success: true});
+                setTimeout(function() {
+                    this.props.history.push('/boardgames')
+                }.bind(this), 1500);
             }.bind(this))
             .catch(function (error) {
                 console.log(error);
@@ -88,6 +96,14 @@ class SearchResults extends React.Component {
         this.setState(mod_state)
     }
 
+    handleCloseSnack(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({snackbar_error: false})
+    }
+
     render() {
         const { classes } = this.props;
         if (this.state.isLoading) {
@@ -106,6 +122,29 @@ class SearchResults extends React.Component {
 
         return (
             <div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left'
+                    }}
+                    open={this.state.snackbar_success}
+                    autoHideDuration={3000}
+                    onClose={this.handleCloseSnack}
+                    ContentProps={{
+                        'aria-describedby': "error_msg"
+                    }}
+                    message={<span id="error_msg">Board game successfully added</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.handleCloseSnack}>
+                            <CloseIcon/>
+                        </IconButton>
+                    ]}>
+
+                </Snackbar>
                 <Grid container spacing={16}>
                     {this.state.hits.map(tile => (
                         <Grid item key={tile.id}>
