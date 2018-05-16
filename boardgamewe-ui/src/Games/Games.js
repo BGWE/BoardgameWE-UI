@@ -80,15 +80,22 @@ class Games extends React.Component {
         this.setState({ isLoading: true });
 
         fetch('http://api.boardgameweekend.party/games')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw Error('Request failed');
+                return response.json();
+            })
             .then(function (data) {
                 console.log(data);
                 // let games = data.games.map((game) => {
                 //     game.expanded = false;
                 //     return game;
                 // });
-                this.setState({games: data.games, isLoading: false});
-                console.log(this.state);
+                if (typeof data === 'object' && data.hasOwnProperty('games')){
+                    this.setState({games: data.games, isLoading: false});
+                }
+                else {
+                    this.setState({games: [], isLoading: false});
+                }
             }.bind(this))
             .catch(error => {
                 console.log(error);
