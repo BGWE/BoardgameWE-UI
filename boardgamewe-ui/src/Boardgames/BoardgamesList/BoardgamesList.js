@@ -15,10 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
     root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        overflow: 'hidden',
+
         backgroundColor: theme.palette.background.paper,
     },
     gridList: {
