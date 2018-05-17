@@ -11,7 +11,7 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, InputAdornment,
+    DialogTitle, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select,
     Snackbar, TextField
 } from "material-ui";
 
@@ -25,9 +25,7 @@ const styles = theme => ({
     root: {
     },
     gridList: {
-        width: 'auto',
-        paddingLeft: "40px",
-        paddingRight: "40px",
+
     },
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
@@ -40,6 +38,12 @@ const styles = theme => ({
         marginRight: "auto",
         marginLeft: "45px",
         width: "150px"
+    },
+    gridContainer:{
+        width: "90%",
+    },
+    tile: {
+        // marginRight:"10px"
     }
 });
 
@@ -69,7 +73,8 @@ class TitlebarGridList extends React.Component {
             confirm_delete_game_id: "",
             confirm_delete_game_name: "",
 
-            filter_name: ""
+            filter_name: "",
+            orderby: "name"
         };
 
         this.cellHeight = 180;
@@ -82,6 +87,7 @@ class TitlebarGridList extends React.Component {
         this.reload = this.reload.bind(this);
         this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
         this.handleChangeFilterText = this.handleChangeFilterText.bind(this);
+        this.handleChangeOrderBy = this.handleChangeOrderBy.bind(this);
     }
 
     componentWillMount() {
@@ -104,6 +110,63 @@ class TitlebarGridList extends React.Component {
                 console.log(error);
                 this.setState({ snackbar_error: true, isLoading: false })
             });
+    }
+
+    order(games) {
+        let build_sort = function(property, increasing_order) {
+            return (first, second) => {
+                let ret = 0;
+                if (first[property] === second[property]) {
+                    ret = 0;
+                }
+                else if (first[property] < second[property]) {
+                    ret = -1;
+                }
+                else {
+                    ret = 1;
+                }
+
+                return ret * (increasing_order ? 1 : -1)
+            }
+        };
+
+        let name_order_fm = function (first, second) {
+            if (first.name === second.name) {
+                return 0;
+            }
+            else if (first.name < second.name) {
+                return -1;
+            }
+            else {
+                return 1;
+            }
+        };
+
+        if (this.state.orderby === 'name') {
+            return games.concat().sort(build_sort('name', true))
+        }
+
+        else if (this.state.orderby === 'name_reverse') {
+            return games.concat().sort(build_sort('name', false))
+        }
+
+        else if (this.state.orderby === 'year_increasing') {
+            return games.concat().sort(build_sort('year_published', true))
+        }
+
+        else if (this.state.orderby === 'year_decreasing') {
+            return games.concat().sort(build_sort('year_published', false))
+        }
+
+        else if (this.state.orderby === 'score_increasing') {
+            return games.concat().sort(build_sort('bgg_score', true))
+        }
+
+        else if (this.state.orderby === 'score_decreasing') {
+            return games.concat().sort(build_sort('bgg_score', false))
+        }
+
+        return []
     }
 
     static get_number_of_columns_from_width(width) {
@@ -201,6 +264,12 @@ class TitlebarGridList extends React.Component {
         this.setState({filter_name: event.target.value, hits: filtered_hits})
     }
 
+    handleChangeOrderBy(event) {
+        let value = event.target.value;
+        console.log(value);
+        this.setState({orderby: value});
+    }
+
     render () {
         const { classes } = this.props;
 
@@ -256,60 +325,95 @@ class TitlebarGridList extends React.Component {
                     </DialogActions>
                 </Dialog>
 
-                <div className={classes.search}>
-                    <TextField
-                        id="filter"
-                        label="Filter"
-                        className={classes.textField}
-                        value={this.state.filter_name}
-                        onChange={this.handleChangeFilterText}
-                        margin="normal"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                </div>
+                <Grid container spacing={16}>
+                    <Grid item xs={12}>
+                        <Grid container
+                              justify="flex-start"
+                              direction="row"
+                              alignItems="center"
+                              spacing={16}>
+                            <Grid key="filter_item" item>
+                                <TextField
+                                    id="filter"
+                                    label="Filter"
+                                    className={classes.textField}
+                                    value={this.state.filter_name}
+                                    onChange={this.handleChangeFilterText}
+                                    margin="normal"
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            </Grid>
+                            <Grid key="order_by_item" item style={{marginTop: "8px"}}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="order">Order</InputLabel>
+                                    <Select
+                                        native
+                                        value={this.state.orderby}
+                                        onChange={this.handleChangeOrderBy}
+                                    >
+                                        <option value={"name"}>Name (A->Z)</option>
+                                        <option value={"name_reverse"}>Name (Z->A)</option>
+                                        <option value={"year_increasing"}>Year (Increasing)</option>
+                                        <option value={"year_decreasing"}>Year (Decreasing)</option>
+                                        <option value={"score_increasing"}>Score (Increasing)</option>
+                                        <option value={"score_decreasing"}>Score (Decreasing)</option>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
 
-                <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
-                    <GridListTile key="add">
-                        <AddGame />
-                    </GridListTile>
-                    {this.state.hits.map(tile => (
-                        <GridListTile key={tile.id} >
-                            <img src={tile.thumbnail} alt={tile.name} />
-                            {
-                                <GridListTileBar
-                                    titlePosition="top"
-                                    actionIcon={
-                                        <IconButton
-                                            className={classes.deleteIcon}
-                                            onClick={() => this.handleDeleteBg(tile.id, tile.name)}>
-                                            <CloseIcon />
-                                        </IconButton>
+
+                <Grid container>
+                    <Grid item xs={12} style={{marginTop: "25px"}}>
+                        <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
+                            <GridListTile key="add">
+                                <AddGame />
+                            </GridListTile>
+                            {this.order(this.state.hits).map(tile => (
+                                <GridListTile key={tile.id} className={classes.tile}>
+                                    <img src={tile.thumbnail} alt={tile.name} />
+                                    {
+                                        <GridListTileBar
+                                            titlePosition="top"
+                                            actionIcon={
+                                                <IconButton
+                                                    className={classes.deleteIcon}
+                                                    onClick={() => this.handleDeleteBg(tile.id, tile.name)}>
+                                                    <CloseIcon />
+                                                </IconButton>
+                                            }
+                                            style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
+                                        />
                                     }
-                                    style={{backgroundColor: 'rgba(255, 255, 255, 0)'}}
-                                />
-                            }
-                            {
-                                <GridListTileBar
-                                    title={tile.name}
-                                    subtitle={tile.year_published ? (<span>({tile.year_published})</span>) : tile.year_published}
-                                    actionIcon={
-                                        <Link to={"/boardgame/" + tile.id} >
-                                            <IconButton className={classes.icon}>
-                                                <InfoIcon />
-                                            </IconButton>
-                                        </Link>
+                                    {
+                                        <GridListTileBar
+                                            title={tile.name}
+                                            subtitle={tile.year_published ? (<span>({tile.year_published})</span>) : tile.year_published}
+                                            actionIcon={
+                                                <Link to={"/boardgame/" + tile.id} >
+                                                    <IconButton className={classes.icon}>
+                                                        <InfoIcon />
+                                                    </IconButton>
+                                                </Link>
+                                            }
+                                        />
                                     }
-                                />
-                            }
-                        </GridListTile>
-                    ))}
-                </GridList>
+                                </GridListTile>
+                            ))}
+                        </GridList>
+                    </Grid>
+                </Grid>
+
+
+
             </div>
         );
     }
