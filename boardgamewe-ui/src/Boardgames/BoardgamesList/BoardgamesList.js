@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
-import Subheader from 'material-ui/List/ListSubheader';
 import IconButton from 'material-ui/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
-import GamesToolBar from "./GamesToolBar";
 import {
     Button,
     CircularProgress,
@@ -13,13 +11,14 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
-    Snackbar
+    DialogTitle, InputAdornment,
+    Snackbar, TextField
 } from "material-ui";
-import AddIcon from '@material-ui/icons/Add';
+
 import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
 import CloseIcon from '@material-ui/icons/Close';
+import SearchIcon from '@material-ui/icons/Search';
 
 
 const styles = theme => ({
@@ -35,6 +34,12 @@ const styles = theme => ({
     },
     deleteIcon: {
         color: 'rgba(255, 255, 255, 0.7)',
+    },
+    search: {
+        paddingBottom: "20px",
+        marginRight: "auto",
+        marginLeft: "45px",
+        width: "150px"
     }
 });
 
@@ -56,12 +61,15 @@ class TitlebarGridList extends React.Component {
 
         this.state = {
             hits: [],
+            board_games: [],
             snackbar_error: false,
             order: 'alphabetical',
             n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth),
             open_confirmation_dialog: false,
             confirm_delete_game_id: "",
             confirm_delete_game_name: "",
+
+            filter_name: ""
         };
 
         this.cellHeight = 180;
@@ -73,6 +81,7 @@ class TitlebarGridList extends React.Component {
         this.handleDeleteBg = this.handleDeleteBg.bind(this);
         this.reload = this.reload.bind(this);
         this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+        this.handleChangeFilterText = this.handleChangeFilterText.bind(this);
     }
 
     componentWillMount() {
@@ -89,7 +98,7 @@ class TitlebarGridList extends React.Component {
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
-                this.setState({ hits: data.board_games, isLoading: false })
+                this.setState({ hits: data.board_games, board_games: data.board_games, isLoading: false })
             }.bind(this))
             .catch(error => {
                 console.log(error);
@@ -182,6 +191,16 @@ class TitlebarGridList extends React.Component {
         });
     }
 
+    handleChangeFilterText(event) {
+        let value = event.target.value;
+
+        let filtered_hits = this.state.board_games.filter(suggestion => {
+            return (!value || suggestion.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+        });
+
+        this.setState({filter_name: event.target.value, hits: filtered_hits})
+    }
+
     render () {
         const { classes } = this.props;
 
@@ -236,6 +255,24 @@ class TitlebarGridList extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <div className={classes.search}>
+                    <TextField
+                        id="filter"
+                        label="Filter"
+                        className={classes.textField}
+                        value={this.state.filter_name}
+                        onChange={this.handleChangeFilterText}
+                        margin="normal"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </div>
 
                 <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
                     <GridListTile key="add">
