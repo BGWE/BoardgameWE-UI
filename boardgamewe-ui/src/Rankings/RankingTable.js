@@ -69,7 +69,10 @@ class RankingTable extends React.Component {
     render () {
         const { classes } = this.props;
 
-        console.log(this.props);
+        let isWinLose = this.props.isWinLose;
+        if (isWinLose === null) {
+            isWinLose = false;
+        }
 
         return (
             <Table>
@@ -78,7 +81,12 @@ class RankingTable extends React.Component {
                         <TableCell className={classes.iconCell}/>
                         <TableCell>Rank</TableCell>
                         <TableCell>Player</TableCell>
-                        <TableCell>Score</TableCell>
+                        {
+                            isWinLose ? null:
+                                (<TableCell>Score</TableCell>)
+                        }
+
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -87,7 +95,11 @@ class RankingTable extends React.Component {
                             <TableCell className={classes.iconCell}>{this.getIcon(player.rank, classes)}</TableCell>
                             <TableCell className={player.win ? classes.winnerCell : null}>{player.rank}</TableCell>
                             <TableCell className={player.win ? classes.winnerCell : null}>{player.player.name.split(" ")[0]}</TableCell>
-                            <TableCell className={player.win ? classes.winnerCell : null}>{this.props.modifier(player.score)}</TableCell>
+                            {
+                                isWinLose ? null:
+                                    (<TableCell className={player.win ? classes.winnerCell : null}>{this.props.modifier(player.score)}</TableCell>)
+                            }
+
                         </TableRow>
                     ))}
                 </TableBody>

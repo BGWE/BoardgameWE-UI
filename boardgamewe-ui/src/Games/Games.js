@@ -224,7 +224,10 @@ class Games extends React.Component {
                                                         justify="flex-start"
                                                     >
                                                         <Grid item>
-                                                            <RankingTable ranking={game.players} modifier={a => a}/>
+                                                            <RankingTable
+                                                                ranking={game.players}
+                                                                modifier={a => a}
+                                                                isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
