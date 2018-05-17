@@ -10,7 +10,7 @@ import {
     DialogTitle,
     ExpansionPanel,
     ExpansionPanelDetails,
-    ExpansionPanelSummary,
+    ExpansionPanelSummary, Grid,
     GridList,
     IconButton,
     List,
@@ -30,10 +30,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import Link from "react-router-dom/es/Link";
 
 import AddGameModal from './AddGameModal'
+import RankingTable from "../Rankings/RankingTable";
 
 const styles = theme => ({
     root: {
-        width: '90%',
+        width: '70%',
         marginRight: 'auto',
         marginLeft: 'auto'
     },
@@ -214,30 +215,20 @@ class Games extends React.Component {
                                                 <Typography className={classes.heading}>{game.board_game.name}</Typography>
                                                 <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
                                             </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails>
-                                                <div className={classes.demo}>
-                                                    <List>
-                                                        {
-                                                            game.players.map(function (player) {
-                                                                return (
-                                                                    <ListItem key={player.id_player}>
-                                                                        {
-                                                                            player.hasOwnProperty('winner') && player.winner ? (
-                                                                                <ListItemIcon>
-                                                                                    <StarIcon />
-                                                                                </ListItemIcon>
-                                                                            ) : null
-                                                                        }
-                                                                        <ListItemText inset
-                                                                            primary={player.player.name}
-                                                                            secondary={'Rank: ' + player.rank}
-                                                                        />
-                                                                    </ListItem>
-                                                                )
-                                                            })
-                                                        }
-                                                    </List>
-                                                </div>
+                                            <ExpansionPanelDetails style={{width: "50%"}}>
+                                                <Grid item xs={12}>
+                                                    <Grid
+                                                        container
+                                                        spacing={16}
+                                                        alignItems="center"
+                                                        direction="row"
+                                                        justify="flex-start"
+                                                    >
+                                                        <Grid item>
+                                                            <RankingTable ranking={game.players} />
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
                                             </ExpansionPanelDetails>
                                         </ExpansionPanel>
                                     )
