@@ -353,15 +353,16 @@ class TitlebarGridList extends React.Component {
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="order">Order</InputLabel>
                                     <Select
+                                        native
                                         value={this.state.orderby}
                                         onChange={this.handleChangeOrderBy}
                                     >
-                                        <MenuItem value={"name"}>Name (A->Z)</MenuItem>
-                                        <MenuItem value={"name_reverse"}>Name (Z->A)</MenuItem>
-                                        <MenuItem value={"year_increasing"}>Year (Increasing)</MenuItem>
-                                        <MenuItem value={"year_decreasing"}>Year (Decreasing)</MenuItem>
-                                        <MenuItem value={"score_increasing"}>Score (Increasing)</MenuItem>
-                                        <MenuItem value={"score_decreasing"}>Score (Decreasing)</MenuItem>
+                                        <option value={"name"}>Name (A->Z)</option>
+                                        <option value={"name_reverse"}>Name (Z->A)</option>
+                                        <option value={"year_increasing"}>Year (Increasing)</option>
+                                        <option value={"year_decreasing"}>Year (Decreasing)</option>
+                                        <option value={"score_increasing"}>Score (Increasing)</option>
+                                        <option value={"score_decreasing"}>Score (Decreasing)</option>
                                     </Select>
                                 </FormControl>
                             </Grid>
