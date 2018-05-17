@@ -10,12 +10,22 @@ import Dialog, {
 import {Link} from "react-router-dom";
 import AddIcon from '@material-ui/icons/Add';
 import {Tooltip} from "material-ui";
+import {Redirect} from "react-router";
 
 export default class BoardGameModal extends React.Component {
-    state = {
-        open: false,
-        gamename: ""
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            open: false,
+            gamename: "",
+            redirect: false
+        };
+
+        this._handleKeyPress = this._handleKeyPress.bind(this);
+    }
+
+
 
     handleClickOpen = () => {
         this.setState({ open: true });
@@ -35,7 +45,17 @@ export default class BoardGameModal extends React.Component {
         return '/search/' + q;
     }
 
+    _handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            console.log(this.context);
+            this.setState({redirect: true});
+        }
+    }
+
     render() {
+        if (this.state.redirect) {
+            return <Redirect push to={this.build_uri(this.state.gamename)} />;
+        }
         return (
             <div style={{paddingTop: 60}}>
                 <Tooltip id="tooltip-fab" title="Add" placement="bottom">
@@ -64,6 +84,7 @@ export default class BoardGameModal extends React.Component {
                             value={this.state.gamename}
                             onChange={this.handleChange('gamename')}
                             fullWidth
+                            onKeyPress={this._handleKeyPress}
                         />
                     </DialogContent>
                     <DialogActions>
