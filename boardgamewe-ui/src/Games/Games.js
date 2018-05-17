@@ -7,8 +7,8 @@ import {
     Collapse,
     Dialog,
     DialogActions, DialogContent, DialogContentText,
-    DialogTitle,
-    ExpansionPanel,
+    DialogTitle, Divider,
+    ExpansionPanel, ExpansionPanelActions,
     ExpansionPanelDetails,
     ExpansionPanelSummary, Grid,
     GridList,
@@ -27,9 +27,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarIcon from '@material-ui/icons/Star';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Link from "react-router-dom/es/Link";
 
 import RankingTable from "../Rankings/RankingTable";
+import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 
 const styles = theme => ({
     root: {
@@ -39,7 +41,7 @@ const styles = theme => ({
     },
 
     mobileRoot: {
-        width: '95%',
+        width: '100%',
         marginRight: 'auto',
         marginLeft: 'auto'
     },
@@ -60,6 +62,10 @@ const styles = theme => ({
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
     },
+
+    tableWrapper: {
+        overflowX: 'auto',
+    }
 });
 
 class Games extends React.Component {
@@ -77,6 +83,8 @@ class Games extends React.Component {
             isLoading: true,
             snackbar_error: false,
             open_modal: false,
+            confirm_delete_open: false,
+            game_to_delete: null,
 
             is_mobile: window.innerWidth < Games.IS_MOBILE_THRESHOLD
         };
@@ -84,10 +92,12 @@ class Games extends React.Component {
         this.spacing = 10;
 
         // Bind this
+        this.reload = this.reload.bind(this);
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this);
+        this.handleDeleteGame = this.handleDeleteGame.bind(this);
     }
 
     componentWillMount() {
@@ -101,6 +111,10 @@ class Games extends React.Component {
     };
 
     componentDidMount() {
+        this.reload()
+    }
+
+    reload() {
         this.setState({ isLoading: true });
 
         fetch('http://api.boardgameweekend.party/games')
@@ -110,15 +124,12 @@ class Games extends React.Component {
             })
             .then(function (data) {
                 console.log(data);
-                // let games = data.games.map((game) => {
-                //     game.expanded = false;
-                //     return game;
-                // });
-                this.setState({games: data, isLoading: false});
+
+                this.setState({games: data, isLoading: false, confirm_delete_open: false, game_to_delete: null});
             }.bind(this))
             .catch(error => {
                 console.log(error);
-                this.setState({games: [], isLoading: false, snackbar_error: true});
+                this.setState({games: [], isLoading: false, snackbar_error: true, confirm_delete_open: false, game_to_delete: null});
             })
     }
 
@@ -153,6 +164,25 @@ class Games extends React.Component {
         }
 
         this.setState({snackbar_error: false})
+    }
+
+    handleDeleteGame() {
+        let url = new URL('http://api.boardgameweekend.party/game/' + this.state.game_to_delete);
+
+        fetch(url, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) throw Error('Request failed');
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+                this.reload();
+            }.bind(this))
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     sortByProp(data, prop) {
@@ -198,6 +228,13 @@ class Games extends React.Component {
                     ]}>
 
                 </Snackbar>
+
+                <ConfirmDeleteDialog
+                    isOpen={this.state.confirm_delete_open}
+                    fnCancel={() => this.setState({game_to_delete: null, confirm_delete_open: false})}
+                    fnConfirm={this.handleDeleteGame}
+                    fnOnClose={() => this.setState({game_to_delete: null, confirm_delete_open: false})}/>
+
                 <div style={{width: "100%"}}>
                     <h1>Games</h1>
                 </div>
@@ -233,7 +270,7 @@ class Games extends React.Component {
 
                                     let created_at = new Date(game.createdAt);
                                     return (
-                                        <ExpansionPanel key={game.id}>
+                                        <ExpansionPanel key={game.id} >
                                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                                 <Typography className={classes.heading}>{game.board_game.name}</Typography>
                                                 <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
@@ -248,14 +285,27 @@ class Games extends React.Component {
                                                         justify="flex-start"
                                                     >
                                                         <Grid item>
-                                                            <RankingTable
-                                                                ranking={game.players}
-                                                                modifier={a => a}
-                                                                isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
+                                                            <div className={classes.tableWrapper}>
+                                                                <RankingTable
+                                                                    ranking={game.players}
+                                                                    modifier={a => a}
+                                                                    isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
+                                                            </div>
+
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
                                             </ExpansionPanelDetails>
+                                            <Divider />
+                                            <ExpansionPanelActions>
+                                                <IconButton
+                                                    key="close"
+                                                    aria-label="Close"
+                                                    color="inherit"
+                                                    onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game.id})}>
+                                                    <DeleteIcon/>
+                                                </IconButton>
+                                            </ExpansionPanelActions>
                                         </ExpansionPanel>
                                     )
                                 })
