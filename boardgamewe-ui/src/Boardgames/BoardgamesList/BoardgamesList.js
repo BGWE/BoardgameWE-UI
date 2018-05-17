@@ -19,6 +19,8 @@ import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
+import PersonIcon from '@material-ui/icons/Person';
+import PeopleIcon from '@material-ui/icons/People';
 
 
 const styles = theme => ({
@@ -47,18 +49,6 @@ const styles = theme => ({
     }
 });
 
-
-const tileData = [
-    {"id":4,"name":"Scythe","bgg_id":169786,"bgg_score":8.29447,"gameplay_video_url":"","min_players":1,"max_players":5,"min_playing_time":115,"max_playing_time":90,"playing_time":115,"thumbnail":"https://cf.geekdo-images.com/thumb/img/ZpuWhZuKrFry__SY8CTRuQp35rk=/fit-in/200x150/pic3163924.jpg","image":"https://cf.geekdo-images.com/original/img/enxCZt0Cn78-rlvmPvGtOej1ios=/0x0/pic3163924.jpg","description":"It is a time of unrest in 1920s Europa. The ashes from the first great war still darken the snow. The capitalistic city-state known simply as &ldquo;The Factory&rdquo;, which fueled the war with heavily armored mechs, has closed its doors, drawing the attention of several nearby countries.&#10;&#10;Scythe is an engine-building game set in an alternate-history 1920s period. It is a time of farming and war, broken hearts and rusted gears, innovation and valor. In Scythe, each player represents a character from one of five factions of Eastern Europe who are attempting to earn their fortune and claim their faction's stake in the land around the mysterious Factory. Players conquer territory, enlist new recruits, reap resources, gain villagers, build structures, and activate monstrous mechs.&#10;&#10;Each player begins the game with different resources (power, coins, combat acumen, and popularity), a different starting location, and a hidden goal. Starting positions are specially calibrated to contribute to each faction&rsquo;s uniqueness and the asymmetrical nature of the game (each faction always starts in the same place).&#10;&#10;Scythe gives players almost complete control over their fate. Other than each player&rsquo;s individual hidden objective card, the only elements of luck or variability are &ldquo;encounter&rdquo; cards that players will draw as they interact with the citizens of newly explored lands. Each encounter card provides the player with several options, allowing them to mitigate the luck of the draw through their selection. Combat is also driven by choices, not luck or randomness.&#10;&#10;Scythe uses a streamlined action-selection mechanism (no rounds or phases) to keep gameplay moving at a brisk pace and reduce downtime between turns. While there is plenty of direct conflict for players who seek it, there is no player elimination.&#10;&#10;Every part of Scythe has an aspect of engine-building to it. Players can upgrade actions to become more efficient, build structures that improve their position on the map, enlist new recruits to enhance character abilities, activate mechs to deter opponents from invading, and expand their borders to reap greater types and quantities of resources. These engine-building aspects create a sense of momentum and progress throughout the game. The order in which players improve their engine adds to the unique feel of each game, even when playing one faction multiple times.&#10;&#10;","year_published":2016,"category":"Civilization,Economic,Fighting,Miniatures,Science Fiction,Territory Building","mechanic":"Area Control / Area Influence,Grid Movement,Simultaneous Action Selection,Variable Player Powers","family":"Alternate History,Components: Miniatures,Crowdfunding: Kickstarter,Scythe,Solitaire Games,Tableau Building","createdAt":"2018-05-11T10:05:27.225Z","updatedAt":"2018-05-11T10:05:27.225Z"},
-    {"id":5,"name":"Azul","bgg_id":230802,"bgg_score":8.01788,"gameplay_video_url":null,"min_players":2,"max_players":4,"min_playing_time":45,"max_playing_time":30,"playing_time":45,"thumbnail":"https://cf.geekdo-images.com/thumb/img/_ed_JktpgFwTr2WjEQgYMzHBvOQ=/fit-in/200x150/pic3718275.jpg","image":"https://cf.geekdo-images.com/original/img/9-SR48jyfxs4At6255sjHoly2sw=/0x0/pic3718275.jpg","description":"Introduced by the Moors, azulejos (originally white and blue ceramic tiles) were fully embraced by the Portuguese when their king Manuel I, on a visit to the Alhambra palace in Southern Spain, was mesmerized by the stunning beauty of the Moorish decorative tiles. The king, awestruck by the interior beauty of the Alhambra, immediately ordered that his own palace in Portugal be decorated with similar wall tiles. As a tile-laying artist, you have been challenged to embellish the walls of the Royal Palace of Evora.&#10;&#10;In the game Azul, players take turns drafting colored tiles from suppliers to their player board. Later in the round, players score points based on how they've placed their tiles to decorate the palace. Extra points are scored for specific patterns and completing sets; wasted supplies harm the player's score. The player with the most points at the end of the game wins.&#10;&#10;","year_published":2017,"category":"Abstract Strategy","mechanic":"Pattern Building,Set Collection,Tile Placement","family":"Country: Portugal","createdAt":"2018-05-11T11:09:09.928Z","updatedAt":"2018-05-11T11:09:09.928Z"},
-    {"id":6,"name":"Azul","bgg_id":230802,"bgg_score":8.01788,"gameplay_video_url":null,"min_players":2,"max_players":4,"min_playing_time":45,"max_playing_time":30,"playing_time":45,"thumbnail":"https://cf.geekdo-images.com/thumb/img/_ed_JktpgFwTr2WjEQgYMzHBvOQ=/fit-in/200x150/pic3718275.jpg","image":"https://cf.geekdo-images.com/original/img/9-SR48jyfxs4At6255sjHoly2sw=/0x0/pic3718275.jpg","description":"Introduced by the Moors, azulejos (originally white and blue ceramic tiles) were fully embraced by the Portuguese when their king Manuel I, on a visit to the Alhambra palace in Southern Spain, was mesmerized by the stunning beauty of the Moorish decorative tiles. The king, awestruck by the interior beauty of the Alhambra, immediately ordered that his own palace in Portugal be decorated with similar wall tiles. As a tile-laying artist, you have been challenged to embellish the walls of the Royal Palace of Evora.&#10;&#10;In the game Azul, players take turns drafting colored tiles from suppliers to their player board. Later in the round, players score points based on how they've placed their tiles to decorate the palace. Extra points are scored for specific patterns and completing sets; wasted supplies harm the player's score. The player with the most points at the end of the game wins.&#10;&#10;","category":"Abstract Strategy","mechanic":"Pattern Building,Set Collection,Tile Placement","family":"Country: Portugal","createdAt":"2018-05-11T11:09:09.928Z","updatedAt":"2018-05-11T11:09:09.928Z"},
-    {"id":7,"name":"Scythe","bgg_id":169786,"bgg_score":8.29447,"gameplay_video_url":"","min_players":1,"max_players":5,"min_playing_time":115,"max_playing_time":90,"playing_time":115,"thumbnail":"https://cf.geekdo-images.com/thumb/img/ZpuWhZuKrFry__SY8CTRuQp35rk=/fit-in/200x150/pic3163924.jpg","image":"https://cf.geekdo-images.com/original/img/enxCZt0Cn78-rlvmPvGtOej1ios=/0x0/pic3163924.jpg","description":"It is a time of unrest in 1920s Europa. The ashes from the first great war still darken the snow. The capitalistic city-state known simply as &ldquo;The Factory&rdquo;, which fueled the war with heavily armored mechs, has closed its doors, drawing the attention of several nearby countries.&#10;&#10;Scythe is an engine-building game set in an alternate-history 1920s period. It is a time of farming and war, broken hearts and rusted gears, innovation and valor. In Scythe, each player represents a character from one of five factions of Eastern Europe who are attempting to earn their fortune and claim their faction's stake in the land around the mysterious Factory. Players conquer territory, enlist new recruits, reap resources, gain villagers, build structures, and activate monstrous mechs.&#10;&#10;Each player begins the game with different resources (power, coins, combat acumen, and popularity), a different starting location, and a hidden goal. Starting positions are specially calibrated to contribute to each faction&rsquo;s uniqueness and the asymmetrical nature of the game (each faction always starts in the same place).&#10;&#10;Scythe gives players almost complete control over their fate. Other than each player&rsquo;s individual hidden objective card, the only elements of luck or variability are &ldquo;encounter&rdquo; cards that players will draw as they interact with the citizens of newly explored lands. Each encounter card provides the player with several options, allowing them to mitigate the luck of the draw through their selection. Combat is also driven by choices, not luck or randomness.&#10;&#10;Scythe uses a streamlined action-selection mechanism (no rounds or phases) to keep gameplay moving at a brisk pace and reduce downtime between turns. While there is plenty of direct conflict for players who seek it, there is no player elimination.&#10;&#10;Every part of Scythe has an aspect of engine-building to it. Players can upgrade actions to become more efficient, build structures that improve their position on the map, enlist new recruits to enhance character abilities, activate mechs to deter opponents from invading, and expand their borders to reap greater types and quantities of resources. These engine-building aspects create a sense of momentum and progress throughout the game. The order in which players improve their engine adds to the unique feel of each game, even when playing one faction multiple times.&#10;&#10;","year_published":2016,"category":"Civilization,Economic,Fighting,Miniatures,Science Fiction,Territory Building","mechanic":"Area Control / Area Influence,Grid Movement,Simultaneous Action Selection,Variable Player Powers","family":"Alternate History,Components: Miniatures,Crowdfunding: Kickstarter,Scythe,Solitaire Games,Tableau Building","createdAt":"2018-05-11T10:05:27.225Z","updatedAt":"2018-05-11T10:05:27.225Z"},
-    {"id":8,"name":"Azul","bgg_id":230802,"bgg_score":8.01788,"gameplay_video_url":null,"min_players":2,"max_players":4,"min_playing_time":45,"max_playing_time":30,"playing_time":45,"thumbnail":"https://cf.geekdo-images.com/thumb/img/_ed_JktpgFwTr2WjEQgYMzHBvOQ=/fit-in/200x150/pic3718275.jpg","image":"https://cf.geekdo-images.com/original/img/9-SR48jyfxs4At6255sjHoly2sw=/0x0/pic3718275.jpg","description":"Introduced by the Moors, azulejos (originally white and blue ceramic tiles) were fully embraced by the Portuguese when their king Manuel I, on a visit to the Alhambra palace in Southern Spain, was mesmerized by the stunning beauty of the Moorish decorative tiles. The king, awestruck by the interior beauty of the Alhambra, immediately ordered that his own palace in Portugal be decorated with similar wall tiles. As a tile-laying artist, you have been challenged to embellish the walls of the Royal Palace of Evora.&#10;&#10;In the game Azul, players take turns drafting colored tiles from suppliers to their player board. Later in the round, players score points based on how they've placed their tiles to decorate the palace. Extra points are scored for specific patterns and completing sets; wasted supplies harm the player's score. The player with the most points at the end of the game wins.&#10;&#10;","year_published":2017,"category":"Abstract Strategy","mechanic":"Pattern Building,Set Collection,Tile Placement","family":"Country: Portugal","createdAt":"2018-05-11T11:09:09.928Z","updatedAt":"2018-05-11T11:09:09.928Z"},
-    {"id":9,"name":"Azul","bgg_id":230802,"bgg_score":8.01788,"gameplay_video_url":null,"min_players":2,"max_players":4,"min_playing_time":45,"max_playing_time":30,"playing_time":45,"thumbnail":"https://cf.geekdo-images.com/thumb/img/_ed_JktpgFwTr2WjEQgYMzHBvOQ=/fit-in/200x150/pic3718275.jpg","image":"https://cf.geekdo-images.com/original/img/9-SR48jyfxs4At6255sjHoly2sw=/0x0/pic3718275.jpg","description":"Introduced by the Moors, azulejos (originally white and blue ceramic tiles) were fully embraced by the Portuguese when their king Manuel I, on a visit to the Alhambra palace in Southern Spain, was mesmerized by the stunning beauty of the Moorish decorative tiles. The king, awestruck by the interior beauty of the Alhambra, immediately ordered that his own palace in Portugal be decorated with similar wall tiles. As a tile-laying artist, you have been challenged to embellish the walls of the Royal Palace of Evora.&#10;&#10;In the game Azul, players take turns drafting colored tiles from suppliers to their player board. Later in the round, players score points based on how they've placed their tiles to decorate the palace. Extra points are scored for specific patterns and completing sets; wasted supplies harm the player's score. The player with the most points at the end of the game wins.&#10;&#10;","category":"Abstract Strategy","mechanic":"Pattern Building,Set Collection,Tile Placement","family":"Country: Portugal","createdAt":"2018-05-11T11:09:09.928Z","updatedAt":"2018-05-11T11:09:09.928Z"},
-    {"id":10,"name":"Scythe","bgg_id":169786,"bgg_score":8.29447,"gameplay_video_url":"","min_players":1,"max_players":5,"min_playing_time":115,"max_playing_time":90,"playing_time":115,"thumbnail":"https://cf.geekdo-images.com/thumb/img/ZpuWhZuKrFry__SY8CTRuQp35rk=/fit-in/200x150/pic3163924.jpg","image":"https://cf.geekdo-images.com/original/img/enxCZt0Cn78-rlvmPvGtOej1ios=/0x0/pic3163924.jpg","description":"It is a time of unrest in 1920s Europa. The ashes from the first great war still darken the snow. The capitalistic city-state known simply as &ldquo;The Factory&rdquo;, which fueled the war with heavily armored mechs, has closed its doors, drawing the attention of several nearby countries.&#10;&#10;Scythe is an engine-building game set in an alternate-history 1920s period. It is a time of farming and war, broken hearts and rusted gears, innovation and valor. In Scythe, each player represents a character from one of five factions of Eastern Europe who are attempting to earn their fortune and claim their faction's stake in the land around the mysterious Factory. Players conquer territory, enlist new recruits, reap resources, gain villagers, build structures, and activate monstrous mechs.&#10;&#10;Each player begins the game with different resources (power, coins, combat acumen, and popularity), a different starting location, and a hidden goal. Starting positions are specially calibrated to contribute to each faction&rsquo;s uniqueness and the asymmetrical nature of the game (each faction always starts in the same place).&#10;&#10;Scythe gives players almost complete control over their fate. Other than each player&rsquo;s individual hidden objective card, the only elements of luck or variability are &ldquo;encounter&rdquo; cards that players will draw as they interact with the citizens of newly explored lands. Each encounter card provides the player with several options, allowing them to mitigate the luck of the draw through their selection. Combat is also driven by choices, not luck or randomness.&#10;&#10;Scythe uses a streamlined action-selection mechanism (no rounds or phases) to keep gameplay moving at a brisk pace and reduce downtime between turns. While there is plenty of direct conflict for players who seek it, there is no player elimination.&#10;&#10;Every part of Scythe has an aspect of engine-building to it. Players can upgrade actions to become more efficient, build structures that improve their position on the map, enlist new recruits to enhance character abilities, activate mechs to deter opponents from invading, and expand their borders to reap greater types and quantities of resources. These engine-building aspects create a sense of momentum and progress throughout the game. The order in which players improve their engine adds to the unique feel of each game, even when playing one faction multiple times.&#10;&#10;","year_published":2016,"category":"Civilization,Economic,Fighting,Miniatures,Science Fiction,Territory Building","mechanic":"Area Control / Area Influence,Grid Movement,Simultaneous Action Selection,Variable Player Powers","family":"Alternate History,Components: Miniatures,Crowdfunding: Kickstarter,Scythe,Solitaire Games,Tableau Building","createdAt":"2018-05-11T10:05:27.225Z","updatedAt":"2018-05-11T10:05:27.225Z"},
-    {"id":11,"name":"Azul","bgg_id":230802,"bgg_score":8.01788,"gameplay_video_url":null,"min_players":2,"max_players":4,"min_playing_time":45,"max_playing_time":30,"playing_time":45,"thumbnail":"https://cf.geekdo-images.com/thumb/img/_ed_JktpgFwTr2WjEQgYMzHBvOQ=/fit-in/200x150/pic3718275.jpg","image":"https://cf.geekdo-images.com/original/img/9-SR48jyfxs4At6255sjHoly2sw=/0x0/pic3718275.jpg","description":"Introduced by the Moors, azulejos (originally white and blue ceramic tiles) were fully embraced by the Portuguese when their king Manuel I, on a visit to the Alhambra palace in Southern Spain, was mesmerized by the stunning beauty of the Moorish decorative tiles. The king, awestruck by the interior beauty of the Alhambra, immediately ordered that his own palace in Portugal be decorated with similar wall tiles. As a tile-laying artist, you have been challenged to embellish the walls of the Royal Palace of Evora.&#10;&#10;In the game Azul, players take turns drafting colored tiles from suppliers to their player board. Later in the round, players score points based on how they've placed their tiles to decorate the palace. Extra points are scored for specific patterns and completing sets; wasted supplies harm the player's score. The player with the most points at the end of the game wins.&#10;&#10;","year_published":2017,"category":"Abstract Strategy","mechanic":"Pattern Building,Set Collection,Tile Placement","family":"Country: Portugal","createdAt":"2018-05-11T11:09:09.928Z","updatedAt":"2018-05-11T11:09:09.928Z"}
-    ];
-
 class TitlebarGridList extends React.Component {
     constructor(props) {
         super(props);
@@ -72,6 +62,8 @@ class TitlebarGridList extends React.Component {
             open_confirmation_dialog: false,
             confirm_delete_game_id: "",
             confirm_delete_game_name: "",
+            min_player: 0,
+            max_player: 0,
 
             filter_name: "",
             orderby: "name"
@@ -88,6 +80,8 @@ class TitlebarGridList extends React.Component {
         this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
         this.handleChangeFilterText = this.handleChangeFilterText.bind(this);
         this.handleChangeOrderBy = this.handleChangeOrderBy.bind(this);
+        this.handleChangeMinPlayer = this.handleChangeMinPlayer.bind(this);
+        this.handleChangeMaxPlayer = this.handleChangeMaxPlayer.bind(this);
     }
 
     componentWillMount() {
@@ -167,6 +161,16 @@ class TitlebarGridList extends React.Component {
         }
 
         return []
+    }
+
+    filter(games) {
+        let filtered_hits = this.state.board_games.filter(suggestion => {
+
+            return (!this.state.filter_name || suggestion.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
+                (this.state.min_player <= 0 || (suggestion.min_players <= this.state.min_player && this.state.min_player <= suggestion.max_players)) &&
+                (this.state.max_player <= 0 || (suggestion.max_players >= this.state.max_player&& this.state.max_player >= suggestion.min_players));
+        });
+        return filtered_hits;
     }
 
     static get_number_of_columns_from_width(width) {
@@ -257,17 +261,27 @@ class TitlebarGridList extends React.Component {
     handleChangeFilterText(event) {
         let value = event.target.value;
 
-        let filtered_hits = this.state.board_games.filter(suggestion => {
-            return (!value || suggestion.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-        });
+        // let filtered_hits = this.state.board_games.filter(suggestion => {
+        //     return (!value || suggestion.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+        // });
 
-        this.setState({filter_name: event.target.value, hits: filtered_hits})
+        this.setState({filter_name: event.target.value})
     }
 
     handleChangeOrderBy(event) {
         let value = event.target.value;
         console.log(value);
         this.setState({orderby: value});
+    }
+
+    handleChangeMinPlayer(event) {
+        let value = event.target.value;
+        this.setState({min_player: value})
+    }
+
+    handleChangeMaxPlayer(event) {
+        let value = event.target.value;
+        this.setState({max_player: value})
     }
 
     render () {
@@ -332,6 +346,7 @@ class TitlebarGridList extends React.Component {
                               direction="row"
                               alignItems="center"
                               spacing={16}>
+
                             <Grid key="filter_item" item>
                                 <TextField
                                     id="filter"
@@ -349,6 +364,7 @@ class TitlebarGridList extends React.Component {
                                     }}
                                 />
                             </Grid>
+
                             <Grid key="order_by_item" item style={{marginTop: "8px"}}>
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="order">Order</InputLabel>
@@ -366,6 +382,45 @@ class TitlebarGridList extends React.Component {
                                     </Select>
                                 </FormControl>
                             </Grid>
+
+                            <Grid key="filter_min_player" item>
+                                <TextField
+                                    id="filter_min_player"
+                                    label="Min player"
+                                    className={classes.textField}
+                                    value={this.state.min_player}
+                                    onChange={this.handleChangeMinPlayer}
+                                    margin="normal"
+                                    style={{width: "80px"}}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <PersonIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            </Grid>
+
+                            <Grid key="filter_max_player" item>
+                                <TextField
+                                    id="filter_max_player"
+                                    label="Max player"
+                                    className={classes.textField}
+                                    value={this.state.max_player}
+                                    onChange={this.handleChangeMaxPlayer}
+                                    margin="normal"
+                                    style={{width: "80px"}}
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <PeopleIcon />
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                            </Grid>
+
                         </Grid>
                     </Grid>
                 </Grid>
@@ -377,7 +432,7 @@ class TitlebarGridList extends React.Component {
                             <GridListTile key="add">
                                 <AddGame />
                             </GridListTile>
-                            {this.order(this.state.hits).map(tile => (
+                            {this.order(this.filter((this.state.hits))).map(tile => (
                                 <GridListTile key={tile.id} className={classes.tile}>
                                     <img src={tile.thumbnail} alt={tile.name} />
                                     {
