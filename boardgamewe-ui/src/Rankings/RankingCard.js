@@ -86,7 +86,7 @@ class Rankings extends React.Component {
                     <div className={classes.rightColumn} align="right">
                         <Chip
                             className={classes.chip}
-                            avatar={<Avatar style={{backgroundColor: "#FFD700"}}>1</Avatar>}
+                            avatar={<Avatar style={{backgroundColor: "#FFD700"}}>1<sup>st</sup></Avatar>}
                             label={this.props.value}/>
                     </div>
                 </ExpansionPanelSummary>

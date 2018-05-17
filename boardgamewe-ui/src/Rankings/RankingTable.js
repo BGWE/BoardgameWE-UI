@@ -42,6 +42,10 @@ const styles = theme => ({
     boldCell: {
         padding: "5px",
         fontWeight: "bold"
+    },
+
+    winnerCell: {
+        fontWeight: 'bold',
     }
 });
 
@@ -81,9 +85,9 @@ class RankingTable extends React.Component {
                     {this.props.ranking.slice(0, 10).map(player => (
                         <TableRow key={player.player.id} className={player.win ? classes.winnerRow : null}>
                             <TableCell className={classes.iconCell}>{this.getIcon(player.rank, classes)}</TableCell>
-                            <TableCell>{player.rank}</TableCell>
-                            <TableCell>{player.player.name.split(" ")[0]}</TableCell>
-                            <TableCell>{this.props.modifier(player.score)}</TableCell>
+                            <TableCell className={player.win ? classes.winnerCell : null}>{player.rank}</TableCell>
+                            <TableCell className={player.win ? classes.winnerCell : null}>{player.player.name.split(" ")[0]}</TableCell>
+                            <TableCell className={player.win ? classes.winnerCell : null}>{this.props.modifier(player.score)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
