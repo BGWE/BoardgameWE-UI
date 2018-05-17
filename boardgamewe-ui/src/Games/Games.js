@@ -39,7 +39,7 @@ const styles = theme => ({
     },
 
     mobileRoot: {
-        width: '95%',
+        width: '100%',
         marginRight: 'auto',
         marginLeft: 'auto'
     },
@@ -60,6 +60,10 @@ const styles = theme => ({
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
     },
+
+    tableWrapper: {
+        overflowX: 'auto',
+    }
 });
 
 class Games extends React.Component {
@@ -233,7 +237,7 @@ class Games extends React.Component {
 
                                     let created_at = new Date(game.createdAt);
                                     return (
-                                        <ExpansionPanel key={game.id}>
+                                        <ExpansionPanel key={game.id} >
                                             <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                                 <Typography className={classes.heading}>{game.board_game.name}</Typography>
                                                 <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
@@ -248,10 +252,13 @@ class Games extends React.Component {
                                                         justify="flex-start"
                                                     >
                                                         <Grid item>
-                                                            <RankingTable
-                                                                ranking={game.players}
-                                                                modifier={a => a}
-                                                                isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
+                                                            <div className={classes.tableWrapper}>
+                                                                <RankingTable
+                                                                    ranking={game.players}
+                                                                    modifier={a => a}
+                                                                    isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
+                                                            </div>
+
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
