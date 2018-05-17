@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {
+    Avatar, Chip,
     ExpansionPanel,
     ExpansionPanelDetails,
     ExpansionPanelSummary
 } from "material-ui";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
 import RANK_COLORS from './RankingTable';
+
 
 const styles = theme => ({
     root: {
