@@ -105,6 +105,8 @@ class AddGame extends React.Component {
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
         this.handleRankingMethodChange = this.handleRankingMethodChange.bind(this);
         this.handleCheckBox = this.handleCheckBox.bind(this);
+        this.handleRemoveWinLose = this.handleRemoveWinLose.bind(this);
+        this.handleRemoveScore = this.handleRemoveScore.bind(this);
     }
 
     componentDidMount() {
@@ -371,7 +373,7 @@ class AddGame extends React.Component {
         else {
             payload["players"] = this.state.scores.map(elem => {
                 return {
-                    'score': elem.score,
+                    'score': elem.win ? 1 : 0,
                     'player': elem.player.id
                 }
             })
@@ -396,6 +398,24 @@ class AddGame extends React.Component {
     handleCheckBox(event) {
         console.log(event.target.checked);
         this.setState({is_winner: event.target.checked});
+    }
+
+    handleRemoveScore(p_score) {
+        console.log(p_score);
+        let current_scores = this.state.scores;
+
+        this.setState({scores: current_scores.filter(function (_score) {
+                return !(_score.player.name === p_score.player.name && _score.score === p_score.score)
+            })})
+    }
+
+    handleRemoveWinLose(p_score) {
+        console.log(p_score);
+        let current_scores = this.state.win_lose_scores;
+
+        this.setState({win_lose_scores: current_scores.filter(function (_score) {
+                return !(_score.player.name === p_score.player.name && _score.win === p_score.win)
+            })})
     }
 
     render () {
@@ -669,6 +689,7 @@ class AddGame extends React.Component {
                                             <Table className={classes.table}>
                                                 <TableHead>
                                                     <TableRow>
+                                                        <TableCell padding="checkbox"/>
                                                         <TableCell>Player</TableCell>
                                                         <TableCell>Score</TableCell>
                                                     </TableRow>
@@ -678,6 +699,16 @@ class AddGame extends React.Component {
                                                         this.state.scores.map(p_score => {
                                                             return (
                                                                 <TableRow key={p_score.player.id}>
+                                                                    <TableCell padding="checkbox">
+                                                                        <IconButton
+                                                                        key="close"
+                                                                        aria-label="Close"
+                                                                        color="inherit"
+                                                                        onClick={() => this.handleRemoveScore(p_score)}
+                                                                        size={"small"}>
+                                                                            <CloseIcon/>
+                                                                        </IconButton>
+                                                                    </TableCell>
                                                                     <TableCell component="th" scope="row">
                                                                         {p_score.player.name}
                                                                     </TableCell>
@@ -694,6 +725,7 @@ class AddGame extends React.Component {
                                             <Table className={classes.table}>
                                                 <TableHead>
                                                     <TableRow>
+                                                        <TableCell padding="checkbox"/>
                                                         <TableCell>Player</TableCell>
                                                         <TableCell>Winner</TableCell>
                                                     </TableRow>
@@ -703,6 +735,16 @@ class AddGame extends React.Component {
                                                         this.state.win_lose_scores.map(p_score => {
                                                             return (
                                                                 <TableRow key={p_score.player.id}>
+                                                                    <TableCell padding="checkbox">
+                                                                        <IconButton
+                                                                            key="close"
+                                                                            aria-label="Close"
+                                                                            color="inherit"
+                                                                            onClick={() => this.handleRemoveWinLose(p_score)}
+                                                                            size={"small"}>
+                                                                            <CloseIcon/>
+                                                                        </IconButton>
+                                                                    </TableCell>
                                                                     <TableCell component="th" scope="row">
                                                                         {p_score.player.name}
                                                                     </TableCell>
