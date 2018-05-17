@@ -31,6 +31,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Link from "react-router-dom/es/Link";
 
 import RankingTable from "../Rankings/RankingTable";
+import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 
 const styles = theme => ({
     root: {
@@ -82,6 +83,8 @@ class Games extends React.Component {
             isLoading: true,
             snackbar_error: false,
             open_modal: false,
+            confirm_delete_open: false,
+            game_to_delete: null,
 
             is_mobile: window.innerWidth < Games.IS_MOBILE_THRESHOLD
         };
@@ -121,15 +124,12 @@ class Games extends React.Component {
             })
             .then(function (data) {
                 console.log(data);
-                // let games = data.games.map((game) => {
-                //     game.expanded = false;
-                //     return game;
-                // });
-                this.setState({games: data, isLoading: false});
+
+                this.setState({games: data, isLoading: false, confirm_delete_open: false, game_to_delete: null});
             }.bind(this))
             .catch(error => {
                 console.log(error);
-                this.setState({games: [], isLoading: false, snackbar_error: true});
+                this.setState({games: [], isLoading: false, snackbar_error: true, confirm_delete_open: false, game_to_delete: null});
             })
     }
 
@@ -166,8 +166,8 @@ class Games extends React.Component {
         this.setState({snackbar_error: false})
     }
 
-    handleDeleteGame(game_id) {
-        let url = new URL('http://api.boardgameweekend.party/game/' + game_id);
+    handleDeleteGame() {
+        let url = new URL('http://api.boardgameweekend.party/game/' + this.state.game_to_delete);
 
         fetch(url, {
             method: 'DELETE',
@@ -228,6 +228,13 @@ class Games extends React.Component {
                     ]}>
 
                 </Snackbar>
+
+                <ConfirmDeleteDialog
+                    isOpen={this.state.confirm_delete_open}
+                    fnCancel={() => this.setState({game_to_delete: null, confirm_delete_open: false})}
+                    fnConfirm={this.handleDeleteGame}
+                    fnOnClose={() => this.setState({game_to_delete: null, confirm_delete_open: false})}/>
+
                 <div style={{width: "100%"}}>
                     <h1>Games</h1>
                 </div>
@@ -295,7 +302,7 @@ class Games extends React.Component {
                                                     key="close"
                                                     aria-label="Close"
                                                     color="inherit"
-                                                    onClick={() => this.handleDeleteGame(game.id)}>
+                                                    onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game.id})}>
                                                     <DeleteIcon/>
                                                 </IconButton>
                                             </ExpansionPanelActions>
