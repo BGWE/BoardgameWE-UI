@@ -2,38 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {
-    Button,
-    CircularProgress,
-    Collapse,
-    Dialog,
-    DialogActions, DialogContent, DialogContentText,
-    DialogTitle,
-    ExpansionPanel,
-    ExpansionPanelDetails,
-    ExpansionPanelSummary, Grid,
-    GridList,
-    IconButton, InputAdornment,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText, MenuItem, Paper,
+    Button, Checkbox,
+    CircularProgress, FormControl, FormControlLabel, Grid,
+    IconButton, InputAdornment, InputLabel,
+    MenuItem, Paper, Select,
     Snackbar, Table, TableBody, TableCell, TableHead, TableRow, TextField,
 
     Typography
 } from "material-ui";
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import StarIcon from '@material-ui/icons/Star';
-import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
-import Link from "react-router-dom/es/Link";
 
-import AddGameModal from './AddGameModal'
 import Downshift from "downshift";
-import Boardgame from "../Boardgames/Boardgame/Boardgame";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import PersonAdd from "@material-ui/icons/PersonAdd";
+
+import Star from '@material-ui/icons/Star';
+import StarBorder from '@material-ui/icons/StarBorder';
 
 const styles = theme => ({
     root: {
@@ -77,7 +62,12 @@ const styles = theme => ({
 
     score: {
         width: "55px"
-    }
+    },
+
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 150,
+    },
 });
 
 class AddGame extends React.Component {
@@ -90,12 +80,18 @@ class AddGame extends React.Component {
             board_games: [],
             players: [],
             scores: [],
+            win_lose_scores: [],
 
             isLoading: false,
 
             selected_board_game: null,
+
+            ranking_method: "ranked",
+
             selected_player: null,
             current_score: "",
+
+            is_winner: false,
 
             fetch_error: false,
             no_bg_selected_open: false,
@@ -107,6 +103,8 @@ class AddGame extends React.Component {
         this.handleChangeScore = this.handleChangeScore.bind(this);
         this.handleAddGame = this.handleAddGame.bind(this);
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
+        this.handleRankingMethodChange = this.handleRankingMethodChange.bind(this);
+        this.handleCheckBox = this.handleCheckBox.bind(this);
     }
 
     componentDidMount() {
@@ -163,6 +161,12 @@ class AddGame extends React.Component {
     sortByProp(data, prop) {
         return new Map([...data.entries()].sort((a, b) => a[1][prop] > b[1][prop]));
     };
+
+
+    handleRankingMethodChange(event) {
+        this.setState({ranking_method: event.target.value});
+    }
+
 
     static renderInputBg(inputProps) {
         const { InputProps, classes, ref, ...other } = inputProps;
@@ -302,13 +306,27 @@ class AddGame extends React.Component {
 
     handleAddNewScore() {
         console.log(this.state);
-        console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
-        let current_scores = this.state.scores;
-        current_scores.push({
-            player: this.state.selected_player,
-            score: this.state.current_score
-        });
-        this.setState({scores: current_scores, current_score: ""})
+
+        if (this.state.ranking_method === 'ranked') {
+            console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
+            let current_scores = this.state.scores;
+            current_scores.push({
+                player: this.state.selected_player,
+                score: this.state.current_score
+            });
+            this.setState({scores: current_scores, current_score: ""})
+        }
+
+        else {
+            console.log('Adding ' + this.state.selected_player.name + ' - Win:' + this.state.is_winner);
+            let current_scores = this.state.win_lose_scores;
+            current_scores.push({
+                player: this.state.selected_player,
+                win: this.state.is_winner
+            });
+            this.setState({scores: current_scores, is_winner: false})
+        }
+
     }
 
     handleAddGame() {
@@ -329,17 +347,35 @@ class AddGame extends React.Component {
 
 
         let url = new URL('http://api.boardgameweekend.party/game/');
+        let ranking_method = "";
+        if (this.state.ranking_method === "ranked") {
+            ranking_method = "POINTS_HIGHER_BETTER";
+        }
+        else {
+            ranking_method = "WIN_LOSE"
+        }
         let payload = {
-            'ranking_method': 'POINTS_HIGHER_BETTER',
+            'ranking_method': ranking_method,
             'board_game': this.state.selected_board_game.id,
-            'duration': null,
-            'players': this.state.scores.map(elem => {
+            'duration': null
+        };
+
+        if (this.state.ranking_method === "ranked") {
+            payload["players"] = this.state.scores.map(elem => {
                 return {
                     'score': elem.score,
                     'player': elem.player.id
                 }
             })
-        };
+        }
+        else {
+            payload["players"] = this.state.scores.map(elem => {
+                return {
+                    'score': elem.score,
+                    'player': elem.player.id
+                }
+            })
+        }
 
         fetch(url, {
             method: 'PUT',
@@ -355,6 +391,11 @@ class AddGame extends React.Component {
                 console.log(error);
                 this.setState({ open: false, snackbar_error: true});
             }.bind(this));
+    }
+
+    handleCheckBox(event) {
+        console.log(event.target.checked);
+        this.setState({is_winner: event.target.checked});
     }
 
     render () {
@@ -491,6 +532,34 @@ class AddGame extends React.Component {
                             </Downshift>
                         </Grid>
 
+                        <Grid item xs={12} style={{marginTop: "25px"}}>
+                            <Grid
+                                container
+                                spacing={16}
+                                alignItems="center"
+                                direction="row"
+                                justify="flex-start"
+                            >
+                                <Grid item>
+
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel htmlFor="age-native-simple">Ranking method</InputLabel>
+                                        <Select
+                                            native
+                                            value={this.state.ranking_method}
+                                            onChange={this.handleRankingMethodChange}
+                                            inputProps={{
+                                                id: 'ranking-method',
+                                            }}
+                                        >
+                                            <option value={"ranked"}>Ranked</option>
+                                            <option value={"win_lose"}>Win/Lose</option>
+                                        </Select>
+                                    </FormControl>
+
+                                </Grid>
+                            </Grid>
+                        </Grid>
 
                         <Grid item xs={12}>
                             <Grid
@@ -541,18 +610,37 @@ class AddGame extends React.Component {
                                     </Downshift>
                                 </Grid>
                                 <Grid item>
-                                    <TextField
-                                        id="score"
-                                        label="Score"
-                                        value={this.state.current_score}
-                                        onChange={this.handleChangeScore}
-                                        type="number"
-                                        className={classes.score}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        margin="normal"
-                                    />
+                                    {
+                                        this.state.ranking_method === 'ranked' ? (
+                                                <TextField
+                                                id="score"
+                                                label="Score"
+                                                value={this.state.current_score}
+                                                onChange={this.handleChangeScore}
+                                                type="number"
+                                                className={classes.score}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                margin="normal"
+                                                />
+                                            ) :
+                                            (
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            icon={<StarBorder />}
+                                                            checkedIcon={<Star />}
+                                                            checked={this.state.is_winner}
+                                                            onChange={this.handleCheckBox}/>
+                                                    }
+                                                    label="Winner"
+                                                    style={{marginTop: "10px"}}
+                                                />
+                                            )
+                                    }
+
+
                                 </Grid>
                                 <Grid item>
                                     <Button
@@ -576,30 +664,60 @@ class AddGame extends React.Component {
                                 justify="flex-start"
                             >
                                 <Grid item style={{paddingTop: "30px"}}>
-                                    <Table className={classes.table}>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>Player</TableCell>
-                                                <TableCell>Score</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {
-                                                this.state.scores.map(p_score => {
-                                                    return (
-                                                        <TableRow key={p_score.player.id}>
-                                                            <TableCell component="th" scope="row">
-                                                                {p_score.player.name}
-                                                            </TableCell>
-                                                            <TableCell>
-                                                                {p_score.score}
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    )
-                                                })
-                                            }
-                                        </TableBody>
-                                    </Table>
+                                    {
+                                        this.state.ranking_method === 'ranked' ? (
+                                            <Table className={classes.table}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell>Player</TableCell>
+                                                        <TableCell>Score</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        this.state.scores.map(p_score => {
+                                                            return (
+                                                                <TableRow key={p_score.player.id}>
+                                                                    <TableCell component="th" scope="row">
+                                                                        {p_score.player.name}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {p_score.score}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        ) : (
+                                            <Table className={classes.table}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <TableCell>Player</TableCell>
+                                                        <TableCell>Winner</TableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        this.state.win_lose_scores.map(p_score => {
+                                                            return (
+                                                                <TableRow key={p_score.player.id}>
+                                                                    <TableCell component="th" scope="row">
+                                                                        {p_score.player.name}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        {p_score.win ? "Yes" : "No"}
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                    }
+                                                </TableBody>
+                                            </Table>
+                                        )
+                                    }
+
                                 </Grid>
                             </Grid>
                         </Grid>

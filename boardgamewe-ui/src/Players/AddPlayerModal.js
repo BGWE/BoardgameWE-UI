@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import PropTypes from 'prop-types';
 
-export default class AddGameModal extends React.Component {
+export default class AddPlayerModal extends React.Component {
 
     constructor(props) {
         super(props);
@@ -183,6 +183,6 @@ export default class AddGameModal extends React.Component {
     }
 }
 
-AddGameModal.propTypes = {
+AddPlayerModal.propTypes = {
     // reload: PropTypes.object.func,
 };
