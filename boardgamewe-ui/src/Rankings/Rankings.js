@@ -69,22 +69,37 @@ const styles = theme => ({
     },
     grid_card: {
         width: "40%",
-        minWidth: "300px",
-        maxWidth: "600px"
+        minWidth: "330px",
+        // maxWidth: "600px"
     }
 });
 
 class Rankings extends React.Component {
+    static IS_MOBILE_THRESHOLD = 800;
+
     constructor(props) {
         super(props);
 
         this.state = {
             spacing: '40',
             rankings: null,
-            isLoading: true
+            isLoading: true,
+
+            is_mobile: window.innerWidth < Rankings.IS_MOBILE_THRESHOLD
         };
 
+        this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this);
     }
+
+    componentWillMount() {
+        window.addEventListener('resize', this.handleWindowSizeChange);
+    }
+
+    handleWindowSizeChange = () => {
+        console.log(window.innerWidth);
+        this.setState({ is_mobile: window.innerWidth < Rankings.IS_MOBILE_THRESHOLD })
+
+    };
 
     componentDidMount() {
         this.setState({ isLoading: true });
@@ -103,7 +118,7 @@ class Rankings extends React.Component {
         const players = this.state.rankings[ranking_name];
         if (players.length > 2 && players.slice(0, 3).every(a => a.win)) {
             return this.getFirstName(players[0]) + ", " + this.getFirstName(players[1]) + ",...";
-        }  else if (players.length === 2 && players.slice(0, 2).every(a => a.win)) {
+        }  else if (players.length >= 2 && players.slice(0, 2).every(a => a.win)) {
             return this.getFirstName(players[0]) + " & " + this.getFirstName(players[1]);
         } if (players.length > 0) {
             return this.getFirstName(players[0]);
@@ -166,7 +181,7 @@ class Rankings extends React.Component {
 
                     <Grid container className={classes.root} spacing={16}>
                         <Grid item xs>
-                            <Grid container className={classes.demo} justify="center" spacing={Number(spacing)}>
+                            <Grid container justify="center" spacing={Number(spacing)}>
                                 {rankings_info.map(info => (
                                     <Grid key={info.ranking_name} item className={classes.grid_card}>
                                         <RankingCard
