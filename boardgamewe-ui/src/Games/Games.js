@@ -7,8 +7,8 @@ import {
     Collapse,
     Dialog,
     DialogActions, DialogContent, DialogContentText,
-    DialogTitle,
-    ExpansionPanel,
+    DialogTitle, Divider,
+    ExpansionPanel, ExpansionPanelActions,
     ExpansionPanelDetails,
     ExpansionPanelSummary, Grid,
     GridList,
@@ -27,6 +27,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarIcon from '@material-ui/icons/Star';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Link from "react-router-dom/es/Link";
 
 import RankingTable from "../Rankings/RankingTable";
@@ -88,10 +89,12 @@ class Games extends React.Component {
         this.spacing = 10;
 
         // Bind this
+        this.reload = this.reload.bind(this);
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this);
+        this.handleDeleteGame = this.handleDeleteGame.bind(this);
     }
 
     componentWillMount() {
@@ -105,6 +108,10 @@ class Games extends React.Component {
     };
 
     componentDidMount() {
+        this.reload()
+    }
+
+    reload() {
         this.setState({ isLoading: true });
 
         fetch('http://api.boardgameweekend.party/games')
@@ -157,6 +164,25 @@ class Games extends React.Component {
         }
 
         this.setState({snackbar_error: false})
+    }
+
+    handleDeleteGame(game_id) {
+        let url = new URL('http://api.boardgameweekend.party/game/' + game_id);
+
+        fetch(url, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (!response.ok) throw Error('Request failed');
+                return response.json();
+            })
+            .then(function (data) {
+                console.log(data);
+                this.reload();
+            }.bind(this))
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     sortByProp(data, prop) {
@@ -263,6 +289,16 @@ class Games extends React.Component {
                                                     </Grid>
                                                 </Grid>
                                             </ExpansionPanelDetails>
+                                            <Divider />
+                                            <ExpansionPanelActions>
+                                                <IconButton
+                                                    key="close"
+                                                    aria-label="Close"
+                                                    color="inherit"
+                                                    onClick={() => this.handleDeleteGame(game.id)}>
+                                                    <DeleteIcon/>
+                                                </IconButton>
+                                            </ExpansionPanelActions>
                                         </ExpansionPanel>
                                     )
                                 })
