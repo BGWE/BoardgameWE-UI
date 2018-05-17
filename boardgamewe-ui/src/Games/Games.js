@@ -29,7 +29,6 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import Link from "react-router-dom/es/Link";
 
-import AddGameModal from './AddGameModal'
 import RankingTable from "../Rankings/RankingTable";
 
 const styles = theme => ({
