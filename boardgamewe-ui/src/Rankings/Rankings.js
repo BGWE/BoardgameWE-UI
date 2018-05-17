@@ -91,16 +91,16 @@ class Rankings extends React.Component {
         this.reload();
     }
 
-    getRankingBest (ranking_name) {
+    getRankingBest (ranking_name, modifier) {
         if (!this.state.rankings || this.state.rankings[ranking_name].length === 0) {
             return "/";
         }
 
         const best = this.state.rankings[ranking_name][0];
-        return best.player.name + " - " + best.score;
+        return best.player.name.split(" ")[0]; // + " (" + modifier(best.score) + ")";
     }
 
-    getRankingTableOrProgress (ranking_name, classes) {
+    getRankingTableOrProgress (ranking_name, modifier, classes) {
         if (!this.state.rankings) {
             return (
                 <div className={classes.root}>
@@ -110,7 +110,9 @@ class Rankings extends React.Component {
         }
 
         return (
-            <RankingTable ranking={this.state.rankings[ranking_name]}>
+            <RankingTable
+                ranking={this.state.rankings[ranking_name]}
+                modifier={modifier}>
             </RankingTable>
         );
     }
@@ -136,12 +138,12 @@ class Rankings extends React.Component {
         console.log(this.state);
 
         const rankings_info = [
-            { ranking_name: "victory_count", title: "Number of games won" },
-            { ranking_name: "defeat_count", title: "Number of games lost" },
-            { ranking_name: "victory_prop", title: "Percentage of games won" },
-            { ranking_name: "defeat_prop", title: "Percentage of games lost" },
-            { ranking_name: "count_games", title: "Number of games played" },
-            { ranking_name: "count_unique_games", title: "Number of different games played" }
+            { ranking_name: "victory_count", title: "Games won", modifier: a => a },
+            { ranking_name: "defeat_count", title: "Games lost", modifier: a => a },
+            { ranking_name: "victory_prop", title: "Games won (%)", modifier: a => Math.round(a * 100) + "%"},
+            { ranking_name: "defeat_prop", title: "Games lost (%)", modifier: a => Math.round(a * 100) + "%"},
+            { ranking_name: "count_games", title: "Games played", modifier: a => a },
+            { ranking_name: "count_unique_games", title: "Different games played", modifier: a => a }
         ];
 
         return (
@@ -157,8 +159,8 @@ class Rankings extends React.Component {
                                     <Grid key={info.ranking_name} item className={classes.grid_card}>
                                         <RankingCard
                                             title={info.title}
-                                            value={this.getRankingBest(info.ranking_name)}>
-                                            {this.getRankingTableOrProgress(info.ranking_name, classes)}
+                                            value={this.getRankingBest(info.ranking_name, info.modifier)}>
+                                            {this.getRankingTableOrProgress(info.ranking_name, info.modifier, classes)}
                                         </RankingCard>
                                     </Grid>
                                 ))}

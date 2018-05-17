@@ -224,7 +224,7 @@ class Games extends React.Component {
                                                         justify="flex-start"
                                                     >
                                                         <Grid item>
-                                                            <RankingTable ranking={game.players} />
+                                                            <RankingTable ranking={game.players} modifier={a => a}/>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>

@@ -4,10 +4,12 @@ import { withStyles } from 'material-ui/styles';
 import {
     ExpansionPanel,
     ExpansionPanelDetails,
-    ExpansionPanelSummary,
-    Typography,
+    ExpansionPanelSummary
 } from "material-ui";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Avatar from '@material-ui/core/Avatar';
+import Chip from '@material-ui/core/Chip';
+import RANK_COLORS from './RankingTable';
 
 const styles = theme => ({
     root: {
@@ -24,28 +26,37 @@ const styles = theme => ({
 
     },
     secondaryHeading: {
-        fontSize: theme.typography.pxToRem(26),
+        fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.primary,
         // "line-height": "px",
 
     },
+
     details: {
         alignItems: 'center',
     },
-    leftColumn: {
-        flexBasis: '40%',
-    },
-    rightColumn: {
-        flexBasis: '45%',
-    },
-    panelSummary: {
-        // justifyContent: 'center',
-        // display: 'flex',
-        // alignItems: 'center',
-        // width: '..',
-        // height: '..'
-    }
 
+    leftColumn: {
+        flexBasis: '100%',
+    },
+
+    logoColumn: {
+        padding: "auto"
+    },
+
+    chip: {
+        marginTop: "12px",
+        fontWeight: "bold"
+    },
+
+    avatarFirst: {
+        backgroundColor: RANK_COLORS.gold
+    },
+
+    rightColumn: {
+        marginLeft: "5px",
+        flexBasis: '40%',
+    }
 });
 
 class Rankings extends React.Component {
@@ -69,11 +80,14 @@ class Rankings extends React.Component {
         return (
             <ExpansionPanel className={classes.panel}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} className={classes.panelSummary}>
-                    <div className={classes.leftColumn}>
-                        <h2 className={classes.heading} align="center">{this.props.title}</h2>
+                    <div className={classes.leftColumn} align="left">
+                        <h4>{this.props.title}</h4>
                     </div>
-                    <div className={classes.rightColumn}>
-                        <h2>{this.props.value}</h2>
+                    <div className={classes.rightColumn} align="right">
+                        <Chip
+                            className={classes.chip}
+                            avatar={<Avatar style={{backgroundColor: "#FFD700"}}>1</Avatar>}
+                            label={this.props.value}/>
                     </div>
                 </ExpansionPanelSummary>
 
