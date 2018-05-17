@@ -38,6 +38,12 @@ const styles = theme => ({
         marginLeft: 'auto'
     },
 
+    mobileRoot: {
+        width: '95%',
+        marginRight: 'auto',
+        marginLeft: 'auto'
+    },
+
     gridList: {
         width: '80%',
         'padding-left': 0,
@@ -57,15 +63,22 @@ const styles = theme => ({
 });
 
 class Games extends React.Component {
+
+    static IS_MOBILE_THRESHOLD = 800;
+
     constructor(props) {
         super(props);
+
+        console.log(window.innerWidth < Games.IS_MOBILE_THRESHOLD);
 
         this.state = {
             games: [],
             n_cols: 4,
             isLoading: true,
             snackbar_error: false,
-            open_modal: false
+            open_modal: false,
+
+            is_mobile: window.innerWidth < Games.IS_MOBILE_THRESHOLD
         };
 
         this.spacing = 10;
@@ -74,7 +87,18 @@ class Games extends React.Component {
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
+        this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this);
     }
+
+    componentWillMount() {
+        window.addEventListener('resize', this.handleWindowSizeChange);
+    }
+
+    handleWindowSizeChange = () => {
+        console.log(window.innerWidth);
+        this.setState({ is_mobile: window.innerWidth < Games.IS_MOBILE_THRESHOLD })
+
+    };
 
     componentDidMount() {
         this.setState({ isLoading: true });
@@ -141,7 +165,7 @@ class Games extends React.Component {
 
         if (this.state.isLoading) {
             return (
-                <div className={classes.root}>
+                <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
                     <CircularProgress thickness={7} />
                 </div>
             )
@@ -150,7 +174,7 @@ class Games extends React.Component {
         // if (this.state.games.length)
 
         return (
-            <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
+            <div className={this.state.is_mobile ? classes.mobileRoot : classes.root} style={{backgroundColor: '#fafafa'}}>
                 <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -189,7 +213,7 @@ class Games extends React.Component {
 
                 {
                     this.state.games.length > 0 ? (
-                        <div className={classes.root}>
+                        <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
                             {
                                 this.state.games.map((game) => {
                                     game.players.sort(function (first, second) {
