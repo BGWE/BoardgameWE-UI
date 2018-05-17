@@ -91,13 +91,25 @@ class Rankings extends React.Component {
         this.reload();
     }
 
+    getFirstName(player) {
+        return player.player.name.split(" ")[0];
+    }
+
     getRankingBest (ranking_name, modifier) {
         if (!this.state.rankings || this.state.rankings[ranking_name].length === 0) {
             return "/";
         }
 
-        const best = this.state.rankings[ranking_name][0];
-        return best.player.name.split(" ")[0]; // + " (" + modifier(best.score) + ")";
+        const players = this.state.rankings[ranking_name];
+        if (players.length > 2 && players.slice(0, 3).every(a => a.win)) {
+            return this.getFirstName(players[0]) + ", " + this.getFirstName(players[1]) + ",...";
+        }  else if (players.length === 2 && players.slice(0, 2).every(a => a.win)) {
+            return this.getFirstName(players[0]) + " & " + this.getFirstName(players[1]);
+        } if (players.length > 0) {
+            return this.getFirstName(players[0]);
+        } else {
+            return "";
+        }
     }
 
     getRankingTableOrProgress (ranking_name, modifier, classes) {
