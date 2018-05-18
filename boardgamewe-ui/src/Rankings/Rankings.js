@@ -36,6 +36,10 @@ const styles = theme => ({
     root: {
         width: '100%',
     },
+    grid_item_mobile: {
+        marginLeft: '0px',
+        marginRight: '0px',
+    },
     heading: {
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
@@ -69,7 +73,7 @@ const styles = theme => ({
     },
     grid_card: {
         width: "40%",
-        minWidth: "330px",
+        minWidth: "350px",
         // maxWidth: "600px"
     }
 });
@@ -183,7 +187,7 @@ class Rankings extends React.Component {
                         <Grid item xs>
                             <Grid container justify="center" spacing={Number(spacing)}>
                                 {rankings_info.map(info => (
-                                    <Grid key={info.ranking_name} item className={classes.grid_card}>
+                                    <Grid key={info.ranking_name} item className={this.state.is_mobile ? classes.grid_item_mobile : classes.grid_card}>
                                         <RankingCard
                                             title={info.title}
                                             value={this.getRankingBest(info.ranking_name, info.modifier)}>
