@@ -22,7 +22,7 @@ const styles = theme => ({
         overflow: 'hidden',
     },
     div_root: {
-        width: '40%',
+        // width: '20%',
         marginRight: 'auto',
         marginLeft: 'auto'
     },
@@ -115,7 +115,7 @@ class Players extends React.Component {
                 <div style={{width: "100%"}}>
                     <h1>Players</h1>
                 </div>
-                <div style={{paddingBottom: 20, width: "80%"}}>
+                <div style={{paddingBottom: 20, width: "100%"}}>
                     <AddPlayerModal reload={this.reload}/>
                 </div>
 
@@ -127,7 +127,7 @@ class Players extends React.Component {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Name</TableCell>
-                                            <TableCell>Played</TableCell>
+                                            {/*<TableCell>Played</TableCell>*/}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -140,9 +140,9 @@ class Players extends React.Component {
                                                     >
                                                         {column.name}
                                                     </TableCell>
-                                                    <TableCell numeric>
-                                                        2
-                                                    </TableCell>
+                                                    {/*<TableCell numeric>*/}
+                                                        {/*2*/}
+                                                    {/*</TableCell>*/}
                                                 </TableRow>
                                             );
                                         }, this)}
