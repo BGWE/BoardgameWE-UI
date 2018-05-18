@@ -5,7 +5,7 @@ class Boardgames extends React.Component {
     render() {
         return (
             <div>
-                <h1>Boardgames</h1>
+                <h1>Board Games</h1>
                 <BoardgamesList ></BoardgamesList>
             </div>
         );
