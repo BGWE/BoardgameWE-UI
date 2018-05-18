@@ -164,13 +164,12 @@ class TitlebarGridList extends React.Component {
     }
 
     filter(games) {
-        let filtered_hits = this.state.board_games.filter(suggestion => {
+        return this.state.board_games.filter(game => {
 
-            return (!this.state.filter_name || suggestion.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
-                (this.state.min_player <= 0 || (suggestion.min_players <= this.state.min_player && this.state.min_player <= suggestion.max_players)) &&
-                (this.state.max_player <= 0 || (suggestion.max_players >= this.state.max_player&& this.state.max_player >= suggestion.min_players));
+            return (!this.state.filter_name || game.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
+                (this.state.min_player <= 0 || (game.min_players <= this.state.min_player && this.state.min_player <= game.max_players)) &&
+                (this.state.max_player <= 0 || (game.max_players >= this.state.max_player&& this.state.max_player >= game.min_players));
         });
-        return filtered_hits;
     }
 
     static get_number_of_columns_from_width(width) {
