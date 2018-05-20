@@ -33,6 +33,8 @@ import Link from "react-router-dom/es/Link";
 import RankingTable from "../Rankings/RankingTable";
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 
+import {Constants} from "../utils/constants";
+
 const styles = theme => ({
     root: {
         width: '70%',
@@ -117,7 +119,7 @@ class Games extends React.Component {
     reload() {
         this.setState({ isLoading: true });
 
-        fetch('http://api.boardgameweekend.party/games')
+        fetch(Constants.API_ADDRESS + '/games')
             .then(response => {
                 if (!response.ok) throw Error('Request failed');
                 return response.json();
@@ -167,7 +169,7 @@ class Games extends React.Component {
     }
 
     handleDeleteGame() {
-        let url = new URL('http://api.boardgameweekend.party/game/' + this.state.game_to_delete);
+        let url = new URL(Constants.API_ADDRESS + '/game/' + this.state.game_to_delete);
 
         fetch(url, {
             method: 'DELETE',

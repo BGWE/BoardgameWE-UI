@@ -14,6 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import AddPlayerModal from './AddPlayerModal'
 
+import {Constants} from "../utils/constants";
+
 const styles = theme => ({
     root: {
         display: 'flex',
@@ -54,7 +56,7 @@ class Players extends React.Component {
     }
 
     reload() {
-        fetch('http://api.boardgameweekend.party/players')
+        fetch(Constants.API_ADDRESS + '/players')
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);

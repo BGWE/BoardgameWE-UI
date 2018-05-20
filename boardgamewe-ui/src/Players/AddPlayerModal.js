@@ -14,6 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import PropTypes from 'prop-types';
 
+import {Constants} from "../utils/constants";
+
 export default class AddPlayerModal extends React.Component {
 
     constructor(props) {
@@ -73,7 +75,7 @@ export default class AddPlayerModal extends React.Component {
         console.log("Adding " + name + " - " + email);
         this.setState({ open: false });
 
-        let url = new URL('http://api.boardgameweekend.party/player/');
+        let url = new URL(Constants.API_ADDRESS + '/player/');
         let payload = {
             'name': name,
             'email': email

@@ -12,6 +12,8 @@ import Subheader from 'material-ui/List/ListSubheader';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from 'material-ui/IconButton';
 
+import {Constants} from "../../utils/constants";
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -41,7 +43,7 @@ class SearchResults extends React.Component {
 
         console.log(name);
 
-        let url = new URL('http://api.boardgameweekend.party/board_game/search');
+        let url = new URL(Constants.API_ADDRESS + '/board_game/search');
         url.searchParams.append('q', name);
 
         fetch(url)
@@ -56,7 +58,7 @@ class SearchResults extends React.Component {
     }
 
     addBoardGame(game_id) {
-        let url = new URL('http://api.boardgameweekend.party/board_game/' + game_id);
+        let url = new URL(Constants.API_ADDRESS + '/board_game/' + game_id);
 
         fetch(url, {
             method: 'PUT'

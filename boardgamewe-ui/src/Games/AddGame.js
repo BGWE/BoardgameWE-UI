@@ -20,6 +20,8 @@ import PersonAdd from "@material-ui/icons/PersonAdd";
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
 
+import {Constants} from "../utils/constants";
+
 const styles = theme => ({
     root: {
         width: '90%',
@@ -112,7 +114,7 @@ class AddGame extends React.Component {
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch('http://api.boardgameweekend.party/board_games')
+        fetch(Constants.API_ADDRESS + '/board_games')
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
@@ -131,7 +133,7 @@ class AddGame extends React.Component {
                 })
             });
 
-        fetch('http://api.boardgameweekend.party/players')
+        fetch(Constants.API_ADDRESS + '/players')
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
@@ -348,7 +350,7 @@ class AddGame extends React.Component {
         console.log('Adding new game');
 
 
-        let url = new URL('http://api.boardgameweekend.party/game/');
+        let url = new URL(Constants.API_ADDRESS + '/game/');
         let ranking_method = "";
         if (this.state.ranking_method === "ranked") {
             ranking_method = "POINTS_HIGHER_BETTER";

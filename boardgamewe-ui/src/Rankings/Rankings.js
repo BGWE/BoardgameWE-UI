@@ -18,6 +18,7 @@ import classNames from 'classnames';
 import RankingCard from "./RankingCard";
 import RankingTable from "./RankingTable";
 
+import {Constants} from "../utils/constants";
 
 // const styles = theme => ({
 //     root: {
@@ -149,7 +150,7 @@ class Rankings extends React.Component {
     }
 
     reload() {
-        fetch('http://api.boardgameweekend.party/stats/rankings/')
+        fetch(Constants.API_ADDRESS + '/stats/rankings/')
             .then(response => response.json())
             .then(function (data) {
                 console.log("request");
