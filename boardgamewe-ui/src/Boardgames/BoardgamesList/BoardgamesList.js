@@ -173,7 +173,8 @@ class TitlebarGridList extends React.Component {
         return this.state.board_games.filter(game => {
             // check interval intersection
             console.log(game.name + " [ " + game.min_players + " -> " + game.max_players + "]: " + (this.state.min_player <= games.max_player && games.min_player <= this.state.max_player));
-            return this.state.min_player <= game.max_players && game.min_players <= this.state.max_player;
+            return (!this.state.filter_name || game.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
+                (this.state.min_player <= game.max_players && game.min_players <= this.state.max_player);
             // return (!this.state.filter_name || game.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
             //     (this.state.min_player <= 0 || (game.min_players <= this.state.min_player && this.state.min_player <= game.max_players)) &&
             //     (this.state.max_player <= 0 || (game.max_players >= this.state.max_player&& this.state.max_player >= game.min_players));
