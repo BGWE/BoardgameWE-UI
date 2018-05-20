@@ -237,6 +237,7 @@ class Games extends React.Component {
 
                 <div style={{width: "100%"}}>
                     <h1>Games</h1>
+                    <p>{this.state.games.length} game(s) played so far.</p>
                 </div>
                 <div style={{paddingBottom: 20}}>
                     <Tooltip id="tooltip-fab" title="Add" placement="right">
