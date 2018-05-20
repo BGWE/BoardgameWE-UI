@@ -62,8 +62,8 @@ class TitlebarGridList extends React.Component {
             open_confirmation_dialog: false,
             confirm_delete_game_id: "",
             confirm_delete_game_name: "",
-            min_player: 0,
-            max_player: 0,
+            min_player: 1,
+            max_player: 20,
 
             filter_name: "",
             orderby: "name"
@@ -98,7 +98,13 @@ class TitlebarGridList extends React.Component {
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
-                this.setState({ hits: data.board_games, board_games: data.board_games, isLoading: false })
+                this.setState({
+                    hits: data.board_games,
+                    board_games: data.board_games,
+                    isLoading: false,
+                    min_player: Math.min.apply(null, data.board_games.map(bg => bg.min_players)),
+                    max_player: Math.max.apply(null, data.board_games.map(bg => bg.max_players))
+                });
             }.bind(this))
             .catch(error => {
                 console.log(error);
@@ -162,13 +168,15 @@ class TitlebarGridList extends React.Component {
 
         return []
     }
-
+    // min <= g.max && max >= g.min
     filter(games) {
         return this.state.board_games.filter(game => {
-
-            return (!this.state.filter_name || game.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
-                (this.state.min_player <= 0 || (game.min_players <= this.state.min_player && this.state.min_player <= game.max_players)) &&
-                (this.state.max_player <= 0 || (game.max_players >= this.state.max_player&& this.state.max_player >= game.min_players));
+            // check interval intersection
+            console.log(game.name + " [ " + game.min_players + " -> " + game.max_players + "]: " + (this.state.min_player <= games.max_player && games.min_player <= this.state.max_player));
+            return this.state.min_player <= game.max_players && game.min_players <= this.state.max_player;
+            // return (!this.state.filter_name || game.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
+            //     (this.state.min_player <= 0 || (game.min_players <= this.state.min_player && this.state.min_player <= game.max_players)) &&
+            //     (this.state.max_player <= 0 || (game.max_players >= this.state.max_player&& this.state.max_player >= game.min_players));
         });
     }
 
@@ -294,6 +302,7 @@ class TitlebarGridList extends React.Component {
             )
         }
 
+        let filteredBoardGames = this.filter(this.state.hits);
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
                 <Snackbar
@@ -337,6 +346,9 @@ class TitlebarGridList extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <p>{this.state.board_games.length} game(s)</p>
+                <p>{filteredBoardGames.length} game(s) after filtering</p>
 
                 <Grid container spacing={16}>
                     <Grid item xs={12}>
@@ -431,7 +443,7 @@ class TitlebarGridList extends React.Component {
                             <GridListTile key="add">
                                 <AddGame />
                             </GridListTile>
-                            {this.order(this.filter((this.state.hits))).map(tile => (
+                            {this.order(filteredBoardGames).map(tile => (
                                 <GridListTile key={tile.id} className={classes.tile}>
                                     <img src={tile.thumbnail} alt={tile.name} />
                                     {
