@@ -12,7 +12,9 @@ import {
     Toolbar,
     Typography
 } from "material-ui";
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {withStyles} from "material-ui/styles/index";
+import {Link} from "react-router-dom";
 
 const styles = theme => ({
     root: {
@@ -58,6 +60,11 @@ const styles = theme => ({
     card: {
         height:140,
         width:140
+    },
+    button:{
+        fontSize: 12,
+        marginTop: "10px",
+        padding:"5px"
     }
 
 });
@@ -358,6 +365,13 @@ class Boardgame extends React.Component {
                         </Typography>) :
                         null
                 }
+                <a href={"https://boardgamegeek.com/boardgame/" + this.state.data.bgg_id} target="_blank" style={{textDecoration: "none"}}>
+                    <Button className={classes.button} variant="flat" color="primary" style={{fontSize: 12}}>
+                        Board Game Geek
+                        <OpenInNewIcon>Board Game Geek</OpenInNewIcon>
+                    </Button>
+                </a>
+
                 <br/>
                 <img src={this.state.data.image} alt="Board game image" className={classes.image}/>
                 <br/>
