@@ -1,0 +1,32 @@
+language: node_js
+
+node_js:
+  - 10.0.0
+
+branches:
+  only:
+    - master
+    - develop
+
+env:
+  global:
+    - TEST_RESULTS_DIR=$SHIPPABLE_REPO_DIR/shippable/testresults
+    - CODE_COVERAGE_DIR=$SHIPPABLE_REPO_DIR/shippable/codecoverage
+    - TESTS_LOC_DIR=$SHIPPABLE_REPO_DIR/tests
+    - MOD_LOC=$SHIPPABLE_REPO_DIR/node_modules/.bin/
+    - AWS_S3_BUCKET='s3://www.boardgameweekend.party'
+    - AWS_S3_REGION='eu-west-1'
+    - CI=false
+    - secure: kSh4V9lh+e4WUMNPpPiPzH8/Np8okjd50uAF5uQdmaeMvy6MUTaM/WfRQ0rqE8cjdm6G7yk7KhtwDzQOgiA0DQXzF+bdjJJm7OJLOowDGmRMr6fKzezJFU2662RraJLFjQWhQYnlETpMv++PCsizwST65cRDbMdwOMj+9HEXS593BqIYbLYUrtXIWB8TylNtB6Fn8y4e8FtwhdBR0X1qG8jtDjl8hUuBZtCTHYjlMP/UlPsBBHg4RjEFUB21JQCOKzXHvXZDUYmpVgzsR4hxJ8LsSeGZfXDu/Eo1zwz8gulOy/8aJMlRFwJ3THfOa6EX1hgXfEhsFE9pBT/nGG7pdw==
+
+build:
+
+  ci:
+    - cd boardgamewe-ui
+    - npm install
+    - npm run build
+    - echo $SHIPPABLE_BUILD_DIR
+    - ls $SHIPPABLE_BUILD_DIR
+
+  on_success:
+  - aws s3 sync $SHIPPABLE_BUILD_DIR/boardgamewe-ui/build/ $AWS_S3_BUCKET --region $AWS_S3_REGION
