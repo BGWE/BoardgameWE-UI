@@ -22,7 +22,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
 
-import {Constants} from "../../utils/constants";
+import {Constants} from "../../utils/Constants";
+import {Api} from "../../utils/Api";
 
 
 const styles = theme => ({
@@ -54,6 +55,8 @@ const styles = theme => ({
 class TitlebarGridList extends React.Component {
     constructor(props) {
         super(props);
+
+        this.uri = '/board_games';
 
         this.state = {
             hits: [],
@@ -96,7 +99,7 @@ class TitlebarGridList extends React.Component {
     }
 
     reload() {
-        fetch(Constants.API_ADDRESS + '/board_games')
+        Api._fetch(this.uri)
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
@@ -233,11 +236,7 @@ class TitlebarGridList extends React.Component {
 
     handleDeleteConfirm() {
         console.log('Deleting');
-        let url = new URL(Constants.API_ADDRESS + '/board_game/' + this.state.confirm_delete_game_id);
-
-        fetch(url, {
-            method: 'DELETE',
-        })
+        Api.delete('/board_game/' + this.state.confirm_delete_game_id)
             .then(response => response.json())
             .then(function (data) {
                 console.log(data);
