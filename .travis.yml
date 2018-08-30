@@ -21,3 +21,4 @@ deploy:
   bucket: www.boardgameweekend.party
   acl: public_read
   region: eu-west-1
+  local_dir: build
