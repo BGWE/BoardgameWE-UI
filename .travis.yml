@@ -1,11 +1,18 @@
 language: node_js
+
 node_js:
 - '10'
+
 install:
 - cd boardgamewe-ui
 - npm install
+
 script:
 - npm run build
+
+env:
+- CI=false
+
 deploy:
   provider: s3
   access_key_id: AKIAIE47NTGGUBJRO2LQ
