@@ -33,7 +33,7 @@ import Link from "react-router-dom/es/Link";
 import RankingTable from "../Rankings/RankingTable";
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 
-import {Constants} from "../utils/constants";
+import {Constants} from "../utils/Constants";
 
 const styles = theme => ({
     root: {

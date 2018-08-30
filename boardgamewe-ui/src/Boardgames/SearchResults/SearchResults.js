@@ -12,7 +12,7 @@ import Subheader from 'material-ui/List/ListSubheader';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from 'material-ui/IconButton';
 
-import {Constants} from "../../utils/constants";
+import {Constants} from "../../utils/Constants";
 
 const styles = theme => ({
     root: {

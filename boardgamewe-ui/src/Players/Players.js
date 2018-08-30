@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import AddPlayerModal from './AddPlayerModal'
 
-import {Constants} from "../utils/constants";
+import {Constants} from "../utils/Constants";
 
 const styles = theme => ({
     root: {

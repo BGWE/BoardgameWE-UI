@@ -18,7 +18,7 @@ import classNames from 'classnames';
 import RankingCard from "./RankingCard";
 import RankingTable from "./RankingTable";
 
-import {Constants} from "../utils/constants";
+import {Constants} from "../utils/Constants";
 
 // const styles = theme => ({
 //     root: {

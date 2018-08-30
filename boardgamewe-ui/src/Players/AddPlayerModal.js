@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import PropTypes from 'prop-types';
 
-import {Constants} from "../utils/constants";
+import {Constants} from "../utils/Constants";
 
 export default class AddPlayerModal extends React.Component {
 

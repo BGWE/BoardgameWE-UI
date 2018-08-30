@@ -20,7 +20,7 @@ import PersonAdd from "@material-ui/icons/PersonAdd";
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
 
-import {Constants} from "../utils/constants";
+import {Constants} from "../utils/Constants";
 
 const styles = theme => ({
     root: {
