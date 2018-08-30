@@ -15,7 +15,8 @@ import {
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {withStyles} from "material-ui/styles/index";
 import {Link} from "react-router-dom";
-import {Constants} from "../../utils/constants";
+import {Constants} from "../../utils/Constants";
+import { Api } from '../../utils/Api';
 
 const styles = theme => ({
     root: {
@@ -111,14 +112,20 @@ class Boardgame extends React.Component {
 
     updateVideo(youtube_url) {
         console.log('Updating video');
-        let url = Constants.API_ADDRESS + '/board_game/' + this.state.data.id;
-        fetch(url, {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({
+        // let url = Constants.API_ADDRESS + ;
+        // fetch(url, {
+        //     method: 'POST',
+        //     headers: {'Content-Type':'application/json'},
+        //     body: JSON.stringify({
+        //         'video_url': youtube_url
+        //     })
+        // })
+        Api.post(
+            '/board_game/' + this.state.data.id, 
+            JSON.stringify({
                 'video_url': youtube_url
-            })
-        })
+            }),
+            "json")
             .then(function (_data_returned) {
                 console.log(_data_returned);
                 let current_data = this.state.data;
