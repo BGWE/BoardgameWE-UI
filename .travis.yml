@@ -22,3 +22,8 @@ deploy:
   upload-dir: $TRAVIS_BRANCH
   acl: public_read
   region: eu-west-1
+  on:
+    branches:
+      only:
+        - master
+        - develop
