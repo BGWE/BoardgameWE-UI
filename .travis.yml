@@ -21,6 +21,8 @@ deploy:
   bucket: www.boardgameweekend.party
   acl: public_read
   region: eu-west-1
+  skip_cleanup: true
+  local_dir: build
   on:
     branch: master
 
@@ -31,5 +33,7 @@ deploy:
   bucket: dev.boardgameweekend.party
   acl: public_read
   region: eu-west-1
+  skip_cleanup: true
+  local_dir: build
   on:
     branch: develop
