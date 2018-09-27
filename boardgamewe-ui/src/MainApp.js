@@ -22,6 +22,7 @@ import Players from "./Players/Players";
 import Games from "./Games/Games";
 import Rankings from "./Rankings/Rankings";
 import AddGame from "./Games/AddGame";
+import { StyleUtils } from './utils/Styles';
 
 const drawerWidth = 240;
 
@@ -105,7 +106,7 @@ const styles = theme => ({
 
 class PersistentDrawer extends React.Component {
     state = {
-        open: true,
+        open: StyleUtils.isLargeScreen(),
         anchor: 'left',
     };
 
