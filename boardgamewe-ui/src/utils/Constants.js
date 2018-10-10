@@ -1,3 +1,3 @@
 export const Constants = {
-    API_ADDRESS: "http://api.boardgameweekend.party"
+    API_ADDRESS: "https://boardgameweekend.appspot.com/"
 };
