@@ -15,8 +15,7 @@ import {
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import {withStyles} from "material-ui/styles/index";
 import {Link} from "react-router-dom";
-import {Constants} from "../../utils/Constants";
-import { Api } from '../../utils/Api';
+import BoardGameModel from "../../utils/api/BoardGame.js";
 
 const styles = theme => ({
     root: {
@@ -83,18 +82,13 @@ class Boardgame extends React.Component {
 
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.setState({ isLoading: true });
 
         const { bgid } = this.props.match.params;
 
-
-        fetch(Constants.API_ADDRESS + '/board_game/' + bgid)
-            .then(response => response.json())
-            .then(function (data) {
-                this.setState({ data: data, isLoading: false });
-                console.log(this.state);
-            }.bind(this));
+        let data = await BoardGameModel.fetch(bgid);
+        this.setState({data: data, isLoading: false});
     }
 
     handleChange = url => event => {
@@ -110,36 +104,19 @@ class Boardgame extends React.Component {
         this.updateVideo(youtube_url);
     }
 
-    updateVideo(youtube_url) {
+    async updateVideo(youtube_url) {
         console.log('Updating video');
-        // let url = Constants.API_ADDRESS + ;
-        // fetch(url, {
-        //     method: 'POST',
-        //     headers: {'Content-Type':'application/json'},
-        //     body: JSON.stringify({
-        //         'video_url': youtube_url
-        //     })
-        // })
-        Api.post(
-            '/board_game/' + this.state.data.id, 
-            JSON.stringify({
-                'video_url': youtube_url
-            }),
-            "json")
-            .then(function (_data_returned) {
-                console.log(_data_returned);
-                let current_data = this.state.data;
-                current_data.gameplay_video_url = youtube_url;
-                console.log(this.state);
-                console.log(current_data);
-                this.setState({data: current_data, add_video_loading: false});
-                console.log(this.state);
 
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
-                this.setState({add_video_loading: false});
-            }.bind(this));
+        let updatedBoardGame = this.state.data.clone();
+        updatedBoardGame.gameplay_video_url = youtube_url;
+        try {
+            await updatedBoardGame.save();
+            this.setState({data: updatedBoardGame, add_video_loading: false});
+        }
+        catch(error) {
+            console.log(error);
+            this.setState({add_video_loading: false});
+        }
     }
 
     unicodeToChar(text) {

@@ -22,8 +22,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
 
-import {Constants} from "../../utils/Constants";
-import {Api} from "../../utils/Api";
+import BoardGameModel from "../../utils/api/BoardGame.js";
+import BoardGame from '../../utils/api/BoardGame.js';
 
 
 const styles = theme => ({
@@ -98,23 +98,22 @@ class TitlebarGridList extends React.Component {
         this.reload()
     }
 
-    reload() {
-        Api._fetch(this.uri)
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.setState({
-                    hits: data.board_games,
-                    board_games: data.board_games,
-                    isLoading: false,
-                    min_player: Math.min.apply(null, data.board_games.map(bg => bg.min_players)),
-                    max_player: Math.max.apply(null, data.board_games.map(bg => bg.max_players))
-                });
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-                this.setState({ snackbar_error: true, isLoading: false })
+    async reload() {
+        try {
+            let data = await BoardGameModel.fetchAll();
+
+            this.setState({
+                hits: data,
+                board_games: data,
+                isLoading: false,
+                min_player: Math.min.apply(null, data.map(bg => bg.min_players)),
+                max_player: Math.max.apply(null, data.map(bg => bg.max_players))
             });
+        }
+        catch(error) {
+            console.log(error);
+                this.setState({ snackbar_error: true, isLoading: false });
+        }
     }
 
     order(games) {
@@ -234,28 +233,22 @@ class TitlebarGridList extends React.Component {
         });
     }
 
-    handleDeleteConfirm() {
+    async handleDeleteConfirm() {
         console.log('Deleting');
-        Api.delete('/board_game/' + this.state.confirm_delete_game_id)
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.setState({
-                    open_confirmation_dialog: false,
-                    confirm_delete_game_id: "",
-                    confirm_delete_game_name: ""
-                });
-                this.reload()
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
-                this.setState({
-                    open_confirmation_dialog: false,
-                    confirm_delete_game_id: "",
-                    confirm_delete_game_name: ""
-                });
-                this.reload()
-            }.bind(this));
+        try {
+            BoardGame.delete(this.state.confirm_delete_game_id);
+        }
+        catch(error) {
+            console.log(error);
+        }
+        finally {
+            this.setState({
+                open_confirmation_dialog: false,
+                confirm_delete_game_id: "",
+                confirm_delete_game_name: ""
+            });
+            this.reload();
+        }
     }
 
     handleDeleteBg(bg_id, bg_name) {
