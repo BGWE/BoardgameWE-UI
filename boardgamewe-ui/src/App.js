@@ -12,10 +12,6 @@ import axios from "axios";
 axios.defaults.baseURL = Constants.API_ADDRESS;
 
 
-// TODO: traiter erreur 401 (filtre qui redirige sur page de connexion)
-// TODO: traiter token
-
-
 class App extends Component {
     constructor(props) {
         super(props);

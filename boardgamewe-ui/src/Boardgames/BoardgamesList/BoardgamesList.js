@@ -236,7 +236,7 @@ class TitlebarGridList extends React.Component {
     async handleDeleteConfirm() {
         console.log('Deleting');
         try {
-            BoardGame.delete(this.state.confirm_delete_game_id);
+            await BoardGame.delete(this.state.confirm_delete_game_id);
         }
         catch(error) {
             console.log(error);

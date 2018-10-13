@@ -12,7 +12,7 @@ export default class BoardGame extends Model {
         super._initProperties();
 
         this.bgg_id = null;
-        this.bggsbacore = null;
+        this.bgg_score = null;
         this.thumbnail = null;
         this.image = null;
         this.description = null;
