@@ -135,13 +135,6 @@ class Boardgame extends React.Component {
             }.bind(this));
     }
 
-    unicodeToChar(text) {
-        return text.replace(/\\u[\dA-F]{4}/gi,
-            function (match) {
-                return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
-            });
-    }
-
     render() {
         const { classes } = this.props;
 
@@ -156,9 +149,14 @@ class Boardgame extends React.Component {
         // Misc
         let score = this.state.data.bgg_score;
         let rounded_score = String(parseFloat(score).toFixed(1));
+
+        let num_players = String(parseInt(this.state.data.min_players)) + String(" - ") + String(parseInt(this.state.data.max_players));
+        if (this.state.data.min_players === this.state.data.max_players)
+            num_players = String(parseInt(this.state.data.min_players));
+
         let misc_tag = (
             <div style={{marginTop: 30, marginBottom: 30}}>
-                 <Grid container cols={3} className={classes.toolbar} justify="center" spacing={24}>
+                <Grid container cols={3} className={classes.toolbar} justify="center" spacing={24}>
                     <Grid item>
                         <Card className={classes.card}>
                             <CardContent>
@@ -175,18 +173,18 @@ class Boardgame extends React.Component {
                         </Card>
                     </Grid>
 
-                     <Grid item>
-                         <Card className={classes.card}>
-                             <CardContent>
-                                 <Typography className={classes.title} color="textSecondary">
-                                     Players
-                                 </Typography>
-                                 <Typography variant="headline" component="h2">
-                                     {this.state.data.min_players} - {this.state.data.max_players}
-                                 </Typography>
-                             </CardContent>
-                         </Card>
-                     </Grid>
+                    <Grid item>
+                        <Card className={classes.card}>
+                            <CardContent>
+                                <Typography className={classes.title} color="textSecondary">
+                                    Players
+                                </Typography>
+                                <Typography variant="headline" component="h2">
+                                    {num_players}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
 
                      <Grid item>
                          <Card className={classes.card}>
@@ -388,8 +386,6 @@ class Boardgame extends React.Component {
                         </List>
                     </Paper>
                 </div>
-
-
             </div>
         );
     }
