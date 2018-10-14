@@ -17,6 +17,7 @@ import {withStyles} from "material-ui/styles/index";
 import {Link} from "react-router-dom";
 import {Constants} from "../../utils/Constants";
 import { Api } from '../../utils/Api';
+import {htmlDecode} from "../../utils/Helper";
 
 const styles = theme => ({
     root: {
@@ -112,14 +113,6 @@ class Boardgame extends React.Component {
 
     updateVideo(youtube_url) {
         console.log('Updating video');
-        // let url = Constants.API_ADDRESS + ;
-        // fetch(url, {
-        //     method: 'POST',
-        //     headers: {'Content-Type':'application/json'},
-        //     body: JSON.stringify({
-        //         'video_url': youtube_url
-        //     })
-        // })
         Api.post(
             '/board_game/' + this.state.data.id, 
             JSON.stringify({
@@ -191,9 +184,6 @@ class Boardgame extends React.Component {
                                  <Typography variant="headline" component="h2">
                                      {this.state.data.min_players} - {this.state.data.max_players}
                                  </Typography>
-                                 {/*<Typography className={classes.pos} color="textSecondary">*/}
-                                     {/*players*/}
-                                 {/*</Typography>*/}
                              </CardContent>
                          </Card>
                      </Grid>
@@ -284,7 +274,6 @@ class Boardgame extends React.Component {
                                 </div>
                             </ListItem>
                         </List>
-
                     </Paper>
                     <br/>
                 </div>
@@ -296,6 +285,7 @@ class Boardgame extends React.Component {
 
         if (this.state.data.description) {
             let description = this.state.data.description;
+            let decoded = htmlDecode(description);
             description_tag = (
                 <div>
                     <Paper className={classes.paper}>
@@ -306,7 +296,7 @@ class Boardgame extends React.Component {
                                 </Typography>
                             </ListItem>
                             <ListItem>
-                                {description}
+                                {decoded}
                             </ListItem>
                         </List>
 
@@ -353,9 +343,6 @@ class Boardgame extends React.Component {
                 <div>
                     <iframe width="560" height="315" src={"https://www.youtube.com/embed/" + y_id + "?rel=0"} frameBorder="0"
                             allow="autoplay; encrypted-media" allowFullScreen></iframe>
-                    {/*<Toolbar className={classes.toolbar}>*/}
-                        {/*<Button variant="raised" className={classes.buttonInToolbar} onClick={() => this.addVideo("")}>Reset</Button>*/}
-                    {/*</Toolbar>*/}
                 </div>
 
             )
@@ -389,10 +376,16 @@ class Boardgame extends React.Component {
                     {categories_tag}
                     {description_tag}
                     <Paper>
-                        <Typography variant="headline">
-                            Video
-                        </Typography>
-                        {gp_video}
+                        <List component="nav">
+                            <ListItem>
+                                <Typography variant="headline">
+                                    Explanation video
+                                </Typography>
+                            </ListItem>
+                            <ListItem>
+                                {gp_video}
+                            </ListItem>
+                        </List>
                     </Paper>
                 </div>
 
