@@ -18,6 +18,7 @@ import {Link} from "react-router-dom";
 import {Constants} from "../../utils/Constants";
 import { Api } from '../../utils/Api';
 import {htmlDecode} from "../../utils/Helper";
+import InfoCard from "./InfoCard";
 
 const styles = theme => ({
     root: {
@@ -157,50 +158,9 @@ class Boardgame extends React.Component {
         let misc_tag = (
             <div style={{marginTop: 30, marginBottom: 30}}>
                 <Grid container cols={3} className={classes.toolbar} justify="center" spacing={24}>
-                    <Grid item>
-                        <Card className={classes.card}>
-                            <CardContent>
-                                <Typography className={classes.title} color="textSecondary">
-                                    Playing Time
-                                </Typography>
-                                <Typography variant="headline" component="h2">
-                                    {this.state.data.playing_time}
-                                </Typography>
-                                <Typography className={classes.pos} color="textSecondary">
-                                    minutes
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-
-                    <Grid item>
-                        <Card className={classes.card}>
-                            <CardContent>
-                                <Typography className={classes.title} color="textSecondary">
-                                    Players
-                                </Typography>
-                                <Typography variant="headline" component="h2">
-                                    {num_players}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-
-                     <Grid item>
-                         <Card className={classes.card}>
-                             <CardContent>
-                                 <Typography className={classes.title} color="textSecondary">
-                                     Score
-                                 </Typography>
-                                 <Typography variant="headline" component="h2">
-                                     {rounded_score}
-                                 </Typography>
-                                 <Typography className={classes.pos} color="textSecondary">
-                                     out of 10
-                                 </Typography>
-                             </CardContent>
-                         </Card>
-                     </Grid>
+                    <InfoCard type="Playing time" value={this.state.data.playing_time} optional="minutes"/>
+                    <InfoCard type="Players" value={num_players}/>
+                    <InfoCard type="Score" value={rounded_score} optional="out of 10"/>
                 </Grid>
             </div>
         );
