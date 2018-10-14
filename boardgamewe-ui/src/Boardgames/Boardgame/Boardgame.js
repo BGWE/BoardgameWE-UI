@@ -157,10 +157,12 @@ class Boardgame extends React.Component {
 
         let misc_tag = (
             <div style={{marginTop: 30, marginBottom: 30}}>
-                <Grid container cols={3} className={classes.toolbar} justify="center" spacing={24}>
-                    <InfoCard type="Playing time" value={this.state.data.playing_time} optional="minutes"/>
-                    <InfoCard type="Players" value={num_players}/>
-                    <InfoCard type="Score" value={rounded_score} optional="out of 10"/>
+                <Grid item xs={12}>
+                    <Grid container cols={3} justify="center" spacing={24}>
+                        <InfoCard type="Playing time" value={this.state.data.playing_time} optional="minutes"/>
+                        <InfoCard type="Players" value={num_players}/>
+                        <InfoCard type="Score" value={rounded_score} optional="out of 10"/>
+                    </Grid>
                 </Grid>
             </div>
         );
@@ -171,7 +173,6 @@ class Boardgame extends React.Component {
             let mechanics = this.state.data.mechanic.split(',');
 
             mecanics_tag = (
-                <div>
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
@@ -197,8 +198,6 @@ class Boardgame extends React.Component {
                             </ListItem>
                         </List>
                     </Paper>
-                    <br/>
-                </div>
             );
         }
 
@@ -208,7 +207,6 @@ class Boardgame extends React.Component {
             let categories = this.state.data.category.split(',');
 
             categories_tag = (
-                <div>
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
@@ -233,8 +231,6 @@ class Boardgame extends React.Component {
                             </ListItem>
                         </List>
                     </Paper>
-                    <br/>
-                </div>
             );
         }
 
@@ -245,7 +241,6 @@ class Boardgame extends React.Component {
             let description = this.state.data.description;
             let decoded = htmlDecode(description);
             description_tag = (
-                <div>
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
@@ -257,10 +252,7 @@ class Boardgame extends React.Component {
                                 {decoded}
                             </ListItem>
                         </List>
-
                     </Paper>
-                    <br/>
-                </div>
             );
         }
 
@@ -328,11 +320,15 @@ class Boardgame extends React.Component {
                 <br/>
                 <img src={this.state.data.image} alt="Board game image" className={classes.image}/>
                 <br/>
-                <div style={{width: '70%', marginLeft: 'auto', marginRight: 'auto'}}>
+                <div style={{width: '75%', marginLeft: 'auto', marginRight: 'auto'}}>
                     {misc_tag}
+                    <br/>
                     {mecanics_tag}
+                    <br/>
                     {categories_tag}
+                    <br/>
                     {description_tag}
+                    <br/>
                     <Paper>
                         <List component="nav">
                             <ListItem>
