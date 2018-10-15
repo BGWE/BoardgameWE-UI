@@ -3,9 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
-import CardContent from "@material-ui/core/CardContent/CardContent";
 import Typography from "@material-ui/core/Typography/Typography";
-import Card from "@material-ui/core/Card/Card";
 import Paper from "@material-ui/core/Paper/Paper";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
@@ -14,7 +12,7 @@ import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button/Button";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew"
 import BoardGameModel from "../../utils/api/BoardGame.js";
-
+import InfoCard from "./InfoCard";
 
 const styles = theme => ({
     root: {
@@ -118,13 +116,6 @@ class Boardgame extends React.Component {
         }
     }
 
-    unicodeToChar(text) {
-        return text.replace(/\\u[\dA-F]{4}/gi,
-            function (match) {
-                return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
-            });
-    }
-
     render() {
         const { classes } = this.props;
 
@@ -139,56 +130,20 @@ class Boardgame extends React.Component {
         // Misc
         let score = this.state.data.bgg_score;
         let rounded_score = String(parseFloat(score).toFixed(1));
+
+        let num_players = String(parseInt(this.state.data.min_players)) + String(" - ") + String(parseInt(this.state.data.max_players));
+        if (this.state.data.min_players === this.state.data.max_players)
+            num_players = String(parseInt(this.state.data.min_players));
+
         let misc_tag = (
             <div style={{marginTop: 30, marginBottom: 30}}>
-                 <Grid container justify="center" spacing={24}>
-                    <Grid item>
-                        <Card className={classes.card}>
-                            <CardContent>
-                                <Typography className={classes.title} color="textSecondary">
-                                    Playing Time
-                                </Typography>
-                                <Typography variant="h5" component="h2">
-                                    {this.state.data.playing_time}
-                                </Typography>
-                                <Typography className={classes.pos} color="textSecondary">
-                                    minutes
-                                </Typography>
-                            </CardContent>
-                        </Card>
+
+                <Grid item xs={12}>
+                    <Grid container cols={3} justify="center" spacing={24}>
+                        <InfoCard type="Playing time" value={this.state.data.playing_time} optional="minutes"/>
+                        <InfoCard type="Players" value={num_players}/>
+                        <InfoCard type="Score" value={rounded_score} optional="out of 10"/>
                     </Grid>
-
-                     <Grid item>
-                         <Card className={classes.card}>
-                             <CardContent>
-                                 <Typography className={classes.title} color="textSecondary">
-                                     Players
-                                 </Typography>
-                                 <Typography variant="h5" component="h2">
-                                     {this.state.data.min_players} - {this.state.data.max_players}
-                                 </Typography>
-                                 {/*<Typography className={classes.pos} color="textSecondary">*/}
-                                     {/*players*/}
-                                 {/*</Typography>*/}
-                             </CardContent>
-                         </Card>
-                     </Grid>
-
-                     <Grid item>
-                         <Card className={classes.card}>
-                             <CardContent>
-                                 <Typography className={classes.title} color="textSecondary">
-                                     Score
-                                 </Typography>
-                                 <Typography variant="h5" component="h2">
-                                     {rounded_score}
-                                 </Typography>
-                                 <Typography className={classes.pos} color="textSecondary">
-                                     out of 10
-                                 </Typography>
-                             </CardContent>
-                         </Card>
-                     </Grid>
                 </Grid>
             </div>
         );
@@ -199,7 +154,6 @@ class Boardgame extends React.Component {
             let mechanics = this.state.data.mechanic.split(',');
 
             mecanics_tag = (
-                <div>
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
@@ -225,8 +179,6 @@ class Boardgame extends React.Component {
                             </ListItem>
                         </List>
                     </Paper>
-                    <br/>
-                </div>
             );
         }
 
@@ -236,7 +188,6 @@ class Boardgame extends React.Component {
             let categories = this.state.data.category.split(',');
 
             categories_tag = (
-                <div>
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
@@ -262,8 +213,6 @@ class Boardgame extends React.Component {
                         </List>
 
                     </Paper>
-                    <br/>
-                </div>
             );
         }
 
@@ -273,7 +222,6 @@ class Boardgame extends React.Component {
         if (this.state.data.description) {
             let description = this.state.data.description;
             description_tag = (
-                <div>
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
@@ -285,10 +233,7 @@ class Boardgame extends React.Component {
                                 {description}
                             </ListItem>
                         </List>
-
                     </Paper>
-                    <br/>
-                </div>
             );
         }
 
@@ -365,11 +310,15 @@ class Boardgame extends React.Component {
                 <br/>
                 <img src={this.state.data.image} alt="Board game" className={classes.image}/>
                 <br/>
-                <div style={{width: '70%', marginLeft: 'auto', marginRight: 'auto'}}>
+                <div style={{width: '75%', marginLeft: 'auto', marginRight: 'auto'}}>
                     {misc_tag}
+                    <br/>
                     {mecanics_tag}
+                    <br/>
                     {categories_tag}
+                    <br/>
                     {description_tag}
+                    <br/>
                     <Paper>
                         <Typography variant="h5">
                             Video
@@ -377,8 +326,6 @@ class Boardgame extends React.Component {
                         {gp_video}
                     </Paper>
                 </div>
-
-
             </div>
         );
     }
