@@ -23,7 +23,7 @@ export default class Model {
     }
 
     toString() {
-        let str = `[${this.callbackIdentifier}] ${this.id}`;
+        let str = `[${this.className}] ${this.id}`;
         if(this.name) {
             str += `: ${this.name}`;
         }
@@ -119,29 +119,14 @@ export default class Model {
      * @returns {this} The saved object, as returned by backend
      */
     async save() {
+        let data;
         if(this.isNew()) {
-            let {data} = await axios.post(this.uri, this.getPublicProperties());
-            this.populate(data[this.callbackIdentifier]);
-            return this;
+            ({data} = await axios.post(this.uri, this.getPublicProperties()));
         }
         else {
-            return this.update();
+            ({data} = await axios.put(this.uri, this.getPublicProperties()));
         }
-    }
-
-
-    /**
-     * Update the object
-     *
-     * @returns {this} The updated object, as returned by backend
-     */
-    async update() {
-        if(this.isNew()) {
-            throw new Error("Cannot update a model with no ID.");
-        }
-
-        let {data} = await axios.put(this.uri, this.getPublicProperties());
-        this.populate(data[this.callbackIdentifier]);
+        this.populate(data);
         return this;
     }
 
@@ -186,7 +171,7 @@ export default class Model {
 
     /**
      * @abstract
-     * @returns {string} The callback identifier of the model used in API requests
+     * @returns {string} The class name of the model used in API endpoints
      */
     static get className() {
         throw new Error("Abstract getter className() not overriden in child.");
