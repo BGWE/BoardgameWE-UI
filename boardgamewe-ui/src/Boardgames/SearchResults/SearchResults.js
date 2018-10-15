@@ -11,7 +11,8 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 
-import {Constants} from "../../utils/Constants";
+import BoardGameModel from "../../utils/api/BoardGame.js";
+import BoardGame from '../../utils/api/BoardGame.js';
 
 const styles = theme => ({
     root: {
@@ -37,43 +38,34 @@ class SearchResults extends React.Component {
         this.addBoardGame = this.addBoardGame.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { name } = this.props.match.params;
 
         console.log(name);
 
-        let url = new URL(Constants.API_ADDRESS + '/board_game/search');
-        url.searchParams.append('q', name);
-
-        fetch(url)
-            .then(response => response.json())
-            .then(function (data) {
-                this.setState({ hits: data.map((bg) => {bg['isLoading'] = false; return bg;}), isLoading: false });
-                console.log(this.state);
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
+        try {
+            let data = await BoardGameModel.searchAll(name);
+            let hits = data.map(bg => {
+                bg['isLoading'] = false; 
+                return bg;
             });
+            this.setState({hits, isLoading: false });
+        }
+        catch(error) {
+            console.log(error);
+        }
     }
 
-    addBoardGame(game_id) {
-        let url = new URL(Constants.API_ADDRESS + '/board_game/' + game_id);
-
-        fetch(url, {
-            method: 'PUT'
-        })
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.setState({snackbar_success: true});
-                setTimeout(function() {
-                    // this.props.history.push('/boardgames')
-                    this.props.history.goBack()
-                }.bind(this), 1500);
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
-            });
+    async addBoardGame(game_id) {
+        let boardGame = new BoardGame({bgg_id: game_id});
+        try {
+            await boardGame.save();
+            this.setState({snackbar_success: true});
+            setTimeout(() => this.props.history.goBack(), 1500);
+        }
+        catch(error) {
+            console.log(error);
+        }
     }
 
     test(test_id) {
