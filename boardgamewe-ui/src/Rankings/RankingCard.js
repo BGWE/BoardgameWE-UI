@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import {
-    Avatar, Chip,
-    ExpansionPanel,
-    ExpansionPanelDetails,
-    ExpansionPanelSummary
-} from "material-ui";
+
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RANK_COLORS from './RankingTable';
+import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary";
+import Chip from "@material-ui/core/Chip/Chip";
+import Avatar from "@material-ui/core/Avatar/Avatar";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
+import { withStyles } from '@material-ui/core/styles';
 
 
 const styles = theme => ({

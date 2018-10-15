@@ -1,20 +1,19 @@
 import React from 'react';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
-import {Link} from "react-router-dom";
+
 import AddIcon from '@material-ui/icons/Add';
-import {IconButton, Snackbar, Tooltip} from "material-ui";
 import CloseIcon from '@material-ui/icons/Close';
 
-import PropTypes from 'prop-types';
-
 import {Constants} from "../utils/Constants";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import Button from "@material-ui/core/Button/Button";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText/DialogContentText";
+import TextField from "@material-ui/core/TextField/TextField";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 
 export default class AddPlayerModal extends React.Component {
 

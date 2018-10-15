@@ -1,15 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import {
-    Button, Checkbox,
-    CircularProgress, FormControl, FormControlLabel, Grid,
-    IconButton, InputAdornment, InputLabel,
-    MenuItem, Paper, Select,
-    Snackbar, Table, TableBody, TableCell, TableHead, TableRow, TextField,
 
-    Typography
-} from "material-ui";
+
 
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -21,6 +13,27 @@ import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
 
 import {Constants} from "../utils/Constants";
+import TextField from "@material-ui/core/TextField/TextField";
+import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
+import MenuItem from "@material-ui/core/MenuItem/MenuItem";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import Grid from "@material-ui/core/Grid/Grid";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Paper from "@material-ui/core/Paper/Paper";
+import FormControl from "@material-ui/core/FormControl/FormControl";
+import InputLabel from "@material-ui/core/InputLabel/InputLabel";
+import Select from "@material-ui/core/Select/Select";
+import FormControlLabel from "@material-ui/core/FormControlLabel/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import Button from "@material-ui/core/Button/Button";
+import Table from "@material-ui/core/Table/Table";
+import TableHead from "@material-ui/core/TableHead/TableHead";
+import TableRow from "@material-ui/core/TableRow/TableRow";
+import TableCell from "@material-ui/core/TableCell/TableCell";
+import TableBody from "@material-ui/core/TableBody/TableBody";
+
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     root: {
@@ -422,7 +435,6 @@ class AddGame extends React.Component {
 
     render () {
         const { classes } = this.props;
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
 
         if (this.state.isLoading) {
             return (

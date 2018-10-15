@@ -1,8 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import {Table, TableBody, TableCell, TableHead, TableRow } from "material-ui";
+
 import StarIcon from '@material-ui/icons/Star';
+import TableCell from "@material-ui/core/TableCell/TableCell";
+import TableRow from "@material-ui/core/TableRow/TableRow";
+import TableHead from "@material-ui/core/TableHead/TableHead";
+import Table from "@material-ui/core/Table/Table";
+import TableBody from "@material-ui/core/TableBody/TableBody";
+import { withStyles } from '@material-ui/core/styles';
 
 const colors = {
     gold: "#FFD700",
@@ -50,10 +54,6 @@ const styles = theme => ({
 });
 
 class RankingTable extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     getIcon(rank, classes) {
         if (rank === 1) {
             return (<StarIcon className={classes.gold_icon}/>);
@@ -90,7 +90,7 @@ class RankingTable extends React.Component {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {this.props.ranking.slice(0, 10).map(player => (
+                    {this.props.ranking ? this.props.ranking.slice(0, 10).map(player => (
                         <TableRow key={player.player.id} className={player.win ? classes.winnerRow : null}>
                             <TableCell className={classes.iconCell}>{this.getIcon(player.rank, classes)}</TableCell>
                             <TableCell className={player.win ? classes.winnerCell : null}>{player.rank}</TableCell>
@@ -101,7 +101,7 @@ class RankingTable extends React.Component {
                             }
 
                         </TableRow>
-                    ))}
+                    )) : ""}
                 </TableBody>
             </Table>
         );

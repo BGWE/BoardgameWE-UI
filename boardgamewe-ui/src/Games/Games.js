@@ -1,39 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import {
-    Button,
-    CircularProgress,
-    Collapse,
-    Dialog,
-    DialogActions, DialogContent, DialogContentText,
-    DialogTitle, Divider,
-    ExpansionPanel, ExpansionPanelActions,
-    ExpansionPanelDetails,
-    ExpansionPanelSummary, Grid,
-    GridList,
-    IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Snackbar, TextField, Tooltip,
 
-    Typography
-} from "material-ui";
-
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import StarIcon from '@material-ui/icons/Star';
+
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Link from "react-router-dom/es/Link";
+
 
 import RankingTable from "../Rankings/RankingTable";
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 
 import {Constants} from "../utils/Constants";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import Tooltip from "@material-ui/core/Tooltip/Tooltip";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button/Button";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
+import Typography from "@material-ui/core/Typography/Typography";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
+import Grid from "@material-ui/core/Grid/Grid";
+import Divider from "@material-ui/core/Divider/Divider";
+import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions/ExpansionPanelActions";
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     root: {
@@ -193,7 +185,6 @@ class Games extends React.Component {
 
     render () {
         const { classes } = this.props;
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
 
         if (this.state.isLoading) {
             return (
@@ -203,7 +194,8 @@ class Games extends React.Component {
             )
         }
 
-        // if (this.state.games.length)
+        console.log("GAMES");
+        console.log(this.props);
 
         return (
             <div className={this.state.is_mobile ? classes.mobileRoot : classes.root} style={{backgroundColor: '#fafafa'}}>
@@ -243,7 +235,7 @@ class Games extends React.Component {
                 </div>
                 <div style={{paddingBottom: 20}}>
                     <Tooltip id="tooltip-fab" title="Add" placement="right">
-                        <Link to="/games/add">
+                        <Link to={`${this.props.match.url}/add`}>
                             <Button variant="fab" color="secondary" aria-label="add">
                                 <AddIcon />
                             </Button>

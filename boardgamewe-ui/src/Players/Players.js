@@ -1,20 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import {Checkbox, CircularProgress, IconButton, Paper, Snackbar, Tooltip, Typography} from "material-ui";
-import Table, {
-    TableBody,
-    TableCell,
-    TableHead,
-    TablePagination,
-    TableRow,
-    TableSortLabel,
-} from 'material-ui/Table';
 import CloseIcon from '@material-ui/icons/Close';
 
 import AddPlayerModal from './AddPlayerModal'
-
 import {Constants} from "../utils/Constants";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar/Snackbar";
+import Typography from "@material-ui/core/Typography/Typography";
+import Paper from "@material-ui/core/Paper/Paper";
+import Table from "@material-ui/core/Table/Table";
+import TableHead from "@material-ui/core/TableHead/TableHead";
+import TableRow from "@material-ui/core/TableRow/TableRow";
+import TableCell from "@material-ui/core/TableCell/TableCell";
+import TableBody from "@material-ui/core/TableBody/TableBody";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     root: {
@@ -78,7 +78,6 @@ class Players extends React.Component {
 
     render () {
         const { classes } = this.props;
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
 
         if (this.state.isLoading) {
             return (

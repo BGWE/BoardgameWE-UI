@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import {AppBar, Button, IconButton, Toolbar, Typography} from "material-ui";
+import { withStyles } from '@material-ui/core/styles';
+import {AppBar, Button, IconButton, Toolbar, Typography} from "@material-ui/core";
 import AddGame from "../AddGame/AddBoardGameModal";
 
 const styles = {
@@ -26,7 +26,7 @@ class GamesToolBar extends React.Component {
         return (
                 <AppBar position="static">
                     <Toolbar>
-                        {/*<Button variant="raised" color="secondary" className={classes.menuButton}>Add</Button>*/}
+                        {/*<Button variant="contained" color="secondary" className={classes.menuButton}>Add</Button>*/}
                         <AddGame ></AddGame>
                     </Toolbar>
                 </AppBar>

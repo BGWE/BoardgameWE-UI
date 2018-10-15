@@ -1,23 +1,20 @@
 import React from 'react';
-import {
-    Button, Card, CardContent,
-    Chip,
-    CircularProgress,
-    Divider,
-    Grid,
-    List,
-    ListItem,
-    Paper,
-    TextField,
-    Toolbar,
-    Typography
-} from "material-ui";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import {withStyles} from "material-ui/styles/index";
-import {Link} from "react-router-dom";
+import { withStyles } from '@material-ui/core/styles';
 import {Constants} from "../../utils/Constants";
-import { Api } from '../../utils/Api';
-import {htmlDecode} from "../../utils/Helper";
+import {Api} from "../../utils/Api";
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Grid from "@material-ui/core/Grid/Grid";
+import CardContent from "@material-ui/core/CardContent/CardContent";
+import Typography from "@material-ui/core/Typography/Typography";
+import Card from "@material-ui/core/Card/Card";
+import Paper from "@material-ui/core/Paper/Paper";
+import List from "@material-ui/core/List/List";
+import ListItem from "@material-ui/core/ListItem/ListItem";
+import Chip from "@material-ui/core/Chip/Chip";
+import TextField from "@material-ui/core/TextField/TextField";
+import Button from "@material-ui/core/Button/Button";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew"
+
 
 const styles = theme => ({
     root: {
@@ -113,6 +110,14 @@ class Boardgame extends React.Component {
 
     updateVideo(youtube_url) {
         console.log('Updating video');
+        // let url = Constants.API_ADDRESS + ;
+        // fetch(url, {
+        //     method: 'POST',
+        //     headers: {'Content-Type':'application/json'},
+        //     body: JSON.stringify({
+        //         'video_url': youtube_url
+        //     })
+        // })
         Api.post(
             '/board_game/' + this.state.data.id, 
             JSON.stringify({
@@ -158,14 +163,14 @@ class Boardgame extends React.Component {
         let rounded_score = String(parseFloat(score).toFixed(1));
         let misc_tag = (
             <div style={{marginTop: 30, marginBottom: 30}}>
-                 <Grid container cols={3} className={classes.toolbar} justify="center" spacing={24}>
+                 <Grid container justify="center" spacing={24}>
                     <Grid item>
                         <Card className={classes.card}>
                             <CardContent>
                                 <Typography className={classes.title} color="textSecondary">
                                     Playing Time
                                 </Typography>
-                                <Typography variant="headline" component="h2">
+                                <Typography variant="h5" component="h2">
                                     {this.state.data.playing_time}
                                 </Typography>
                                 <Typography className={classes.pos} color="textSecondary">
@@ -181,9 +186,12 @@ class Boardgame extends React.Component {
                                  <Typography className={classes.title} color="textSecondary">
                                      Players
                                  </Typography>
-                                 <Typography variant="headline" component="h2">
+                                 <Typography variant="h5" component="h2">
                                      {this.state.data.min_players} - {this.state.data.max_players}
                                  </Typography>
+                                 {/*<Typography className={classes.pos} color="textSecondary">*/}
+                                     {/*players*/}
+                                 {/*</Typography>*/}
                              </CardContent>
                          </Card>
                      </Grid>
@@ -194,7 +202,7 @@ class Boardgame extends React.Component {
                                  <Typography className={classes.title} color="textSecondary">
                                      Score
                                  </Typography>
-                                 <Typography variant="headline" component="h2">
+                                 <Typography variant="h5" component="h2">
                                      {rounded_score}
                                  </Typography>
                                  <Typography className={classes.pos} color="textSecondary">
@@ -217,7 +225,7 @@ class Boardgame extends React.Component {
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
-                                <Typography variant="headline">
+                                <Typography variant="h5">
                                     Mechanics
                                 </Typography>
                             </ListItem>
@@ -254,7 +262,7 @@ class Boardgame extends React.Component {
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
-                                <Typography variant="headline">
+                                <Typography variant="h5">
                                     Categories
                                 </Typography>
                             </ListItem>
@@ -274,6 +282,7 @@ class Boardgame extends React.Component {
                                 </div>
                             </ListItem>
                         </List>
+
                     </Paper>
                     <br/>
                 </div>
@@ -285,18 +294,17 @@ class Boardgame extends React.Component {
 
         if (this.state.data.description) {
             let description = this.state.data.description;
-            let decoded = htmlDecode(description);
             description_tag = (
                 <div>
                     <Paper className={classes.paper}>
                         <List component="nav">
                             <ListItem>
-                                <Typography variant="headline">
+                                <Typography variant="h5">
                                     Description
                                 </Typography>
                             </ListItem>
                             <ListItem>
-                                {decoded}
+                                {description}
                             </ListItem>
                         </List>
 
@@ -328,7 +336,7 @@ class Boardgame extends React.Component {
                         onChange={this.handleChange('url_video')}
                         margin="normal"
                     />
-                    <Button variant="raised" color="secondary" onClick={() => this.addVideo(this.state.url_video)}>{capt}</Button>
+                    <Button variant="contained" color="secondary" onClick={() => this.addVideo(this.state.url_video)}>{capt}</Button>
                 </div>
 
             );
@@ -341,8 +349,17 @@ class Boardgame extends React.Component {
             let y_id = match[1];
             gp_video = (
                 <div>
-                    <iframe width="560" height="315" src={"https://www.youtube.com/embed/" + y_id + "?rel=0"} frameBorder="0"
-                            allow="autoplay; encrypted-media" allowFullScreen></iframe>
+                    <iframe
+                        width="560"
+                        height="315"
+                        src={"https://www.youtube.com/embed/" + y_id + "?rel=0"}
+                        frameBorder="0"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                        title="Board Game Video"/>
+                    {/*<Toolbar className={classes.toolbar}>*/}
+                        {/*<Button variant="contained" className={classes.buttonInToolbar} onClick={() => this.addVideo("")}>Reset</Button>*/}
+                    {/*</Toolbar>*/}
                 </div>
 
             )
@@ -350,7 +367,7 @@ class Boardgame extends React.Component {
 
         return (
             <div>
-                <Typography variant="display2">
+                <Typography variant="h3">
                     {this.state.data.name}
                 </Typography>
                 {
@@ -360,15 +377,15 @@ class Boardgame extends React.Component {
                         </Typography>) :
                         null
                 }
-                <a href={"https://boardgamegeek.com/boardgame/" + this.state.data.bgg_id} target="_blank" style={{textDecoration: "none"}}>
-                    <Button className={classes.button} variant="flat" color="primary" style={{fontSize: 12}}>
+                <a href={"https://boardgamegeek.com/boardgame/" + this.state.data.bgg_id} target="_blank" rel="noopener noreferrer" style={{textDecoration: "none"}}>
+                    <Button className={classes.button} variant="text" color="primary" style={{fontSize: 12}}>
                         Board Game Geek
                         <OpenInNewIcon>Board Game Geek</OpenInNewIcon>
                     </Button>
                 </a>
 
                 <br/>
-                <img src={this.state.data.image} alt="Board game image" className={classes.image}/>
+                <img src={this.state.data.image} alt="Board game" className={classes.image}/>
                 <br/>
                 <div style={{width: '70%', marginLeft: 'auto', marginRight: 'auto'}}>
                     {misc_tag}
@@ -376,16 +393,10 @@ class Boardgame extends React.Component {
                     {categories_tag}
                     {description_tag}
                     <Paper>
-                        <List component="nav">
-                            <ListItem>
-                                <Typography variant="headline">
-                                    Explanation video
-                                </Typography>
-                            </ListItem>
-                            <ListItem>
-                                {gp_video}
-                            </ListItem>
-                        </List>
+                        <Typography variant="h5">
+                            Video
+                        </Typography>
+                        {gp_video}
                     </Paper>
                 </div>
 

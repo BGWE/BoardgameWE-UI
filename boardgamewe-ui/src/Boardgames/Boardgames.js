@@ -6,7 +6,7 @@ class Boardgames extends React.Component {
         return (
             <div>
                 <h1>Board Games</h1>
-                <BoardgamesList ></BoardgamesList>
+                <BoardgamesList />
             </div>
         );
     }

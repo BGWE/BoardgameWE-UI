@@ -1,12 +1,7 @@
 import React from 'react';
-import { withStyles } from 'material-ui/styles';
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "material-ui";
+import { withStyles } from '@material-ui/core/styles';
+import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 
-const colors = {
-    gold: "#FFD700",
-    silver: "#C0C0C0",
-    bronze: "#cd7f32"
-};
 
 const styles = theme => ({
     root: {
@@ -16,13 +11,8 @@ const styles = theme => ({
 });
 
 class ConfirmDeleteDialog extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-
     render () {
-        const { classes, isOpen, fnCancel, fnConfirm, fnOnClose } = this.props;
+        const { isOpen, fnCancel, fnConfirm, fnOnClose } = this.props;
 
         return (
             <Dialog
@@ -39,7 +29,7 @@ class ConfirmDeleteDialog extends React.Component {
                     <Button onClick={fnCancel} color="secondary">
                         Cancel
                     </Button>
-                    <Button onClick={fnConfirm} color="secondary" variant="raised" autoFocus>
+                    <Button onClick={fnConfirm} color="secondary" variant="contained" autoFocus>
                         Delete
                     </Button>
                 </DialogActions>

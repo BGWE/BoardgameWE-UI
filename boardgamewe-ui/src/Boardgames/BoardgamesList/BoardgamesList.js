@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import {
     Button,
@@ -11,9 +10,9 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, FormControl, Grid, InputAdornment, InputLabel, MenuItem, Select,
+    DialogTitle, FormControl, Grid, InputAdornment, InputLabel, Select,
     Snackbar, TextField
-} from "material-ui";
+} from "@material-ui/core";
 
 import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
@@ -22,8 +21,10 @@ import SearchIcon from '@material-ui/icons/Search';
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
 
-import {Constants} from "../../utils/Constants";
 import {Api} from "../../utils/Api";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
 
 
 const styles = theme => ({
@@ -95,10 +96,11 @@ class TitlebarGridList extends React.Component {
 
     componentDidMount() {
         this.setState({ isLoading: true });
-        this.reload()
+        this.reload();
     }
 
     reload() {
+        console.log("Reloading...");
         Api._fetch(this.uri)
             .then(response => response.json())
             .then(function (data) {
@@ -135,17 +137,17 @@ class TitlebarGridList extends React.Component {
             }
         };
 
-        let name_order_fm = function (first, second) {
-            if (first.name === second.name) {
-                return 0;
-            }
-            else if (first.name < second.name) {
-                return -1;
-            }
-            else {
-                return 1;
-            }
-        };
+        // let name_order_fm = function (first, second) {
+        //     if (first.name === second.name) {
+        //         return 0;
+        //     }
+        //     else if (first.name < second.name) {
+        //         return -1;
+        //     }
+        //     else {
+        //         return 1;
+        //     }
+        // };
 
         if (this.state.orderby === 'name') {
             return games.concat().sort(build_sort('name', true))
@@ -177,7 +179,7 @@ class TitlebarGridList extends React.Component {
     filter(games) {
         return this.state.board_games.filter(game => {
             // check interval intersection
-            console.log(game.name + " [ " + game.min_players + " -> " + game.max_players + "]: " + (this.state.min_player <= games.max_player && games.min_player <= this.state.max_player));
+            // console.log(game.name + " [ " + game.min_players + " -> " + game.max_players + "]: " + (this.state.min_player <= games.max_player && games.min_player <= this.state.max_player));
             return (!this.state.filter_name || game.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
                 (this.state.min_player <= game.max_players && game.min_players <= this.state.max_player);
             // return (!this.state.filter_name || game.name.toLowerCase().indexOf(this.state.filter_name.toLowerCase()) !== -1) &&
@@ -268,8 +270,6 @@ class TitlebarGridList extends React.Component {
     }
 
     handleChangeFilterText(event) {
-        let value = event.target.value;
-
         // let filtered_hits = this.state.board_games.filter(suggestion => {
         //     return (!value || suggestion.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
         // });
@@ -343,7 +343,7 @@ class TitlebarGridList extends React.Component {
                         <Button onClick={this.handleCloseConfirm} color="secondary">
                             Cancel
                         </Button>
-                        <Button onClick={this.handleDeleteConfirm} color="secondary" variant="raised" autoFocus>
+                        <Button onClick={this.handleDeleteConfirm} color="secondary" variant="contained" autoFocus>
                             Delete
                         </Button>
                     </DialogActions>
@@ -466,7 +466,7 @@ class TitlebarGridList extends React.Component {
                                             title={tile.name}
                                             subtitle={tile.year_published ? (<span>({tile.year_published})</span>) : tile.year_published}
                                             actionIcon={
-                                                <Link to={"/boardgame/" + tile.id} >
+                                                <Link to={`${this.props.match.path.slice(0, -"/boardgames".length)}/boardgame/${tile.id}`} >
                                                     <IconButton className={classes.icon}>
                                                         <InfoIcon />
                                                     </IconButton>

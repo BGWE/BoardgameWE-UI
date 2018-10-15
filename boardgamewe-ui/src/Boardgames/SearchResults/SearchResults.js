@@ -1,16 +1,15 @@
 import React from 'react';
-import {withStyles} from "material-ui/styles/index";
+import {withStyles} from "@material-ui/core/styles/index";
 import {
     Button,
     Card,
     CardActions,
     CardContent, CircularProgress,
-    Grid, LinearProgress, Snackbar,
+    Grid, Snackbar,
     Typography
-} from "material-ui";
-import Subheader from 'material-ui/List/ListSubheader';
+} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
-import IconButton from 'material-ui/IconButton';
+import IconButton from '@material-ui/core/IconButton';
 
 import {Constants} from "../../utils/Constants";
 
@@ -19,7 +18,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     card: {
-        raised: true,
+        contained: true,
         width: 200,
     }
 });
@@ -68,7 +67,8 @@ class SearchResults extends React.Component {
                 console.log(data);
                 this.setState({snackbar_success: true});
                 setTimeout(function() {
-                    this.props.history.push('/boardgames')
+                    // this.props.history.push('/boardgames')
+                    this.props.history.goBack()
                 }.bind(this), 1500);
             }.bind(this))
             .catch(function (error) {
@@ -152,7 +152,7 @@ class SearchResults extends React.Component {
                         <Grid item key={tile.id}>
                             <Card key={tile.id} className={classes.card}>
                                 <CardContent>
-                                    <Typography variant="title" component="h5">
+                                    <Typography variant="h6" >
                                         {tile.name}
                                     </Typography>
                                     <Typography color="textSecondary">

@@ -1,16 +1,15 @@
 import React from 'react';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import Dialog, {
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from 'material-ui/Dialog';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
-import {Tooltip} from "material-ui";
-import {Redirect} from "react-router";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import TextField from "@material-ui/core/TextField";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+
 
 export default class BoardGameModal extends React.Component {
     constructor(props) {
@@ -92,7 +91,7 @@ export default class BoardGameModal extends React.Component {
                             Cancel
                         </Button>
                         <Link to={this.build_uri(this.state.gamename)} style={{ textDecoration: 'none' }}>
-                            <Button onClick={this.handleClose} color="secondary" variant="raised">
+                            <Button onClick={this.handleClose} color="secondary" variant="contained">
                                 Search
                             </Button>
                         </Link>

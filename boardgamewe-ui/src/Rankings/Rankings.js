@@ -1,43 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import {
-    Button,
-    Chip,
-    CircularProgress, Divider,
-    ExpansionPanel,
-    ExpansionPanelActions,
-    ExpansionPanelDetails,
-    ExpansionPanelSummary,
-    Grid,
-    Paper,
-    Typography,
-} from "material-ui";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import classNames from 'classnames';
+
 import RankingCard from "./RankingCard";
 import RankingTable from "./RankingTable";
 
 import {Constants} from "../utils/Constants";
-
-// const styles = theme => ({
-//     root: {
-//         flexGrow: 1,
-//     },
-//     paper: {
-//         height: 140,
-//         width: 140,
-//     },
-//     control: {
-//         padding: theme.spacing.unit * 2,
-//     },
-// });
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+import Grid from "@material-ui/core/Grid/Grid";
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     root: {
         width: '100%',
     },
     grid_item_mobile: {
+        width: '100%',
         marginLeft: '0px',
         marginRight: '0px',
     },
@@ -116,7 +93,7 @@ class Rankings extends React.Component {
     }
 
     getRankingBest (ranking_name, modifier) {
-        if (!this.state.rankings || this.state.rankings[ranking_name].length === 0) {
+        if (!this.state.rankings || !this.state.rankings[ranking_name] || this.state.rankings[ranking_name].length === 0) {
             return "/";
         }
 
@@ -190,7 +167,11 @@ class Rankings extends React.Component {
                         <Grid item xs>
                             <Grid container justify="center" spacing={Number(spacing)}>
                                 {rankings_info.map(info => (
-                                    <Grid key={info.ranking_name} item className={this.state.is_mobile ? classes.grid_item_mobile : classes.grid_card}>
+                                    <Grid
+                                        key={info.ranking_name}
+                                        item
+                                        className={this.state.is_mobile ? classes.grid_item_mobile : classes.grid_card}
+                                    >
                                         <RankingCard
                                             title={info.title}
                                             value={this.getRankingBest(info.ranking_name, info.modifier)}>
