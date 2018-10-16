@@ -13,6 +13,7 @@ import Button from "@material-ui/core/Button/Button";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew"
 import BoardGameModel from "../../utils/api/BoardGame.js";
 import InfoCard from "./InfoCard";
+import {htmlDecode} from "../../utils/Helper";
 
 const styles = theme => ({
     root: {
@@ -131,9 +132,9 @@ class Boardgame extends React.Component {
         let score = this.state.data.bgg_score;
         let rounded_score = String(parseFloat(score).toFixed(1));
 
-        let num_players = String(parseInt(this.state.data.min_players)) + String(" - ") + String(parseInt(this.state.data.max_players));
+        let num_players = this.state.data.min_players + " - " + this.state.data.max_players;
         if (this.state.data.min_players === this.state.data.max_players)
-            num_players = String(parseInt(this.state.data.min_players));
+            num_players = this.state.data.min_players;
 
         let misc_tag = (
             <div style={{marginTop: 30, marginBottom: 30}}>
@@ -220,7 +221,7 @@ class Boardgame extends React.Component {
         let description_tag = null;
 
         if (this.state.data.description) {
-            let description = this.state.data.description;
+            let description = htmlDecode(this.state.data.description);
             description_tag = (
                     <Paper className={classes.paper}>
                         <List component="nav">
@@ -236,7 +237,6 @@ class Boardgame extends React.Component {
                     </Paper>
             );
         }
-
 
 
 
