@@ -680,7 +680,7 @@ class AddGame extends React.Component {
                                     <Button
                                         style={{marginTop: "17px"}}
                                         size="small"
-                                        variant="raised"
+                                        variant="contained"
                                         color="primary"
                                         onClick={this.handleAddNewScore}>
                                         Add
@@ -790,7 +790,7 @@ class AddGame extends React.Component {
                                     <Button
                                         style={{marginTop: "17px"}}
                                         size="medium"
-                                        variant="raised"
+                                        variant="contained"
                                         color="secondary"
                                         onClick={this.handleAddGame}>
                                         Confirm
