@@ -11,7 +11,6 @@ import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import SearchResults from "./Boardgames/SearchResults/SearchResults";
 import axios from "axios";
 import {Constants} from "./utils/Constants.js";
-import Login from "./User/Login.js";
 
 axios.defaults.baseURL = Constants.API_ADDRESS;
 
@@ -57,7 +56,6 @@ class App extends Component {
                 <MuiThemeProvider theme={theme}>
                     <div className="App">
                         <Switch>
-                            <Route exact path="/login" component={LoginLayout} />
                             <Route exact path="/register" component={LoginLayout} />
                             <Route exact path="/events" component={EventsLayout} />
                             <Route path="/event/:eventid" component={EventLayout} />

@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import UserModel from "../utils/api/User";
 import axios from "axios";
+import CustomizedSnackbar from "../utils/UI/Snackbar";
 
 const styles = theme => ({
     layout: {
@@ -56,6 +57,14 @@ class LoginLayout extends React.Component {
         this.state = {
             signInView: true,
 
+            loginSuccessSnackbarOpen: false,
+            loginFailureSnackbarOpen: false,
+            loginFailureSnackbarMsg: "",
+
+            registerSuccessSnackbarOpen: false,
+            registerFailureSnackbarOpen: false,
+            registerFailureSnackbarMsg: "",
+
             username: "",
             password: "",
             email: "",
@@ -72,30 +81,97 @@ class LoginLayout extends React.Component {
     };
 
     handleSubmit = async (event) => {
-        console.log("SUBMIT");
-        //Make a network call somewhere
         if (this.state.signInView) {
             // Login request
-            let token = await UserModel.login(this.state.username, this.state.password); // TODO
-            axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
-            window.localStorage.accessToken = token;
-            // this.props.callbackAuthentication();
+            try {
+                let token = await UserModel.login(this.state.username, this.state.password); // TODO
+
+                axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
+                window.localStorage.accessToken = token;
+
+                this.setState({ loginSuccessSnackbarOpen: true });
+
+                setTimeout(() => this.props.callbackAuthentication(), 800);
+            } catch (error) {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    // console.log(error.response.data);
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                    this.setState({ loginFailureSnackbarOpen: true, loginFailureSnackbarMsg: error.response.data.message });
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                    this.setState({ loginFailureSnackbarOpen: true, loginFailureSnackbarMsg: "No response received." });
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                    this.setState({ loginFailureSnackbarOpen: true });
+                }
+            }
+
         } else {
             // Register request
-            let data = await UserModel.signUp(this.state.username, this.state.password, this.state.surname, this.state.name, this.state.email)
-            console.log(data);
+            try {
+                let data = await UserModel.signUp(this.state.username, this.state.password, this.state.surname, this.state.name, this.state.email);
+                console.log(data);
+
+                this.setState({ registerSuccessSnackbarOpen: true });
+
+                setTimeout(() => window.location.reload(), 800);
+            }
+            catch (error) {
+                if (error.response) {
+                    console.log(error.response);
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    // console.log(error.response.data);
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                    this.setState({ registerFailureSnackbarOpen: true, registerFailureSnackbarMsg: error.response.data.error });
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+            }
         }
         return false;
     };
 
     handleInputChange(event) {
-        console.log("Input change");
         const target = event.target;
         this.setState({
             [target.name]: target.value
         });
-        console.log(this.state);
     }
+
+    handleCloseSnackbar = () => {
+        this.setState({
+            loginSuccessSnackbarOpen: false,
+            loginFailureSnackbarOpen: false,
+
+            registerSuccessSnackbarOpen: false,
+            registerFailureSnackbarOpen: false,
+        });
+
+        // Well... This is ugly and inefficient...
+        // Problem is if we put the same in setState above, we can see in the UI that the text is disappearing,
+        // before the snackbar is completely gone. We can see the text changing as the snackbar fades away.
+        // So temporary workaround til a better solution comes...
+        setTimeout(() => this.setState({
+            loginFailureSnackbarMsg: "",
+            registerFailureSnackbarMsg: ""
+        }), 800);
+
+    };
 
     render() {
         const { classes } = this.props;
@@ -105,7 +181,7 @@ class LoginLayout extends React.Component {
                 <Avatar className={classes.avatar}>
                     <LockIcon />
                 </Avatar>
-                <Typography component="h1" variant="h5">
+                <Typography variant="h5">
                     Sign in
                 </Typography>
                 <form className={classes.form} onSubmit={this.handleSubmit}>
@@ -242,11 +318,65 @@ class LoginLayout extends React.Component {
             </Paper>
         );
 
+        let loginSuccessSnackbar = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="success"
+                message="Login successful!"
+                open={this.state.loginSuccessSnackbarOpen}
+            />
+        );
+
+        let loginFailureMsg = "";
+        if (this.state.loginFailureSnackbarMsg) {
+            loginFailureMsg = "Failed to log in: " + this.state.loginFailureSnackbarMsg;
+        } else {
+            loginFailureMsg = "Failed to log in."
+        }
+
+        let loginFailedSnackbar = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="error"
+                message={loginFailureMsg}
+                open={this.state.loginFailureSnackbarOpen}
+            />
+        );
+
+        let registerSuccessSnackbar = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="success"
+                message="Registration successful!"
+                open={this.state.registerSuccessSnackbarOpen}
+            />
+        );
+
+        let registerFailureMsg = "";
+        if (this.state.registerFailureSnackbarMsg) {
+            registerFailureMsg = "Failed to register: " + this.state.registerFailureSnackbarMsg;
+        } else {
+            registerFailureMsg = "Failed to register."
+        }
+
+        let registerFailedSnackbar = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="error"
+                message={registerFailureMsg}
+                open={this.state.registerFailureSnackbarOpen}
+            />
+        );
+
         return (
             <React.Fragment>
                 <CssBaseline />
                 <main className={classes.layout}>
                     {this.state.signInView ? signIn : signUp}
+                    {loginSuccessSnackbar}
+                    {loginFailedSnackbar}
+                    {registerSuccessSnackbar}
+                    {registerFailedSnackbar}
                 </main>
             </React.Fragment>
         );

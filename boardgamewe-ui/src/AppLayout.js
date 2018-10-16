@@ -1,8 +1,9 @@
 import React from "react";
+import {Redirect} from "react-router-dom";
 
 class AppLayout extends React.Component{
     render() {
-        return <div>AppLayout</div>
+        return <Redirect to="/events"/>
     }
 }
 
