@@ -46,6 +46,9 @@ const styles = theme => ({
     },
     registerText: {
         marginTop: theme.spacing.unit * 3,
+    },
+    invalidInput: {
+        color: 'red'
     }
 });
 
@@ -69,15 +72,26 @@ class LoginLayout extends React.Component {
             password: "",
             email: "",
             surname: "",
-            name: ""
+            name: "",
+
+            usernameValid: false,
+            passwordValid: false,
+            emailValid: false,
+            surnameValid: false,
+            nameValid: false,
+
+            formErrors: {username:'', password: '', email: '', surnameValid: '', nameValid: ''},
+            formValid: false
+
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.validateField = this.validateField.bind(this);
     }
 
     switchView = () => {
         console.log("Switch view");
-        this.setState({ signInView: !this.state.signInView });
+        this.setState({ signInView: !this.state.signInView }, this.validateForm);
     };
 
     handleSubmit = async (event) => {
@@ -147,10 +161,10 @@ class LoginLayout extends React.Component {
     };
 
     handleInputChange(event) {
-        const target = event.target;
-        this.setState({
-            [target.name]: target.value
-        });
+        const name = event.target.name;
+        const value = event.target.value;
+        this.setState({[name]: value},
+            () => { this.validateField(name, value) });
     }
 
     handleCloseSnackbar = () => {
@@ -173,6 +187,64 @@ class LoginLayout extends React.Component {
 
     };
 
+    validateField(fieldName, value) {
+        let fieldValidationErrors = this.state.formErrors;
+        let emailValid = this.state.emailValid;
+        let passwordValid = this.state.passwordValid;
+        let usernameValid = this.state.usernameValid;
+        let surnameValid = this.state.surnameValid;
+        let nameValid = this.state.nameValid;
+
+        switch(fieldName) {
+            case 'email':
+                emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+                fieldValidationErrors.email = emailValid ? '' : 'is invalid';
+                break;
+            case 'password':
+                passwordValid = value.length >= 6;
+                fieldValidationErrors.password = passwordValid ? '': 'your password should contain at least 6 characters';
+                break;
+            case 'username':
+                usernameValid = value.length > 0;
+                fieldValidationErrors.username = usernameValid ? '': 'cannot be blank';
+                break;
+            case 'surname':
+                surnameValid = value.length > 0;
+                fieldValidationErrors.surname = surnameValid ? '': 'cannot be blank';
+                break;
+            case 'name':
+                nameValid = value.length > 0;
+                fieldValidationErrors.name = nameValid ? '': 'cannot be blank';
+                break;
+            default:
+                break;
+        }
+        this.setState({formErrors: fieldValidationErrors,
+            emailValid: emailValid,
+            passwordValid: passwordValid,
+            surnameValid: surnameValid,
+            nameValid: nameValid,
+            usernameValid: usernameValid
+        }, this.validateForm);
+    }
+
+    validateForm() {
+        if (!this.state.signInView) {
+            this.setState({
+                formValid: this.state.emailValid &&
+                    this.state.passwordValid &&
+                    this.state.usernameValid &&
+                    this.state.nameValid &&
+                    this.state.surnameValid
+            });
+        } else {
+            this.setState({
+                formValid: this.state.usernameValid &&
+                    this.state.passwordValid
+            });
+        }
+    }
+
     render() {
         const { classes } = this.props;
 
@@ -193,7 +265,9 @@ class LoginLayout extends React.Component {
                             autoComplete="username"
                             autoFocus
                             value={this.state.username}
-                            onChange={this.handleInputChange} />
+                            onChange={this.handleInputChange}
+                        />
+                        <span className={classes.invalidInput}>{this.state.formErrors.username}</span>
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="password">Password</InputLabel>
@@ -205,6 +279,7 @@ class LoginLayout extends React.Component {
                             value={this.state.password}
                             onChange={this.handleInputChange}
                         />
+                        <span className={classes.invalidInput}>{this.state.formErrors.password}</span>
                     </FormControl>
 
                     <Button
@@ -214,6 +289,7 @@ class LoginLayout extends React.Component {
                         color="primary"
                         className={classes.submit}
                         onClick={this.handleSubmit}
+                        disabled={!this.state.formValid}
                     >
                         Sign in
                     </Button>
@@ -249,7 +325,9 @@ class LoginLayout extends React.Component {
                             name="username"
                             autoComplete="username"
                             value={this.state.username}
-                            onChange={this.handleInputChange}/>
+                            onChange={this.handleInputChange}
+                        />
+                        <span className={classes.invalidInput}>{this.state.formErrors.username}</span>
                     </FormControl>
 
                     <FormControl margin="normal" required fullWidth>
@@ -262,6 +340,7 @@ class LoginLayout extends React.Component {
                             value={this.state.password}
                             onChange={this.handleInputChange}
                         />
+                        <span className={classes.invalidInput}>{this.state.formErrors.password}</span>
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
@@ -271,7 +350,9 @@ class LoginLayout extends React.Component {
                             autoComplete="email"
                             autoFocus
                             value={this.state.email}
-                            onChange={this.handleInputChange}/>
+                            onChange={this.handleInputChange}
+                        />
+                        <span className={classes.invalidInput}>{this.state.formErrors.email}</span>
                     </FormControl>
 
                     <FormControl margin="normal" required fullWidth>
@@ -281,7 +362,9 @@ class LoginLayout extends React.Component {
                             name="surname"
                             autoComplete="surname"
                             value={this.state.surname}
-                            onChange={this.handleInputChange}/>
+                            onChange={this.handleInputChange}
+                        />
+                        <span className={classes.invalidInput}>{this.state.formErrors.surname}</span>
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="name">Name</InputLabel>
@@ -290,7 +373,9 @@ class LoginLayout extends React.Component {
                             name="name"
                             autoComplete="name"
                             value={this.state.name}
-                            onChange={this.handleInputChange}/>
+                            onChange={this.handleInputChange}
+                        />
+                        <span className={classes.invalidInput}>{this.state.formErrors.name}</span>
                     </FormControl>
 
                     <Button
@@ -300,6 +385,7 @@ class LoginLayout extends React.Component {
                         color="primary"
                         className={classes.submit}
                         onClick={this.handleSubmit}
+                        disabled={!this.state.formValid}
                     >
                         Sign up
                     </Button>
