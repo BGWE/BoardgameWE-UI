@@ -229,7 +229,7 @@ class LoginLayout extends React.Component {
     }
 
     validateForm() {
-        if (this.state.signInView === false) {
+        if (!this.state.signInView) {
             this.setState({
                 formValid: this.state.emailValid &&
                     this.state.passwordValid &&
