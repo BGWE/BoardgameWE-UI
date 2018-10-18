@@ -92,6 +92,7 @@ class LoginLayout extends React.Component {
     };
 
     handleSubmit = async (event) => {
+        event.preventDefault();
         if (this.state.signInView) {
             // Login request
             try {
