@@ -253,7 +253,11 @@ class LoginLayout extends React.Component {
             });
         } else {
             this.setState({
-                formValid: this.state.usernameValid && this.state.emailValid && this.state.passwordValid
+                formValid: this.state.usernameValid &&
+                    this.state.emailValid &&
+                    this.state.passwordValid &&
+                    this.state.nameValid &&
+                    this.state.surnameValid
             });
         }
     }
