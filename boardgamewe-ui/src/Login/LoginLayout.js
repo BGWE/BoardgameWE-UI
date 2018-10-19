@@ -74,13 +74,10 @@ class LoginLayout extends React.Component {
             surname: "",
             name: "",
 
-            usernameValid: false,
             passwordValid: false,
             emailValid: false,
-            surnameValid: false,
-            nameValid: false,
 
-            formErrors: {username:'', password: '', email: '', surnameValid: '', nameValid: ''},
+            formErrors: {password: '', email: ''},
             formValid: false
 
         };
@@ -95,6 +92,7 @@ class LoginLayout extends React.Component {
     };
 
     handleSubmit = async (event) => {
+        event.preventDefault();
         if (this.state.signInView) {
             // Login request
             try {
@@ -191,9 +189,6 @@ class LoginLayout extends React.Component {
         let fieldValidationErrors = this.state.formErrors;
         let emailValid = this.state.emailValid;
         let passwordValid = this.state.passwordValid;
-        let usernameValid = this.state.usernameValid;
-        let surnameValid = this.state.surnameValid;
-        let nameValid = this.state.nameValid;
 
         switch(fieldName) {
             case 'email':
@@ -204,27 +199,12 @@ class LoginLayout extends React.Component {
                 passwordValid = value.length >= 6;
                 fieldValidationErrors.password = passwordValid ? '': 'your password should contain at least 6 characters';
                 break;
-            case 'username':
-                usernameValid = value.length > 0;
-                fieldValidationErrors.username = usernameValid ? '': 'cannot be blank';
-                break;
-            case 'surname':
-                surnameValid = value.length > 0;
-                fieldValidationErrors.surname = surnameValid ? '': 'cannot be blank';
-                break;
-            case 'name':
-                nameValid = value.length > 0;
-                fieldValidationErrors.name = nameValid ? '': 'cannot be blank';
-                break;
             default:
                 break;
         }
         this.setState({formErrors: fieldValidationErrors,
             emailValid: emailValid,
-            passwordValid: passwordValid,
-            surnameValid: surnameValid,
-            nameValid: nameValid,
-            usernameValid: usernameValid
+            passwordValid: passwordValid
         }, this.validateForm);
     }
 
@@ -232,15 +212,11 @@ class LoginLayout extends React.Component {
         if (!this.state.signInView) {
             this.setState({
                 formValid: this.state.emailValid &&
-                    this.state.passwordValid &&
-                    this.state.usernameValid &&
-                    this.state.nameValid &&
-                    this.state.surnameValid
+                    this.state.passwordValid
             });
         } else {
             this.setState({
-                formValid: this.state.usernameValid &&
-                    this.state.passwordValid
+                formValid: this.state.passwordValid
             });
         }
     }
@@ -258,7 +234,7 @@ class LoginLayout extends React.Component {
                 </Typography>
                 <form className={classes.form} onSubmit={this.handleSubmit}>
                     <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="email">Username</InputLabel>
+                        <InputLabel htmlFor="username">Username</InputLabel>
                         <Input
                             id="username"
                             name="username"
@@ -267,7 +243,6 @@ class LoginLayout extends React.Component {
                             value={this.state.username}
                             onChange={this.handleInputChange}
                         />
-                        <span className={classes.invalidInput}>{this.state.formErrors.username}</span>
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="password">Password</InputLabel>
@@ -278,12 +253,12 @@ class LoginLayout extends React.Component {
                             autoComplete="current-password"
                             value={this.state.password}
                             onChange={this.handleInputChange}
+                            error={!this.state.passwordValid}
                         />
-                        <span className={classes.invalidInput}>{this.state.formErrors.password}</span>
                     </FormControl>
 
                     <Button
-                        // type="submit"
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
@@ -295,7 +270,7 @@ class LoginLayout extends React.Component {
                     </Button>
 
                     <Button
-                        // type="submit"
+                        type="submit"
                         color="default"
                         className={classes.submit}
                         size={"small"}
@@ -327,7 +302,6 @@ class LoginLayout extends React.Component {
                             value={this.state.username}
                             onChange={this.handleInputChange}
                         />
-                        <span className={classes.invalidInput}>{this.state.formErrors.username}</span>
                     </FormControl>
 
                     <FormControl margin="normal" required fullWidth>
@@ -339,8 +313,8 @@ class LoginLayout extends React.Component {
                             autoComplete="current-password"
                             value={this.state.password}
                             onChange={this.handleInputChange}
+                            error={!this.state.passwordValid}
                         />
-                        <span className={classes.invalidInput}>{this.state.formErrors.password}</span>
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
@@ -351,8 +325,8 @@ class LoginLayout extends React.Component {
                             autoFocus
                             value={this.state.email}
                             onChange={this.handleInputChange}
+                            error={!this.state.emailValid}
                         />
-                        <span className={classes.invalidInput}>{this.state.formErrors.email}</span>
                     </FormControl>
 
                     <FormControl margin="normal" required fullWidth>
@@ -364,7 +338,6 @@ class LoginLayout extends React.Component {
                             value={this.state.surname}
                             onChange={this.handleInputChange}
                         />
-                        <span className={classes.invalidInput}>{this.state.formErrors.surname}</span>
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="name">Name</InputLabel>
@@ -375,11 +348,10 @@ class LoginLayout extends React.Component {
                             value={this.state.name}
                             onChange={this.handleInputChange}
                         />
-                        <span className={classes.invalidInput}>{this.state.formErrors.name}</span>
                     </FormControl>
 
                     <Button
-                        // type="submit"
+                        type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
@@ -391,7 +363,6 @@ class LoginLayout extends React.Component {
                     </Button>
 
                     <Button
-                        // type="submit"
                         color="default"
                         className={classes.submit}
                         size={"small"}

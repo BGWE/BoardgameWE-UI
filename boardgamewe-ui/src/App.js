@@ -11,6 +11,7 @@ import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import SearchResults from "./Boardgames/SearchResults/SearchResults";
 import axios from "axios";
 import {Constants} from "./utils/Constants.js";
+import ViewEventLayout from "./Events/ViewEventLayout";
 
 axios.defaults.baseURL = Constants.API_ADDRESS;
 
@@ -24,7 +25,6 @@ class App extends Component {
     }
 
   async componentDidMount() {
-    console.log("mount");
     axios.interceptors.response.use(response => {
         return response;
     }, 
@@ -57,6 +57,7 @@ class App extends Component {
                     <div className="App">
                         <Switch>
                             <Route exact path="/register" component={LoginLayout} />
+                            <Route exact path="/events/add" component={ViewEventLayout} />
                             <Route exact path="/events" component={EventsLayout} />
                             <Route path="/event/:eventid" component={EventLayout} />
                             <Route path="/search/:name" component={SearchResults}/>
