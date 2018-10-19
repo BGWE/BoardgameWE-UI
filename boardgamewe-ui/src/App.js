@@ -25,7 +25,6 @@ class App extends Component {
     }
 
   async componentDidMount() {
-    console.log("mount");
     axios.interceptors.response.use(response => {
         return response;
     }, 
