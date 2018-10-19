@@ -30,6 +30,11 @@ export default class Event extends Model {
         return `event/${this.id}/board_games`;
     }
 
+    static async fetchAllEvents() {
+        let {data} = await axios.get("events");
+        return data;
+    }
+
     async fetchBoardGames() {
         let {data} = await axios.get(this.boardGamesUri);
         return data;
