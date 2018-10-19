@@ -16,6 +16,7 @@ import Players from "../Players/Players";
 import Games from "../Games/Games";
 import AddGame from "../Games/AddGame";
 import Rankings from "../Rankings/Rankings";
+import EventModel from "../utils/api/Event";
 
 const styles = theme => ({
     root: {
@@ -34,16 +35,30 @@ class EventLayout extends React.Component{
     constructor(props, context) {
         super(props, context);
 
+
         this.state = {
             menuOpen: false,
-            eventName: ""
+            eventName: "",
+            event_model: null
         }
     }
 
     componentDidMount() {
-        // TODO Get event name from id (this.props.match.params.eventid)
+        this.load()
+    }
+
+    async load() {
+        // this.setState()
+        let event_model = null;
+        try {
+            event_model = await EventModel.fetch(this.props.match.params.eventid);
+        } catch (e) {
+            console.log("Failed to fetch event " + this.props.match.params.eventid);
+            console.log(e);
+        }
+
         this.setState({
-            eventName: "Week End"
+            event_model: event_model
         });
     }
 
@@ -89,19 +104,19 @@ class EventLayout extends React.Component{
                             <MenuIcon />
                         </IconButton>
                         <Typography variant="h6" color="inherit" noWrap>
-                            {this.state.eventName}
+                            {this.state.event_model ? this.state.event_model.name : ""}
                         </Typography>
                     </Toolbar>
                 </AppBar>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Switch>
-                        <Route path={`${this.props.match.path}/boardgames`} component={BoardgamesList} />
-                        <Route path={`${this.props.match.path}/boardgame/:bgid`} component={Boardgame} />
-                        <Route path={`${this.props.match.path}/players`} component={Players} />
-                        <Route path={`${this.props.match.path}/games/add`} component={AddGame} />
-                        <Route path={`${this.props.match.path}/games`} component={Games} />
-                        <Route path={`${this.props.match.path}/rankings`} component={Rankings} />
+                        <Route path={`${this.props.match.path}/boardgames`} render={() => <BoardgamesList {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/boardgame/:bgid`} render={() => <Boardgame {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/players`} render={() => <Players {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/games/add`} render={() => <AddGame {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/games`} render={() => <Games {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/rankings`} render={() => <Rankings {...this.props} eventModel={this.state.event_model}/> } />
                     </Switch>
                 </main>
             </div>
