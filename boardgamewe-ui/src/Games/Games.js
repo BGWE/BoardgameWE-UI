@@ -69,7 +69,7 @@ class Games extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log(window.innerWidth < Games.IS_MOBILE_THRESHOLD);
+        this.eventModel = props.eventModel;
 
         this.state = {
             games: [],
@@ -108,39 +108,28 @@ class Games extends React.Component {
         this.reload()
     }
 
-    reload() {
+    async reload() {
         this.setState({ isLoading: true });
 
-        fetch(Constants.API_ADDRESS + '/games')
-            .then(response => {
-                if (!response.ok) throw Error('Request failed');
-                return response.json();
-            })
-            .then(function (data) {
-                console.log(data);
+        try {
+            let games = await this.eventModel.fetchGames();
 
-                this.setState({games: data, isLoading: false, confirm_delete_open: false, game_to_delete: null});
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-                this.setState({games: [], isLoading: false, snackbar_error: true, confirm_delete_open: false, game_to_delete: null});
-            })
+            this.setState({
+                games: games,
+                isLoading: false,
+                confirm_delete_open: false,
+                game_to_delete: null});
+
+        } catch (e) {
+            console.log(e);
+            this.setState({
+                games: [],
+                isLoading: false,
+                snackbar_error: true,
+                confirm_delete_open: false,
+                game_to_delete: null});
+        }
     }
-
-    // handleExpandClick = (_id) => {
-    //     let mod_state = this.state;
-    //
-    //     mod_state.games = mod_state.games.map((game) => {
-    //         if (game.id === _id) {
-    //             let mod_game = game;
-    //             mod_game.expanded = !game.expanded;
-    //             return mod_game;
-    //         }
-    //         return game;
-    //     });
-    //
-    //     this.setState(mod_state);
-    // };
 
     handleClickAdd() {
         console.log('Opening modal');
@@ -235,7 +224,7 @@ class Games extends React.Component {
                 </div>
                 <div style={{paddingBottom: 20}}>
                     <Tooltip id="tooltip-fab" title="Add" placement="right">
-                        <Link to={`${this.props.match.url}/add`}>
+                        <Link to={`${this.props.match.url}/games/add`}>
                             <Button variant="fab" color="secondary" aria-label="add">
                                 <AddIcon />
                             </Button>

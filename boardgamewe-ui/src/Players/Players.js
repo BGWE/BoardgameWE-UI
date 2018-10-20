@@ -37,6 +37,8 @@ class Players extends React.Component {
     constructor(props) {
         super(props);
 
+        this.eventModel = props.eventModel;
+
         this.state = {
             players: [],
 
@@ -55,16 +57,20 @@ class Players extends React.Component {
         this.reload();
     }
 
-    reload() {
-        fetch(Constants.API_ADDRESS + '/players')
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.setState({players: data, isLoading: false})
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-                this.setState({snackbar_error: true, isLoading: false})
+    async reload() {
+
+        try {
+            let data = await this.eventModel.fetchAttendees();
+
+            this.setState({
+                players: data,
+                isLoading: false});
+        } catch (e) {
+            console.log(e);
+
+            this.setState({
+                snackbar_error: true,
+                isLoading: false
             });
     }
 
