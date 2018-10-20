@@ -150,17 +150,15 @@ class Games extends React.Component {
         this.setState({snackbar_error: false})
     }
 
-    handleDeleteGame() {
-        // TO DO uncomment when removeGame is implemented
-        /*
+    async handleDeleteGame() {
         try {
-            await this.props.eventModel.removeGame(this.state.game_to_delete);
+            await this.props.eventModel.remove(this.state.game_to_delete);
         } catch (e) {
             console.log(e);
             this.setState({
-                isLoading:true;
-            })
-        }*/
+                isLoading:true
+            });
+        }
     }
 
     sortByProp(data, prop) {
