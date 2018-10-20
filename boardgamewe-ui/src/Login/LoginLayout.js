@@ -57,6 +57,8 @@ class LoginLayout extends React.Component {
     constructor(props) {
         super(props);
 
+        this.minPwdLenth = 8;
+
         this.state = {
             signInView: true,
 
@@ -74,12 +76,15 @@ class LoginLayout extends React.Component {
             surname: "",
             name: "",
 
+            usernameValid: false,
             passwordValid: false,
             emailValid: false,
-
+            surnameValid: false,
+            nameValid: false,
+            formValid: false,
             formErrors: {password: '', email: ''},
-            formValid: false
 
+            showErrors:false
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -88,70 +93,86 @@ class LoginLayout extends React.Component {
 
     switchView = () => {
         console.log("Switch view");
-        this.setState({ signInView: !this.state.signInView }, this.validateForm);
+        this.setState({
+            signInView: !this.state.signInView,
+            showErrors: false
+        }, this.validateForm);
     };
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        if (this.state.signInView) {
-            // Login request
-            try {
-                let token = await UserModel.login(this.state.username, this.state.password); // TODO
+        this.setState({showErrors : true});
 
-                axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
-                window.localStorage.accessToken = token;
+        if (this.state.formValid) {
+            if (this.state.signInView) {
+                // Login request
+                try {
+                    let token = await UserModel.login(this.state.username, this.state.password); // TODO
 
-                this.setState({ loginSuccessSnackbarOpen: true });
+                    axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
+                    window.localStorage.accessToken = token;
 
-                setTimeout(() => this.props.callbackAuthentication(), 800);
-            } catch (error) {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    // console.log(error.response.data);
-                    // console.log(error.response.status);
-                    // console.log(error.response.headers);
-                    this.setState({ loginFailureSnackbarOpen: true, loginFailureSnackbarMsg: error.response.data.message });
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                    this.setState({ loginFailureSnackbarOpen: true, loginFailureSnackbarMsg: "No response received." });
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                    this.setState({ loginFailureSnackbarOpen: true });
+                    this.setState({loginSuccessSnackbarOpen: true});
+
+                    setTimeout(() => this.props.callbackAuthentication(), 800);
+                } catch (error) {
+                    if (error.response) {
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        // console.log(error.response.data);
+                        // console.log(error.response.status);
+                        // console.log(error.response.headers);
+                        this.setState({
+                            loginFailureSnackbarOpen: true,
+                            loginFailureSnackbarMsg: error.response.data.message
+                        });
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        // http.ClientRequest in node.js
+                        console.log(error.request);
+                        this.setState({
+                            loginFailureSnackbarOpen: true,
+                            loginFailureSnackbarMsg: "No response received."
+                        });
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log('Error', error.message);
+                        this.setState({loginFailureSnackbarOpen: true});
+                    }
                 }
-            }
 
-        } else {
-            // Register request
-            try {
-                let data = await UserModel.signUp(this.state.username, this.state.password, this.state.surname, this.state.name, this.state.email);
-                console.log(data);
+            } else {
+                // Register request
+                try {
+                    let data = await UserModel.signUp(this.state.username, this.state.password, this.state.surname, this.state.name, this.state.email);
+                    console.log(data);
 
-                this.setState({ registerSuccessSnackbarOpen: true });
+                    this.setState({registerSuccessSnackbarOpen: true});
 
-                setTimeout(() => window.location.reload(), 800);
-            }
-            catch (error) {
-                if (error.response) {
-                    console.log(error.response);
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    // console.log(error.response.data);
-                    // console.log(error.response.status);
-                    // console.log(error.response.headers);
-                    this.setState({ registerFailureSnackbarOpen: true, registerFailureSnackbarMsg: error.response.data.error });
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
+                    setTimeout(() => window.location.reload(), 800);
+                }
+                catch (error) {
+                    if (error.response) {
+                        console.log(error.response);
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        // console.log(error.response.data);
+                        // console.log(error.response.status);
+                        // console.log(error.response.headers);
+                        this.setState({
+                            registerFailureSnackbarOpen: true,
+                            registerFailureSnackbarMsg: error.response.data.error
+                        });
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        // http.ClientRequest in node.js
+                        console.log(error.request);
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log('Error', error.message);
+                    }
                 }
             }
         }
@@ -189,34 +210,54 @@ class LoginLayout extends React.Component {
         let fieldValidationErrors = this.state.formErrors;
         let emailValid = this.state.emailValid;
         let passwordValid = this.state.passwordValid;
+        let usernameValid = this.state.usernameValid;
+        let nameValid = this.state.nameValid;
+        let surnameValid = this.state.surnameValid;
+
 
         switch(fieldName) {
+            case 'name':
+                nameValid = value.length > 0;
+                break;
+            case 'surname':
+                surnameValid = value.length > 0;
+                break;
+            case 'username':
+                usernameValid = value.length > 0;
+                break;
             case 'email':
                 emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
                 fieldValidationErrors.email = emailValid ? '' : 'is invalid';
                 break;
             case 'password':
-                passwordValid = value.length >= 6;
-                fieldValidationErrors.password = passwordValid ? '': 'your password should contain at least 6 characters';
+                passwordValid = value.length >= this.minPwdLenth;
+                fieldValidationErrors.password = passwordValid ? '': 'your password should contain at least ' + this.minPwdLenth +  ' characters';
                 break;
             default:
                 break;
         }
-        this.setState({formErrors: fieldValidationErrors,
+        this.setState({
+            formErrors: fieldValidationErrors,
+            usernameValid: usernameValid,
             emailValid: emailValid,
+            nameValid: nameValid,
+            surnameValid: surnameValid,
             passwordValid: passwordValid
         }, this.validateForm);
     }
 
     validateForm() {
-        if (!this.state.signInView) {
+        if (this.state.signInView) {
             this.setState({
-                formValid: this.state.emailValid &&
-                    this.state.passwordValid
+                formValid: this.state.usernameValid && this.state.passwordValid
             });
         } else {
             this.setState({
-                formValid: this.state.passwordValid
+                formValid: this.state.usernameValid &&
+                    this.state.emailValid &&
+                    this.state.passwordValid &&
+                    this.state.nameValid &&
+                    this.state.surnameValid
             });
         }
     }
@@ -242,6 +283,7 @@ class LoginLayout extends React.Component {
                             autoFocus
                             value={this.state.username}
                             onChange={this.handleInputChange}
+                            error={this.state.showErrors && !this.state.usernameValid}
                         />
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
@@ -253,7 +295,7 @@ class LoginLayout extends React.Component {
                             autoComplete="current-password"
                             value={this.state.password}
                             onChange={this.handleInputChange}
-                            error={!this.state.passwordValid}
+                            error={this.state.showErrors && !this.state.passwordValid}
                         />
                     </FormControl>
 
@@ -264,7 +306,6 @@ class LoginLayout extends React.Component {
                         color="primary"
                         className={classes.submit}
                         onClick={this.handleSubmit}
-                        disabled={!this.state.formValid}
                     >
                         Sign in
                     </Button>
@@ -301,6 +342,7 @@ class LoginLayout extends React.Component {
                             autoComplete="username"
                             value={this.state.username}
                             onChange={this.handleInputChange}
+                            error={this.state.showErrors && !this.state.usernameValid}
                         />
                     </FormControl>
 
@@ -313,7 +355,7 @@ class LoginLayout extends React.Component {
                             autoComplete="current-password"
                             value={this.state.password}
                             onChange={this.handleInputChange}
-                            error={!this.state.passwordValid}
+                            error={this.state.showErrors && !this.state.passwordValid}
                         />
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
@@ -325,7 +367,7 @@ class LoginLayout extends React.Component {
                             autoFocus
                             value={this.state.email}
                             onChange={this.handleInputChange}
-                            error={!this.state.emailValid}
+                            error={this.state.showErrors && !this.state.emailValid}
                         />
                     </FormControl>
 
@@ -337,6 +379,7 @@ class LoginLayout extends React.Component {
                             autoComplete="surname"
                             value={this.state.surname}
                             onChange={this.handleInputChange}
+                            error={this.state.showErrors && !this.state.surnameValid}
                         />
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
@@ -347,6 +390,7 @@ class LoginLayout extends React.Component {
                             autoComplete="name"
                             value={this.state.name}
                             onChange={this.handleInputChange}
+                            error={this.state.showErrors && !this.state.nameValid}
                         />
                     </FormControl>
 
@@ -357,7 +401,6 @@ class LoginLayout extends React.Component {
                         color="primary"
                         className={classes.submit}
                         onClick={this.handleSubmit}
-                        disabled={!this.state.formValid}
                     >
                         Sign up
                     </Button>
