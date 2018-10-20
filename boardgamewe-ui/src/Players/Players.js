@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import CloseIcon from '@material-ui/icons/Close';
 
 import AddPlayerModal from './AddPlayerModal'
-import {Constants} from "../utils/Constants";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -37,8 +36,6 @@ class Players extends React.Component {
     constructor(props) {
         super(props);
 
-        this.eventModel = props.eventModel;
-
         this.state = {
             players: [],
 
@@ -52,15 +49,20 @@ class Players extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ isLoading: true });
+        this.setState({
+            isLoading: true
+        })
+    }
 
-        this.reload();
+    componentDidUpdate() {
+        if (this.props.eventModel && this.state.isLoading) {
+            this.reload();
+        }
     }
 
     async reload() {
-
         try {
-            let data = await this.eventModel.fetchAttendees();
+            let data = await this.props.eventModel.fetchAttendees();
 
             this.setState({
                 players: data,
@@ -72,6 +74,7 @@ class Players extends React.Component {
                 snackbar_error: true,
                 isLoading: false
             });
+        }
     }
 
     handleCloseSnack(event, reason) {
@@ -93,7 +96,6 @@ class Players extends React.Component {
             )
         }
         let empty_players = (<div style={{width: "100%"}}><Typography>No player found</Typography></div>);
-
 
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>

@@ -11,7 +11,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import RankingTable from "../Rankings/RankingTable";
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 
-import {Constants} from "../utils/Constants";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import IconButton from "@material-ui/core/IconButton/IconButton";
@@ -69,12 +68,9 @@ class Games extends React.Component {
     constructor(props) {
         super(props);
 
-        this.eventModel = props.eventModel;
-
         this.state = {
             games: [],
             n_cols: 4,
-            isLoading: true,
             snackbar_error: false,
             open_modal: false,
             confirm_delete_open: false,
@@ -99,20 +95,25 @@ class Games extends React.Component {
     }
 
     handleWindowSizeChange = () => {
-        console.log(window.innerWidth);
         this.setState({ is_mobile: window.innerWidth < Games.IS_MOBILE_THRESHOLD })
 
     };
 
     componentDidMount() {
-        this.reload()
+        this.setState({
+            isLoading:true
+        })
+    }
+
+    componentDidUpdate() {
+        if (this.props.eventModel && this.state.isLoading) {
+            this.reload();
+        }
     }
 
     async reload() {
-        this.setState({ isLoading: true });
-
         try {
-            let games = await this.eventModel.fetchGames();
+            let games = await this.props.eventModel.fetchGames();
 
             this.setState({
                 games: games,
@@ -150,22 +151,16 @@ class Games extends React.Component {
     }
 
     handleDeleteGame() {
-        let url = new URL(Constants.API_ADDRESS + '/game/' + this.state.game_to_delete);
-
-        fetch(url, {
-            method: 'DELETE',
-        })
-            .then(response => {
-                if (!response.ok) throw Error('Request failed');
-                return response.json();
+        // TO DO uncomment when removeGame is implemented
+        /*
+        try {
+            await this.props.eventModel.removeGame(this.state.game_to_delete);
+        } catch (e) {
+            console.log(e);
+            this.setState({
+                isLoading:true;
             })
-            .then(function (data) {
-                console.log(data);
-                this.reload();
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-            })
+        }*/
     }
 
     sortByProp(data, prop) {
@@ -182,9 +177,6 @@ class Games extends React.Component {
                 </div>
             )
         }
-
-        console.log("GAMES");
-        console.log(this.props);
 
         return (
             <div className={this.state.is_mobile ? classes.mobileRoot : classes.root} style={{backgroundColor: '#fafafa'}}>
@@ -232,75 +224,67 @@ class Games extends React.Component {
                     </Tooltip>
                 </div>
 
-                {
-                    this.state.games.length > 0 ? (
-                        <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
-                            {
-                                this.state.games.map((game) => {
-                                    game.players.sort(function (first, second) {
-                                        if (first.rank === second.rank) {
-                                            return 0;
-                                        }
-                                        else if (first.rank < second.rank) {
-                                            return -1;
-                                        }
-                                        else {
-                                            return 1;
-                                        }
-                                    });
+                <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
+                    {
+                        this.state.games.map((game) => {
+                            game.players.sort(function (first, second) {
+                                if (first.rank === second.rank) {
+                                    return 0;
+                                }
+                                else if (first.rank < second.rank) {
+                                    return -1;
+                                }
+                                else {
+                                    return 1;
+                                }
+                            });
 
-                                    game.players[0].winner = true;
-                                    console.log(game.players);
+                            game.players[0].winner = true;
+                            console.log(game.players);
 
-                                    let created_at = new Date(game.createdAt);
-                                    return (
-                                        <ExpansionPanel key={game.id} >
-                                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                                <Typography className={classes.heading}>{game.board_game.name}</Typography>
-                                                <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
-                                            </ExpansionPanelSummary>
-                                            <ExpansionPanelDetails style={{width: "50%"}}>
-                                                <Grid item xs={12}>
-                                                    <Grid
-                                                        container
-                                                        spacing={16}
-                                                        alignItems="center"
-                                                        direction="row"
-                                                        justify="flex-start"
-                                                    >
-                                                        <Grid item>
-                                                            <div className={classes.tableWrapper}>
-                                                                <RankingTable
-                                                                    ranking={game.players}
-                                                                    modifier={a => a}
-                                                                    isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
-                                                            </div>
+                            let created_at = new Date(game.createdAt);
+                            return (
+                                <ExpansionPanel key={game.id} >
+                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                        <Typography className={classes.heading}>{game.board_game.name}</Typography>
+                                        <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
+                                    </ExpansionPanelSummary>
+                                    <ExpansionPanelDetails style={{width: "50%"}}>
+                                        <Grid item xs={12}>
+                                            <Grid
+                                                container
+                                                spacing={16}
+                                                alignItems="center"
+                                                direction="row"
+                                                justify="flex-start"
+                                            >
+                                                <Grid item>
+                                                    <div className={classes.tableWrapper}>
+                                                        <RankingTable
+                                                            ranking={game.players}
+                                                            modifier={a => a}
+                                                            isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
+                                                    </div>
 
-                                                        </Grid>
-                                                    </Grid>
                                                 </Grid>
-                                            </ExpansionPanelDetails>
-                                            <Divider />
-                                            <ExpansionPanelActions>
-                                                <IconButton
-                                                    key="close"
-                                                    aria-label="Close"
-                                                    color="inherit"
-                                                    onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game.id})}>
-                                                    <DeleteIcon/>
-                                                </IconButton>
-                                            </ExpansionPanelActions>
-                                        </ExpansionPanel>
-                                    )
-                                })
-                            }
-                        </div>
-
-                    ) : <Typography>No game found</Typography>
-
-                }
-
-
+                                            </Grid>
+                                        </Grid>
+                                    </ExpansionPanelDetails>
+                                    <Divider />
+                                    <ExpansionPanelActions>
+                                        <IconButton
+                                            key="close"
+                                            aria-label="Close"
+                                            color="inherit"
+                                            onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game.id})}>
+                                            <DeleteIcon/>
+                                        </IconButton>
+                                    </ExpansionPanelActions>
+                                </ExpansionPanel>
+                            )
+                        })
+                    }
+                </div>
             </div>
         );
     }
