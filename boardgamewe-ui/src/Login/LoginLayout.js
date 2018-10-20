@@ -95,7 +95,7 @@ class LoginLayout extends React.Component {
         console.log("Switch view");
         this.setState({
             signInView: !this.state.signInView,
-            showErrors: false
+            showErrors: false,
         }, this.validateForm);
     };
 
@@ -306,6 +306,7 @@ class LoginLayout extends React.Component {
                         color="primary"
                         className={classes.submit}
                         onClick={this.handleSubmit}
+                        disabled={!this.state.formValid}
                     >
                         Sign in
                     </Button>
@@ -401,6 +402,7 @@ class LoginLayout extends React.Component {
                         color="primary"
                         className={classes.submit}
                         onClick={this.handleSubmit}
+                        disabled={!this.state.formValid}
                     >
                         Sign up
                     </Button>
