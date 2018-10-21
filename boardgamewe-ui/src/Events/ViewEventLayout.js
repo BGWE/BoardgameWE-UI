@@ -118,16 +118,16 @@ class ViewEventLayout extends React.Component {
         event.preventDefault();
 
         // Convert dates
-        let startDate = ViewEventLayout.convertToISO(this.state.startDate);
-        let endDate = ViewEventLayout.convertToISO(this.state.endDate);
+        let start = ViewEventLayout.convertToISO(this.state.startDate);
+        let end = ViewEventLayout.convertToISO(this.state.endDate);
 
-        let data = await EventModel.createEvent(
-            this.state.name,
-            this.state.location,
-            startDate,
-            endDate,
-            this.state.description
-        );
+        let data = await new EventModel({
+            name: this.state.name,
+            location: this.state.location,
+            start,
+            end,
+            description: this.state.description
+        }).save();
 
         console.log(data);
 

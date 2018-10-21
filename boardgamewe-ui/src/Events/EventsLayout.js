@@ -104,10 +104,10 @@ class EventsLayout extends React.Component {
     }
 
     async loadEvents() {
-        let data = await Event.fetchAllEvents();
-        console.log(data);
+        let events = await Event.fetchAll();
+        console.log(events);
         this.setState({
-            events: data.events
+            events: events
         })
     }
 
