@@ -27,6 +27,16 @@ export default class Game extends Model {
         this.players = []; // for creation, {Array<{user: Number, score: Number}>}
     }
 
+    /** @inheritdoc */
+    get uri() {
+        if(this.isNew()) {
+            return `/event/${this.id_event}/${this.className}`;
+        }
+        else {
+            return `${this.className}/${this.id}`;
+        }
+    }
+
     static async fetchAllInEvent(idEvent) {
         if(idEvent == null) {
             throw new Error("Cannot fetch games of an event with no ID.");

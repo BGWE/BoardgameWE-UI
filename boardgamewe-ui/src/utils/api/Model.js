@@ -102,10 +102,9 @@ export default class Model {
      */
     static async fetchAll() {
         let {data} = await axios.get(this.collectionName);
-        let collection = data[this.collectionName];
 
         let processedCollection = [];
-        collection.forEach(elem => {
+        data.forEach(elem => {
             let model = new this(elem);
             processedCollection.push(model);
         });
