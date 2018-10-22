@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import CloseIcon from '@material-ui/icons/Close';
 
 import AddPlayerModal from './AddPlayerModal'
-import {Constants} from "../utils/Constants";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import Typography from "@material-ui/core/Typography/Typography";
@@ -50,22 +49,32 @@ class Players extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ isLoading: true });
-
-        this.reload();
+        this.setState({
+            isLoading: true
+        })
     }
 
-    reload() {
-        fetch(Constants.API_ADDRESS + '/players')
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.setState({players: data, isLoading: false})
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-                this.setState({snackbar_error: true, isLoading: false})
+    componentDidUpdate() {
+        if (this.props.eventModel && this.state.isLoading) {
+            this.reload();
+        }
+    }
+
+    async reload() {
+        try {
+            let data = await this.props.eventModel.fetchAttendees();
+
+            this.setState({
+                players: data,
+                isLoading: false});
+        } catch (e) {
+            console.log(e);
+
+            this.setState({
+                snackbar_error: true,
+                isLoading: false
             });
+        }
     }
 
     handleCloseSnack(event, reason) {
@@ -87,7 +96,6 @@ class Players extends React.Component {
             )
         }
         let empty_players = (<div style={{width: "100%"}}><Typography>No player found</Typography></div>);
-
 
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import RankingCard from "./RankingCard";
 import RankingTable from "./RankingTable";
 
-import {Constants} from "../utils/Constants";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
 import { withStyles } from '@material-ui/core/styles';
@@ -65,7 +64,6 @@ class Rankings extends React.Component {
         this.state = {
             spacing: '40',
             rankings: null,
-            isLoading: true,
 
             is_mobile: window.innerWidth < Rankings.IS_MOBILE_THRESHOLD
         };
@@ -84,8 +82,15 @@ class Rankings extends React.Component {
     };
 
     componentDidMount() {
-        this.setState({ isLoading: true });
-        this.reload();
+        this.setState({
+            isLoading:true
+        })
+    }
+
+    componentDidUpdate() {
+        if (this.props.eventModel && this.state.isLoading) {
+            this.reload();
+        }
     }
 
     getFirstName(player) {
@@ -126,18 +131,22 @@ class Rankings extends React.Component {
         );
     }
 
-    reload() {
-        fetch(Constants.API_ADDRESS + '/stats/rankings/')
-            .then(response => response.json())
-            .then(function (data) {
-                console.log("request");
-                console.log(data);
-                this.setState({ rankings: data, isLoading: false })
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-                this.setState({ snackbar_error: true, isLoading: false })
+    async reload() {
+
+        try {
+            let data = await this.props.eventModel.fetchRankings();
+
+            this.setState({
+                rankings: data,
+                isLoading: false
             });
+        } catch (e) {
+            console.log(e);
+            this.setState({
+                snackbar_error: true,
+                isLoading: false
+            });
+        }
     }
 
     render () {
