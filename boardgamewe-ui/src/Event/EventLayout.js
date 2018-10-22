@@ -83,6 +83,8 @@ class EventLayout extends React.Component{
             menuItems.push((<MenuItem key={uri} uri={this.props.match.url + uri} name={menuItemsList[uri]} onClick={this.handleDrawerClose} />))
         }
 
+        console.log(this.state.event_model);
+
         return (
             <div className={classes.root}>
                 <Drawer open={this.state.menuOpen} onClose={this.handleDrawerClose}>
@@ -111,12 +113,12 @@ class EventLayout extends React.Component{
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Switch>
-                        <Route path={`${this.props.match.path}/boardgames`} render={() => <BoardgamesList {...this.props} eventModel={this.state.event_model}/> } />
-                        <Route path={`${this.props.match.path}/boardgame/:bgid`} render={() => <Boardgame {...this.props} eventModel={this.state.event_model}/> } />
-                        <Route path={`${this.props.match.path}/players`} render={() => <Players {...this.props} eventModel={this.state.event_model}/> } />
-                        <Route path={`${this.props.match.path}/games/add`} render={() => <AddGame {...this.props} eventModel={this.state.event_model}/> } />
-                        <Route path={`${this.props.match.path}/games`} render={() => <Games {...this.props} eventModel={this.state.event_model}/> } />
-                        <Route path={`${this.props.match.path}/rankings`} render={() => <Rankings {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/boardgames`} render={(props) => <BoardgamesList {...props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/boardgame/:bgid`} render={(props) => <Boardgame {...props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/players`} render={(props) => <Players {...props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/games/add`} render={(props) => <AddGame {...props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/games`} render={(props) => <Games {...props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/rankings`} render={(props) => <Rankings {...props} eventModel={this.state.event_model}/> } />
                     </Switch>
                 </main>
             </div>
