@@ -17,6 +17,7 @@ import Games from "../Games/Games";
 import AddGame from "../Games/AddGame";
 import Rankings from "../Rankings/Rankings";
 import EventModel from "../utils/api/Event";
+import AccountMenu from "../Layout/AccountMenu.js";
 
 const styles = theme => ({
     root: {
@@ -93,8 +94,7 @@ class EventLayout extends React.Component{
                         {menuItems}
                     </div>
                 </Drawer>
-                <AppBar
-                >
+                <AppBar>
                     <Toolbar disableGutters={true}>
                         <IconButton
                             color="inherit"
@@ -106,6 +106,7 @@ class EventLayout extends React.Component{
                         <Typography variant="h6" color="inherit" noWrap>
                             {this.state.event_model ? this.state.event_model.name : ""}
                         </Typography>
+                        <AccountMenu callbackLogout={this.props.callbackLogout}/>
                     </Toolbar>
                 </AppBar>
                 <main className={classes.content}>

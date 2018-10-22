@@ -43,13 +43,13 @@ class App extends Component {
     }
   }
 
-  setAuthenticated() {
-    this.setState({authenticated: true});
+  setAuthenticated(val) {
+    this.setState({authenticated: val});
   }
 
   render() {
         if(!this.state.authenticated) {
-            return  <LoginLayout callbackAuthentication={() => this.setAuthenticated()} />
+            return  <LoginLayout callbackAuthentication={() => this.setAuthenticated(true)} />
         }
         else {
             return (
@@ -58,9 +58,9 @@ class App extends Component {
                         <Switch>
                             <Route exact path="/register" component={LoginLayout} />
                             <Route exact path="/events/add" component={ViewEventLayout} />
-                            <Route exact path="/events" component={EventsLayout} />
-                            <Route path="/event/:eventid" component={EventLayout} />
-                            <Route path="/search/:name" component={SearchResults}/>
+                            <Route exact path="/events" render={routeProps => <EventsLayout {...routeProps} callbackLogout={() => this.setAuthenticated(false)} /> } />
+                            <Route path="/event/:eventid" render={routeProps => <EventLayout {...routeProps} callbackLogout={() => this.setAuthenticated(false)} />} />
+                            <Route path="/search/:name" component={SearchResults} />
                             <Route path="/" component={AppLayout} />
                         </Switch>
                     </div>
