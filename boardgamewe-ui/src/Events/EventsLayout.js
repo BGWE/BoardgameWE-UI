@@ -21,6 +21,7 @@ import Button from "@material-ui/core/Button/Button";
 
 import EventIcon from '@material-ui/icons/Event';
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
+import User from "../utils/api/User";
 
 const styles = theme => ({
     appBar: {
@@ -86,8 +87,6 @@ const styles = theme => ({
         textDecoration: "none"
     }
 });
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 class EventsLayout extends React.Component {
 
