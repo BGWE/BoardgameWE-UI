@@ -198,11 +198,11 @@ class BoardGameModal extends React.Component {
                         <Button onClick={this.handleClose} color="secondary" >
                             Cancel
                         </Button>
-                        <Link to={this.build_uri(this.state.gamename)} style={{ textDecoration: 'none' }}>
-                            <Button onClick={this.handleClose} color="secondary" variant="contained">
-                                Search
-                            </Button>
-                        </Link>
+                        {/*<Link to={this.build_uri(this.state.gamename)} style={{ textDecoration: 'none' }}>*/}
+                            {/*<Button onClick={this.handleClose} color="secondary" variant="contained">*/}
+                                {/*Search*/}
+                            {/*</Button>*/}
+                        {/*</Link>*/}
 
                     </DialogActions>
                 </Dialog>
