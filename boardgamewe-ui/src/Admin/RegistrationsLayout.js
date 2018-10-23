@@ -21,7 +21,7 @@ const styles = theme => ({
     },
     usersList: {
         width: '100%',
-        maxWidth: 400,
+        maxWidth: 500,
         backgroundColor: theme.palette.background.paper,
     },
     button: {
@@ -78,19 +78,19 @@ class RegistrationsLayout extends React.Component {
     render() {
         const { classes } = this.props;
 
-        let secondaryAction = (user_id) => {
+        let undefinedValidate = (user_id) => {
             return (
             <ListItemSecondaryAction>
                 <Button variant="outlined" color="primary" className={classes.button} onClick={() => {this.handleValidationButtons(user_id, true)}}>
-                    Accept
+                    Approve
                 </Button>
-                {/*<Button variant="outlined" color="secondary" className={classes.button} onClick={() => {this.handleValidationButtons(user_id, false)}}>*/}
-                    {/*Refuse*/}
-                {/*</Button>*/}
+                <Button variant="outlined" color="secondary" className={classes.button} onClick={() => {this.handleValidationButtons(user_id, false)}}>
+                    Reject
+                </Button>
             </ListItemSecondaryAction>
         )};
 
-        let rejectAction = (user_id) => {
+        let userValidated = (user_id) => {
             return (
                 <ListItemSecondaryAction>
                     <Button variant="outlined" color="secondary" className={classes.button} onClick={() => {this.handleValidationButtons(user_id, false)}}>
@@ -99,13 +99,48 @@ class RegistrationsLayout extends React.Component {
                 </ListItemSecondaryAction>
             )};
 
+        let userRejected = (user_id) => {
+            return (
+                <ListItemSecondaryAction>
+                    <Button variant="outlined" color="primary" className={classes.button} onClick={() => {this.handleValidationButtons(user_id, true)}}>
+                        Approve
+                    </Button>
+                </ListItemSecondaryAction>
+            )};
+
+        let generateSecondaryAction = (validated, id) => {
+          if (validated === null) {
+              return undefinedValidate(id)
+          } else if (validated) {
+              return userValidated(id)
+          } else {
+              return userRejected(id)
+          }
+        };
+
+        let generatedSecondaryText = (validated, admin) => {
+            if (admin) {
+                return "Admin"
+            } else if (validated === null) {
+                return "Not registered"
+            } else if (validated) {
+                return "Registered"
+            } else {
+                return "Rejected"
+            }
+        };
+
         let list = (
             <div className={classes.usersList}>
                 <List>
                     {this.state.users.map(value => (
                         <ListItem key={value.id} divider>
-                            <ListItemText primary={`${value.name} ${value.surname} ${value.admin ? "(admin)" : ""}`} />
-                            {!value.validated ? secondaryAction(value.id) : rejectAction(value.id)}
+                            <ListItemText
+                                primary={`${value.name} ${value.surname}`}
+                                secondary={generatedSecondaryText(value.validated, value.admin)}
+                            />
+                            {generateSecondaryAction(value.validated, value.id)}
+
                         </ListItem>
                     ))}
                 </List>
