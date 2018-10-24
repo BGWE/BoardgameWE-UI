@@ -96,85 +96,88 @@ class LoginLayout extends React.Component {
         this.setState({
             signInView: !this.state.signInView,
             showErrors: false
-        }, this.validateForm);
+        });
     };
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        this.setState({showErrors : true});
 
-        if (this.state.formValid) {
-            if (this.state.signInView) {
-                // Login request
-                try {
-                    let token = await UserModel.login(this.state.username, this.state.password); // TODO
+        if (this.state.signInView) {
+            // Login request
+            try {
+                let token = await UserModel.login(this.state.username, this.state.password);
 
-                    axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
-                    window.localStorage.accessToken = token;
+                axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
+                window.localStorage.accessToken = token;
 
-                    this.setState({loginSuccessSnackbarOpen: true});
+                this.setState({loginSuccessSnackbarOpen: true});
 
-                    setTimeout(() => this.props.callbackAuthentication(), 800);
-                } catch (error) {
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        // console.log(error.response.data);
-                        // console.log(error.response.status);
-                        // console.log(error.response.headers);
-                        this.setState({
-                            loginFailureSnackbarOpen: true,
-                            loginFailureSnackbarMsg: error.response.data.message
-                        });
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                        this.setState({
-                            loginFailureSnackbarOpen: true,
-                            loginFailureSnackbarMsg: "No response received."
-                        });
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                        this.setState({loginFailureSnackbarOpen: true});
-                    }
-                }
-
-            } else {
-                // Register request
-                try {
-                    let data = await UserModel.signUp(this.state.username, this.state.password, this.state.surname, this.state.name, this.state.email);
-                    console.log(data);
-
-                    this.setState({registerSuccessSnackbarOpen: true});
-
-                    setTimeout(() => window.location.reload(), 800);
-                }
-                catch (error) {
-                    if (error.response) {
-                        console.log(error.response);
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        // console.log(error.response.data);
-                        // console.log(error.response.status);
-                        // console.log(error.response.headers);
-                        this.setState({
-                            registerFailureSnackbarOpen: true,
-                            registerFailureSnackbarMsg: error.response.data.error
-                        });
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log('Error', error.message);
-                    }
+                setTimeout(() => this.props.callbackAuthentication(), 800);
+            } catch (error) {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    // console.log(error.response.data);
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                    this.setState({
+                        loginFailureSnackbarOpen: true,
+                        loginFailureSnackbarMsg: error.response.data.message,
+                        showErrors:true
+                    });
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                    this.setState({
+                        loginFailureSnackbarOpen: true,
+                        loginFailureSnackbarMsg: "No response received."
+                    });
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                    this.setState({loginFailureSnackbarOpen: true});
                 }
             }
+
+        } else  if (this.state.formValid) {
+            // Register request - only called if the form is valid
+            try {
+                let data = await UserModel.signUp(this.state.username, this.state.password, this.state.surname, this.state.name, this.state.email);
+                console.log(data);
+
+                this.setState({registerSuccessSnackbarOpen: true});
+
+                setTimeout(() => window.location.reload(), 800);
+            }
+            catch (error) {
+                if (error.response) {
+                    console.log(error.response);
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    // console.log(error.response.data);
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
+                    this.setState({
+                        registerFailureSnackbarOpen: true,
+                        registerFailureSnackbarMsg: error.response.data.error
+                    });
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+            }
+        } else {
+            // Registration form is invalid -> show it to the user.
+            this.setState({
+                showErrors: true
+            })
         }
         return false;
     };
@@ -182,8 +185,16 @@ class LoginLayout extends React.Component {
     handleInputChange(event) {
         const name = event.target.name;
         const value = event.target.value;
-        this.setState({[name]: value},
-            () => { this.validateField(name, value) });
+
+        this.setState({[name]: value});
+
+        if (!this.state.signInView) {
+            this.validateField(name, value);
+        } else if (this.state.showErrors) {
+            this.setState({
+                showErrors: false
+            })
+        }
     }
 
     handleCloseSnackbar = () => {
@@ -243,23 +254,19 @@ class LoginLayout extends React.Component {
             nameValid: nameValid,
             surnameValid: surnameValid,
             passwordValid: passwordValid
-        }, this.validateForm);
+        }, this.validateRegistrationForm);
     }
 
-    validateForm() {
-        if (this.state.signInView) {
-            this.setState({
-                formValid: this.state.usernameValid && this.state.passwordValid
-            });
-        } else {
-            this.setState({
-                formValid: this.state.usernameValid &&
-                    this.state.emailValid &&
-                    this.state.passwordValid &&
-                    this.state.nameValid &&
-                    this.state.surnameValid
-            });
-        }
+    validateRegistrationForm() {
+        let valid = this.state.usernameValid &&
+            this.state.emailValid &&
+            this.state.passwordValid &&
+            this.state.nameValid &&
+            this.state.surnameValid;
+
+        this.setState({
+            formValid: valid
+        });
     }
 
     render() {
@@ -283,7 +290,7 @@ class LoginLayout extends React.Component {
                             autoFocus
                             value={this.state.username}
                             onChange={this.handleInputChange}
-                            error={this.state.showErrors && !this.state.usernameValid}
+                            error={this.state.showErrors}
                         />
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
@@ -295,7 +302,7 @@ class LoginLayout extends React.Component {
                             autoComplete="current-password"
                             value={this.state.password}
                             onChange={this.handleInputChange}
-                            error={this.state.showErrors && !this.state.passwordValid}
+                            error={this.state.showErrors}
                         />
                     </FormControl>
 
