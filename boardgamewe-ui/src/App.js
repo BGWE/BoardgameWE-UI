@@ -12,6 +12,7 @@ import SearchResults from "./Boardgames/SearchResults/SearchResults";
 import axios from "axios";
 import {Constants} from "./utils/Constants.js";
 import ViewEventLayout from "./Events/ViewEventLayout";
+import AdminLayout from "./Admin/AdminLayout";
 
 axios.defaults.baseURL = Constants.API_ADDRESS;
 
@@ -29,7 +30,7 @@ class App extends Component {
         return response;
     }, 
     error => {
-        if(error.response.status === "401") {
+        if(error.response.status === 401) {
             this.setState({authenticated: false});
         }
         error.message += " - Response data: " + JSON.stringify(error.response.data);
@@ -56,6 +57,7 @@ class App extends Component {
                 <MuiThemeProvider theme={theme}>
                     <div className="App">
                         <Switch>
+                            <Route path="/admin" component={AdminLayout} />
                             <Route exact path="/register" component={LoginLayout} />
                             <Route exact path="/events/add" component={ViewEventLayout} />
                             <Route exact path="/events" component={EventsLayout} />

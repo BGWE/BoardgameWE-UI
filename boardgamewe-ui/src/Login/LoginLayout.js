@@ -57,7 +57,7 @@ class LoginLayout extends React.Component {
     constructor(props) {
         super(props);
 
-        this.minPwdLenth = 8;
+        this.minPwdLenth = 7;
 
         this.state = {
             signInView: true,
