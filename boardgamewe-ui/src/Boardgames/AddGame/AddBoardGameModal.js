@@ -52,6 +52,8 @@ class BoardGameModal extends React.Component {
         };
 
         this._handleKeyPress = this._handleKeyPress.bind(this);
+
+        this.searchTextField = React.createRef()
     }
 
 
@@ -77,6 +79,10 @@ class BoardGameModal extends React.Component {
                 board_games: data,
                 isLoading: false
             });
+            console.log(this.searchTextField.current);
+
+            // Refocus on the search text field
+            this.searchTextField.current.focus()
         }
 
     };
@@ -173,7 +179,6 @@ class BoardGameModal extends React.Component {
                     maxWidth = {'sm'}
                     className={classes.dialog}
                 >
-                    {/*<DialogTitle id="form-dialog-title">Add a board game</DialogTitle>*/}
                     <DialogContent>
                         {/*<DialogContentText>*/}
                             {/*Let's first search for your game.*/}
@@ -188,21 +193,16 @@ class BoardGameModal extends React.Component {
                             value={this.state.gamename}
                             onChange={this.handleChange('gamename')}
                             disabled={this.state.isLoading}
+                            inputRef={this.searchTextField}
                             fullWidth
                             onKeyPress={this._handleKeyPress}
                         />
-                        {/*<IntegrationDownshift />*/}
                         {results}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleClose} color="secondary" >
                             Cancel
                         </Button>
-                        {/*<Link to={this.build_uri(this.state.gamename)} style={{ textDecoration: 'none' }}>*/}
-                            {/*<Button onClick={this.handleClose} color="secondary" variant="contained">*/}
-                                {/*Search*/}
-                            {/*</Button>*/}
-                        {/*</Link>*/}
 
                     </DialogActions>
                 </Dialog>
