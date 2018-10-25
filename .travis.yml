@@ -6,6 +6,7 @@ node_js:
 install:
 - cd boardgamewe-ui
 - npm install
+- npm install -g firebase-tools
 
 script:
 - npm run build
