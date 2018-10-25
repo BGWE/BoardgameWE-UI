@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
-import {menuItemsList} from "./Menu/MenuItemsList";
+import {menuItemsList, secondaryItemsList} from "./Menu/MenuItemsList";
 import MenuItem from "./Menu/MenuItem";
 import {Route, Switch} from "react-router-dom";
 import Boardgame from "../Boardgames/Boardgame/Boardgame";
@@ -17,6 +17,7 @@ import Games from "../Games/Games";
 import AddGame from "../Games/AddGame";
 import Rankings from "../Rankings/Rankings";
 import EventModel from "../utils/api/Event";
+import Divider from "@material-ui/core/Divider/Divider";
 
 const styles = theme => ({
     root: {
@@ -91,10 +92,17 @@ class EventLayout extends React.Component{
                         role="button"
                     >
                         {menuItems}
+
+                        <Divider/>
+                        <MenuItem
+                            key={"/"}
+                            uri={"/"}
+                            name={"Other events"}
+                            onCLick={this.handleDrawerClose}
+                        />
                     </div>
                 </Drawer>
-                <AppBar
-                >
+                <AppBar>
                     <Toolbar disableGutters={true}>
                         <IconButton
                             color="inherit"
@@ -113,7 +121,6 @@ class EventLayout extends React.Component{
                     <Switch>
                         <Route path={`${this.props.match.path}/boardgames`} render={() => <BoardgamesList {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/boardgame/:bgid`} render={() => <Boardgame {...this.props} eventModel={this.state.event_model}/> } />
-                        <Route path={`${this.props.match.path}/players`} render={() => <Players {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/games/add`} render={() => <AddGame {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/games`} render={() => <Games {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/rankings`} render={() => <Rankings {...this.props} eventModel={this.state.event_model}/> } />
