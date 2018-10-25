@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+import {Link} from "react-router-dom";
 
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -70,9 +70,13 @@ class AccountMenu extends React.Component{
                     open={opened}
                     onClose={this.handleClose}
                 >
-                        <MenuItem onClick={this.handleClose}>Profile</MenuItem> {/* TODO */}
-                        <MenuItem onClick={this.handleClose}>My library</MenuItem> {/* TODO */}
-                        <MenuItem onClick={this.logout}>Logout</MenuItem>
+                    <Link style={{ textDecoration: 'none' }} to="/account/profile" onClick={this.handleClose}>
+                        <MenuItem>Profile</MenuItem>
+                    </Link>
+                    <Link style={{ textDecoration: 'none' }} to="/account/library" onClick={this.handleClose}>
+                        <MenuItem>My library</MenuItem>
+                    </Link>
+                    <MenuItem onClick={this.logout}>Logout</MenuItem>
                 </Menu>
             </div>
         )

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import {Route, Switch} from "react-router-dom";
 import AppLayout from "./AppLayout";
+import AccountLayout from "./Account/AccountLayout";
 import LoginLayout from "./Login/LoginLayout";
 import EventsLayout from "./Events/EventsLayout";
 import EventLayout from "./Event/EventLayout";
@@ -56,6 +57,7 @@ class App extends Component {
                 <MuiThemeProvider theme={theme}>
                     <div className="App">
                         <Switch>
+                            <Route path="/account" render={routeProps => <AccountLayout {...routeProps} callbackLogout={() => this.setAuthenticated(false)} /> } />
                             <Route exact path="/register" component={LoginLayout} />
                             <Route exact path="/events/add" component={ViewEventLayout} />
                             <Route exact path="/events" render={routeProps => <EventsLayout {...routeProps} callbackLogout={() => this.setAuthenticated(false)} /> } />

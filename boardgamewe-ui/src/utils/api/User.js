@@ -34,7 +34,7 @@ export default class User extends Model {
      */
     static async fetchCurrent() {
         let {data} = await axios.get("user/current");
-        return new this(data.user);
+        return new this(data);
     }
 
     /**
