@@ -82,7 +82,7 @@ export default class Event extends Model {
         if(this.isNew()) {
             throw new Error("Cannot fetch rankings for an event with no ID");
         }
-        let {data} = await axios.post(`event/${this.id}/rankings`);
+        let {data} = await axios.get(`event/${this.id}/rankings`);
         return data;
     }
 }
