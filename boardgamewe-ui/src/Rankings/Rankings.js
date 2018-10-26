@@ -17,41 +17,9 @@ const styles = theme => ({
         marginLeft: '0px',
         marginRight: '0px',
     },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
-        "justify-content": "center",
-
-    },
-    secondaryHeading: {
-        fontSize: theme.typography.pxToRem(26),
-        color: theme.palette.text.primary,
-        "line-height": "px",
-
-    },
-    icon: {
-        verticalAlign: 'bottom',
-        height: 20,
-        width: 20,
-    },
-    details: {
-        alignItems: 'center',
-    },
-    helper: {
-        borderLeft: `2px solid ${theme.palette.divider}`,
-        padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-    },
-    link: {
-        color: theme.palette.primary.main,
-        textDecoration: 'none',
-        '&:hover': {
-            textDecoration: 'underline',
-        },
-    },
     grid_card: {
         width: "40%",
         minWidth: "350px",
-        // maxWidth: "600px"
     }
 });
 
@@ -94,7 +62,13 @@ class Rankings extends React.Component {
     }
 
     getFirstName(player) {
-        return player.player.name.split(" ")[0];
+        let firstname;
+        if (player.name) {
+            firstname = player.name.split(" ")[0];
+        } else {
+            firstname = player.user.name;
+        }
+        return firstname;
     }
 
     getRankingBest (ranking_name, modifier) {
@@ -104,11 +78,11 @@ class Rankings extends React.Component {
 
         const players = this.state.rankings[ranking_name];
         if (players.length > 2 && players.slice(0, 3).every(a => a.win)) {
-            return this.getFirstName(players[0]) + ", " + this.getFirstName(players[1]) + ",...";
+            return this.getFirstName(players[0].player) + ", " + this.getFirstName(players[1].player) + ",...";
         }  else if (players.length >= 2 && players.slice(0, 2).every(a => a.win)) {
-            return this.getFirstName(players[0]) + " & " + this.getFirstName(players[1]);
+            return this.getFirstName(players[0].player) + " & " + this.getFirstName(players[1].player);
         } if (players.length > 0) {
-            return this.getFirstName(players[0]);
+            return this.getFirstName(players[0].player);
         } else {
             return "";
         }
@@ -172,24 +146,21 @@ class Rankings extends React.Component {
                 <div style={{width: "100%"}}>
                     <h1>Rankings</h1>
 
-                    <Grid container className={classes.root} spacing={16}>
-                        <Grid item xs>
-                            <Grid container justify="center" spacing={Number(spacing)}>
-                                {rankings_info.map(info => (
-                                    <Grid
-                                        key={info.ranking_name}
-                                        item
-                                        className={this.state.is_mobile ? classes.grid_item_mobile : classes.grid_card}
-                                    >
-                                        <RankingCard
-                                            title={info.title}
-                                            value={this.getRankingBest(info.ranking_name, info.modifier)}>
-                                            {this.getRankingTableOrProgress(info.ranking_name, info.modifier, classes)}
-                                        </RankingCard>
-                                    </Grid>
-                                ))}
+                    <Grid container className={classes.root} spacing={8} justify={"center"}>
+                        {rankings_info.map(info => (
+                            <Grid
+                                key={info.ranking_name}
+                                item
+                                className={this.state.is_mobile ? classes.grid_item_mobile : classes.grid_card}
+                            >
+                                <RankingCard
+                                    is_mobile = {this.state.is_mobile}
+                                    title={info.title}
+                                    value={this.getRankingBest(info.ranking_name, info.modifier)}>
+                                    {this.getRankingTableOrProgress(info.ranking_name, info.modifier, classes)}
+                                </RankingCard>
                             </Grid>
-                        </Grid>
+                        ))}
                     </Grid>
                 </div>
             </div>

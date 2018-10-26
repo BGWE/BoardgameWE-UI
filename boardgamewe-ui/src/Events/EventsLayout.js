@@ -2,15 +2,10 @@ import React from "react";
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import {Link} from "react-router-dom";
 import Event from "../utils/api/Event";
 import Typography from "@material-ui/core/Typography/Typography";
 import Grid from "@material-ui/core/Grid/Grid";
-import CardMedia from "@material-ui/core/CardMedia/CardMedia";
 import Card from "@material-ui/core/Card/Card";
 import CardContent from "@material-ui/core/CardContent/CardContent";
 import CardActions from "@material-ui/core/CardActions/CardActions";
@@ -86,8 +81,6 @@ const styles = theme => ({
         textDecoration: "none"
     }
 });
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 class EventsLayout extends React.Component {
 
