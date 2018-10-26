@@ -17,10 +17,15 @@ const colors = {
 const styles = theme => ({
     root: {
         width: '100%',
-        alignItems: "center"
+        alignItems: "center",
+    },
+
+    tableCell : {
+        padding: '5px 8px 4px 8px',
     },
 
     winnerRow: {
+        padding: 'dense',
         fontWeight: 'bold'
     },
 
@@ -39,12 +44,7 @@ const styles = theme => ({
         color: colors.bronze
     },
 
-    iconCell: {
-        padding: "5px"
-    },
-
     boldCell: {
-        padding: "5px",
         fontWeight: "bold"
     },
 
@@ -62,7 +62,7 @@ class RankingTable extends React.Component {
         } else if (rank === 3) {
             return (<StarIcon className={classes.bronze_icon}/>);
         } else {
-            return "";
+            return rank;
         }
     }
 
@@ -78,26 +78,22 @@ class RankingTable extends React.Component {
             <Table>
                 <TableHead>
                     <TableRow>
-                        <TableCell className={classes.iconCell}/>
-                        <TableCell>Rank</TableCell>
-                        <TableCell>Player</TableCell>
+                        <TableCell classes={{root : classes.tableCell}}>#</TableCell>
+                        <TableCell classes={{root : classes.tableCell}}>Player</TableCell>
                         {
                             isWinLose ? null:
-                                (<TableCell>Score</TableCell>)
+                                (<TableCell classes={{root : classes.tableCell}} numeric={true}>Score</TableCell>)
                         }
-
-
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {this.props.ranking ? this.props.ranking.slice(0, 10).map(player => (
-                        <TableRow key={player.player.id} className={player.win ? classes.winnerRow : null}>
-                            <TableCell className={classes.iconCell}>{this.getIcon(player.rank, classes)}</TableCell>
-                            <TableCell className={player.win ? classes.winnerCell : null}>{player.rank}</TableCell>
-                            <TableCell className={player.win ? classes.winnerCell : null}>{player.player.name.split(" ")[0]}</TableCell>
+                        <TableRow key={player.player.id_user} className={player.win ? classes.winnerRow : null}>
+                            <TableCell classes={{root : classes.tableCell}}>{this.getIcon(player.rank, classes)}</TableCell>
+                            <TableCell classes={{root : classes.tableCell}} className={player.win ? classes.winnerCell : null}>{player.player.name ? player.player.name.split(" ")[0] : player.player.user.name}</TableCell>
                             {
                                 isWinLose ? null:
-                                    (<TableCell className={player.win ? classes.winnerCell : null}>{this.props.modifier(player.score)}</TableCell>)
+                                    (<TableCell classes={{root : classes.tableCell}} className={player.win ? classes.winnerCell : null} numeric={true}>{this.props.modifier(player.score)}</TableCell>)
                             }
 
                         </TableRow>
