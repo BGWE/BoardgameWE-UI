@@ -1,22 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Downshift from "downshift";
 
 
 import CloseIcon from '@material-ui/icons/Close';
-
-import Downshift from "downshift";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import PersonAdd from "@material-ui/icons/PersonAdd";
-
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
+import IconButton from "@material-ui/core/IconButton/IconButton";
 
-import {Constants} from "../utils/Constants";
 import TextField from "@material-ui/core/TextField/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import IconButton from "@material-ui/core/IconButton/IconButton";
 import Grid from "@material-ui/core/Grid/Grid";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
@@ -797,9 +794,7 @@ class AddGame extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-
                 </div>
-
             </div>
         );
     }
