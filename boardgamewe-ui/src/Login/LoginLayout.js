@@ -14,6 +14,9 @@ import UserModel from "../utils/api/User";
 import axios from "axios";
 import CustomizedSnackbar from "../utils/UI/Snackbar";
 
+import green from '@material-ui/core/colors/green';
+import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
+
 const styles = theme => ({
     layout: {
         width: 'auto',
@@ -49,6 +52,17 @@ const styles = theme => ({
     },
     invalidInput: {
         color: 'red'
+    },
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative',
+    },
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginLeft: -12,
     }
 });
 
@@ -83,8 +97,9 @@ class LoginLayout extends React.Component {
             nameValid: false,
             formValid: false,
             formErrors: {password: '', email: ''},
+            showErrors:false,
 
-            showErrors:false
+            loading: false,
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -102,6 +117,10 @@ class LoginLayout extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
+        this.setState({
+            loading: true
+        });
+
         if (this.state.signInView) {
             // Login request
             try {
@@ -110,7 +129,9 @@ class LoginLayout extends React.Component {
                 axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
                 window.localStorage.accessToken = token;
 
-                this.setState({loginSuccessSnackbarOpen: true});
+                this.setState({
+                    loginSuccessSnackbarOpen: true,
+                });
 
                 setTimeout(() => this.props.callbackAuthentication(), 800);
             } catch (error) {
@@ -123,7 +144,8 @@ class LoginLayout extends React.Component {
                     this.setState({
                         loginFailureSnackbarOpen: true,
                         loginFailureSnackbarMsg: error.response.data.message,
-                        showErrors:true
+                        loading: false,
+                        showErrors: true
                     });
                 } else if (error.request) {
                     // The request was made but no response was received
@@ -132,12 +154,16 @@ class LoginLayout extends React.Component {
                     console.log(error.request);
                     this.setState({
                         loginFailureSnackbarOpen: true,
-                        loginFailureSnackbarMsg: "No response received."
+                        loginFailureSnackbarMsg: "No response received.",
+                        loading: false
                     });
                 } else {
                     // Something happened in setting up the request that triggered an Error
                     console.log('Error', error.message);
-                    this.setState({loginFailureSnackbarOpen: true});
+                    this.setState({
+                        loginFailureSnackbarOpen: true,
+                        loading: false
+                    });
                 }
             }
 
@@ -147,7 +173,9 @@ class LoginLayout extends React.Component {
                 let data = await UserModel.signUp(this.state.username, this.state.password, this.state.surname, this.state.name, this.state.email);
                 console.log(data);
 
-                this.setState({registerSuccessSnackbarOpen: true});
+                this.setState({
+                    registerSuccessSnackbarOpen: true,
+                });
 
                 setTimeout(() => window.location.reload(), 800);
             }
@@ -161,22 +189,32 @@ class LoginLayout extends React.Component {
                     // console.log(error.response.headers);
                     this.setState({
                         registerFailureSnackbarOpen: true,
-                        registerFailureSnackbarMsg: error.response.data.error
+                        registerFailureSnackbarMsg: error.response.data.error,
+                        loading: false
                     });
                 } else if (error.request) {
                     // The request was made but no response was received
                     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                     // http.ClientRequest in node.js
                     console.log(error.request);
+
+                    this.setState({
+                        loading: false
+                    });
+
                 } else {
                     // Something happened in setting up the request that triggered an Error
                     console.log('Error', error.message);
+                    this.setState({
+                        loading:false
+                    })
                 }
             }
         } else {
             // Registration form is invalid -> show it to the user.
             this.setState({
-                showErrors: true
+                showErrors: true,
+                loading: false
             })
         }
         return false;
@@ -271,6 +309,7 @@ class LoginLayout extends React.Component {
 
     render() {
         const { classes } = this.props;
+        const { loading } = this.state;
 
         let signIn = (
             <Paper className={classes.paper}>
@@ -306,16 +345,20 @@ class LoginLayout extends React.Component {
                         />
                     </FormControl>
 
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={this.handleSubmit}
-                    >
-                        Sign in
-                    </Button>
+                    <div className={classes.wrapper}>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            disabled={loading}
+                            className={classes.submit}
+                            onClick={this.handleSubmit}
+                        >
+                            Sign in
+                        </Button>
+                        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                    </div>
 
                     <Button
                         type="submit"
@@ -327,6 +370,7 @@ class LoginLayout extends React.Component {
                     >
                         Click here to register
                     </Button>
+
                 </form>
             </Paper>
         );
@@ -401,16 +445,20 @@ class LoginLayout extends React.Component {
                         />
                     </FormControl>
 
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        onClick={this.handleSubmit}
-                    >
-                        Sign up
-                    </Button>
+                    <div className={classes.wrapper}>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            disabled={loading}
+                            className={classes.submit}
+                            onClick={this.handleSubmit}
+                        >
+                            Sign up
+                        </Button>
+                        {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                    </div>
 
                     <Button
                         color="default"
