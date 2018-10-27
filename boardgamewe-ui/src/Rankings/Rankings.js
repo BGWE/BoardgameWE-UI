@@ -125,9 +125,6 @@ class Rankings extends React.Component {
 
     render () {
         const { classes } = this.props;
-        const { spacing } = this.state;
-
-        console.log(this.state);
 
         const rankings_info = [
             { ranking_name: "victory_count", title: "Games won", modifier: a => a },
@@ -138,11 +135,11 @@ class Rankings extends React.Component {
             { ranking_name: "defeat_prop", title: "Games lost (%)", modifier: a => Math.round(a * 100) + "%"},
             { ranking_name: "is_last", title: "Games as last", modifier: a => a },
             { ranking_name: "is_last_prop", title: "Games as last (%)", modifier: a => Math.round(a * 100) + "%"},
+            { ranking_name: "gcbgb", title: "Great canadian blitz ranking", modifier: a => a},
         ];
 
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
-
                 <div style={{width: "100%"}}>
                     <h1>Rankings</h1>
 
