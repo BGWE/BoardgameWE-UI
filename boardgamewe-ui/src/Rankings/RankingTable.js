@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import Table from "@material-ui/core/Table/Table";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import { withStyles } from '@material-ui/core/styles';
+import Typography from "@material-ui/core/Typography/Typography";
 
 const colors = {
     gold: "#FFD700",
@@ -30,17 +31,17 @@ const styles = theme => ({
     },
 
     gold_icon: {
-        width: '20px',
+        width: '25px',
         color: colors.gold
     },
 
     silver_icon: {
-        width: '20px',
+        width: '25px',
         color: colors.silver
     },
 
     bronze_icon: {
-        width: '20px',
+        width: '25px',
         color: colors.bronze
     },
 
@@ -50,17 +51,53 @@ const styles = theme => ({
 
     winnerCell: {
         fontWeight: 'bold',
+    },
+    wrapper: {
+        position: "relative"
+    },
+    numberInIcon: {
+        position: 'absolute',
+        [theme.breakpoints.down('sm')] : {
+            top: '18%',
+            left: '70%'
+        },
+        [theme.breakpoints.up('md')] : {
+            top: '12%',
+            left: '40%'
+        },
+
     }
 });
 
 class RankingTable extends React.Component {
     getIcon(rank, classes) {
         if (rank === 1) {
-            return (<StarIcon className={classes.gold_icon}/>);
+            return (
+                <div className={classes.wrapper}>
+                    <StarIcon className={classes.gold_icon}/>
+                    <div className={classes.numberInIcon}>
+                        {rank}
+                    </div>
+                </div>
+        );
         } else if (rank === 2) {
-            return (<StarIcon className={classes.silver_icon}/>);
+            return (
+                <div className={classes.wrapper}>
+                    <StarIcon className={classes.silver_icon}/>
+                    <div className={classes.numberInIcon}>
+                        {rank}
+                    </div>
+                </div>
+            );
         } else if (rank === 3) {
-            return (<StarIcon className={classes.bronze_icon}/>);
+            return (
+                <div className={classes.wrapper}>
+                    <StarIcon className={classes.bronze_icon}/>
+                    <div className={classes.numberInIcon}>
+                        {rank}
+                    </div>
+                </div>
+            );
         } else {
             return rank;
         }
@@ -73,6 +110,8 @@ class RankingTable extends React.Component {
         if (isWinLose === null) {
             isWinLose = false;
         }
+
+        console.log(this.props.ranking);
 
         return (
             <Table>
@@ -89,7 +128,7 @@ class RankingTable extends React.Component {
                 <TableBody>
                     {this.props.ranking ? this.props.ranking.slice(0, 10).map(player => (
                         <TableRow key={player.player.id_user} className={player.win ? classes.winnerRow : null}>
-                            <TableCell classes={{root : classes.tableCell}}>{this.getIcon(player.rank, classes)}</TableCell>
+                            <TableCell classes={{root : classes.tableCell}}>{this.getIcon(player.rank, classes)} </TableCell>
                             <TableCell classes={{root : classes.tableCell}} className={player.win ? classes.winnerCell : null}>{player.player.name ? player.player.name.split(" ")[0] : player.player.user.name}</TableCell>
                             {
                                 isWinLose ? null:
