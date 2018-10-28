@@ -50,17 +50,52 @@ const styles = theme => ({
 
     winnerCell: {
         fontWeight: 'bold',
+    },
+    wrapper: {
+        position: "relative"
+    },
+    numberInIcon: {
+        position: 'absolute',
+        [theme.breakpoints.down('sm')] : {
+            top: '18%',
+            left: '70%'
+        },
+        [theme.breakpoints.up('md')] : {
+            top: '12%',
+            left: '20%'
+        },
     }
 });
 
 class GameTable extends React.Component {
     getIcon(rank, classes) {
         if (rank === 1) {
-            return (<StarIcon className={classes.gold_icon}/>);
+            return (
+                <div className={classes.wrapper}>
+                    <StarIcon className={classes.gold_icon}/>
+                    <div className={classes.numberInIcon}>
+                        {rank}
+                    </div>
+                </div>
+            );
         } else if (rank === 2) {
-            return (<StarIcon className={classes.silver_icon}/>);
+            return (
+                <div className={classes.wrapper}>
+                    <StarIcon className={classes.silver_icon}/>
+                    <div className={classes.numberInIcon}>
+                        {rank}
+                    </div>
+                </div>
+            );
         } else if (rank === 3) {
-            return (<StarIcon className={classes.bronze_icon}/>);
+            return (
+                <div className={classes.wrapper}>
+                    <StarIcon className={classes.bronze_icon}/>
+                    <div className={classes.numberInIcon}>
+                        {rank}
+                    </div>
+                </div>
+            );
         } else {
             return rank;
         }
@@ -70,7 +105,7 @@ class GameTable extends React.Component {
         const { classes } = this.props;
 
         console.log(this.props);
-
+        var rank = 0;
         return (
             <Table padding={"dense"}>
                 <TableHead>
@@ -86,11 +121,11 @@ class GameTable extends React.Component {
                 <TableBody>
                     {this.props.game ? this.props.game.players.slice(0, 10).map(player => (
                         <TableRow key={player.id_user} className={player.winner ? classes.winnerRow : null}>
-                            <TableCell> {this.getIcon(player.rank, classes)} </TableCell>
+                            <TableCell> {this.getIcon(rank += 1, classes)} </TableCell>
                             <TableCell className={player.winner ? classes.winnerCell : null}>{player.name ? player.name.split(" ")[0] : player.user.name}</TableCell>
                             {
                                 this.props.isWinLose ? null:
-                                    (<TableCell className={player.winner ? classes.winnerCell : null} numeric={true}>{this.props.modifier(player.score)}</TableCell>)
+                                    (<TableCell className={player.winner ? classes.winnerCell : null} numeric> {this.props.modifier(player.score)} </TableCell>)
                             }
 
                         </TableRow>

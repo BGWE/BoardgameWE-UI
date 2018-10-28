@@ -7,6 +7,7 @@ import RankingTable from "./RankingTable";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
 import { withStyles } from '@material-ui/core/styles';
+import {getRankingBest} from "../utils/Helper";
 
 const styles = theme => ({
     root: {
@@ -32,11 +33,14 @@ class Rankings extends React.Component {
         this.state = {
             spacing: '40',
             rankings: null,
+            isLoading:true,
 
             is_mobile: window.innerWidth < Rankings.IS_MOBILE_THRESHOLD
         };
 
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
+        this.reload = this.reload.bind(this);
     }
 
     componentWillMount() {
@@ -51,40 +55,13 @@ class Rankings extends React.Component {
 
     componentDidMount() {
         this.setState({
-            isLoading:true
+            isLoading: true
         })
     }
 
     componentDidUpdate() {
         if (this.props.eventModel && this.state.isLoading) {
             this.reload();
-        }
-    }
-
-    getFirstName(player) {
-        let firstname;
-        if (player.name) {
-            firstname = player.name.split(" ")[0];
-        } else {
-            firstname = player.user.name;
-        }
-        return firstname;
-    }
-
-    getRankingBest (ranking_name, modifier) {
-        if (!this.state.rankings || !this.state.rankings[ranking_name] || this.state.rankings[ranking_name].length === 0) {
-            return "/";
-        }
-
-        const players = this.state.rankings[ranking_name];
-        if (players.length > 2 && players.slice(0, 3).every(a => a.win)) {
-            return this.getFirstName(players[0].player) + ", " + this.getFirstName(players[1].player) + ",...";
-        }  else if (players.length >= 2 && players.slice(0, 2).every(a => a.win)) {
-            return this.getFirstName(players[0].player) + " & " + this.getFirstName(players[1].player);
-        } if (players.length > 0) {
-            return this.getFirstName(players[0].player);
-        } else {
-            return "";
         }
     }
 
@@ -138,6 +115,16 @@ class Rankings extends React.Component {
             { ranking_name: "gcbgb", title: "Great canadian blitz ranking", modifier: a => a},
         ];
 
+        console.log(this.state);
+
+        if (this.state.isLoading) {
+            return (
+                <div className={classes.root}>
+                    <CircularProgress thickness={7} />
+                </div>
+            );
+        }
+
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
                 <div style={{width: "100%"}}>
@@ -152,8 +139,8 @@ class Rankings extends React.Component {
                             >
                                 <RankingCard
                                     is_mobile = {this.state.is_mobile}
-                                    title={info.title}
-                                    value={this.getRankingBest(info.ranking_name, info.modifier)}>
+                                    title = {info.title}
+                                    value = {getRankingBest(this.state.rankings[info.ranking_name])}>
                                     {this.getRankingTableOrProgress(info.ranking_name, info.modifier, classes)}
                                 </RankingCard>
                             </Grid>

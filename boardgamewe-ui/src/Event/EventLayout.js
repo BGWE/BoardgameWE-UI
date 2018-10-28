@@ -19,6 +19,7 @@ import Games from "../Games/Games";
 import AddGame from "../Games/AddGame";
 import Rankings from "../Rankings/Rankings";
 import EventModel from "../utils/api/Event";
+import Dashboard from "./Dashboard";
 
 
 const styles = theme => ({
@@ -129,6 +130,7 @@ class EventLayout extends React.Component{
                         <Route path={`${this.props.match.path}/games/add`} render={() => <AddGame {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/games`} render={() => <Games {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/rankings`} render={() => <Rankings {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/`} render={() => <Dashboard {...this.props} eventModel={this.state.event_model}/> } />
                     </Switch>
                 </main>
             </div>

@@ -7,7 +7,6 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import Table from "@material-ui/core/Table/Table";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import { withStyles } from '@material-ui/core/styles';
-import Typography from "@material-ui/core/Typography/Typography";
 
 const colors = {
     gold: "#FFD700",
@@ -63,9 +62,8 @@ const styles = theme => ({
         },
         [theme.breakpoints.up('md')] : {
             top: '12%',
-            left: '40%'
+            left: '20%'
         },
-
     }
 });
 

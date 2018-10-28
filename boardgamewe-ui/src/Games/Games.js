@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -19,7 +18,6 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/Expan
 import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
 import Typography from "@material-ui/core/Typography/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
-import Grid from "@material-ui/core/Grid/Grid";
 import Divider from "@material-ui/core/Divider/Divider";
 import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions/ExpansionPanelActions";
 import { withStyles } from '@material-ui/core/styles';
@@ -83,6 +81,7 @@ class Games extends React.Component {
 
         // Bind this
         this.reload = this.reload.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -247,7 +246,7 @@ class Games extends React.Component {
                                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                         <Typography className={classes.heading}>{game.board_game.name}</Typography>
                                         <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
-                                        <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography>
+                                        <Typography className={classes.secondaryHeading}>Lasted {game.duration ? game.duration : ""} minutes </Typography>
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
                                         <GameTable
