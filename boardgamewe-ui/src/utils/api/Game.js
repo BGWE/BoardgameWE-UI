@@ -51,4 +51,19 @@ export default class Game extends Model {
 
         return processedCollection;
     }
+
+    static async fetchLatestInEvent(idEvent) {
+        if(idEvent == null) {
+            throw new Error("Cannot fetch latest games of an event with no ID.");
+        }
+        let {data} = await axios.get(`event/${idEvent}/games/latest`);
+
+        let processedCollection = [];
+        data.forEach(elem => {
+            let model = new this(elem);
+            processedCollection.push(model);
+        });
+
+        return processedCollection;
+    }
 }
