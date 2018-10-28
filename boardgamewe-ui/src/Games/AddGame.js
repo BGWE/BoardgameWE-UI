@@ -1,22 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Downshift from "downshift";
 
 
 import CloseIcon from '@material-ui/icons/Close';
-
-import Downshift from "downshift";
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import PersonAdd from "@material-ui/icons/PersonAdd";
-
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
+import IconButton from "@material-ui/core/IconButton/IconButton";
 
-import {Constants} from "../utils/Constants";
 import TextField from "@material-ui/core/TextField/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment/InputAdornment";
 import MenuItem from "@material-ui/core/MenuItem/MenuItem";
-import IconButton from "@material-ui/core/IconButton/IconButton";
 import Grid from "@material-ui/core/Grid/Grid";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
@@ -34,6 +31,7 @@ import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 
 import { withStyles } from '@material-ui/core/styles';
+import Game, {GameRankingMethods} from "../utils/api/Game";
 
 const styles = theme => ({
     root: {
@@ -89,6 +87,8 @@ class AddGame extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log(props);
+
         this.state = {
             open: false,
 
@@ -113,6 +113,7 @@ class AddGame extends React.Component {
             no_score_open: false,
         };
 
+        this.reload = this.reload.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleAddNewScore = this.handleAddNewScore.bind(this);
         this.handleChangeScore = this.handleChangeScore.bind(this);
@@ -126,46 +127,51 @@ class AddGame extends React.Component {
 
     componentDidMount() {
         this.setState({ isLoading: true });
-
-        fetch(Constants.API_ADDRESS + '/board_games')
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.setState({
-                    board_games: data.board_games,
-                    isLoading: false,
-                    fetch_error: false
-                });
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-                this.setState({
-                    board_games: [],
-                    isLoading: false,
-                    fetch_error: true
-                })
-            });
-
-        fetch(Constants.API_ADDRESS + '/players')
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.setState({
-                    players: data,
-                    isLoading: false,
-                    fetch_error: false
-                })
-            }.bind(this))
-            .catch(error => {
-                console.log(error);
-                this.setState({
-                    players: [],
-                    isLoading: false,
-                    fetch_error: true
-                })
-            });
     }
 
+    componentDidUpdate() {
+        if (this.props.eventModel && this.state.isLoading) {
+            this.reload();
+        }
+    }
+
+    async reload() {
+        try {
+            let data = await this.props.eventModel.fetchBoardGames();
+
+            this.setState({
+                board_games: data,
+                isLoading: false,
+                fetch_error: false
+            });
+        } catch (e) {
+            console.log(e);
+
+            this.setState({
+                board_games: [],
+                isLoading: false,
+                fetch_error: true
+            });
+        }
+
+        try {
+            let data = await this.props.eventModel.fetchAttendees();
+
+            this.setState({
+                players: data,
+                isLoading: false,
+                fetch_error: false
+            });
+        } catch (e) {
+            console.log(e);
+
+            this.setState({
+                players: [],
+                isLoading: false,
+                fetch_error: true,
+            });
+        }
+    }
 
     handleCloseSnack(event, reason) {
         if (reason === 'clickaway') {
@@ -274,8 +280,6 @@ class AddGame extends React.Component {
     getSuggestionsPlayer(inputValue) {
         let count = 0;
 
-        console.log(this.state.players);
-
         return this.state.players.filter(suggestion => {
             const keep =
                 (!inputValue || suggestion.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1) &&
@@ -347,38 +351,31 @@ class AddGame extends React.Component {
     }
 
     handleAddGame() {
-        console.log(this.state.selected_board_game);
-        console.log(this.state.scores);
-
         if (!this.state.selected_board_game) {
             this.setState({no_bg_selected_open: true});
             return
-        }
-
-        else if (this.state.scores.length <= 0) {
+        } else if (this.state.scores.length <= 0) {
             this.setState({no_score_open: true});
             return
         }
 
+        let game = new Game();
+
         console.log('Adding new game');
+        console.log(game);
 
+        game.board_game = this.state.selected_board_game.id;
+        game.duration = null;
 
-        let url = new URL(Constants.API_ADDRESS + '/game/');
-        let ranking_method = "";
         if (this.state.ranking_method === "ranked") {
-            ranking_method = "POINTS_HIGHER_BETTER";
+            game.ranking_method = GameRankingMethods.POINTS_HIGHER_BETTER;
         }
         else {
-            ranking_method = "WIN_LOSE"
+            game.ranking_method = GameRankingMethods.WIN_LOSE;
         }
-        let payload = {
-            'ranking_method': ranking_method,
-            'board_game': this.state.selected_board_game.id,
-            'duration': null
-        };
 
         if (this.state.ranking_method === "ranked") {
-            payload["players"] = this.state.scores.map(elem => {
+            game.players = this.state.scores.map(elem => {
                 return {
                     'score': elem.score,
                     'player': elem.player.id
@@ -386,7 +383,7 @@ class AddGame extends React.Component {
             })
         }
         else {
-            payload["players"] = this.state.scores.map(elem => {
+            game.players = this.state.scores.map(elem => {
                 return {
                     'score': elem.win ? 1 : 0,
                     'player': elem.player.id
@@ -394,20 +391,19 @@ class AddGame extends React.Component {
             })
         }
 
-        fetch(url, {
-            method: 'PUT',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify(payload)
-        })
-            .then(response => response.json())
-            .then(function (data) {
-                console.log(data);
-                this.props.history.push('/games')
-            }.bind(this))
-            .catch(function (error) {
-                console.log(error);
-                this.setState({ open: false, snackbar_error: true});
-            }.bind(this));
+        try {
+            console.log(game);
+
+            game.save();
+
+        } catch (e) {
+            console.log(e);
+
+            this.setState({
+                open: false,
+                snackbar_error: true
+            });
+        }
     }
 
     handleCheckBox(event) {
@@ -443,7 +439,6 @@ class AddGame extends React.Component {
                 </div>
             )
         }
-
 
         return (
 
@@ -799,9 +794,7 @@ class AddGame extends React.Component {
                             </Grid>
                         </Grid>
                     </Grid>
-
                 </div>
-
             </div>
         );
     }
