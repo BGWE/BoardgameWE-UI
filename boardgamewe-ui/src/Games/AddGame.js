@@ -36,39 +36,51 @@ import Game, {GameRankingMethods} from "../utils/api/Game";
 const game_durations = [
     {
         value: '15',
+        label: '15'
     },
     {
         value: '30',
+        label: '30'
     },
     {
         value: '45',
+        label: '45'
     },
     {
         value: '60',
+        label: '1h 0'
     },
     {
         value: '75',
+        label: '1h 15'
     },
     {
         value: '90',
+        label: '1h 30'
     },
     {
         value: '105',
+        label: '1h 45'
     },
     {
         value: '120',
+        label: '2h 0'
     },
     {
         value: '135',
+        label: '2h 15'
     },
     {
         value: '160',
+        label: '2h 30'
     },
     {
         value: '175',
+        label: '2h 45'
     },
     {
         value: '190',
+        label: '3h 0'
     },
 ];
 
@@ -612,7 +624,7 @@ class AddGame extends React.Component {
                             >
                                 {game_durations.map(option => (
                                     <option key={option.value} value={option.value}>
-                                        {option.value + " min"}
+                                        {option.label + "min"}
                                     </option>
                                 ))}
                             </TextField>
