@@ -3,8 +3,8 @@ import {Link, Redirect} from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import AddIcon from '@material-ui/icons/Add';
+import DoneIcon from '@material-ui/icons/Done';
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -17,6 +17,8 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction/L
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Boardgame from "../../utils/api/BoardGame";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
+import CustomizedSnackbar from "../../utils/UI/Snackbar";
+import Event from "../../utils/api/Event";
 
 const styles = theme => ({
     dialog: {
@@ -29,6 +31,9 @@ const styles = theme => ({
         position: 'relative',
         overflow: 'auto',
         maxHeight: 300,
+    },
+    itemCircularProgress: {
+        width: '30px'
     }
 });
 
@@ -47,18 +52,42 @@ class BoardGameModal extends React.Component {
             gamename: "",
             redirect: false,
             isLoading: false,
+            isAdding: false,
 
-            board_games: null
+            boardGames: null,
+
+            boardGameToAdd: null,
+            addBoadGameToEventSnackbarSuccessOpen: false,
+            addBoadGameToEventSnackbarFailOpen: false
         };
 
         this._handleKeyPress = this._handleKeyPress.bind(this);
+        this.generate = this.generate.bind(this);
+        this.handleAddBoardGame = this.handleAddBoardGame.bind(this);
+        this.reloadSearchResults = this.reloadSearchResults.bind(this);
 
         this.searchTextField = React.createRef()
     }
 
+    reloadSearchResults() {
+        if (this.state.boardGames !== null) {
+            this.setState({
+                boardGames: this.state.boardGames.map(boardGame => {
+                    boardGame.added = BoardGameModal.checkAlreadyAdded(boardGame.id, this.props.boardGamesList, 'bgg_id');
+                    return boardGame
+                })
+            });
+        }
 
+    }
+
+    componentDidUpdate() {
+        console.log("Did update");
+        console.log(this.props)
+    }
 
     handleClickOpen = () => {
+        this.reloadSearchResults();
         this.setState({ open: true });
     };
 
@@ -71,15 +100,16 @@ class BoardGameModal extends React.Component {
             [name]: event.target.value,
         });
 
-        console.log(event.target.value);
         if (event.target.value.length > 2) {
             let data = await searchAPIDebounced(event.target.value, ()=>{this.setState({isLoading: true})});
 
             this.setState({
-                board_games: data,
+                boardGames: data.map(boardGame => {
+                    boardGame.added = BoardGameModal.checkAlreadyAdded(boardGame.id, this.props.boardGamesList, 'bgg_id');
+                    return boardGame
+                }),
                 isLoading: false
             });
-            console.log(this.searchTextField.current);
 
             // Refocus on the search text field
             this.searchTextField.current.focus()
@@ -87,7 +117,11 @@ class BoardGameModal extends React.Component {
 
     };
 
-    build_uri(q){
+    static checkAlreadyAdded(boardGameId, boardGamesList, field) {
+        return boardGamesList.some((bg) => (bg[field].toString() === boardGameId))
+    }
+
+    static build_uri(q){
         return '/search/' + q;
     }
 
@@ -97,12 +131,12 @@ class BoardGameModal extends React.Component {
         }
     }
 
-    generate(element) {
-        if (this.state.board_games === null) {
+    generate(boardGames) {
+        if (boardGames === null) {
             return "";
         }
 
-        if (this.state.board_games.length === 0) {
+        if (boardGames.length === 0) {
             return (
                 <ListItem key={"not_found"}>
                     <ListItemText
@@ -112,28 +146,93 @@ class BoardGameModal extends React.Component {
             );
         }
 
-        return this.state.board_games.map(value =>
-            (
-                <ListItem key={value.id}>
+        return boardGames.map(boardGame => {
+            let boardGameState = "add";
+            let icon = (<AddIcon/>);
+
+            if (this.state.boardGameToAdd !== null && boardGame.id === this.state.boardGameToAdd.id && this.state.isAdding) {
+                boardGameState = "inProgress";
+                icon = (<CircularProgress thickness={2} size={22} /> );
+            } else if (boardGame.added) {
+                boardGameState = "added";
+                icon = (<DoneIcon />);
+            }
+
+            return (
+                <ListItem key={boardGame.id}>
                     <ListItemText
-                        primary={value.name}
-                        secondary={value.year}
+                        primary={boardGame.name}
+                        secondary={boardGame.year}
                     />
                     <ListItemSecondaryAction>
-                        <IconButton aria-label="Delete">
-                            <AddIcon />
+                        <IconButton
+                            aria-label="Add"
+                            onClick={() => this.handleAddBoardGame(boardGame)}
+                            disabled={boardGameState !== "add"}>
+                            {icon}
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
             )
-        );
+        });
     }
+
+    handleAddBoardGame = (boardGame) => {
+        this.setState({
+            boardGameToAdd: boardGame,
+            isAdding: true
+        });
+
+        setTimeout(() => {
+            let resp = this.props.addGameCb(boardGame);
+            console.log(resp);
+
+            if (resp === true) {
+                this.setState({
+                    addBoadGameToEventSnackbarSuccessOpen: true,
+                });
+            }
+
+            boardGame.added = true;
+
+            setTimeout(() => {
+                this.setState({
+                    isAdding: false
+                });
+                this.props.postCb(boardGame);
+            }, 600);
+
+        }, 800);
+
+        // let resp = this.props.addGameCb(boardGame);
+        // console.log(resp);
+        //
+        // this.setState({
+        //     isAdding: false
+        // });
+
+
+        // if (resp === true) {
+        //     this.setState({
+        //         addBoadGameToEventSnackbarSuccessOpen: true,
+        //     });
+        // }
+
+
+    };
+
+    handleCloseSnackbar = () => {
+        this.setState({
+            addBoadGameToEventSnackbarSuccessOpen: false,
+            addBoadGameToEventSnackbarFailOpen: false,
+        });
+    };
 
     render() {
         const { classes } = this.props;
 
         if (this.state.redirect) {
-            return <Redirect push to={this.build_uri(this.state.gamename)} />;
+            return <Redirect push to={BoardGameModal.build_uri(this.state.gamename)} />;
         }
 
         let results = null;
@@ -147,25 +246,40 @@ class BoardGameModal extends React.Component {
         } else {
             results = (
                 <List dense={true} className={classes.list}>
-                    {this.generate(
-                        <ListItem>
-                            <ListItemText
-                                primary="Single-line item"
-                                secondary={'Secondary text'}
-                            />
-                            <ListItemSecondaryAction>
-                                <IconButton aria-label="Delete">
-                                    <AddIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>,
-                    )}
+                    {this.generate(this.state.boardGames)}
                 </List>
             )
         }
 
+        let lastBoardGameAddedName = '';
+        if (this.state.boardGameToAdd) {
+            lastBoardGameAddedName = this.state.boardGameToAdd.name;
+        }
+
+        let addBoadgameToEventSnackbarSuccess = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="success"
+                message={`${lastBoardGameAddedName} has been added to the event.`}
+                open={this.state.addBoadGameToEventSnackbarSuccessOpen}
+                autoHideDuration={5000}
+            />
+        );
+
+        let addBoadgameToEventSnackbarFail = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="error"
+                message={`${lastBoardGameAddedName} failed to be added to the event.`}
+                open={this.state.addBoadGameToEventSnackbarFailOpen}
+                autoHideDuration={5000}
+            />
+        );
+
         return (
             <div style={{paddingTop: 60}}>
+                {addBoadgameToEventSnackbarSuccess}
+                {addBoadgameToEventSnackbarFail}
                 <Tooltip id="tooltip-fab" title="Add" placement="bottom">
                     <Button onClick={this.handleClickOpen} variant="fab" color="secondary" aria-label="add">
                         <AddIcon />
@@ -180,9 +294,10 @@ class BoardGameModal extends React.Component {
                     className={classes.dialog}
                 >
                     <DialogContent>
-                        {/*<DialogContentText>*/}
-                            {/*Let's first search for your game.*/}
-                        {/*</DialogContentText>*/}
+                        <DialogContentText>
+                            Let's first search for your game.
+                        </DialogContentText>
+                        <br />
                         <TextField
                             autoFocus
                             margin="dense"
@@ -206,6 +321,7 @@ class BoardGameModal extends React.Component {
 
                     </DialogActions>
                 </Dialog>
+
             </div>
         );
     }

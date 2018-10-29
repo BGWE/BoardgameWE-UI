@@ -24,8 +24,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
-import BoardGameModel from "../../utils/api/BoardGame.js";
-import BoardGame from '../../utils/api/BoardGame.js';
+import Typography from "@material-ui/core/Typography/Typography";
 
 
 const styles = theme => ({
@@ -89,6 +88,8 @@ class TitlebarGridList extends React.Component {
         this.handleChangeOrderBy = this.handleChangeOrderBy.bind(this);
         this.handleChangeMinPlayer = this.handleChangeMinPlayer.bind(this);
         this.handleChangeMaxPlayer = this.handleChangeMaxPlayer.bind(this);
+        this.addGameCb = this.addGameCb.bind(this);
+        this.postCb = this.postCb.bind(this);
     }
 
     componentWillMount() {
@@ -97,19 +98,26 @@ class TitlebarGridList extends React.Component {
 
     componentDidMount() {
         this.setState({ isLoading: true });
-        this.reload();
+    }
+
+    componentDidUpdate() {
+        if (this.state.isLoading && this.props.eventModel !== null) {
+            this.reload()
+        }
     }
 
     async reload() {
+        console.log("Reloading...");
         try {
-            let data = await BoardGameModel.fetchAll();
+            let data = await this.props.eventModel.fetchBoardGames();
+            console.log(data);
 
             this.setState({
-                hits: data,
-                board_games: data,
+                hits: data.map((item) => (item.provided_board_game)),
+                board_games: data.map((item) => (item.provided_board_game)),
                 isLoading: false,
-                min_player: Math.min.apply(null, data.map(bg => bg.min_players)),
-                max_player: Math.max.apply(null, data.map(bg => bg.max_players))
+                min_player: Math.min.apply(null, data.map(bg => bg.provided_board_game.min_players)),
+                max_player: Math.max.apply(null, data.map(bg => bg.provided_board_game.max_players))
             });
         }
         catch(error) {
@@ -227,7 +235,6 @@ class TitlebarGridList extends React.Component {
     }
 
     handleCloseConfirm() {
-        console.log('Close confirmation dialog');
         this.setState({
             open_confirmation_dialog: false,
             confirm_delete_game_id: "",
@@ -238,7 +245,7 @@ class TitlebarGridList extends React.Component {
     async handleDeleteConfirm() {
         console.log('Deleting');
         try {
-            await BoardGame.delete(this.state.confirm_delete_game_id);
+            await this.props.eventModel.removeBoardGames([this.state.confirm_delete_game_id]);
         }
         catch(error) {
             console.log(error);
@@ -286,9 +293,19 @@ class TitlebarGridList extends React.Component {
         this.setState({max_player: value})
     }
 
+    addGameCb(boardGame) {
+        let resp = this.props.eventModel.addBoardGameFromBgg(boardGame.id);
+        console.log(resp);
+        return true;
+    }
+
+    postCb(boardGame) {
+        console.log("Post CB");
+        this.reload();
+    }
+
     render () {
         const { classes } = this.props;
-
         if (this.state.isLoading) {
             return (
                 <div className={classes.root}>
@@ -342,11 +359,15 @@ class TitlebarGridList extends React.Component {
                     </DialogActions>
                 </Dialog>
 
-                <p>{this.state.board_games.length} game(s)</p>
-                <p>{filteredBoardGames.length} game(s) after filtering</p>
+                {/*<p>{this.state.board_games.length} game(s)</p>*/}
+                {/*<p>{filteredBoardGames.length} game(s) after filtering</p>*/}
 
-                <Grid container spacing={16}>
-                    <Grid item xs={12}>
+                {/*List bar*/}
+                <Grid
+                    container
+                    spacing={8}
+                    alignItems="flex-end">
+                    <Grid item xs={6}>
                         <Grid container
                               justify="flex-start"
                               direction="row"
@@ -429,14 +450,28 @@ class TitlebarGridList extends React.Component {
 
                         </Grid>
                     </Grid>
+
+                    <Grid item xs={2}>
+                        {/*Hey*/}
+                    </Grid>
+
+                    <Grid item sm={4} xs={12}>
+                        <Typography variant="subtitle1" gutterBottom>
+                            Showing {filteredBoardGames.length}/{this.state.board_games.length} board games in the event
+                        </Typography>
+                    </Grid>
                 </Grid>
 
-
+                {/* List */}
                 <Grid container>
-                    <Grid item xs={12} style={{marginTop: "25px"}}>
+                    <Grid item xs={12} style={{marginTop: "5px"}}>
                         <GridList cellHeight={this.cellHeight} className={classes.gridList} cols={this.state.n_cols} spacing={this.spacing}>
                             <GridListTile key="add">
-                                <AddGame />
+                                <AddGame
+                                    boardGamesList={this.state.board_games}
+                                    addGameCb={this.addGameCb}
+                                    postCb={this.postCb}
+                                />
                             </GridListTile>
                             {this.order(filteredBoardGames).map(tile => (
                                 <GridListTile key={tile.id} className={classes.tile}>

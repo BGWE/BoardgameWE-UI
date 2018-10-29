@@ -83,8 +83,6 @@ class EventLayout extends React.Component{
             menuItems.push((<MenuItem key={uri} uri={this.props.match.url + uri} name={menuItemsList[uri]} onClick={this.handleDrawerClose} />))
         }
 
-        console.log(this.state.event_model);
-
         return (
             <div className={classes.root}>
                 <Drawer open={this.state.menuOpen} onClose={this.handleDrawerClose}>
