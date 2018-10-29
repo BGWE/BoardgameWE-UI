@@ -85,8 +85,12 @@ class EventLayout extends React.Component{
         const { classes } = this.props;
 
         let menuItems = [];
-        for (var uri in menuItemsList) {
-            menuItems.push((<MenuItem key={uri} uri={this.props.match.url + uri} name={menuItemsList[uri]} onClick={this.handleDrawerClose} />))
+        for (var uriKey in menuItemsList) {
+            let uri = uriKey;
+            if (uriKey === '/') {
+                uri = ''
+            }
+            menuItems.push((<MenuItem key={uriKey} uri={this.props.match.url + uri} name={menuItemsList[uriKey]} onClick={this.handleDrawerClose} />))
         }
 
         return (
