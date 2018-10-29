@@ -13,6 +13,7 @@ import axios from "axios";
 import {Constants} from "./utils/Constants.js";
 import ViewEventLayout from "./Events/ViewEventLayout";
 import AdminLayout from "./Admin/AdminLayout";
+import ErrorPageLayout from "./ErrorPageLayout";
 
 axios.defaults.baseURL = Constants.API_ADDRESS;
 
@@ -21,6 +22,7 @@ class App extends Component {
         super(props);
 
         this.state = {
+            appError: null,
             authenticated: false
         };
     }
@@ -30,6 +32,12 @@ class App extends Component {
         return response;
     }, 
     error => {
+        if (error.response === undefined) {
+            this.setState({
+                appError: error
+            });
+            return Promise.reject(error);
+        }
         if(error.response.status === 401) {
             this.setState({authenticated: false});
         }
@@ -49,6 +57,9 @@ class App extends Component {
   }
 
   render() {
+        if (this.state.appError) {
+            return <ErrorPageLayout/>
+        }
         if(!this.state.authenticated) {
             return  <LoginLayout callbackAuthentication={() => this.setAuthenticated()} />
         }
