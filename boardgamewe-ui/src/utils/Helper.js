@@ -16,3 +16,28 @@ export function debounce(a,b,c) {
         return clearTimeout(d),d=setTimeout(h,b),c&&!d&&(e=a.apply(f,g)),e
     }
 }
+
+export function getFirstName(player) {
+    let firstname;
+    if (player.name) {
+        firstname = player.name.split(" ")[0];
+    } else {
+        firstname = player.user.name;
+    }
+    return firstname;
+}
+
+export function getRankingBest (ranking) {
+
+    console.log(ranking);
+
+    if (ranking.length > 2 && ranking.slice(0, 3).every(a => a.win)) {
+        return getFirstName(ranking[0].player) + ", " + getFirstName(ranking[1].player) + ",...";
+    }  else if (ranking.length >= 2 && ranking.slice(0, 2).every(a => a.win)) {
+        return getFirstName(ranking[0].player) + " & " + getFirstName(ranking[1].player);
+    } if (ranking.length > 0) {
+        return getFirstName(ranking[0].player);
+    } else {
+        return "";
+    }
+}

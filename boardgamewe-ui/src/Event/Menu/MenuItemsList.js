@@ -1,7 +1,11 @@
 export const menuItemsList = {
+    "/" : "Dashboard",
     "/boardgames" : "Board Games",
-    "/players" : "Players",
     "/games" : "Games",
     "/rankings" : "Rankings"
+};
+
+export const secondaryItemsList = {
+    "/" : "Other events"
 };
 

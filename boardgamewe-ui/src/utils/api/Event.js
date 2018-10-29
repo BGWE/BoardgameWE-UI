@@ -23,11 +23,22 @@ export default class Event extends Model {
         return Game.fetchAllInEvent(this.id);
     }
 
+    async fetchLatestGames() {
+        return Game.fetchLatestInEvent(this.id);
+    }
+
     get boardGamesUri() {
         if(this.isNew()) {
             throw new Error("Cannot construct board games URI of an event with no ID.");
         }
         return `event/${this.id}/board_games`;
+    }
+
+    boardGamesFromBggUri(bgg_id) {
+        if(this.isNew()) {
+            throw new Error("Cannot construct board games URI of an event with no ID.");
+        }
+        return `event/${this.id}/board_game/bgg/${bgg_id}`;
     }
 
     async fetchBoardGames() {
@@ -37,6 +48,11 @@ export default class Event extends Model {
 
     async addBoardGames(gamesIds) {
         let {data} = await axios.post(this.boardGamesUri, {board_games: gamesIds});
+        return data;
+    }
+
+    async addBoardGameFromBgg(bggId) {
+        let {data} = await axios.post(this.boardGamesFromBggUri(bggId), {});
         return data;
     }
 
@@ -82,7 +98,28 @@ export default class Event extends Model {
         if(this.isNew()) {
             throw new Error("Cannot fetch rankings for an event with no ID");
         }
-        let {data} = await axios.post(`event/${this.id}/rankings`);
+        let {data} = await axios.get(`event/${this.id}/rankings`);
+        return data;
+    }
+
+    /**
+     * Fetch specific ranking corresponding to rankingType
+     * rankingType may take the following values:
+     * - gcbgb
+     * - victory_count
+     * - defeat_count
+     * - victory_prop
+     * - defeat_prop
+     * - count_games
+     * - count_unique_games
+     * - is_last
+     * - is_last_prop
+     */
+    async fetchRanking(rankingType) {
+        if(this.isNew()) {
+            throw new Error("Cannot fetch rankings for an event with no ID");
+        }
+        let {data} = await axios.get(`event/${this.id}/ranking/${rankingType}`);
         return data;
     }
 }

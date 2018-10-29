@@ -13,6 +13,7 @@ import SearchResults from "./Boardgames/SearchResults/SearchResults";
 import axios from "axios";
 import {Constants} from "./utils/Constants.js";
 import ViewEventLayout from "./Events/ViewEventLayout";
+import AdminLayout from "./Admin/AdminLayout";
 
 axios.defaults.baseURL = Constants.API_ADDRESS;
 
@@ -58,6 +59,7 @@ class App extends Component {
                     <div className="App">
                         <Switch>
                             <Route path="/account" render={routeProps => <AccountLayout {...routeProps} callbackLogout={() => this.setAuthenticated(false)} /> } />
+                            <Route path="/admin" component={AdminLayout} />
                             <Route exact path="/register" component={LoginLayout} />
                             <Route exact path="/events/add" component={ViewEventLayout} />
                             <Route exact path="/events" render={routeProps => <EventsLayout {...routeProps} callbackLogout={() => this.setAuthenticated(false)} /> } />

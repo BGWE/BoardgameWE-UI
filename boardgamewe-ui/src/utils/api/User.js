@@ -49,4 +49,24 @@ export default class User extends Model {
         let {data} = await axios.post("user", {username, password, surname, name, email});
         return data;
     }
+
+    /**
+     * [ADMIN] Fetch the listing of users with their status
+     * @return {Array} List of users and their status.
+     */
+    static async fetchUsers() {
+        let {data} = await axios.get("admin/users");
+        return data.users;
+    }
+
+    /**
+     * [ADMIN] Validate or refuse
+     * @param {String} user_id
+     * @param {Boolean} validate
+     * @return {Object} Response from backend
+     */
+    static async setUserValidation(user_id, validate) {
+        let {data} = await axios.put("admin/user", {id_user: user_id, validated: validate});
+        return data;
+    }
 }

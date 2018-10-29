@@ -1,4 +1,6 @@
 import React from "react";
+import {Redirect} from "react-router-dom";
+
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
@@ -13,9 +15,8 @@ import Input from "@material-ui/core/Input/Input";
 import Button from "@material-ui/core/Button/Button";
 import Paper from "@material-ui/core/Paper/Paper";
 import TextField from "@material-ui/core/TextField/TextField";
+
 import EventModel from "../utils/api/Event";
-import axios from "axios";
-import {Redirect} from "react-router-dom";
 
 const styles = theme => ({
     appBar: {
