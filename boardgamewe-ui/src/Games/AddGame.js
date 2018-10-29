@@ -122,7 +122,7 @@ class AddGame extends React.Component {
             selected_board_game: null,
 
             ranking_method: "ranked",
-            game_duration: "",
+            game_duration: 15,
 
             selected_player: null,
             current_score: "",
@@ -309,8 +309,6 @@ class AddGame extends React.Component {
         const isHighlighted = highlightedIndex === index;
         let isSelected = false;
 
-        console.log(selectedItem);
-
         if (selectedItem && selectedItem.user.hasOwnProperty('name')) {
             isSelected = (selectedItem.user.name || '').indexOf(suggestion.user.name) > -1;
         }
@@ -343,7 +341,6 @@ class AddGame extends React.Component {
     }
 
     handleCheckBox(event) {
-        console.log(event.target.checked);
         this.setState({is_winner: event.target.checked});
     }
 
@@ -369,7 +366,7 @@ class AddGame extends React.Component {
         }
     }
 
-    handleAddGame() {
+    async handleAddGame() {
         if (!this.state.selected_board_game) {
             this.setState({no_bg_selected_open: true});
             return
@@ -380,10 +377,9 @@ class AddGame extends React.Component {
             return
         }
 
-        console.log('Adding new game');
         let game = new Game();
-
-        game.board_game = this.state.selected_board_game.id;
+        game.id_event = this.props.eventModel.id;
+        game.id_board_game = this.state.selected_board_game.id;
         game.duration = this.state.game_duration;
 
         if (this.state.ranking_method === "ranked") {
@@ -397,7 +393,7 @@ class AddGame extends React.Component {
             game.players = this.state.scores.map(elem => {
                 return {
                     'score': elem.score,
-                    'player': elem.player.id
+                    'user': elem.player.id
                 }
             })
         }
@@ -405,14 +401,16 @@ class AddGame extends React.Component {
             game.players = this.state.scores.map(elem => {
                 return {
                     'score': elem.win ? 1 : 0,
-                    'player': elem.player.id
+                    'user': elem.player.id
                 }
             })
         }
 
         try {
             console.log(game);
-            game.save();
+            await game.save();
+
+            setTimeout(() => this.props.history.goBack(), 1500);
 
         } catch (e) {
             console.log(e);

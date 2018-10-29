@@ -23,7 +23,6 @@ import Grid from "@material-ui/core/Grid/Grid";
 
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 import GameTable from "./GameTable";
-import AddGame from "./AddGame";
 
 const styles = theme => ({
     root: {
@@ -225,9 +224,11 @@ class Games extends React.Component {
 
                     <Grid item xs={12} md={8}>
                         <Tooltip id="tooltip-fab" title="Add" placement="right">
+                            <Link to={`${this.props.match.url}/games/add`}>
                                 <Button variant="fab" color="secondary" aria-label="add">
-                                    <AddGame />
+                                    <AddIcon />
                                 </Button>
+                            </Link>
                         </Tooltip>
                     </Grid>
 
