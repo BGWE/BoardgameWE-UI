@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Downshift from "downshift";
 
-
 import CloseIcon from '@material-ui/icons/Close';
 import LibraryAdd from "@material-ui/icons/LibraryAdd";
 import PersonAdd from "@material-ui/icons/PersonAdd";
@@ -29,65 +28,86 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
+import Typography from "@material-ui/core/Typography/Typography";
 
 import { withStyles } from '@material-ui/core/styles';
 import Game, {GameRankingMethods} from "../utils/api/Game";
 
+const game_durations = [
+    {
+        value: '15',
+    },
+    {
+        value: '30',
+    },
+    {
+        value: '45',
+    },
+    {
+        value: '60',
+    },
+    {
+        value: '75',
+    },
+    {
+        value: '90',
+    },
+    {
+        value: '105',
+    },
+    {
+        value: '120',
+    },
+    {
+        value: '135',
+    },
+    {
+        value: '160',
+    },
+    {
+        value: '175',
+    },
+    {
+        value: '190',
+    },
+];
+
 const styles = theme => ({
     root: {
-        width: '90%',
+        width: '70%',
         marginRight: 'auto',
         marginLeft: 'auto'
-    },
-
-    gridList: {
-        width: '80%',
-        'padding-left': 0,
-        'padding-right': 0,
-    },
-
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        flexBasis: '33.33%',
-        flexShrink: 0,
-    },
-
-    secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
-    },
-
-    downshift: {
-        width: "66.66%"
-    },
-
-    table: {
-        width: "30%"
     },
 
     inputRoot: {
         flexWrap: 'wrap',
     },
 
-    gridInputsContainer: {
+    inputInput: {
+        width: 'auto',
         flexGrow: 1,
-    },
-
-    score: {
-        width: "55px"
     },
 
     formControl: {
         margin: theme.spacing.unit,
-        minWidth: 150,
+        minWidth: 120,
     },
+    container: {
+        flexGrow: 1,
+        position: 'relative',
+    },
+    paper: {
+        position: 'absolute',
+        zIndex: 1,
+        marginTop: theme.spacing.unit,
+        left: 0,
+        right: 0,
+    }
 });
 
 class AddGame extends React.Component {
     constructor(props) {
         super(props);
-
-        console.log(props);
 
         this.state = {
             open: false,
@@ -102,6 +122,7 @@ class AddGame extends React.Component {
             selected_board_game: null,
 
             ranking_method: "ranked",
+            game_duration: "",
 
             selected_player: null,
             current_score: "",
@@ -115,11 +136,10 @@ class AddGame extends React.Component {
 
         this.reload = this.reload.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleDownshiftChange = this.handleDownshiftChange.bind(this);
         this.handleAddNewScore = this.handleAddNewScore.bind(this);
-        this.handleChangeScore = this.handleChangeScore.bind(this);
         this.handleAddGame = this.handleAddGame.bind(this);
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
-        this.handleRankingMethodChange = this.handleRankingMethodChange.bind(this);
         this.handleCheckBox = this.handleCheckBox.bind(this);
         this.handleRemoveWinLose = this.handleRemoveWinLose.bind(this);
         this.handleRemoveScore = this.handleRemoveScore.bind(this);
@@ -178,18 +198,8 @@ class AddGame extends React.Component {
             return;
         }
 
-        this.setState({fetch_error: false, no_bg_selected_open: false, no_score_open: false,})
+        this.setState({fetch_error: false, no_bg_selected_open: false, no_score_open: false})
     }
-
-    sortByProp(data, prop) {
-        return new Map([...data.entries()].sort((a, b) => a[1][prop] > b[1][prop]));
-    };
-
-
-    handleRankingMethodChange(event) {
-        this.setState({ranking_method: event.target.value});
-    }
-
 
     static renderInputBg(inputProps) {
         const { InputProps, classes, ref, ...other } = inputProps;
@@ -202,6 +212,7 @@ class AddGame extends React.Component {
                     inputRef: ref,
                     classes: {
                         root: classes.inputRoot,
+                        input: classes.inputInput
                     },
                     startAdornment: (
                         <InputAdornment position="start">
@@ -220,7 +231,7 @@ class AddGame extends React.Component {
 
         return this.state.board_games.filter(suggestion => {
             const keep =
-                (!inputValue || suggestion.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1) &&
+                (!inputValue || suggestion.provided_board_game.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1) &&
                 count < 5;
 
             if (keep) {
@@ -235,20 +246,20 @@ class AddGame extends React.Component {
         const isHighlighted = highlightedIndex === index;
         let isSelected = false;
         if (selectedItem && selectedItem.hasOwnProperty('name')) {
-            isSelected = (selectedItem.name || '').indexOf(suggestion.name) > -1;
+            isSelected = (selectedItem.name || '').indexOf(suggestion.provided_board_game.name) > -1;
         }
 
         return (
             <MenuItem
                 {...itemProps}
-                key={suggestion.id}
+                key={suggestion.id_board_game}
                 selected={isHighlighted}
                 component="div"
                 style={{
                     fontWeight: isSelected ? 500 : 400,
                 }}
             >
-                {suggestion.name}
+                {suggestion.provided_board_game.name}
             </MenuItem>
         );
     }
@@ -264,6 +275,7 @@ class AddGame extends React.Component {
                     inputRef: ref,
                     classes: {
                         root: classes.inputRoot,
+                        input: classes.inputInput
                     },
                     startAdornment: (
                         <InputAdornment position="start">
@@ -282,7 +294,7 @@ class AddGame extends React.Component {
 
         return this.state.players.filter(suggestion => {
             const keep =
-                (!inputValue || suggestion.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1) &&
+                (!inputValue || suggestion.user.name.toLowerCase().indexOf(inputValue.toLowerCase()) !== -1) &&
                 count < 5;
 
             if (keep) {
@@ -296,8 +308,11 @@ class AddGame extends React.Component {
     static renderSuggestionPlayer({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
         const isHighlighted = highlightedIndex === index;
         let isSelected = false;
-        if (selectedItem && selectedItem.hasOwnProperty('name')) {
-            isSelected = (selectedItem.name || '').indexOf(suggestion.name) > -1;
+
+        console.log(selectedItem);
+
+        if (selectedItem && selectedItem.user.hasOwnProperty('name')) {
+            isSelected = (selectedItem.user.name || '').indexOf(suggestion.user.name) > -1;
         }
 
         return (
@@ -310,24 +325,29 @@ class AddGame extends React.Component {
                     fontWeight: isSelected ? 500 : 400,
                 }}
             >
-                {suggestion.name}
+                {suggestion.user.name}
             </MenuItem>
         );
     }
 
-    handleChange(item, _key) {
-        console.log(item);
-        console.log(_key);
-        this.setState({[_key]: item});
+    handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+    };
+
+    handleDownshiftChange(item, _key) {
+        this.setState({
+            [_key]: item,
+        });
     }
 
-    handleChangeScore(event) {
-        this.setState({current_score: event.target.value});
+    handleCheckBox(event) {
+        console.log(event.target.checked);
+        this.setState({is_winner: event.target.checked});
     }
 
     handleAddNewScore() {
-        console.log(this.state);
-
         if (this.state.ranking_method === 'ranked') {
             console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
             let current_scores = this.state.scores;
@@ -347,25 +367,24 @@ class AddGame extends React.Component {
             });
             this.setState({scores: current_scores, is_winner: false})
         }
-
     }
 
     handleAddGame() {
         if (!this.state.selected_board_game) {
             this.setState({no_bg_selected_open: true});
             return
-        } else if (this.state.scores.length <= 0) {
+        }
+
+        if (this.state.scores.length <= 0) {
             this.setState({no_score_open: true});
             return
         }
 
+        console.log('Adding new game');
         let game = new Game();
 
-        console.log('Adding new game');
-        console.log(game);
-
         game.board_game = this.state.selected_board_game.id;
-        game.duration = null;
+        game.duration = this.state.game_duration;
 
         if (this.state.ranking_method === "ranked") {
             game.ranking_method = GameRankingMethods.POINTS_HIGHER_BETTER;
@@ -393,7 +412,6 @@ class AddGame extends React.Component {
 
         try {
             console.log(game);
-
             game.save();
 
         } catch (e) {
@@ -404,11 +422,6 @@ class AddGame extends React.Component {
                 snackbar_error: true
             });
         }
-    }
-
-    handleCheckBox(event) {
-        console.log(event.target.checked);
-        this.setState({is_winner: event.target.checked});
     }
 
     handleRemoveScore(p_score) {
@@ -454,7 +467,7 @@ class AddGame extends React.Component {
                     ContentProps={{
                         'aria-describedby': "error_msg"
                     }}
-                    message={<span id="error_msg">Error while fetching data</span>}
+                    message={<span id="error_msg"> Error while fetching data </span>}
                     action={[
                         <IconButton
                             key="close"
@@ -509,24 +522,27 @@ class AddGame extends React.Component {
                         </IconButton>
                     ]}/>
 
+                <Grid
+                    container
+                    justify="center"
+                    spacing={24}
+                >
+                    <Grid item xs={12} md={8}>
+                        <Typography
+                            variant="h4"
+                        >
+                            Adding a game
+                        </Typography>
+                    </Grid>
 
-                <div style={{width: "100%"}}>
-                    <h2>Adding a game</h2>
-                </div>
-
-                {/*<div className={classes.downshift}>*/}
-                    {/**/}
-                {/*</div>*/}
-                <br/>
-                <div className={classes.downshift}>
-                    <Grid container className={classes.root}>
-                        <Grid item xs={12}>
+                    <Grid item xs={12} md={8} container spacing={24} >
+                        <Grid item xs={12} md={4}>
                             <Downshift
-                                onChange={(item) => this.handleChange(item, 'selected_board_game')}
+                                onChange={(item) => this.handleDownshiftChange(item.provided_board_game, 'selected_board_game')}
                                 itemToString={item => {
                                     if (!item) return "";
-                                    if (!item.hasOwnProperty("name")) return "";
-                                    return item.name
+                                    if (!item.provided_board_game.hasOwnProperty("name")) return "";
+                                    return item.provided_board_game.name
                                 }}>
                                 {
                                     ({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => {
@@ -538,7 +554,7 @@ class AddGame extends React.Component {
                                                     classes,
                                                     InputProps: getInputProps({
                                                         placeholder: 'Search a board game',
-                                                        id: 'integration-downshift-simple',
+                                                        id: 'bg-downshift',
                                                     }),
                                                 })}
                                                 {isOpen ? (
@@ -561,240 +577,216 @@ class AddGame extends React.Component {
                             </Downshift>
                         </Grid>
 
-                        <Grid item xs={12} style={{marginTop: "25px"}}>
-                            <Grid
-                                container
-                                spacing={16}
-                                alignItems="center"
-                                direction="row"
-                                justify="flex-start"
-                            >
-                                <Grid item>
-
-                                    <FormControl className={classes.formControl}>
-                                        <InputLabel htmlFor="age-native-simple">Ranking method</InputLabel>
-                                        <Select
-                                            native
-                                            value={this.state.ranking_method}
-                                            onChange={this.handleRankingMethodChange}
-                                            inputProps={{
-                                                id: 'ranking-method',
-                                            }}
-                                        >
-                                            <option value={"ranked"}>Ranked</option>
-                                            <option value={"win_lose"}>Win/Lose</option>
-                                        </Select>
-                                    </FormControl>
-
-                                </Grid>
-                            </Grid>
+                        <Grid item xs={5} md={3}>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel htmlFor="age-native-simple"> Ranking method </InputLabel>
+                                <Select
+                                    native
+                                    value={this.state.ranking_method}
+                                    onChange={this.handleChange('ranking_method')}
+                                    InputProps={{
+                                        id: 'ranking-method',
+                                    }}
+                                >
+                                    <option value={"ranked"}>Ranked</option>
+                                    <option value={"win_lose"}>Win/Lose</option>
+                                </Select>
+                            </FormControl>
                         </Grid>
 
-                        <Grid item xs={12}>
-                            <Grid
-                                container
-                                spacing={16}
-                                alignItems="center"
-                                direction="row"
-                                justify="flex-start"
+                        <Grid item xs={5} md={3}>
+                            <TextField
+                                id="duration-select"
+                                select
+                                label="Game duration"
+                                value={this.state.game_duration}
+                                className={classes.formControl}
+                                onChange={this.handleChange('game_duration')}
+                                SelectProps={{
+                                    native: true,
+                                    MenuProps: {
+                                        className: classes.menu,
+                                    },
+                                }}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             >
-                                <Grid item>
-                                    <Downshift
-                                        onChange={(item) => this.handleChange(item, 'selected_player')}
-                                        itemToString={item => {
-                                            if (!item) return "";
-                                            if (!item.hasOwnProperty("name")) return "";
-                                            return item.name
-                                        }}>
-                                        {
-                                            ({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => {
+                                {game_durations.map(option => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.value + " min"}
+                                    </option>
+                                ))}
+                            </TextField>
+                        </Grid>
 
-                                                return (
-                                                    <div className={classes.container}>
-                                                        {AddGame.renderInputPlayer({
-                                                            fullWidth: true,
-                                                            classes,
-                                                            InputProps: getInputProps({
-                                                                placeholder: 'Search a player',
-                                                                id: 'player-downshift'
+                    </Grid>
+
+                    <Grid item xs={12} md={8} container spacing={24}>
+                        <Grid item xs={12} md={4}>
+                            <Downshift
+                                onChange={(item) => this.handleDownshiftChange(item.user, 'selected_player')}
+                                itemToString={item => {
+                                    if (!item) return "";
+                                    if (!item.user.hasOwnProperty("name")) return "";
+                                    return item.user.name
+                                }}>
+                                {
+                                    ({ getInputProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex }) => {
+                                        return (
+                                            <div className={classes.container}>
+                                                {AddGame.renderInputPlayer({
+                                                    fullWidth: true,
+                                                    classes,
+                                                    InputProps: getInputProps({
+                                                        placeholder: 'Search a player',
+                                                        id: 'player-downshift'
+                                                    }),
+                                                })}
+                                                {isOpen ? (
+                                                    <Paper className={classes.paper} square>
+                                                        {this.getSuggestionsPlayer(inputValue).map((suggestion, index) =>
+                                                            AddGame.renderSuggestionPlayer({
+                                                                suggestion,
+                                                                index,
+                                                                itemProps: getItemProps({ item: suggestion }),
+                                                                highlightedIndex,
+                                                                selectedItem,
                                                             }),
-                                                        })}
-                                                        {isOpen ? (
-                                                            <Paper className={classes.paper} square>
-                                                                {this.getSuggestionsPlayer(inputValue).map((suggestion, index) =>
-                                                                    AddGame.renderSuggestionPlayer({
-                                                                        suggestion,
-                                                                        index,
-                                                                        itemProps: getItemProps({ item: suggestion }),
-                                                                        highlightedIndex,
-                                                                        selectedItem,
-                                                                    }),
-                                                                )}
-                                                            </Paper>
-                                                        ) : null}
-                                                    </div>
-                                                )
-                                            }
-                                        }
-                                    </Downshift>
-                                </Grid>
-                                <Grid item>
-                                    {
-                                        this.state.ranking_method === 'ranked' ? (
-                                                <TextField
-                                                id="score"
-                                                label="Score"
-                                                value={this.state.current_score}
-                                                onChange={this.handleChangeScore}
-                                                type="number"
-                                                className={classes.score}
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                                margin="normal"
-                                                />
-                                            ) :
-                                            (
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            icon={<StarBorder />}
-                                                            checkedIcon={<Star />}
-                                                            checked={this.state.is_winner}
-                                                            onChange={this.handleCheckBox}/>
-                                                    }
-                                                    label="Winner"
-                                                    style={{marginTop: "10px"}}
-                                                />
-                                            )
-                                    }
-
-
-                                </Grid>
-                                <Grid item>
-                                    <Button
-                                        style={{marginTop: "17px"}}
-                                        size="small"
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.handleAddNewScore}>
-                                        Add
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <Grid
-                                container
-                                spacing={16}
-                                alignItems="center"
-                                direction="row"
-                                justify="flex-start"
-                            >
-                                <Grid item style={{paddingTop: "30px"}}>
-                                    {
-                                        this.state.ranking_method === 'ranked' ? (
-                                            <Table className={classes.table}>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell padding="checkbox"/>
-                                                        <TableCell>Player</TableCell>
-                                                        <TableCell>Score</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {
-                                                        this.state.scores.map(p_score => {
-                                                            return (
-                                                                <TableRow key={p_score.player.id}>
-                                                                    <TableCell padding="checkbox">
-                                                                        <IconButton
-                                                                        key="close"
-                                                                        aria-label="Close"
-                                                                        color="inherit"
-                                                                        onClick={() => this.handleRemoveScore(p_score)}
-                                                                        size={"small"}>
-                                                                            <CloseIcon/>
-                                                                        </IconButton>
-                                                                    </TableCell>
-                                                                    <TableCell component="th" scope="row">
-                                                                        {p_score.player.name}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {p_score.score}
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                            )
-                                                        })
-                                                    }
-                                                </TableBody>
-                                            </Table>
-                                        ) : (
-                                            <Table className={classes.table}>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell padding="checkbox"/>
-                                                        <TableCell>Player</TableCell>
-                                                        <TableCell>Winner</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    {
-                                                        this.state.win_lose_scores.map(p_score => {
-                                                            return (
-                                                                <TableRow key={p_score.player.id}>
-                                                                    <TableCell padding="checkbox">
-                                                                        <IconButton
-                                                                            key="close"
-                                                                            aria-label="Close"
-                                                                            color="inherit"
-                                                                            onClick={() => this.handleRemoveWinLose(p_score)}
-                                                                            size={"small"}>
-                                                                            <CloseIcon/>
-                                                                        </IconButton>
-                                                                    </TableCell>
-                                                                    <TableCell component="th" scope="row">
-                                                                        {p_score.player.name}
-                                                                    </TableCell>
-                                                                    <TableCell>
-                                                                        {p_score.win ? "Yes" : "No"}
-                                                                    </TableCell>
-                                                                </TableRow>
-                                                            )
-                                                        })
-                                                    }
-                                                </TableBody>
-                                            </Table>
+                                                        )}
+                                                    </Paper>
+                                                ) : null}
+                                            </div>
                                         )
                                     }
-
-                                </Grid>
-                            </Grid>
+                                }
+                            </Downshift>
+                        </Grid>
+                        <Grid item xs={12} md={2}>
+                            {
+                                this.state.ranking_method === 'ranked' ?
+                                    (
+                                        <TextField
+                                            id="score"
+                                            label="Score"
+                                            value={this.state.current_score}
+                                            onChange={this.handleChange("current_score")}
+                                            type="number"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                    ) : (
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    icon={<StarBorder />}
+                                                    checkedIcon={<Star />}
+                                                    checked={this.state.is_winner}
+                                                    onChange={this.handleCheckBox}/>
+                                            }
+                                            label="Winner"
+                                        />
+                                    )
+                            }
                         </Grid>
 
-                        <Grid item xs={12}>
-                            <Grid
-                                container
-                                spacing={16}
-                                alignItems="center"
-                                direction="row"
-                                justify="flex-start"
+                        <Grid item xs={12} md={2}>
+                            <Button
+                                size="small"
+                                variant="contained"
+                                color="primary"
+                                onClick={this.handleAddNewScore}
                             >
-                                <Grid item style={{paddingTop: "30px"}}>
-                                    <Button
-                                        style={{marginTop: "17px"}}
-                                        size="medium"
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={this.handleAddGame}>
-                                        Confirm
-                                    </Button>
-                                </Grid>
-                            </Grid>
+                                Add player score
+                            </Button>
                         </Grid>
                     </Grid>
-                </div>
+
+                    <Grid item xs={12} md={5}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell padding="checkbox"/>
+                                    <TableCell> Player </TableCell>
+                                    <TableCell>
+                                        {
+                                            this.state.ranking_method === 'ranked' ? "Score" : "Won"
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            {
+                                this.state.ranking_method === 'ranked' ? (
+                                    <TableBody>
+                                        {
+                                            this.state.scores.map(p_score => {
+                                                return (
+                                                    <TableRow key={p_score.player.id}>
+                                                        <TableCell padding="checkbox">
+                                                            <IconButton
+                                                            key="close"
+                                                            aria-label="Close"
+                                                            color="inherit"
+                                                            onClick={() => this.handleRemoveScore(p_score)}
+                                                            size={"small"}>
+                                                                <CloseIcon/>
+                                                            </IconButton>
+                                                        </TableCell>
+                                                        <TableCell component="th" scope="row">
+                                                            {p_score.player.name}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {p_score.score}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })
+                                        }
+                                    </TableBody>
+                                ) : (
+                                    <TableBody>
+                                        {
+                                            this.state.win_lose_scores.map(p_score => {
+                                                return (
+                                                    <TableRow key={p_score.player.id}>
+                                                        <TableCell padding="checkbox">
+                                                            <IconButton
+                                                                key="close"
+                                                                aria-label="Close"
+                                                                color="inherit"
+                                                                onClick={() => this.handleRemoveWinLose(p_score)}
+                                                                size={"small"}>
+                                                                <CloseIcon/>
+                                                            </IconButton>
+                                                        </TableCell>
+                                                        <TableCell component="th" scope="row">
+                                                            {p_score.player.name}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            {p_score.win ? "Yes" : "No"}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                            })
+                                        }
+                                    </TableBody>
+                                )
+                            }
+                        </Table>
+                    </Grid>
+
+                    <Grid item xs={12} md={12}>
+                        <Button
+                            size="medium"
+                            variant="contained"
+                            color="secondary"
+                            onClick={this.handleAddGame}
+                        >
+                            Confirm
+                        </Button>
+                    </Grid>
+                </Grid>
             </div>
         );
     }
