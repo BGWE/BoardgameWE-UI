@@ -16,6 +16,7 @@ import Button from "@material-ui/core/Button/Button";
 
 import EventIcon from '@material-ui/icons/Event';
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
+import User from "../utils/api/User";
 
 const styles = theme => ({
     appBar: {

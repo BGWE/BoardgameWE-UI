@@ -94,6 +94,10 @@ const styles2 = theme => ({
 
 class CustomizedSnackbar extends React.Component {
     render() {
+        let autoHideDuration = 5000;
+        if ('autoHideDuration' in this.props) {
+            autoHideDuration = this.props.autoHideDuration;
+        }
         return (
             <Snackbar
                 anchorOrigin={{
@@ -101,7 +105,7 @@ class CustomizedSnackbar extends React.Component {
                     horizontal: 'left',
                 }}
                 open={this.props.open}
-                autoHideDuration={5000}
+                autoHideDuration={autoHideDuration}
                 onClose={this.props.onClose}
             >
                 <MySnackbarContentWrapper

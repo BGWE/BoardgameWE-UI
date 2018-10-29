@@ -34,6 +34,13 @@ export default class Event extends Model {
         return `event/${this.id}/board_games`;
     }
 
+    boardGamesFromBggUri(bgg_id) {
+        if(this.isNew()) {
+            throw new Error("Cannot construct board games URI of an event with no ID.");
+        }
+        return `event/${this.id}/board_game/bgg/${bgg_id}`;
+    }
+
     async fetchBoardGames() {
         let {data} = await axios.get(this.boardGamesUri);
         return data;
@@ -41,6 +48,11 @@ export default class Event extends Model {
 
     async addBoardGames(gamesIds) {
         let {data} = await axios.post(this.boardGamesUri, {board_games: gamesIds});
+        return data;
+    }
+
+    async addBoardGameFromBgg(bggId) {
+        let {data} = await axios.post(this.boardGamesFromBggUri(bggId), {});
         return data;
     }
 
