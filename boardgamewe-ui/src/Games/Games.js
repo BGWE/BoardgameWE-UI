@@ -2,13 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
-import RankingTable from "../Rankings/RankingTable";
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
@@ -21,10 +18,10 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/Expan
 import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
 import Typography from "@material-ui/core/Typography/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
-import Grid from "@material-ui/core/Grid/Grid";
 import Divider from "@material-ui/core/Divider/Divider";
 import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions/ExpansionPanelActions";
 import { withStyles } from '@material-ui/core/styles';
+import GameTable from "./GameTable";
 
 const styles = theme => ({
     root: {
@@ -54,6 +51,7 @@ const styles = theme => ({
     secondaryHeading: {
         fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
+        flexBasis: '33.33%'
     },
 
     tableWrapper: {
@@ -83,6 +81,7 @@ class Games extends React.Component {
 
         // Bind this
         this.reload = this.reload.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
         this.handleCloseSnack = this.handleCloseSnack.bind(this);
         this.handleClickAdd = this.handleClickAdd.bind(this);
         this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -168,6 +167,8 @@ class Games extends React.Component {
     render () {
         const { classes } = this.props;
 
+        console.log(this.state.games);
+
         if (this.state.isLoading) {
             return (
                 <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
@@ -238,7 +239,6 @@ class Games extends React.Component {
                             });
 
                             game.players[0].winner = true;
-                            console.log(game.players);
 
                             let created_at = new Date(game.createdAt);
                             return (
@@ -246,27 +246,14 @@ class Games extends React.Component {
                                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                         <Typography className={classes.heading}>{game.board_game.name}</Typography>
                                         <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
+                                        <Typography className={classes.secondaryHeading}>Lasted {game.duration ? game.duration : ""} minutes </Typography>
                                     </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails style={{width: "50%"}}>
-                                        <Grid item xs={12}>
-                                            <Grid
-                                                container
-                                                spacing={16}
-                                                alignItems="center"
-                                                direction="row"
-                                                justify="flex-start"
-                                            >
-                                                <Grid item>
-                                                    <div className={classes.tableWrapper}>
-                                                        <RankingTable
-                                                            ranking={game.players}
-                                                            modifier={a => a}
-                                                            isWinLose={ game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}/>
-                                                    </div>
-
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
+                                    <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
+                                        <GameTable
+                                            game={game}
+                                            modifier={a => a}
+                                            isWinLose={game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}
+                                        />
                                     </ExpansionPanelDetails>
                                     <Divider />
                                     <ExpansionPanelActions>

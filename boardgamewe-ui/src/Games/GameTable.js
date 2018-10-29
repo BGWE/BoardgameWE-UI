@@ -30,17 +30,17 @@ const styles = theme => ({
     },
 
     gold_icon: {
-        width: '25px',
+        width: '20px',
         color: colors.gold
     },
 
     silver_icon: {
-        width: '25px',
+        width: '20px',
         color: colors.silver
     },
 
     bronze_icon: {
-        width: '25px',
+        width: '20px',
         color: colors.bronze
     },
 
@@ -67,7 +67,7 @@ const styles = theme => ({
     }
 });
 
-class RankingTable extends React.Component {
+class GameTable extends React.Component {
     getIcon(rank, classes) {
         if (rank === 1) {
             return (
@@ -77,7 +77,7 @@ class RankingTable extends React.Component {
                         {rank}
                     </div>
                 </div>
-        );
+            );
         } else if (rank === 2) {
             return (
                 <div className={classes.wrapper}>
@@ -104,33 +104,28 @@ class RankingTable extends React.Component {
     render () {
         const { classes } = this.props;
 
-        let isWinLose = this.props.isWinLose;
-        if (isWinLose === null) {
-            isWinLose = false;
-        }
-
-        console.log(this.props.ranking);
-
+        console.log(this.props);
+        var rank = 0;
         return (
-            <Table>
+            <Table padding={"dense"}>
                 <TableHead>
                     <TableRow>
-                        <TableCell classes={{root : classes.tableCell}}>#</TableCell>
-                        <TableCell classes={{root : classes.tableCell}}>Player</TableCell>
+                        <TableCell> # </TableCell>
+                        <TableCell> Player </TableCell>
                         {
-                            isWinLose ? null:
-                                (<TableCell classes={{root : classes.tableCell}} numeric={true}>Score</TableCell>)
+                            this.props.isWinLose ? null:
+                                (<TableCell numeric={true}> Score </TableCell>)
                         }
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {this.props.ranking ? this.props.ranking.slice(0, 10).map(player => (
-                        <TableRow key={player.player.id_user} className={player.win ? classes.winnerRow : null}>
-                            <TableCell classes={{root : classes.tableCell}}>{this.getIcon(player.rank, classes)} </TableCell>
-                            <TableCell classes={{root : classes.tableCell}} className={player.win ? classes.winnerCell : null}>{player.player.name ? player.player.name.split(" ")[0] : player.player.user.name}</TableCell>
+                    {this.props.game ? this.props.game.players.slice(0, 10).map(player => (
+                        <TableRow key={player.id_user} className={player.winner ? classes.winnerRow : null}>
+                            <TableCell> {this.getIcon(rank += 1, classes)} </TableCell>
+                            <TableCell className={player.winner ? classes.winnerCell : null}>{player.name ? player.name.split(" ")[0] : player.user.name}</TableCell>
                             {
-                                isWinLose ? null:
-                                    (<TableCell classes={{root : classes.tableCell}} className={player.win ? classes.winnerCell : null} numeric={true}>{this.props.modifier(player.score)}</TableCell>)
+                                this.props.isWinLose ? null:
+                                    (<TableCell className={player.winner ? classes.winnerCell : null} numeric> {this.props.modifier(player.score)} </TableCell>)
                             }
 
                         </TableRow>
@@ -141,8 +136,5 @@ class RankingTable extends React.Component {
     }
 }
 
-// RankingTable.propTypes = {
-//     classes: PropTypes.object.isRequired,
-// };
 
-export default withStyles(styles)(RankingTable);
+export default withStyles(styles)(GameTable);

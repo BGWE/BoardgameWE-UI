@@ -23,6 +23,10 @@ export default class Event extends Model {
         return Game.fetchAllInEvent(this.id);
     }
 
+    async fetchLatestGames() {
+        return Game.fetchLatestInEvent(this.id);
+    }
+
     get boardGamesUri() {
         if(this.isNew()) {
             throw new Error("Cannot construct board games URI of an event with no ID.");
@@ -95,6 +99,27 @@ export default class Event extends Model {
             throw new Error("Cannot fetch rankings for an event with no ID");
         }
         let {data} = await axios.get(`event/${this.id}/rankings`);
+        return data;
+    }
+
+    /**
+     * Fetch specific ranking corresponding to rankingType
+     * rankingType may take the following values:
+     * - gcbgb
+     * - victory_count
+     * - defeat_count
+     * - victory_prop
+     * - defeat_prop
+     * - count_games
+     * - count_unique_games
+     * - is_last
+     * - is_last_prop
+     */
+    async fetchRanking(rankingType) {
+        if(this.isNew()) {
+            throw new Error("Cannot fetch rankings for an event with no ID");
+        }
+        let {data} = await axios.get(`event/${this.id}/ranking/${rankingType}`);
         return data;
     }
 }
