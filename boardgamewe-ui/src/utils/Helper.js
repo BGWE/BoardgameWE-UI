@@ -1,3 +1,5 @@
+import * as jwt from "jsonwebtoken";
+
 export function htmlDecode(input) {
     let e = document.createElement('div');
     e.innerHTML = input;
@@ -40,4 +42,8 @@ export function getRankingBest (ranking) {
     } else {
         return "";
     }
+}
+
+export function getTokenPayload(token) {
+    return jwt.decode(token);
 }

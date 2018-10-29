@@ -19,6 +19,38 @@ export default class Event extends Model {
         this.location = null;
     }
 
+    static fetchAll(ongoing, registered) {
+        let urlParams = {};
+
+        if ((ongoing === undefined && registered !== undefined) ||
+            (ongoing !== undefined && registered === undefined)) {
+            console.log("FetchAll events - Both ongoing and registered url parameters should be provided to filter the events.")
+        }
+
+        else {
+            if (ongoing !== undefined) {
+                urlParams['ongoing'] = ongoing
+            }
+
+            if (registered !== undefined) {
+                urlParams['registered'] = registered.join(',')
+            }
+        }
+
+        return axios.get(this.collectionName, {
+            params: urlParams
+        }).then((data) => {
+            console.log(data);
+            let processedCollection = [];
+            data.data.forEach(elem => {
+                let model = new this(elem);
+                processedCollection.push(model);
+            });
+
+            return processedCollection;
+        });
+    }
+
     async fetchGames() {
         return Game.fetchAllInEvent(this.id);
     }
