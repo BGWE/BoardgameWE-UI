@@ -169,7 +169,9 @@ class Dashboard extends React.Component {
                                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                         <Typography className={classes.heading}>{game.board_game.name}</Typography>
                                         <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
-                                        <Typography className={classes.secondaryHeading}>Lasted {game.duration ? game.duration : ""} minutes </Typography>
+                                        {
+                                            game.duration ? <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography> : ""
+                                        }
                                     </ExpansionPanelSummary>
                                     <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
                                         <GameTable
