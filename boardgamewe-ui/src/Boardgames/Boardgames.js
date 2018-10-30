@@ -2,6 +2,7 @@ import React from 'react';
 import BoardgamesList from "./BoardgamesList/BoardgamesList";
 
 import BoardGame from "../utils/api/BoardGame.js";
+import User from "../utils/api/User.js";
 
 class Boardgames extends React.Component {
 
@@ -14,8 +15,9 @@ class Boardgames extends React.Component {
     }
 
     async fetchGames() {
+        let currentUser = await User.fetchCurrent();
         let data = await this.props.eventModel.fetchBoardGames();
-        let boardGames = data.map(item => new BoardGame(item.provided_board_game));
+        let boardGames = data.map(item => new BoardGame({owner: item.id_user === currentUser.id, ...item.provided_board_game}));
         return boardGames;
     }
 

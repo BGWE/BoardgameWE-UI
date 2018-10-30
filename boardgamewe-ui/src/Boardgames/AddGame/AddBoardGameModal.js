@@ -117,7 +117,7 @@ class BoardGameModal extends React.Component {
     };
 
     static checkAlreadyAdded(boardGameId, boardGamesList, field) {
-        return boardGamesList.some((bg) => (bg[field].toString() === boardGameId))
+        return boardGamesList.some(bg => (bg[field].toString() === boardGameId && bg.owner))
     }
 
     static build_uri(q){

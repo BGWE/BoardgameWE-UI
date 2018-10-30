@@ -17,12 +17,10 @@ class LibraryLayout extends React.Component {
         this.removeGame = this.removeGame.bind(this);
     }
 
-
-
     async fetchGames() {
         let data = await this.library.fetchGames();
         console.log(data);
-        let boardGames = data.map(item => new BoardGame(item.board_game));
+        let boardGames = data.map(item => new BoardGame({owner: true, ...item.board_game}));
         return boardGames;
     }
 

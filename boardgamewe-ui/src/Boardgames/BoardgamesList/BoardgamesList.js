@@ -308,7 +308,7 @@ class TitlebarGridList extends React.Component {
                     message={this.state.error_msg}
                     open={this.state.snackbar_error}
                 />
-
+            
                 <Dialog
                     open={this.state.open_confirmation_dialog}
                     onClose={this.handleCloseConfirm}
@@ -447,6 +447,7 @@ class TitlebarGridList extends React.Component {
                                 <GridListTile key={tile.id} className={classes.tile}>
                                     <img src={tile.thumbnail} alt={tile.name} />
                                     {
+                                        tile.owner &&
                                         <GridListTileBar
                                             titlePosition="top"
                                             actionIcon={
