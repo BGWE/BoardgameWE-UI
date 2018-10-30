@@ -33,7 +33,7 @@ class App extends Component {
         require("moment/locale/en-gb");
 
         // initialize timezone
-        moment.tz.guess();
+        moment.tz.setDefault(moment.tz.guess());
 
         this.state = {
             appError: null,
