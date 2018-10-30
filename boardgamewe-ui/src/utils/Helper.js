@@ -2,9 +2,15 @@ import * as jwt from "jsonwebtoken";
 import moment from "moment-timezone";
 
 export function formatDatetime(iso8601) {
-    const datetime = moment(iso8601);
-    return datetime.utc().format("LLL");
+    const datetime = moment(iso8601).tz(moment.tz.guess());
+    return datetime.format("LLL");
 }
+
+export function formatDate(iso8601) {
+    const datetime = moment(iso8601).tz(moment.tz.guess());
+    return datetime.format("LL");
+}
+
 
 export function htmlDecode(input) {
     let e = document.createElement('div');

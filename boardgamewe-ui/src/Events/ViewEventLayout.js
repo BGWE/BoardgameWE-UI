@@ -18,6 +18,8 @@ import TextField from "@material-ui/core/TextField/TextField";
 
 import EventModel from "../utils/api/Event";
 
+import moment from "moment-timezone";
+
 const styles = theme => ({
     appBar: {
         position: 'relative',
@@ -83,10 +85,7 @@ class ViewEventLayout extends React.Component {
     }
 
     static convertToISO(stringDate) {
-        let date = new Date(stringDate);
-        console.log(date);
-        console.log(date.toISOString());
-        return date.toISOString()
+        return moment(stringDate).toISOString();
     }
 
     handleInputChange(event) {
@@ -120,6 +119,8 @@ class ViewEventLayout extends React.Component {
 
         // Convert dates
         let start = ViewEventLayout.convertToISO(this.state.startDate);
+        console.log(this.state.startDate);
+        console.log(start);
         let end = ViewEventLayout.convertToISO(this.state.endDate);
 
         let data = await new EventModel({
@@ -184,7 +185,7 @@ class ViewEventLayout extends React.Component {
                                         id="startDate"
                                         name="startDate"
                                         label="Start date"
-                                        type="datetime"
+                                        type="date"
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
@@ -199,7 +200,7 @@ class ViewEventLayout extends React.Component {
                                         id="endDate"
                                         name="endDate"
                                         label="End date"
-                                        type="datetime"
+                                        type="date"
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,

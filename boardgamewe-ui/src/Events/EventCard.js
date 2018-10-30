@@ -85,7 +85,7 @@ class EventCart extends React.Component {
                         }/>
                     <CardContent className={classes.cardContent}>
                         <Typography className={classes.dateHeader} variant="subheading">
-                            {Helper.formatDatetime(event.start)} - {Helper.formatDatetime(event.end)}
+                            {Helper.formatDate(event.start)} - {Helper.formatDate(event.end)}
                         </Typography>
                         <Typography>
                             {event.description}
