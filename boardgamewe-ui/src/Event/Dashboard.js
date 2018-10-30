@@ -9,29 +9,14 @@ import RankingTable from "../Rankings/RankingTable";
 import RankingCard from "../Rankings/RankingCard";
 import DateIcon from "@material-ui/icons/DateRange";
 import PlaceIcon from "@material-ui/icons/Place";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
-import GameTable from "../Games/GameTable";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button/Button";
 import moment from "moment-timezone";
 import * as Helper from "../utils/Helper";
+import GameExpensionPanel from "../Games/GameExpensionPanel";
 
 const styles = theme => ({
     root: {
-    },
-    heading: {
-        fontSize: theme.typography.pxToRem(15),
-        flexBasis: '33.33%',
-        flexShrink: 0,
-    },
-
-    secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
-        flexBasis: '33.33%'
     },
     heroUnit: {
         backgroundColor: theme.palette.background.paper,
@@ -127,10 +112,10 @@ class Dashboard extends React.Component {
                             {this.props.eventModel.name}
                         </Typography>
                         <Typography variant="body1" align="center" color="textSecondary" paragraph>
-                            <DateIcon/> From {Helper.formatDate(this.props.eventModel.start)} to {Helper.formatDate(this.props.eventModel.end)}.
+                            <DateIcon/> From {Helper.formatDatetime(this.props.eventModel.start)} to {Helper.formatDatetime(this.props.eventModel.end)}.
                         </Typography>
                         <Typography variant="body1" align="center" color="textSecondary" paragraph>
-                            <PlaceIcon/> {this.props.eventModel.location} {moment.locale()}
+                            <PlaceIcon/> {this.props.eventModel.location}
                         </Typography>
                         <Typography variant="h6" align="center" color="textSecondary" paragraph>
                             {this.props.eventModel.description}
@@ -160,40 +145,10 @@ class Dashboard extends React.Component {
                     </Grid>
 
                     <Grid item xs={12} md={8}>
-
                         <Typography variant="h4" align="left" className={classes.section_typography}>
                             Latest games
                         </Typography>
-
-                        {
-                            this.state.games.map((game) => {
-                                game.players.sort(function (first, second) {
-                                    return first.rank - second.rank;
-                                });
-
-                                game.players[0].winner = true;
-
-                                let created_at = new Date(game.createdAt);
-                                return (
-                                    <ExpansionPanel key={game.id} >
-                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                            <Typography className={classes.heading}>{game.board_game.name}</Typography>
-                                            <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
-                                            {
-                                                game.duration ? <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography> : ""
-                                            }
-                                        </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
-                                            <GameTable
-                                                game={game}
-                                                modifier={a => a}
-                                                isWinLose={game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}
-                                            />
-                                        </ExpansionPanelDetails>
-                                    </ExpansionPanel>
-                                    );
-                                })
-                            }
+                        { this.state.games.map(game => (<GameExpensionPanel key={game.id} game={game}/>)) }
                         </Grid>
                 </Grid>
         </div>

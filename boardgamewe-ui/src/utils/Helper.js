@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import moment from "moment-timezone";
 
-export function formatDate(iso8601) {
+export function formatDatetime(iso8601) {
     const datetime = moment(iso8601);
     return datetime.utc().format("LLL");
 }
