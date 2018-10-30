@@ -11,9 +11,9 @@ import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Button from "@material-ui/core/Button/Button";
 import AccountMenu from "../Layout/AccountMenu.js";
-import EventIcon from '@material-ui/icons/Event';
 import EventCard from "./EventCard";
 import CustomizedSnackbar from "../utils/UI/Snackbar";
+import HomeButton from "../utils/HomeButton";
 
 const styles = theme => ({
     appBar: {
@@ -196,7 +196,7 @@ class EventsLayout extends React.Component {
                     <CssBaseline />
                     <AppBar position="static" className={classes.appBar}>
                         <Toolbar>
-                            <EventIcon className={classes.icon} />
+                            <HomeButton/>
                             <Typography variant="h6" color="inherit" noWrap>
                                 Event selection
                             </Typography>

@@ -14,6 +14,7 @@ import UserModel from "../utils/api/User";
 
 import ProfileManagementLayout from "./ProfileManagementLayout";
 import LibraryLayout from "./LibraryLayout";
+import HomeButton from "../utils/HomeButton";
 
 const styles = theme => ({
     appBar: {
@@ -33,7 +34,6 @@ const styles = theme => ({
 class AccountLayout extends React.Component {
     constructor(props, context) {
         super(props, context);
-
 
         this.state = {
             user: null,
@@ -64,9 +64,12 @@ class AccountLayout extends React.Component {
                     <AppBar position="absolute" className={classes.appBar}>
                         <Toolbar>
                             <ArrowBack className={classes.icon} onClick={this.props.history.goBack} />
-                            <Typography variant="h6" color="inherit" noWrap>
-                                Accout management
-                            </Typography>
+                            <HomeButton/>
+                            <div>
+                                <Typography variant="h6" color="inherit" noWrap>
+                                    Accout management
+                                </Typography>
+                            </div>
                             <AccountMenu callbackLogout={this.props.callbackLogout}/>
                         </Toolbar>
                     </AppBar>
