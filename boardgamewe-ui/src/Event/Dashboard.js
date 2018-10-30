@@ -109,7 +109,7 @@ class Dashboard extends React.Component {
                             {this.props.eventModel.name}
                         </Typography>
                         <Typography variant="body1" align="center" color="textSecondary" paragraph>
-                            <DateIcon/> From {Helper.formatDatetime(this.props.eventModel.start)} to {Helper.formatDatetime(this.props.eventModel.end)}.
+                            <DateIcon/> From {Helper.formatDate(this.props.eventModel.start)} to {Helper.formatDate(this.props.eventModel.end)}.
                         </Typography>
                         <Typography variant="body1" align="center" color="textSecondary" paragraph>
                             <PlaceIcon/> {this.props.eventModel.location}
