@@ -5,7 +5,7 @@ import AppLayout from "./AppLayout";
 import LoginLayout from "./Login/LoginLayout";
 import EventsLayout from "./Events/EventsLayout";
 import EventLayout from "./Event/EventLayout";
-
+import moment from "moment-timezone";
 import theme from './theme';
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import SearchResults from "./Boardgames/SearchResults/SearchResults";
@@ -20,6 +20,19 @@ axios.defaults.baseURL = Constants.API_ADDRESS;
 class App extends Component {
     constructor(props) {
         super(props);
+
+        // initialize locale: bug with moment, so need to use require to set default locale
+        /* UNCOMMENT FOR SETTING LOCALE FROM BROWSER
+         const locale = window.navigator.userLanguage || window.navigator.language || "fr-be";
+         if (locale !== "en) {
+            require("moment/locale/" + locale);
+         }
+        */
+        // hardcoded in english as app is in english
+        require("moment/locale/en-gb");
+
+        // initialize timezone
+        moment.tz.guess();
 
         this.state = {
             appError: null,

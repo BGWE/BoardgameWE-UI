@@ -8,11 +8,16 @@ import {getRankingBest} from "../utils/Helper";
 import RankingTable from "../Rankings/RankingTable";
 import RankingCard from "../Rankings/RankingCard";
 import DateIcon from "@material-ui/icons/DateRange";
+import PlaceIcon from "@material-ui/icons/Place";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
 import GameTable from "../Games/GameTable";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
+import {Link} from "react-router-dom";
+import Button from "@material-ui/core/Button/Button";
+import moment from "moment-timezone";
+import * as Helper from "../utils/Helper";
 
 const styles = theme => ({
     root: {
@@ -28,6 +33,21 @@ const styles = theme => ({
         color: theme.palette.text.secondary,
         flexBasis: '33.33%'
     },
+    heroUnit: {
+        backgroundColor: theme.palette.background.paper,
+    },
+    heroContent: {
+        maxWidth: 600,
+        margin: '0 auto',
+        padding: `${theme.spacing.unit * 8}px 0 ${theme.spacing.unit * 6}px`,
+    },
+    heroButtons: {
+        marginTop: theme.spacing.unit * 4,
+    },
+    section_typography: {
+        marginBottom: 10,
+        marginTop: 10
+    }
 });
 
 class Dashboard extends React.Component {
@@ -58,11 +78,13 @@ class Dashboard extends React.Component {
 
     async reload() {
         try {
-            let ranking = await this.props.eventModel.fetchRanking('victory_count');
+            let gcbgb_ranking = await this.props.eventModel.fetchRanking('gcbgb');
+            let victory_ranking = await this.props.eventModel.fetchRanking('victory_count');
             let games = await this.props.eventModel.fetchLatestGames();
 
             this.setState({
-                ranking: ranking,
+                gcbgb_ranking: gcbgb_ranking,
+                victory_ranking: victory_ranking,
                 games: games,
                 isLoading: false});
         } catch (e) {
@@ -88,102 +110,91 @@ class Dashboard extends React.Component {
 
         console.log(this.props.eventModel);
 
-
-        const {creator, start} = this.props.eventModel;
+        let ranking, ranking_name;
+        if (this.state.gcbgb_ranking.length > 0) {
+            ranking = this.state.gcbgb_ranking;
+            ranking_name = "Great canadian blitz ranking";
+        } else {
+            ranking = this.state.victory_ranking;
+            ranking_name = "Victories";
+        }
 
         return (
-            <Grid
-                container
-                justify="center"
-                spacing={24}
-            >
-                <Grid item xs={12} md={8}>
-                    <Typography
-                        component="h4"
-                        variant="h4"
-                        align="left"
-                    >
-                        Welcome to {this.props.eventModel.name} !
-                    </Typography>
-                    <div align="left" style={{marginBottom: 10}}>
-                        <DateIcon/> {start}
+            <div>
+                <div className={classes.heroUnit}>
+                    <div className={classes.heroContent}>
+                        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+                            {this.props.eventModel.name}
+                        </Typography>
+                        <Typography variant="body1" align="center" color="textSecondary" paragraph>
+                            <DateIcon/> From {Helper.formatDate(this.props.eventModel.start)} to {Helper.formatDate(this.props.eventModel.end)}.
+                        </Typography>
+                        <Typography variant="body1" align="center" color="textSecondary" paragraph>
+                            <PlaceIcon/> {this.props.eventModel.location} {moment.locale()}
+                        </Typography>
+                        <Typography variant="h6" align="center" color="textSecondary" paragraph>
+                            {this.props.eventModel.description}
+                        </Typography>
+                        <div className={classes.heroButtons}>
+                            <Grid container spacing={16} justify="center">
+                                <Grid item>
+                                    <Link to={`${this.props.match.path}/games/add`} className={classes.button}>
+                                        <Button variant="contained" color="primary">
+                                            Add game
+                                        </Button>
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </div>
                     </div>
-                    <Typography align="left" variant="body1">
-                        Hosted by {creator.name + " " + creator.surname}, in {this.props.eventModel.location}.
-                        The {this.props.eventModel.attendees.length} participants are bringing {this.props.eventModel.provided_board_games.length} board games with them.
-                        Prepare your dices, fetch your beer, this weekend is going down in History !
-                    </Typography>
-                </Grid>
+                </div>
+                <Grid container justify="center" spacing={24}>
+                    <Grid item xs={12} md={8}>
+                        <Typography variant="h4" align="left" className={classes.section_typography}>
+                            Leaderboard
+                        </Typography>
 
-                <Grid item xs={12} md={8}>
-                    <Typography
-                        variant="h4"
-                        align="left"
-                    >
-                        Leaderboard
-                    </Typography>
-
-                    <Typography align="left" variant="body1">
-                        {getRankingBest(this.state.ranking)} is in the lead ! Time to whoop his sorry ass !
-                    </Typography>
-
-                    <RankingCard
-                        title = "Victories"
-                        value = {getRankingBest(this.state.ranking)}
-                    >
-                        <RankingTable
-                            ranking={this.state.ranking}
-                            modifier={a => a}
-                        />
-                    </RankingCard>
-                </Grid>
-
-                <Grid item xs={12} md={8}>
-
-                    <Typography
-                        variant="h4"
-                        align="left"
-                    >
-                        Latest games
-                    </Typography>
-
-                    {
-                        this.state.games.map((game) => {
-                            game.players.sort(function (first, second) {
-                                if (first.rank === second.rank) {
-                                    return 0;
-                                }
-                                else if (first.rank < second.rank) {
-                                    return -1;
-                                }
-                                else {
-                                    return 1;
-                                }
-                            });
-
-                            game.players[0].winner = true;
-
-                            let created_at = new Date(game.createdAt);
-                            return (
-                                <ExpansionPanel key={game.id} >
-                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                        <Typography className={classes.heading}>{game.board_game.name}</Typography>
-                                        <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
-                                        <Typography className={classes.secondaryHeading}>Lasted {game.duration ? game.duration : ""} minutes </Typography>
-                                    </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
-                                        <GameTable
-                                            game={game}
-                                            modifier={a => a}
-                                            isWinLose={game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}
-                                        />
-                                    </ExpansionPanelDetails>
-                                </ExpansionPanel>
-                                );
-                            })
-                        }
+                        <RankingCard title={ranking_name} value={getRankingBest(ranking)}>
+                            <RankingTable ranking={ranking} modifier={a => a}/>
+                        </RankingCard>
                     </Grid>
-            </Grid>
+
+                    <Grid item xs={12} md={8}>
+
+                        <Typography variant="h4" align="left" className={classes.section_typography}>
+                            Latest games
+                        </Typography>
+
+                        {
+                            this.state.games.map((game) => {
+                                game.players.sort(function (first, second) {
+                                    return first.rank - second.rank;
+                                });
+
+                                game.players[0].winner = true;
+
+                                let created_at = new Date(game.createdAt);
+                                return (
+                                    <ExpansionPanel key={game.id} >
+                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography className={classes.heading}>{game.board_game.name}</Typography>
+                                            <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
+                                            <Typography className={classes.secondaryHeading}>Lasted {game.duration ? game.duration : ""} minutes </Typography>
+                                        </ExpansionPanelSummary>
+                                        <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
+                                            <GameTable
+                                                game={game}
+                                                modifier={a => a}
+                                                isWinLose={game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}
+                                            />
+                                        </ExpansionPanelDetails>
+                                    </ExpansionPanel>
+                                    );
+                                })
+                            }
+                        </Grid>
+                </Grid>
+        </div>
         )
     }
 }
