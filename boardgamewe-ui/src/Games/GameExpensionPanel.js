@@ -58,7 +58,7 @@ class GameExpensionPanel extends React.Component {
             <ExpansionPanel key={game.id} >
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography className={classes.heading}>{game.board_game.name}</Typography>
-                    <Typography className={classes.secondaryHeading}>{Helper.formatDatetime(game.created_at)}</Typography>
+                    <Typography className={classes.secondaryHeading}>{Helper.formatDatetime(game.createdAt)}</Typography>
                     {
                         game.duration ? <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography> : ""
                     }

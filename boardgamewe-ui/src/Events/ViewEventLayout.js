@@ -184,7 +184,7 @@ class ViewEventLayout extends React.Component {
                                         id="startDate"
                                         name="startDate"
                                         label="Start date"
-                                        type="date"
+                                        type="datetime"
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,
@@ -199,7 +199,7 @@ class ViewEventLayout extends React.Component {
                                         id="endDate"
                                         name="endDate"
                                         label="End date"
-                                        type="date"
+                                        type="datetime"
                                         className={classes.textField}
                                         InputLabelProps={{
                                             shrink: true,

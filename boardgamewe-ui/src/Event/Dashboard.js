@@ -93,8 +93,6 @@ class Dashboard extends React.Component {
             )
         }
 
-        console.log(this.props.eventModel);
-
         let ranking, ranking_name;
         if (this.state.gcbgb_ranking.length > 0) {
             ranking = this.state.gcbgb_ranking;

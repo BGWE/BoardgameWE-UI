@@ -19,6 +19,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import EventIcon from '@material-ui/icons/Event';
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
 import User from "../utils/api/User";
+import * as Helper from "../utils/Helper";
 
 const styles = theme => ({
     icon: {
@@ -92,7 +93,7 @@ class EventCart extends React.Component {
                         }/>
                     <CardContent className={classes.cardContent}>
                         <Typography className={classes.dateHeader} variant="subheading">
-                            {new Date(event.start).toLocaleDateString()} - {new Date(event.end).toLocaleDateString()}
+                            {Helper.formatDatetime(event.start)} - {Helper.formatDatetime(event.end)}
                         </Typography>
                         <Typography>
                             {event.description}
