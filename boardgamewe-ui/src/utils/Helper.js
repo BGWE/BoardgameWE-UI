@@ -47,3 +47,18 @@ export function getRankingBest (ranking) {
 export function getTokenPayload(token) {
     return jwt.decode(token);
 }
+
+export function convertToISO(stringDate) {
+    let date = new Date(stringDate);
+    console.log(date);
+    console.log(date.toISOString());
+    return date.toISOString()
+}
+
+/**
+ * @return {string}
+ */
+export function ISODateToNormalDate(ISODate) {
+    let date = new Date(ISODate);
+    return date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear();
+}

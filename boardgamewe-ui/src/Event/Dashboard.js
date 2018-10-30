@@ -4,7 +4,7 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 import Typography from "@material-ui/core/Typography/Typography";
 import { withStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid/Grid";
-import {getRankingBest} from "../utils/Helper";
+import {convertToISO, getRankingBest, ISODateToNormalDate} from "../utils/Helper";
 import RankingTable from "../Rankings/RankingTable";
 import RankingCard from "../Rankings/RankingCard";
 import DateIcon from "@material-ui/icons/DateRange";
@@ -89,7 +89,7 @@ class Dashboard extends React.Component {
         console.log(this.props.eventModel);
 
 
-        const {creator, start} = this.props.eventModel;
+        const {creator, start, end} = this.props.eventModel;
 
         return (
             <Grid
@@ -106,7 +106,7 @@ class Dashboard extends React.Component {
                         Welcome to {this.props.eventModel.name} !
                     </Typography>
                     <div align="left" style={{marginBottom: 10}}>
-                        <DateIcon/> {start}
+                        <DateIcon/> {ISODateToNormalDate(start)} to {ISODateToNormalDate(end)}
                     </div>
                     <Typography align="left" variant="body1">
                         Hosted by {creator.name + " " + creator.surname}, in {this.props.eventModel.location}.
@@ -124,7 +124,7 @@ class Dashboard extends React.Component {
                     </Typography>
 
                     <Typography align="left" variant="body1">
-                        {getRankingBest(this.state.ranking)} is in the lead ! Time to whoop his sorry ass !
+                        {getRankingBest(this.state.ranking)} is in the lead ! Time to whoop his/her sorry ass !
                     </Typography>
 
                     <RankingCard
