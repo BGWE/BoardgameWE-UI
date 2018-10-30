@@ -23,6 +23,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 import GameTable from "./GameTable";
+import * as Helper from "../utils/Helper";
 
 const styles = theme => ({
     root: {
@@ -248,12 +249,11 @@ class Games extends React.Component {
 
                                 game.players[0].winner = true;
 
-                                let created_at = new Date(game.createdAt);
                                 return (
                                     <ExpansionPanel key={game.id} >
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography className={classes.heading}> {game.board_game.name} </Typography>
-                                            <Typography className={classes.secondaryHeading}> {created_at.toLocaleString("fr-BE")} </Typography>
+                                            <Typography className={classes.secondaryHeading}> {Helper.formatDatetime(game.createdAt)} </Typography>
                                             {
                                                 game.duration ? <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography> : ""
                                             }
