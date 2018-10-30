@@ -109,8 +109,6 @@ class RankingTable extends React.Component {
             isWinLose = false;
         }
 
-        console.log(this.props.ranking);
-
         return (
             <Table>
                 <TableHead>

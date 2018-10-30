@@ -86,9 +86,6 @@ class Dashboard extends React.Component {
             )
         }
 
-        console.log(this.props.eventModel);
-
-
         const {creator, start, end} = this.props.eventModel;
 
         return (

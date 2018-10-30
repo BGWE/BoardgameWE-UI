@@ -21,8 +21,13 @@ const styles = theme => ({
 
 class MenuItem extends React.Component{
 
-    chooseIcon() {
+    constructor(props) {
+        super(props);
 
+        this.chooseIcon = this.chooseIcon.bind(this);
+    }
+
+    chooseIcon() {
         switch(this.props.name){
             case 'Dashboard':
                 return <DashboardIcon />;

@@ -30,9 +30,6 @@ export function getFirstName(player) {
 }
 
 export function getRankingBest (ranking) {
-
-    console.log(ranking);
-
     if (ranking.length > 2 && ranking.slice(0, 3).every(a => a.win)) {
         return getFirstName(ranking[0].player) + ", " + getFirstName(ranking[1].player) + ",...";
     }  else if (ranking.length >= 2 && ranking.slice(0, 2).every(a => a.win)) {
