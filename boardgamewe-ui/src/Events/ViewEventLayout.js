@@ -17,6 +17,7 @@ import Paper from "@material-ui/core/Paper/Paper";
 import TextField from "@material-ui/core/TextField/TextField";
 
 import EventModel from "../utils/api/Event";
+import CustomizedSnackbar from "../utils/UI/Snackbar";
 
 const styles = theme => ({
     appBar: {
@@ -77,9 +78,11 @@ class ViewEventLayout extends React.Component {
             description: '',
 
             nameValid: true,
+            addEventSnackbarSuccessOpen: false,
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
     }
 
     static convertToISO(stringDate) {
@@ -132,9 +135,21 @@ class ViewEventLayout extends React.Component {
 
         console.log(data);
 
-        setTimeout(() => this.setState({redirectToEvents: true}), 800);
+        this.setState({
+            addEventSnackbarSuccessOpen: true
+        });
+
+        setTimeout(() => this.setState({
+            redirectToEvents: true,
+        }), 800);
 
         return false;
+    };
+
+    handleCloseSnackbar = () => {
+        this.setState({
+            addEventSnackbarSuccessOpen: false,
+        });
     };
 
     render() {
@@ -142,10 +157,23 @@ class ViewEventLayout extends React.Component {
             return (<Redirect to="/events" />)
         }
         const { classes } = this.props;
+
+        let addEventSnackbarSuccess = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="success"
+                message={`Event has been added.`}
+                open={this.state.addEventSnackbarSuccessOpen}
+                autoHideDuration={2000}
+            />
+        );
+
         return (
             <div className={classes.root}>
                 <React.Fragment>
                     <CssBaseline />
+
+                    {addEventSnackbarSuccess}
 
                     <main className={classes.layout}>
                         <Paper className={classes.paper}>

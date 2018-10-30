@@ -464,7 +464,7 @@ class AddGame extends React.Component {
                 </div>
             )
         }
-        
+
         return (
 
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
