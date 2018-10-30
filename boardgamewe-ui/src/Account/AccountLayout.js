@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import {CircularProgress} from "@material-ui/core";
 import {Route, Switch} from "react-router-dom";
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import AccountMenu from "../Layout/AccountMenu.js";
@@ -49,7 +50,11 @@ class AccountLayout extends React.Component {
         const { classes } = this.props;
 
         if(this.state.user === null) {
-            return null;
+            return (
+                <div className={classes.root}>
+                    <CircularProgress thickness={7} />
+                </div>
+            )
         }
 
         return (

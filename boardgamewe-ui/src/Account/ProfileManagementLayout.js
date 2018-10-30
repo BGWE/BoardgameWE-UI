@@ -85,12 +85,6 @@ class ProfileManagementLayout extends React.Component {
         this.setState({...this.props.user});
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.user !== prevProps.user) {
-            this.setState({...this.props.user});
-        }
-    }
-
     handleInputChange(event) {
         const name = event.target.name;
         const value = event.target.value;
@@ -121,7 +115,7 @@ class ProfileManagementLayout extends React.Component {
             //     fieldValidationErrors.oldPassword = valid ? '' : 'Incorrect';
             //     break;
             case 'newPassword':
-                fieldsValidity.password = value.length == 0 || value.length >= this.minPwdLenth;
+                fieldsValidity.password = value.length === 0 || value.length >= this.minPwdLenth;
                 fieldValidationErrors.password = fieldsValidity.password ? '': `Should contain at least ${this.minPwdLenth} characters`;
                 // break omitted because in case of password change we want to compare them again
             case 'confirmPassword':
@@ -168,7 +162,8 @@ class ProfileManagementLayout extends React.Component {
                 snackbarVariant: "success", 
                 snackbarMessage: "Profile successfully updated",
                 newPassword: "",
-                confirmPassword: ""
+                confirmPassword: "",
+                ...user
             });
         }
         catch (error) {
@@ -189,7 +184,7 @@ class ProfileManagementLayout extends React.Component {
 
     closeSnackbar() {
         this.setState({snackbarOpen: false});
-    };
+    }
 
     render() {
         const { classes } = this.props;
@@ -286,7 +281,7 @@ class ProfileManagementLayout extends React.Component {
                         margin="normal"
                         error={this.state.showErrors && !this.state.fieldsValidity.confirmPassword}
                         helperText={this.state.showErrors ? this.state.formErrors.confirmPassword : ""}
-                        disabled={this.state.newPassword.length == 0}
+                        disabled={this.state.newPassword.length === 0}
                     />
 
                     <Button
