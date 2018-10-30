@@ -116,7 +116,7 @@ class EventLayout extends React.Component{
                         <Divider/>
                         <MenuItem
                             key={"/"}
-                            uri={"/"}
+                            uri={"/events"}
                             name={"Other events"}
                             onCLick={this.handleDrawerClose}
                         />
