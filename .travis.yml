@@ -18,23 +18,23 @@ before_deploy:
 - cd ..
 
 deploy:
-  provider: s3
-  access_key_id: AKIAIE47NTGGUBJRO2LQ
-  secret_access_key:
-    secure: f4ViHhSimHpsw+FLd7LwFMd5AZ0aPDPiyuRCK3WhZubd/Gk8vluSmvt04yfrvZHD3HYAl0RKnz02Y/wA0AkUjJhUAWmlYD4OmIn8piZFNmjSZZ+H8qpBUNNxE7ESm7tiv/DHQ31ex7U+LnD99yviDNgl13mbT7qrLufE0hvwb+uOubq3JxTqlhnB4F2l0GJ49aSMP4/EXp9EcNd9bh5ImsCxE51bHXDUsAHncvcApAZlfznDgDeV4pZtJJSMt3aECKOdEK7r0w3mVNcGhbRRDwyPH8zetP3ohFjHfA1l3WYvJCDKLGTpvsYoHniweiM0JeD0/+V5OZOQh30v4KxQ65ovedUkzk+er9vfqKO28J0F/6HfJP+RzbFFxE8sayw+Q5s0x3htZHnF721PvVq2aokhpIEpzhDSW1SX8eyF7XOCkFGTd7jn11MNzsKez6oUcie95B8vtNGp0FC8zjnC5R+GUAQKSUyStojqqXZmHQjMAvXt+wI6egcG5fUJD4SG7g2cISictQTAXjY3amAS2pQum+Ho2a8S3AxsQ0eNWsyALhn6P/iO6X/gN55oLpTN4OB0gYdqH4SKVBn6ZX3i+V1peXQ6MqUoa5vlVJKuu1fzscP64hxER0ed1LqsEwDLcefxAO8VWx5FhaSq+VCMmosmfDUEakUc2yTUIBZuFjc=
-  bucket: www.boardgameweekend.party
-  acl: public_read
-  region: eu-west-1
-  skip_cleanup: true
-  local_dir: boardgamewe-ui/build
-  on:
-    branch: master
+  - provider: s3
+    access_key_id: AKIAIE47NTGGUBJRO2LQ
+    secret_access_key:
+      secure: f4ViHhSimHpsw+FLd7LwFMd5AZ0aPDPiyuRCK3WhZubd/Gk8vluSmvt04yfrvZHD3HYAl0RKnz02Y/wA0AkUjJhUAWmlYD4OmIn8piZFNmjSZZ+H8qpBUNNxE7ESm7tiv/DHQ31ex7U+LnD99yviDNgl13mbT7qrLufE0hvwb+uOubq3JxTqlhnB4F2l0GJ49aSMP4/EXp9EcNd9bh5ImsCxE51bHXDUsAHncvcApAZlfznDgDeV4pZtJJSMt3aECKOdEK7r0w3mVNcGhbRRDwyPH8zetP3ohFjHfA1l3WYvJCDKLGTpvsYoHniweiM0JeD0/+V5OZOQh30v4KxQ65ovedUkzk+er9vfqKO28J0F/6HfJP+RzbFFxE8sayw+Q5s0x3htZHnF721PvVq2aokhpIEpzhDSW1SX8eyF7XOCkFGTd7jn11MNzsKez6oUcie95B8vtNGp0FC8zjnC5R+GUAQKSUyStojqqXZmHQjMAvXt+wI6egcG5fUJD4SG7g2cISictQTAXjY3amAS2pQum+Ho2a8S3AxsQ0eNWsyALhn6P/iO6X/gN55oLpTN4OB0gYdqH4SKVBn6ZX3i+V1peXQ6MqUoa5vlVJKuu1fzscP64hxER0ed1LqsEwDLcefxAO8VWx5FhaSq+VCMmosmfDUEakUc2yTUIBZuFjc=
+    bucket: www.boardgameweekend.party
+    acl: public_read
+    region: eu-west-1
+    skip_cleanup: true
+    local_dir: boardgamewe-ui/build
+    on:
+      branch: master
 
-  provider: firebase
-  token:
-    secure: "bvpf/ndH2xil7Orl4fa9q5jGkVxY3fSGNVyilHIUA2EIgppe27oxfNCR52lKAf06R33aCfZvDBvPqE+LESvQXqTGYq0wCmdFI15peqZpqhEREZaNOR42KRxfOrUadE/zZ4XtOv5R4oUdbwot7kWZzmVOWmFHX7N8CK0Oh+wyCFAPYs/cV70jtS+JzhQt7fV1eX8jBK2LyStm/z/JPZigv+rjFSuwJ9OxrSDHmE50p1GjaAONZu0VlrP34aDQg6bVVsunBlwijBxg+LBE5XWGMp8yEgHpiSEN/AJeFyk74VH4/yCfTdkmFaL/qRjqF313fVU59AFIa1Bi8zlc3+xhNJ4iH6etQfx1ZsTw/gzgiESQzD41mPnkSm/F4PxssUMPaDAGqBQfeczWy3WV7gWh3rvds3vpxkRF0mvqG4MTxJ+BbrVTfJVtyN2WXgpclDEL7cr3ZzZ5kYmO13mQAKlLmUFbBXKuS130SUsnlie9oLlRS76wySYAyYJ3WIiVeDO5HsDSC54pCJs3GV7RXIduqpf/TvYMYvGv4Pf+2YS5myDBJn+lhEWmRRA7g5VRFVrho7JJxhNG4PiuF9SQuDN1r9wrKcoa8q1Ol9nN2wjoiVZTvrxYnBKOJqsv31mRkQNKF4gBbJ46fjzEALXZzXJ9sJEg9uXWR4EgRjHee9Q3GUM="
-  project: boardgameweekend
-  skip_cleanup: true
-  local_dir: boardgamewe-ui/build
-  on:
-    branch: develop
+  - provider: firebase
+    token:
+      secure: "bvpf/ndH2xil7Orl4fa9q5jGkVxY3fSGNVyilHIUA2EIgppe27oxfNCR52lKAf06R33aCfZvDBvPqE+LESvQXqTGYq0wCmdFI15peqZpqhEREZaNOR42KRxfOrUadE/zZ4XtOv5R4oUdbwot7kWZzmVOWmFHX7N8CK0Oh+wyCFAPYs/cV70jtS+JzhQt7fV1eX8jBK2LyStm/z/JPZigv+rjFSuwJ9OxrSDHmE50p1GjaAONZu0VlrP34aDQg6bVVsunBlwijBxg+LBE5XWGMp8yEgHpiSEN/AJeFyk74VH4/yCfTdkmFaL/qRjqF313fVU59AFIa1Bi8zlc3+xhNJ4iH6etQfx1ZsTw/gzgiESQzD41mPnkSm/F4PxssUMPaDAGqBQfeczWy3WV7gWh3rvds3vpxkRF0mvqG4MTxJ+BbrVTfJVtyN2WXgpclDEL7cr3ZzZ5kYmO13mQAKlLmUFbBXKuS130SUsnlie9oLlRS76wySYAyYJ3WIiVeDO5HsDSC54pCJs3GV7RXIduqpf/TvYMYvGv4Pf+2YS5myDBJn+lhEWmRRA7g5VRFVrho7JJxhNG4PiuF9SQuDN1r9wrKcoa8q1Ol9nN2wjoiVZTvrxYnBKOJqsv31mRkQNKF4gBbJ46fjzEALXZzXJ9sJEg9uXWR4EgRjHee9Q3GUM="
+    project: boardgameweekend
+    skip_cleanup: true
+    local_dir: boardgamewe-ui/build
+    on:
+      branch: develop
