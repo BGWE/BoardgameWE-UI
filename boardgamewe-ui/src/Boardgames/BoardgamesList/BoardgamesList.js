@@ -296,7 +296,7 @@ class TitlebarGridList extends React.Component {
         this.reload();
     }
 
-    boardGameModal(bgid) {
+    boardGameModal() {
         const { classes } = this.props;
         return (
             <Dialog
@@ -381,10 +381,8 @@ class TitlebarGridList extends React.Component {
                     </DialogActions>
                 </Dialog>
 
-                {/*<p>{this.state.board_games.length} game(s)</p>*/}
-                {/*<p>{filteredBoardGames.length} game(s) after filtering</p>*/}
+                {this.boardGameModal()}
 
-                {/*List bar*/}
                 <Grid
                     container
                     spacing={8}
