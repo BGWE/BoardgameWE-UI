@@ -122,7 +122,7 @@ class GameTable extends React.Component {
                     {this.props.game ? this.props.game.players.slice(0, 10).map(player => (
                         <TableRow key={player.id_user} className={player.winner ? classes.winnerRow : null}>
                             <TableCell> {this.getIcon(rank += 1, classes)} </TableCell>
-                            <TableCell className={player.winner ? classes.winnerCell : null}>{player.name ? player.name.split(" ")[0] : player.user.name}</TableCell>
+                            <TableCell className={player.winner ? classes.winnerCell : null}> {player.name ? player.name.split(" ")[0] : player.user.name} </TableCell>
                             {
                                 this.props.isWinLose ? null:
                                     (<TableCell className={player.winner ? classes.winnerCell : null} numeric> {this.props.modifier(player.score)} </TableCell>)

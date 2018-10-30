@@ -261,7 +261,7 @@ class Games extends React.Component {
                                             }
 
                                         </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
+                                        <ExpansionPanelDetails style={{justifyItems: 'center'}}>
                                             <GameTable
                                                 game={game}
                                                 modifier={a => a}

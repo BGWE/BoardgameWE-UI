@@ -130,7 +130,7 @@ class Rankings extends React.Component {
                 <div style={{width: "100%"}}>
                     <h1>Rankings</h1>
 
-                    <Grid container className={classes.root} spacing={8} justify={"center"}>
+                    <Grid container className={classes.root} spacing={8} justify="center">
                         {rankings_info.map(info => (
                             <Grid
                                 key={info.ranking_name}
