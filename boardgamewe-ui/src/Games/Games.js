@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from "react-router-dom";
 import PropTypes from 'prop-types';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -6,13 +7,10 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
-
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Snackbar from "@material-ui/core/Snackbar/Snackbar";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
-import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button/Button";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/ExpansionPanelSummary";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel/ExpansionPanel";
@@ -21,6 +19,9 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/Expan
 import Divider from "@material-ui/core/Divider/Divider";
 import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions/ExpansionPanelActions";
 import { withStyles } from '@material-ui/core/styles';
+import Grid from "@material-ui/core/Grid/Grid";
+
+import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 import GameTable from "./GameTable";
 
 const styles = theme => ({
@@ -76,8 +77,6 @@ class Games extends React.Component {
 
             is_mobile: window.innerWidth < Games.IS_MOBILE_THRESHOLD
         };
-
-        this.spacing = 10;
 
         // Bind this
         this.reload = this.reload.bind(this);
@@ -160,10 +159,6 @@ class Games extends React.Component {
         }
     }
 
-    sortByProp(data, prop) {
-        return new Map([...data.entries()].sort((a, b) => a[1][prop] > b[1][prop]));
-    };
-
     render () {
         const { classes } = this.props;
 
@@ -207,69 +202,88 @@ class Games extends React.Component {
                     isOpen={this.state.confirm_delete_open}
                     fnCancel={() => this.setState({game_to_delete: null, confirm_delete_open: false})}
                     fnConfirm={this.handleDeleteGame}
-                    fnOnClose={() => this.setState({game_to_delete: null, confirm_delete_open: false})}/>
+                    fnOnClose={() => this.setState({game_to_delete: null, confirm_delete_open: false})}
+                />
 
-                <div style={{width: "100%"}}>
-                    <h1>Games</h1>
-                    <p>{this.state.games.length} game(s) played so far.</p>
-                </div>
-                <div style={{paddingBottom: 20}}>
-                    <Tooltip id="tooltip-fab" title="Add" placement="right">
-                        <Link to={`${this.props.match.url}/games/add`}>
-                            <Button variant="fab" color="secondary" aria-label="add">
-                                <AddIcon />
-                            </Button>
-                        </Link>
-                    </Tooltip>
-                </div>
+                <Grid
+                    container
+                    justify="center"
+                    spacing={24}
+                    >
+                    <Grid item xs={12} md={8}>
+                        <Typography
+                            variant="h3"
+                            align="center"
+                        >
+                            Games
+                        </Typography>
+                        <Typography>
+                            {this.state.games.length} games(s) played so far.
+                        </Typography>
+                    </Grid>
 
-                <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
-                    {
-                        this.state.games.map((game) => {
-                            game.players.sort(function (first, second) {
-                                if (first.rank === second.rank) {
-                                    return 0;
-                                }
-                                else if (first.rank < second.rank) {
-                                    return -1;
-                                }
-                                else {
-                                    return 1;
-                                }
-                            });
+                    <Grid item xs={12} md={8}>
+                        <Tooltip id="tooltip-fab" title="Add" placement="right">
+                            <Link to={`${this.props.match.url}/games/add`}>
+                                <Button variant="fab" color="secondary" aria-label="add">
+                                    <AddIcon />
+                                </Button>
+                            </Link>
+                        </Tooltip>
+                    </Grid>
 
-                            game.players[0].winner = true;
 
-                            let created_at = new Date(game.createdAt);
-                            return (
-                                <ExpansionPanel key={game.id} >
-                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                                        <Typography className={classes.heading}>{game.board_game.name}</Typography>
-                                        <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
-                                        <Typography className={classes.secondaryHeading}>Lasted {game.duration ? game.duration : ""} minutes </Typography>
-                                    </ExpansionPanelSummary>
-                                    <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
-                                        <GameTable
-                                            game={game}
-                                            modifier={a => a}
-                                            isWinLose={game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}
-                                        />
-                                    </ExpansionPanelDetails>
-                                    <Divider />
-                                    <ExpansionPanelActions>
-                                        <IconButton
-                                            key="close"
-                                            aria-label="Close"
-                                            color="inherit"
-                                            onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game.id})}>
-                                            <DeleteIcon/>
-                                        </IconButton>
-                                    </ExpansionPanelActions>
-                                </ExpansionPanel>
-                            )
-                        })
-                    }
-                </div>
+                    <Grid item xs={12} md={8}>
+                        {
+                            this.state.games.map((game) => {
+                                game.players.sort(function (first, second) {
+                                    if (first.rank === second.rank) {
+                                        return 0;
+                                    }
+                                    else if (first.rank < second.rank) {
+                                        return -1;
+                                    }
+                                    else {
+                                        return 1;
+                                    }
+                                });
+
+                                game.players[0].winner = true;
+
+                                let created_at = new Date(game.createdAt);
+                                return (
+                                    <ExpansionPanel key={game.id} >
+                                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                            <Typography className={classes.heading}> {game.board_game.name} </Typography>
+                                            <Typography className={classes.secondaryHeading}> {created_at.toLocaleString("fr-BE")} </Typography>
+                                            {
+                                                game.duration ? <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography> : ""
+                                            }
+
+                                        </ExpansionPanelSummary>
+                                        <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
+                                            <GameTable
+                                                game={game}
+                                                modifier={a => a}
+                                                isWinLose={game.hasOwnProperty('ranking_method') && game.ranking_method === "WIN_LOSE"}
+                                            />
+                                        </ExpansionPanelDetails>
+                                        <Divider />
+                                        <ExpansionPanelActions>
+                                            <IconButton
+                                                key="close"
+                                                aria-label="Close"
+                                                color="inherit"
+                                                onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game.id})}>
+                                                <DeleteIcon/>
+                                            </IconButton>
+                                        </ExpansionPanelActions>
+                                    </ExpansionPanel>
+                                )
+                            })
+                        }
+                    </Grid>
+                </Grid>
             </div>
         );
     }
