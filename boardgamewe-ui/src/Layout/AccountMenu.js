@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import {Link} from "react-router-dom";
 
 import IconButton from '@material-ui/core/IconButton';

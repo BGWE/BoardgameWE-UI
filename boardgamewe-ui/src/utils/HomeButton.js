@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
+import {withStyles} from '@material-ui/core/styles';
 
 import HomeIcon from '@material-ui/icons/Home';
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import {Redirect} from "react-router-dom";
-import Typography from "@material-ui/core/Typography/Typography";
 import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 
 const styles = theme => ({

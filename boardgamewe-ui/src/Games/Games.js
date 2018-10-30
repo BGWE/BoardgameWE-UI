@@ -18,7 +18,7 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
 import Divider from "@material-ui/core/Divider/Divider";
 import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions/ExpansionPanelActions";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid/Grid";
 
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";

@@ -1,24 +1,16 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {Link} from "react-router-dom";
-import Event from "../utils/api/Event";
 import Typography from "@material-ui/core/Typography/Typography";
 import Grid from "@material-ui/core/Grid/Grid";
 import Card from "@material-ui/core/Card/Card";
 import CardContent from "@material-ui/core/CardContent/CardContent";
 import CardActions from "@material-ui/core/CardActions/CardActions";
-import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
-import AppBar from "@material-ui/core/AppBar/AppBar";
-import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Button from "@material-ui/core/Button/Button";
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import VisibilityIcon from '@material-ui/icons/Visibility';
-
-import EventIcon from '@material-ui/icons/Event';
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
-import User from "../utils/api/User";
 import * as Helper from "../utils/Helper";
 
 const styles = theme => ({

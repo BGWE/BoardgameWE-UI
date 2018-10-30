@@ -6,7 +6,7 @@ import TableRow from "@material-ui/core/TableRow/TableRow";
 import TableHead from "@material-ui/core/TableHead/TableHead";
 import Table from "@material-ui/core/Table/Table";
 import TableBody from "@material-ui/core/TableBody/TableBody";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 
 const colors = {
     gold: "#FFD700",

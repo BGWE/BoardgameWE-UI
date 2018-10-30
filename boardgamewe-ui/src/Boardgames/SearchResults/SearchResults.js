@@ -1,18 +1,11 @@
 import React from 'react';
 import {withStyles} from "@material-ui/core/styles/index";
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent, CircularProgress,
-    Grid, Snackbar,
-    Typography
-} from "@material-ui/core";
+import {Button, Card, CardActions, CardContent, CircularProgress, Grid, Snackbar, Typography} from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 
 import BoardGameModel from "../../utils/api/BoardGame.js";
-import BoardGame from '../../utils/api/BoardGame.js';
+import BoardGame from "../../utils/api/BoardGame.js";
 
 const styles = theme => ({
     root: {

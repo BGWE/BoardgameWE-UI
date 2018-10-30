@@ -30,7 +30,7 @@ import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import Typography from "@material-ui/core/Typography/Typography";
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Game, {GameRankingMethods} from "../utils/api/Game";
 
 const game_durations = [

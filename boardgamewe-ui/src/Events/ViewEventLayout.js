@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect} from "react-router-dom";
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 import Typography from "@material-ui/core/Typography/Typography";

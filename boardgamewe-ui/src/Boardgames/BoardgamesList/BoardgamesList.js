@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 import {
@@ -10,14 +10,18 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, FormControl, Grid, InputAdornment, InputLabel, Select,
+    DialogTitle,
+    FormControl,
+    Grid,
+    InputAdornment,
+    InputLabel,
+    Select,
     TextField
 } from "@material-ui/core";
 
 import CustomizedSnackbar from "../../utils/UI/Snackbar";
 
 import AddGame from "../AddGame/AddBoardGameModal";
-import {Link} from "react-router-dom";
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
 import PersonIcon from '@material-ui/icons/Person';

@@ -1,7 +1,7 @@
 import React from "react";
 import {Route, Switch} from "react-router-dom";
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -14,7 +14,6 @@ import Divider from "@material-ui/core/Divider/Divider";
 import {menuItemsList} from "./Menu/MenuItemsList";
 import {CircularProgress} from "@material-ui/core";
 import MenuItem from "./Menu/MenuItem";
-import Boardgame from "../Boardgames/Boardgame/Boardgame";
 import Boardgames from "../Boardgames/Boardgames";
 import Games from "../Games/Games";
 import AddGame from "../Games/AddGame";

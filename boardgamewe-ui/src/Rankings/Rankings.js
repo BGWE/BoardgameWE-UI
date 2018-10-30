@@ -6,7 +6,7 @@ import RankingTable from "./RankingTable";
 
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Grid from "@material-ui/core/Grid/Grid";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import {getRankingBest} from "../utils/Helper";
 import Typography from "@material-ui/core/Typography/Typography";
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import {AppBar, Button, IconButton, Toolbar, Typography} from "@material-ui/core";
+import {withStyles} from '@material-ui/core/styles';
+import {AppBar, Toolbar} from "@material-ui/core";
 import AddGame from "../AddGame/AddBoardGameModal";
 
 const styles = {

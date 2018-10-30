@@ -1,6 +1,5 @@
 import React from 'react';
 import BoardgamesList from "../Boardgames/BoardgamesList/BoardgamesList";
-import PropTypes from 'prop-types';
 
 import BoardGame from "../utils/api/BoardGame.js";
 import Library from "../utils/api/Library.js";

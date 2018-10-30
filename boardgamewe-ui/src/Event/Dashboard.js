@@ -2,17 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Typography from "@material-ui/core/Typography/Typography";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid/Grid";
-import {convertToISO, getRankingBest, ISODateToNormalDate} from "../utils/Helper";
+import * as Helper from "../utils/Helper";
+import {getRankingBest} from "../utils/Helper";
 import RankingTable from "../Rankings/RankingTable";
 import RankingCard from "../Rankings/RankingCard";
 import DateIcon from "@material-ui/icons/DateRange";
 import PlaceIcon from "@material-ui/icons/Place";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button/Button";
-import moment from "moment-timezone";
-import * as Helper from "../utils/Helper";
 import GameExpensionPanel from "../Games/GameExpensionPanel";
 
 const styles = theme => ({
