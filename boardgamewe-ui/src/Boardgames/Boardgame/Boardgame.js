@@ -47,7 +47,8 @@ const styles = theme => ({
         padding: theme.spacing.unit / 2,
     },
     image: {
-        width: '30%'
+        width: '100%',
+        maxWidth: '400px'
     },
     title: {
         marginBottom: 16,
@@ -83,7 +84,12 @@ class Boardgame extends React.Component {
     async componentDidMount() {
         this.setState({ isLoading: true });
 
-        const { bgid } = this.props.match.params;
+        let bgid = null;
+        if (this.props.boardgame !== null) {
+            bgid = this.props.boardgame.id;
+        } else {
+            bgid = this.props.match.params;
+        }
 
         let data = await BoardGameModel.fetch(bgid);
         this.setState({data: data, isLoading: false});
@@ -308,7 +314,7 @@ class Boardgame extends React.Component {
                 </a>
 
                 <br/>
-                <img src={this.state.data.image} alt="Board game" className={classes.image}/>
+                <img src={this.state.data.image} alt="Board game" className={classes.image} style={{margin: 'auto', display: 'block'}}/>
                 <br/>
                 <div style={{width: '75%', marginLeft: 'auto', marginRight: 'auto'}}>
                     {misc_tag}

@@ -4,7 +4,7 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 import Typography from "@material-ui/core/Typography/Typography";
 import { withStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid/Grid";
-import {getRankingBest} from "../utils/Helper";
+import {convertToISO, getRankingBest, ISODateToNormalDate} from "../utils/Helper";
 import RankingTable from "../Rankings/RankingTable";
 import RankingCard from "../Rankings/RankingCard";
 import DateIcon from "@material-ui/icons/DateRange";
@@ -179,7 +179,9 @@ class Dashboard extends React.Component {
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography className={classes.heading}>{game.board_game.name}</Typography>
                                             <Typography className={classes.secondaryHeading}>{created_at.toLocaleString("fr-BE")}</Typography>
-                                            <Typography className={classes.secondaryHeading}>Lasted {game.duration ? game.duration : ""} minutes </Typography>
+                                            {
+                                                game.duration ? <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography> : ""
+                                            }
                                         </ExpansionPanelSummary>
                                         <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
                                             <GameTable

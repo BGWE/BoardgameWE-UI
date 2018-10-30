@@ -104,7 +104,6 @@ class GameTable extends React.Component {
     render () {
         const { classes } = this.props;
 
-        console.log(this.props);
         var rank = 0;
         return (
             <Table padding={"dense"}>

@@ -19,6 +19,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import {Link, Route, Switch} from "react-router-dom";
 
 import EventRegistrationsLayout from "./RegistrationsLayout";
+import HomeButton from "../utils/HomeButton";
 
 
 const mainListItems = (
@@ -136,6 +137,7 @@ class AdminLayout extends React.Component {
                         className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
                     >
                         <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
+                            <HomeButton/>
                             <IconButton
                                 color="inherit"
                                 aria-label="Open drawer"
