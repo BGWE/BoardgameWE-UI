@@ -6,17 +6,13 @@ import {Link} from "react-router-dom";
 import Event from "../utils/api/Event";
 import Typography from "@material-ui/core/Typography/Typography";
 import Grid from "@material-ui/core/Grid/Grid";
-import Card from "@material-ui/core/Card/Card";
-import CardContent from "@material-ui/core/CardContent/CardContent";
-import CardActions from "@material-ui/core/CardActions/CardActions";
 import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Button from "@material-ui/core/Button/Button";
-
 import EventIcon from '@material-ui/icons/Event';
-import CardHeader from "@material-ui/core/CardHeader/CardHeader";
-import User from "../utils/api/User";
+import EventCard from "./EventCard";
+import CustomizedSnackbar from "../utils/UI/Snackbar";
 
 const styles = theme => ({
     appBar: {
@@ -80,7 +76,13 @@ const styles = theme => ({
     },
     button: {
         textDecoration: "none"
-    }
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+    },
+    iconSmall: {
+        fontSize: 20,
+    },
 });
 
 class EventsLayout extends React.Component {
@@ -89,12 +91,20 @@ class EventsLayout extends React.Component {
         super(props);
 
         this.state = {
-            events: []
-        }
+            events: [],
+            attendedEvents: [],
+
+            eventJoinSuccessSnackbarOpen: false,
+            eventJoinFailureSnackbarOpen: false,
+        };
+
+        this.goToEvent = this.goToEvent.bind(this);
+        this.joinEvent = this.joinEvent.bind(this);
     }
 
     componentDidMount() {
-        this.loadEvents()
+        this.loadEvents();
+        this.loadAttendedEvents();
     }
 
     async loadEvents() {
@@ -105,12 +115,80 @@ class EventsLayout extends React.Component {
         })
     }
 
-    goToEvent(id) {
-        this.props.history.push('/event/' + id)
+    async loadAttendedEvents() {
+        let attendedEvents = await Event.fetchAttendedEvents();
+        console.log(attendedEvents);
+        this.setState({
+            attendedEvents: attendedEvents
+        })
     }
+
+    isCurrentUserAttendsEvent(event) {
+        return this.state.attendedEvents.some((attendedEvent) => (attendedEvent.id === event.id))
+    }
+
+    goToEvent(event) {
+        this.props.history.push('/event/' + event.id)
+    }
+
+    joinEvent(event) {
+        event.subscribe()
+            .then((data) => {
+                console.log("Data");
+                console.log(data);
+                if ("success" in data && data["success"]) {
+                    this.setState({
+                        eventJoinSuccessSnackbarOpen: true
+                    });
+
+                    setTimeout(() => this.goToEvent(event), 600);
+                } else {
+                    this.setState({
+                        eventJoinFailureSnackbarOpen: true
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                this.setState({
+                    eventJoinFailureSnackbarOpen: true
+                });
+            });
+
+        this.loadEvents();
+        this.loadAttendedEvents();
+    }
+
+    handleCloseSnackbar = () => {
+        this.setState({
+            eventJoinSuccessSnackbarOpen: false,
+            eventJoinFailureSnackbarOpen: false,
+        });
+    };
 
     render() {
         const { classes } = this.props;
+
+        let eventJoinSuccessSnackbar = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="success"
+                message={`You've successfully joined the event.`}
+                open={this.state.eventJoinSuccessSnackbarOpen}
+                autoHideDuration={600}
+            />
+        );
+
+        let eventJoinFailureSnackbar = (
+            <CustomizedSnackbar
+                onClose={this.handleCloseSnackbar}
+                variant="error"
+                message={`Error happened while joining the event...`}
+                open={this.state.eventJoinFailureSnackbarOpen}
+                autoHideDuration={600}
+            />
+        );
+
         return (
             <div className={classes.root}>
                 <React.Fragment>
@@ -123,6 +201,9 @@ class EventsLayout extends React.Component {
                             </Typography>
                         </Toolbar>
                     </AppBar>
+
+                    {eventJoinSuccessSnackbar}
+
                     <main>
                         {/* Hero unit */}
                         <div className={classes.heroUnit}>
@@ -149,35 +230,21 @@ class EventsLayout extends React.Component {
                         <div className={classNames(classes.layout, classes.cardGrid)}>
                             {/* End hero unit */}
                             <Grid container spacing={40}>
-                                {this.state.events.map(event => (
-                                    <Grid item key={event.id} sm={6} md={4} lg={3}>
-                                        <Card className={classes.card}>
-                                            <CardHeader
-                                                className={classes.cardHeader}
-                                                title={
-                                                    (<Typography variant="overline" className={classes.title}>
-                                                        {event.location}
-                                                    </Typography>)
-                                                }/>
-                                            <CardContent className={classes.cardContent}>
-                                                <Typography className={classes.dateHeader} variant="subheading">
-                                                    {new Date(event.start).toLocaleDateString()} - {new Date(event.end).toLocaleDateString()}
-                                                </Typography>
-                                                <Typography>
-                                                    {event.description}
-                                                </Typography>
-                                            </CardContent>
-                                            <CardActions>
-                                                <Button
-                                                    size="small"
-                                                    color="primary"
-                                                    onClick={() => this.goToEvent(event.id)}>
-                                                    Select
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </Grid>
-                                ))}
+                                {this.state.events.map(event => {
+                                    if (this.isCurrentUserAttendsEvent(event)) {
+                                        return <EventCard
+                                                    key={event.id}
+                                                    event={event}
+                                                    viewCb={this.goToEvent}
+                                                    attended/>
+                                    } else {
+                                        return <EventCard
+                                                    key={event.id}
+                                                    event={event}
+                                                    viewCb={this.goToEvent}
+                                                    joinCb={this.joinEvent}/>
+                                    }
+                                })}
                             </Grid>
                         </div>
                     </main>
