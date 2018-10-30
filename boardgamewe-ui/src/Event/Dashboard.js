@@ -126,6 +126,13 @@ class Dashboard extends React.Component {
                                         </Button>
                                     </Link>
                                 </Grid>
+                                <Grid item>
+                                    <Link to={`${this.props.match.path}/boardgames`} className={classes.button}>
+                                        <Button variant="contained" color="primary">
+                                            Add board game
+                                        </Button>
+                                    </Link>
+                                </Grid>
                             </Grid>
                         </div>
                     </div>
