@@ -25,6 +25,7 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import Typography from "@material-ui/core/Typography/Typography";
+import Boardgame from "../Boardgame/Boardgame";
 
 
 const styles = theme => ({
@@ -72,7 +73,10 @@ class TitlebarGridList extends React.Component {
             max_player: 20,
 
             filter_name: "",
-            orderby: "name"
+            orderby: "name",
+
+            viewBGOpen: false,
+            viewBG: null
         };
 
         this.cellHeight = 180;
@@ -90,6 +94,9 @@ class TitlebarGridList extends React.Component {
         this.handleChangeMaxPlayer = this.handleChangeMaxPlayer.bind(this);
         this.addGameCb = this.addGameCb.bind(this);
         this.postCb = this.postCb.bind(this);
+        this.boardGameModal = this.boardGameModal.bind(this);
+        this.handleOpenViewBg = this.handleOpenViewBg.bind(this);
+        this.handleCloseViewBg = this.handleCloseViewBg.bind(this);
     }
 
     componentWillMount() {
@@ -304,6 +311,51 @@ class TitlebarGridList extends React.Component {
         this.reload();
     }
 
+    boardGameModal(bgid) {
+        const { classes } = this.props;
+        return (
+            <Dialog
+                open={this.state.viewBGOpen}
+                onClose={this.handleCloseViewBg}
+                aria-labelledby="form-dialog-title"
+                fullWidth
+                maxWidth={"lg"}
+                className={classes.dialog}
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        Board Game
+                    </DialogContentText>
+                    <br />
+
+                    <Boardgame boardgame={this.state.viewBG}/>
+
+
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleCloseViewBg} color="secondary" >
+                        Exit
+                    </Button>
+
+                </DialogActions>
+            </Dialog>
+        )
+    }
+
+    handleOpenViewBg(boardgame) {
+        this.setState({
+            viewBGOpen: true,
+            viewBG: boardgame
+        })
+    }
+
+    handleCloseViewBg() {
+        this.setState({
+            viewBGOpen: false,
+            viewBG: null
+        })
+    }
+
     render () {
         const { classes } = this.props;
         if (this.state.isLoading) {
@@ -338,6 +390,8 @@ class TitlebarGridList extends React.Component {
                             <CloseIcon/>
                         </IconButton>
                     ]}/>
+
+                {this.boardGameModal()}
 
                 <Dialog
                     open={this.state.open_confirmation_dialog}
@@ -494,11 +548,9 @@ class TitlebarGridList extends React.Component {
                                             title={tile.name}
                                             subtitle={tile.year_published ? (<span>({tile.year_published})</span>) : tile.year_published}
                                             actionIcon={
-                                                <Link to={`${this.props.match.path.slice(0, -"/boardgames".length)}/boardgame/${tile.id}`} >
-                                                    <IconButton className={classes.icon}>
-                                                        <InfoIcon />
-                                                    </IconButton>
-                                                </Link>
+                                                <IconButton className={classes.icon} onClick={() => this.handleOpenViewBg(tile)}>
+                                                    <InfoIcon />
+                                                </IconButton>
                                             }
                                         />
                                     }

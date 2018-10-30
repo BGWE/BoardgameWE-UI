@@ -130,7 +130,6 @@ class EventLayout extends React.Component{
                     <div className={classes.toolbar} />
                     <Switch>
                         <Route path={`${this.props.match.path}/boardgames`} render={() => <BoardgamesList {...this.props} eventModel={this.state.event_model}/> } />
-                        <Route path={`${this.props.match.path}/boardgame/:bgid`} render={() => <Boardgame {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/games/add`} render={() => <AddGame {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/games`} render={() => <Games {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/rankings`} render={() => <Rankings {...this.props} eventModel={this.state.event_model}/> } />

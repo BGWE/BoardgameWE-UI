@@ -18,10 +18,9 @@ const styles = theme => ({
         fontSize: 14,
     },
     pos: {
-        marginBottom: 12,
     },
     card: {
-        height:140,
+        height:130,
         width:140
     }
 });
