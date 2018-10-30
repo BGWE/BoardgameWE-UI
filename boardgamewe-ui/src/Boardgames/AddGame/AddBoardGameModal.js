@@ -18,7 +18,6 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import Boardgame from "../../utils/api/BoardGame";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import CustomizedSnackbar from "../../utils/UI/Snackbar";
-import Event from "../../utils/api/Event";
 
 const styles = theme => ({
     dialog: {
@@ -83,7 +82,7 @@ class BoardGameModal extends React.Component {
 
     componentDidUpdate() {
         console.log("Did update");
-        console.log(this.props)
+        console.log(this.props);
     }
 
     handleClickOpen = () => {
@@ -177,32 +176,43 @@ class BoardGameModal extends React.Component {
         });
     }
 
-    handleAddBoardGame = (boardGame) => {
+    handleAddBoardGame = async (boardGame) => {
         this.setState({
             boardGameToAdd: boardGame,
             isAdding: true
         });
 
-        setTimeout(() => {
-            let resp = this.props.addGameCb(boardGame);
-            console.log(resp);
-
-            if (resp === true) {
-                this.setState({
-                    addBoadGameToEventSnackbarSuccessOpen: true,
-                });
-            }
-
+        try {
+            await this.props.addGameCb(boardGame);
             boardGame.added = true;
+            this.setState({addBoadGameToEventSnackbarSuccessOpen: true, isAdding: false});
+            this.props.postCb(boardGame);
+        }
+        catch(error) {
+            console.log(error);
+            this.setState({ addBoadGameToEventSnackbarFailOpen: true, isAdding: false });
+        }
 
-            setTimeout(() => {
-                this.setState({
-                    isAdding: false
-                });
-                this.props.postCb(boardGame);
-            }, 600);
+        // setTimeout(async () => {
+        //     let resp = await this.props.addGameCb(boardGame);
+        //     console.log(resp);
 
-        }, 800);
+        //     if (resp === true) {
+        //         this.setState({
+        //             addBoadGameToEventSnackbarSuccessOpen: true,
+        //         });
+        //     }
+
+        //     boardGame.added = true;
+
+        //     setTimeout(() => {
+        //         this.setState({
+        //             isAdding: false
+        //         });
+        //         this.props.postCb(boardGame);
+        //     }, 600);
+
+        // }, 800);
 
         // let resp = this.props.addGameCb(boardGame);
         // console.log(resp);
@@ -260,7 +270,7 @@ class BoardGameModal extends React.Component {
             <CustomizedSnackbar
                 onClose={this.handleCloseSnackbar}
                 variant="success"
-                message={`${lastBoardGameAddedName} has been added to the event.`}
+                message={`${lastBoardGameAddedName} has been added.`}
                 open={this.state.addBoadGameToEventSnackbarSuccessOpen}
                 autoHideDuration={5000}
             />
@@ -270,7 +280,7 @@ class BoardGameModal extends React.Component {
             <CustomizedSnackbar
                 onClose={this.handleCloseSnackbar}
                 variant="error"
-                message={`${lastBoardGameAddedName} failed to be added to the event.`}
+                message={`Failed to add ${lastBoardGameAddedName}.`}
                 open={this.state.addBoadGameToEventSnackbarFailOpen}
                 autoHideDuration={5000}
             />

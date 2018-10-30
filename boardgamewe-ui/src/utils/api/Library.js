@@ -18,6 +18,19 @@ export default class Library {
     }
 
     /**
+     * Add BGG game to the library (only allowed if library belongs to current user)
+     * @param {Number} bggId The BGG identifier of the game to add
+     * @return {Array<{id_user: Number, id_game: Number}>} The games of the library
+     */
+    async addGameFromBgg(bggId) {
+        if(this.userId != null) {
+            throw new Error("Cannot add games in another user library");
+        }
+        let {data} = await axios.post(`user/library_game/bgg/${bggId}`);
+        return data;
+    }
+
+    /**
      * Add games to the library (only allowed if library belongs to current user)
      * @param {Array<Number>} gamesIds The identifiers of the games to add
      * @return {Array<{id_user: Number, id_game: Number}>} The games of the library

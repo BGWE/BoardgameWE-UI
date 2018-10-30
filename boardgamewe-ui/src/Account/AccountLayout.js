@@ -12,6 +12,7 @@ import AccountMenu from "../Layout/AccountMenu.js";
 import UserModel from "../utils/api/User";
 
 import ProfileManagementLayout from "./ProfileManagementLayout";
+import LibraryLayout from "./LibraryLayout";
 
 const styles = theme => ({
     appBar: {
@@ -20,6 +21,11 @@ const styles = theme => ({
     icon: {
         marginRight: theme.spacing.unit * 2,
         cursor: "pointer"
+    },
+    content: {
+        flexGrow: 1,
+        backgroundColor: theme.palette.background.default,
+        padding: theme.spacing.unit * 3,
     }
 });
 
@@ -42,6 +48,10 @@ class AccountLayout extends React.Component {
     render() {
         const { classes } = this.props;
 
+        if(this.state.user === null) {
+            return null;
+        }
+
         return (
             <React.Fragment>
                 <CssBaseline />
@@ -59,6 +69,7 @@ class AccountLayout extends React.Component {
                         <div className={classes.toolbarSpace} />
                         <Switch>
                             <Route path="/account/profile" render={routeProps => <ProfileManagementLayout {...routeProps} user={this.state.user} /> }/>
+                            <Route path="/account/library" render={routeProps => <LibraryLayout {...routeProps} user={this.state.user} /> }/>
                         </Switch>
                     </main>
                 </div>
