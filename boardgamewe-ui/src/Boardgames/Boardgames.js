@@ -21,10 +21,17 @@ class Boardgames extends React.Component {
         return boardGames;
     }
 
-    async addGame(boardGame) {
-        let resp = await this.props.eventModel.addBoardGameFromBgg(boardGame.id);
-        console.log(resp);
-        return true;
+    async addGame(boardGame, fromBGG=true) {
+        if (fromBGG) {
+            let resp = await this.props.eventModel.addBoardGameFromBgg(boardGame.id);
+            console.log(resp);
+            return true;
+        } else {
+            let resp = await this.props.eventModel.addBoardGames([boardGame.id]);
+            console.log(resp);
+            return true;
+        }
+
     }
 
     async removeGame(id) {
