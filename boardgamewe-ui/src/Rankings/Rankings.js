@@ -8,6 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress/CircularProgres
 import Grid from "@material-ui/core/Grid/Grid";
 import { withStyles } from '@material-ui/core/styles';
 import {getRankingBest} from "../utils/Helper";
+import Typography from "@material-ui/core/Typography/Typography";
 
 const styles = theme => ({
     root: {
@@ -127,10 +128,17 @@ class Rankings extends React.Component {
 
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
-                <div style={{width: "100%"}}>
-                    <h1>Rankings</h1>
+                <Grid container justify="center" spacing={24}>
+                    <Grid item xs={12} md={8}>
+                        <Typography
+                            variant="h3"
+                            align="center"
+                        >
+                            Rankings
+                        </Typography>
+                    </Grid>
 
-                    <Grid container className={classes.root} spacing={8} justify="center">
+                    <Grid item xs={12} container spacing={8} justify="center">
                         {rankings_info.map(info => (
                             <Grid
                                 key={info.ranking_name}
@@ -146,7 +154,7 @@ class Rankings extends React.Component {
                             </Grid>
                         ))}
                     </Grid>
-                </div>
+                </Grid>
             </div>
         );
     }
