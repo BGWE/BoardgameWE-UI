@@ -6,6 +6,6 @@ export const menuItemsList = {
 };
 
 export const secondaryItemsList = {
-    "/" : "Other events"
+    "/events" : "Other events"
 };
 
