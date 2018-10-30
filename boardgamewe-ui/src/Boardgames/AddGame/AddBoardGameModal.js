@@ -18,8 +18,20 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import Boardgame from "../../utils/api/BoardGame";
 import AwesomeDebouncePromise from "awesome-debounce-promise";
 import CustomizedSnackbar from "../../utils/UI/Snackbar";
+import Typography from "@material-ui/core/Typography/Typography";
+import BoardGamesSingleLineGridList from "./BoardGamesSingleLineGridList";
+import Library from "../../utils/api/Library";
+import axios from "axios";
+import * as Helper from "../../utils/Helper";
 
 const styles = theme => ({
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        backgroundColor: theme.palette.background.paper,
+    },
     dialog: {
         marginTop: "2px",
     },
@@ -33,7 +45,19 @@ const styles = theme => ({
     },
     itemCircularProgress: {
         width: '30px'
-    }
+    },
+    gridList: {
+        flexWrap: 'nowrap',
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+    },
+    title: {
+        color: theme.palette.primary.light,
+    },
+    titleBar: {
+        background:
+            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+    },
 });
 
 const searchBoardGame = (text, preExecCb) => {
@@ -57,15 +81,24 @@ class BoardGameModal extends React.Component {
 
             boardGameToAdd: null,
             addBoadGameToEventSnackbarSuccessOpen: false,
-            addBoadGameToEventSnackbarFailOpen: false
+            addBoadGameToEventSnackbarFailOpen: false,
+
+            libraryBoardGames: [],
         };
 
         this._handleKeyPress = this._handleKeyPress.bind(this);
         this.generate = this.generate.bind(this);
         this.handleAddBoardGame = this.handleAddBoardGame.bind(this);
         this.reloadSearchResults = this.reloadSearchResults.bind(this);
+        this.loadBoardGamesFromLibrary = this.loadBoardGamesFromLibrary.bind(this);
+        this.addBoardGameFromLibraryCb = this.addBoardGameFromLibraryCb.bind(this);
 
         this.searchTextField = React.createRef()
+    }
+
+    componentDidMount() {
+        console.log("componentDidMount");
+        this.loadBoardGamesFromLibrary();
     }
 
     reloadSearchResults() {
@@ -77,12 +110,42 @@ class BoardGameModal extends React.Component {
                 })
             });
         }
-
     }
 
-    componentDidUpdate() {
-        console.log("Did update");
-        console.log(this.props);
+    getDecodedToken() {
+        let token = window.localStorage.accessToken;
+        if (token != null) {
+            let decoded_token = Helper.getTokenPayload(token);
+            console.log("Decoded token");
+            console.log(decoded_token);
+            return decoded_token;
+        }
+        return null
+    }
+
+    getLibraryCurrentUser() {
+        let decoded_token = this.getDecodedToken();
+        if (decoded_token) {
+            return new Library(decoded_token.id);
+        }
+        return null
+    }
+
+    boardGameInBoardGameList(boardGame, boardGameList) {
+        return boardGameList.some((bg) => bg.id === boardGame.id);
+    }
+
+    async loadBoardGamesFromLibrary() {
+        let library = this.getLibraryCurrentUser();
+        if (library) {
+            let libraryBoardGames = await library.fetchGames();
+            libraryBoardGames = libraryBoardGames.map((bg) => bg.board_game);
+
+            this.setState({
+                libraryBoardGames: libraryBoardGames
+            })
+        }
+
     }
 
     handleClickOpen = () => {
@@ -176,14 +239,14 @@ class BoardGameModal extends React.Component {
         });
     }
 
-    handleAddBoardGame = async (boardGame) => {
+    handleAddBoardGame = async (boardGame, fromBGG=true) => {
         this.setState({
             boardGameToAdd: boardGame,
             isAdding: true
         });
 
         try {
-            await this.props.addGameCb(boardGame);
+            await this.props.addGameCb(boardGame, fromBGG);
             boardGame.added = true;
             this.setState({addBoadGameToEventSnackbarSuccessOpen: true, isAdding: false});
             this.props.postCb(boardGame);
@@ -192,43 +255,6 @@ class BoardGameModal extends React.Component {
             console.log(error);
             this.setState({ addBoadGameToEventSnackbarFailOpen: true, isAdding: false });
         }
-
-        // setTimeout(async () => {
-        //     let resp = await this.props.addGameCb(boardGame);
-        //     console.log(resp);
-
-        //     if (resp === true) {
-        //         this.setState({
-        //             addBoadGameToEventSnackbarSuccessOpen: true,
-        //         });
-        //     }
-
-        //     boardGame.added = true;
-
-        //     setTimeout(() => {
-        //         this.setState({
-        //             isAdding: false
-        //         });
-        //         this.props.postCb(boardGame);
-        //     }, 600);
-
-        // }, 800);
-
-        // let resp = this.props.addGameCb(boardGame);
-        // console.log(resp);
-        //
-        // this.setState({
-        //     isAdding: false
-        // });
-
-
-        // if (resp === true) {
-        //     this.setState({
-        //         addBoadGameToEventSnackbarSuccessOpen: true,
-        //     });
-        // }
-
-
     };
 
     handleCloseSnackbar = () => {
@@ -237,6 +263,10 @@ class BoardGameModal extends React.Component {
             addBoadGameToEventSnackbarFailOpen: false,
         });
     };
+
+    async addBoardGameFromLibraryCb(boardGame) {
+        let resp = this.handleAddBoardGame(boardGame, false);
+    }
 
     render() {
         const { classes } = this.props;
@@ -266,6 +296,8 @@ class BoardGameModal extends React.Component {
             lastBoardGameAddedName = this.state.boardGameToAdd.name;
         }
 
+        let filteredLibraryBoardGames = this.state.libraryBoardGames.filter((lbg) => !this.boardGameInBoardGameList(lbg, this.props.boardGamesList));
+
         let addBoadgameToEventSnackbarSuccess = (
             <CustomizedSnackbar
                 onClose={this.handleCloseSnackbar}
@@ -284,6 +316,17 @@ class BoardGameModal extends React.Component {
                 open={this.state.addBoadGameToEventSnackbarFailOpen}
                 autoHideDuration={5000}
             />
+        );
+
+        let fromLibrary = (
+            <div>
+                <Typography variant="subtitle1">
+                    From my library
+                </Typography>
+                <BoardGamesSingleLineGridList
+                    boardGames={filteredLibraryBoardGames}
+                    addBoardGameCb={this.addBoardGameFromLibraryCb}/>
+            </div>
         );
 
         return (
@@ -307,6 +350,8 @@ class BoardGameModal extends React.Component {
                         <DialogContentText>
                             Let's first search for your game.
                         </DialogContentText>
+                        <br />
+                        {this.props.showFromLibrary && filteredLibraryBoardGames.length > 0 ? fromLibrary : ""}
                         <br />
                         <TextField
                             autoFocus

@@ -357,24 +357,26 @@ class AddGame extends React.Component {
     }
 
     handleAddNewScore() {
-        if (this.state.ranking_method === 'ranked') {
-            console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
-            let current_scores = this.state.scores;
-            current_scores.push({
-                player: this.state.selected_player,
-                score: this.state.current_score
-            });
-            this.setState({scores: current_scores, current_score: ""})
-        }
+        if (this.state.selected_player && this.state.current_score !== "") {
+            if (this.state.ranking_method === 'ranked') {
+                console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
+                let current_scores = this.state.scores;
+                current_scores.push({
+                    player: this.state.selected_player,
+                    score: this.state.current_score
+                });
+                this.setState({scores: current_scores, current_score: ""})
+            }
 
-        else {
-            console.log('Adding ' + this.state.selected_player.name + ' - Win:' + this.state.is_winner);
-            let current_scores = this.state.win_lose_scores;
-            current_scores.push({
-                player: this.state.selected_player,
-                win: this.state.is_winner
-            });
-            this.setState({scores: current_scores, is_winner: false})
+            else {
+                console.log('Adding ' + this.state.selected_player.name + ' - Win:' + this.state.is_winner);
+                let current_scores = this.state.win_lose_scores;
+                current_scores.push({
+                    player: this.state.selected_player,
+                    win: this.state.is_winner
+                });
+                this.setState({scores: current_scores, is_winner: false})
+            }
         }
     }
 

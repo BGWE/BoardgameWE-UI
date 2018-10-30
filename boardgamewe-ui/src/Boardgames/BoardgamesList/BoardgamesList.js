@@ -114,7 +114,6 @@ class TitlebarGridList extends React.Component {
     }
 
     async reload() {
-        console.log("Reloading...");
         try {
             let board_games = await this.props.fetchMethod();
             console.log(board_games);
@@ -495,6 +494,7 @@ class TitlebarGridList extends React.Component {
                                     boardGamesList={this.state.board_games}
                                     addGameCb={this.props.addMethod}
                                     postCb={this.postCb}
+                                    showFromLibrary
                                 />
                             </GridListTile>
                             {this.order(filteredBoardGames).map(tile => (
