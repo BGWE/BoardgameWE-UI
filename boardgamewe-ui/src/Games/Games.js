@@ -162,8 +162,6 @@ class Games extends React.Component {
     render () {
         const { classes } = this.props;
 
-        console.log(this.state.games);
-
         if (this.state.isLoading) {
             return (
                 <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
