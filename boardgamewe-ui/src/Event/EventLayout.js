@@ -11,14 +11,16 @@ import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider/Divider";
 
-import {menuItemsList, secondaryItemsList} from "./Menu/MenuItemsList";
+import {menuItemsList} from "./Menu/MenuItemsList";
+import {CircularProgress} from "@material-ui/core";
 import MenuItem from "./Menu/MenuItem";
 import Boardgame from "../Boardgames/Boardgame/Boardgame";
-import BoardgamesList from "../Boardgames/BoardgamesList/BoardgamesList";
+import Boardgames from "../Boardgames/Boardgames";
 import Games from "../Games/Games";
 import AddGame from "../Games/AddGame";
 import Rankings from "../Rankings/Rankings";
 import EventModel from "../utils/api/Event";
+import AccountMenu from "../Layout/AccountMenu.js";
 import Dashboard from "./Dashboard";
 
 
@@ -46,7 +48,8 @@ class EventLayout extends React.Component{
         this.state = {
             menuOpen: false,
             eventName: "",
-            event_model: null
+            event_model: null,
+            isLoading: true
         }
     }
 
@@ -55,17 +58,16 @@ class EventLayout extends React.Component{
     }
 
     async load() {
-        let event_model = null;
         try {
-            event_model = await EventModel.fetch(this.props.match.params.eventid);
+            let event_model = await EventModel.fetch(this.props.match.params.eventid);
+            this.setState({
+                event_model,
+                isLoading: false
+            });
         } catch (e) {
             console.log("Failed to fetch event " + this.props.match.params.eventid);
             console.log(e);
         }
-
-        this.setState({
-            event_model: event_model
-        });
     }
 
 
@@ -83,6 +85,14 @@ class EventLayout extends React.Component{
 
     render() {
         const { classes } = this.props;
+
+        if (this.state.isLoading) {
+            return (
+                <div className={classes.root}>
+                    <CircularProgress thickness={7} />
+                </div>
+            )
+        }
 
         let menuItems = [];
         for (var uriKey in menuItemsList) {
@@ -124,12 +134,13 @@ class EventLayout extends React.Component{
                         <Typography variant="h6" color="inherit" noWrap>
                             {this.state.event_model ? this.state.event_model.name : ""}
                         </Typography>
+                        <AccountMenu callbackLogout={this.props.callbackLogout}/>
                     </Toolbar>
                 </AppBar>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />
                     <Switch>
-                        <Route path={`${this.props.match.path}/boardgames`} render={() => <BoardgamesList {...this.props} eventModel={this.state.event_model}/> } />
+                        <Route path={`${this.props.match.path}/boardgames`} render={() => <Boardgames {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/games/add`} render={() => <AddGame {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/games`} render={() => <Games {...this.props} eventModel={this.state.event_model}/> } />
                         <Route path={`${this.props.match.path}/rankings`} render={() => <Rankings {...this.props} eventModel={this.state.event_model}/> } />

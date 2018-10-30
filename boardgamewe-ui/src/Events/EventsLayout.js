@@ -10,6 +10,7 @@ import CssBaseline from "@material-ui/core/CssBaseline/CssBaseline";
 import AppBar from "@material-ui/core/AppBar/AppBar";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Button from "@material-ui/core/Button/Button";
+import AccountMenu from "../Layout/AccountMenu.js";
 import EventIcon from '@material-ui/icons/Event';
 import EventCard from "./EventCard";
 import CustomizedSnackbar from "../utils/UI/Snackbar";
@@ -199,6 +200,7 @@ class EventsLayout extends React.Component {
                             <Typography variant="h6" color="inherit" noWrap>
                                 Event selection
                             </Typography>
+                            <AccountMenu callbackLogout={this.props.callbackLogout}/>
                         </Toolbar>
                     </AppBar>
 

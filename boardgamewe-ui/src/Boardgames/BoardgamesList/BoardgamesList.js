@@ -11,8 +11,10 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle, FormControl, Grid, InputAdornment, InputLabel, Select,
-    Snackbar, TextField
+    TextField
 } from "@material-ui/core";
+
+import CustomizedSnackbar from "../../utils/UI/Snackbar";
 
 import AddGame from "../AddGame/AddBoardGameModal";
 import {Link} from "react-router-dom";
@@ -61,9 +63,9 @@ class TitlebarGridList extends React.Component {
         this.uri = '/board_games';
 
         this.state = {
-            hits: [],
             board_games: [],
             snackbar_error: false,
+            error_msg: "",
             order: 'alphabetical',
             n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth),
             open_confirmation_dialog: false,
@@ -82,7 +84,7 @@ class TitlebarGridList extends React.Component {
         this.cellHeight = 180;
         this.spacing = 10;
 
-        this.handleCloseSnack = this.handleCloseSnack.bind(this);
+        this.closeSnackbar = this.closeSnackbar.bind(this);
         this.componentDidMount = this.componentDidMount.bind(this);
         this.handleCloseConfirm = this.handleCloseConfirm.bind(this);
         this.handleDeleteBg = this.handleDeleteBg.bind(this);
@@ -92,7 +94,6 @@ class TitlebarGridList extends React.Component {
         this.handleChangeOrderBy = this.handleChangeOrderBy.bind(this);
         this.handleChangeMinPlayer = this.handleChangeMinPlayer.bind(this);
         this.handleChangeMaxPlayer = this.handleChangeMaxPlayer.bind(this);
-        this.addGameCb = this.addGameCb.bind(this);
         this.postCb = this.postCb.bind(this);
         this.boardGameModal = this.boardGameModal.bind(this);
         this.handleOpenViewBg = this.handleOpenViewBg.bind(this);
@@ -105,31 +106,25 @@ class TitlebarGridList extends React.Component {
 
     componentDidMount() {
         this.setState({ isLoading: true });
-    }
-
-    componentDidUpdate() {
-        if (this.state.isLoading && this.props.eventModel !== null) {
-            this.reload()
-        }
+        this.reload();
     }
 
     async reload() {
         console.log("Reloading...");
         try {
-            let data = await this.props.eventModel.fetchBoardGames();
-            console.log(data);
+            let board_games = await this.props.fetchMethod();
+            console.log(board_games);
 
             this.setState({
-                hits: data.map((item) => (item.provided_board_game)),
-                board_games: data.map((item) => (item.provided_board_game)),
+                board_games,
                 isLoading: false,
-                min_player: Math.min.apply(null, data.map(bg => bg.provided_board_game.min_players)),
-                max_player: Math.max.apply(null, data.map(bg => bg.provided_board_game.max_players))
+                min_player: Math.min.apply(null, board_games.map(bg => bg.min_players)),
+                max_player: Math.max.apply(null, board_games.map(bg => bg.max_players))
             });
         }
         catch(error) {
             console.log(error);
-                this.setState({ snackbar_error: true, isLoading: false });
+            this.setState({ snackbar_error: true, error_msg: "Error while fetching the board games", isLoading: false });
         }
     }
 
@@ -190,7 +185,7 @@ class TitlebarGridList extends React.Component {
         return []
     }
     // min <= g.max && max >= g.min
-    filter(games) {
+    filter() {
         return this.state.board_games.filter(game => {
             // check interval intersection
             // console.log(game.name + " [ " + game.min_players + " -> " + game.max_players + "]: " + (this.state.min_player <= games.max_player && games.min_player <= this.state.max_player));
@@ -233,12 +228,8 @@ class TitlebarGridList extends React.Component {
         this.setState({n_cols: TitlebarGridList.get_number_of_columns_from_width(window.innerWidth)})
     };
 
-    handleCloseSnack(event, reason) {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        this.setState({snackbar_error: false})
+    closeSnackbar() {
+        this.setState({snackbar_error: false});
     }
 
     handleCloseConfirm() {
@@ -252,10 +243,14 @@ class TitlebarGridList extends React.Component {
     async handleDeleteConfirm() {
         console.log('Deleting');
         try {
-            await this.props.eventModel.removeBoardGames([this.state.confirm_delete_game_id]);
+            await this.props.removeMethod(this.state.confirm_delete_game_id);
         }
         catch(error) {
             console.log(error);
+            this.setState({
+                snackbar_error: true,
+                error_msg: "Failed to delete " + this.state.confirm_delete_game_name
+            });
         }
         finally {
             this.setState({
@@ -277,10 +272,6 @@ class TitlebarGridList extends React.Component {
     }
 
     handleChangeFilterText(event) {
-        // let filtered_hits = this.state.board_games.filter(suggestion => {
-        //     return (!value || suggestion.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
-        // });
-
         this.setState({filter_name: event.target.value})
     }
 
@@ -300,13 +291,7 @@ class TitlebarGridList extends React.Component {
         this.setState({max_player: value})
     }
 
-    addGameCb(boardGame) {
-        let resp = this.props.eventModel.addBoardGameFromBgg(boardGame.id);
-        console.log(resp);
-        return true;
-    }
-
-    postCb(boardGame) {
+    postCb() {
         console.log("Post CB");
         this.reload();
     }
@@ -366,32 +351,15 @@ class TitlebarGridList extends React.Component {
             )
         }
 
-        let filteredBoardGames = this.filter(this.state.hits);
+        let filteredBoardGames = this.filter();
         return (
             <div className={classes.root} style={{backgroundColor: '#fafafa'}}>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left'
-                    }}
+                <CustomizedSnackbar
+                    onClose={this.closeSnackbar}
+                    variant="error"
+                    message={this.state.error_msg}
                     open={this.state.snackbar_error}
-                    autoHideDuration={3000}
-                    onClose={this.handleCloseSnack}
-                    ContentProps={{
-                        'aria-describedby': "error_msg"
-                    }}
-                    message={<span id="error_msg">Error while fetching the board games</span>}
-                    action={[
-                        <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            onClick={this.handleCloseSnack}>
-                            <CloseIcon/>
-                        </IconButton>
-                    ]}/>
-
-                {this.boardGameModal()}
+                />
 
                 <Dialog
                     open={this.state.open_confirmation_dialog}
@@ -511,7 +479,7 @@ class TitlebarGridList extends React.Component {
 
                     <Grid item sm={4} xs={12}>
                         <Typography variant="subtitle1" gutterBottom>
-                            Showing {filteredBoardGames.length}/{this.state.board_games.length} board games in the event
+                            Showing {filteredBoardGames.length}/{this.state.board_games.length} board games after filtering
                         </Typography>
                     </Grid>
                 </Grid>
@@ -523,7 +491,7 @@ class TitlebarGridList extends React.Component {
                             <GridListTile key="add">
                                 <AddGame
                                     boardGamesList={this.state.board_games}
-                                    addGameCb={this.addGameCb}
+                                    addGameCb={this.props.addMethod}
                                     postCb={this.postCb}
                                 />
                             </GridListTile>
@@ -531,6 +499,7 @@ class TitlebarGridList extends React.Component {
                                 <GridListTile key={tile.id} className={classes.tile}>
                                     <img src={tile.thumbnail} alt={tile.name} />
                                     {
+                                        tile.owner &&
                                         <GridListTileBar
                                             titlePosition="top"
                                             actionIcon={
@@ -569,6 +538,9 @@ class TitlebarGridList extends React.Component {
 
 TitlebarGridList.propTypes = {
     classes: PropTypes.object.isRequired,
+    fetchMethod: PropTypes.func.isRequired,
+    addMethod: PropTypes.func.isRequired,
+    removeMethod: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(TitlebarGridList);
