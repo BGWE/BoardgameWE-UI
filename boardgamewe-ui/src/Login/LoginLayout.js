@@ -434,7 +434,7 @@ class LoginLayout extends React.Component {
                         />
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
-                        <InputLabel htmlFor="name">Name</InputLabel>
+                        <InputLabel htmlFor="name">First Name</InputLabel>
                         <Input
                             id="name"
                             name="name"
