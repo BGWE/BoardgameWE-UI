@@ -38,24 +38,24 @@ class HomeButton extends React.Component {
     goToHome() {
         this.setState({
             redirectHome: true
-        })
+        });
     }
 
     render() {
         const { classes } = this.props;
 
         if (this.state.redirectHome) {
-            return <Redirect to='/'/>
+            return <Redirect to='/' />
         }
 
         return (
             <Tooltip title="Home">
                 <IconButton
-                    className={classes.homeIcon}>
+                    className={classes.homeIcon}
+                    onClick={this.goToHome}>
                     <HomeIcon
                         color="inherit"
                         className={classes.icon}
-                        onClick={this.goToHome}
                     />
                 </IconButton>
             </Tooltip>

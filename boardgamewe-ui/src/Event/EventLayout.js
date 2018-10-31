@@ -6,10 +6,11 @@ import PropTypes from 'prop-types';
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Typography from "@material-ui/core/Typography";
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider/Divider";
+
+import HomeButton from "../utils/HomeButton";
 
 import {menuItemsList} from "./Menu/MenuItemsList";
 import {CircularProgress} from "@material-ui/core";
@@ -25,8 +26,6 @@ import Dashboard from "./Dashboard";
 import classNames from 'classnames';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { isAbsolute } from "path";
-
 
 const styles = theme => ({
     root: {
@@ -61,7 +60,7 @@ const styles = theme => ({
         zIndex: 600,
         boxSizing: 'border-box',
         whiteSpace: 'nowrap',
-        width: theme.spacing.unit * 30,
+        width: theme.spacing.unit * 28,
         height: "100%",
         transition: theme.transitions.create('width', {
           easing: theme.transitions.easing.sharp,
@@ -175,14 +174,7 @@ class EventLayout extends React.Component{
                 </Drawer>
                 <AppBar className={classes.appBar}>
                     <Toolbar disableGutters={true}>
-                        <IconButton
-                            color="inherit"
-                            aria-label="Open drawer"
-                            onClick={this.handleDrawerOpen}
-                        >
-                            <MenuIcon />
-                            {/* TODO: replace by home button */}
-                        </IconButton>
+                        <HomeButton/>
                         <Typography variant="h6" color="inherit" noWrap>
                             {this.state.event_model ? this.state.event_model.name : ""}
                         </Typography>
