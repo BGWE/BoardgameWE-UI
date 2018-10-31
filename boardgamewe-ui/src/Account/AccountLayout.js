@@ -63,7 +63,6 @@ class AccountLayout extends React.Component {
                 <div className={classes.root}>
                     <AppBar position="absolute" className={classes.appBar}>
                         <Toolbar>
-                            <ArrowBack className={classes.icon} onClick={this.props.history.goBack} />
                             <HomeButton/>
                             <div>
                                 <Typography variant="h6" color="inherit" noWrap>
