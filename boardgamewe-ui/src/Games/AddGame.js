@@ -424,7 +424,7 @@ class AddGame extends React.Component {
             console.log(game);
             await game.save();
 
-            setTimeout(() => this.props.history.goBack(), 1500);
+            setTimeout(() => this.props.history.goBack(), 1200);
 
         } catch (e) {
             console.log(e);
@@ -539,7 +539,7 @@ class AddGame extends React.Component {
                     justify="center"
                     spacing={24}
                 >
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={10} lg={8}>
                         <Typography
                             variant="h4"
                         >
@@ -547,8 +547,8 @@ class AddGame extends React.Component {
                         </Typography>
                     </Grid>
 
-                    <Grid item xs={12} md={8} container spacing={24} >
-                        <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={10} lg={8} container spacing={24}>
+                        <Grid item xs={12} md={4} lg={4}>
                             <Downshift
                                 onChange={(item) => this.handleDownshiftChange(item.provided_board_game, 'selected_board_game')}
                                 itemToString={item => {
@@ -565,7 +565,7 @@ class AddGame extends React.Component {
                                                     fullWidth: true,
                                                     classes,
                                                     InputProps: getInputProps({
-                                                        placeholder: 'Search a board game',
+                                                        placeholder: 'Search board game',
                                                         id: 'bg-downshift',
                                                     }),
                                                 })}
@@ -589,7 +589,7 @@ class AddGame extends React.Component {
                             </Downshift>
                         </Grid>
 
-                        <Grid item xs={5} md={3}>
+                        <Grid item xs={12} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="age-native-simple"> Ranking method </InputLabel>
                                 <Select
@@ -606,7 +606,7 @@ class AddGame extends React.Component {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={5} md={3}>
+                        <Grid item xs={12} md={4} lg={3}>
                             <TextField
                                 id="duration-select"
                                 select
@@ -634,8 +634,8 @@ class AddGame extends React.Component {
 
                     </Grid>
 
-                    <Grid item xs={12} md={8} container spacing={24}>
-                        <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={10} lg={8} container spacing={24}>
+                        <Grid item xs={12} md={4} lg={4}>
                             <Downshift
                                 onChange={(item) => this.handleDownshiftChange(item.user, 'selected_player')}
                                 itemToString={item => {
@@ -674,7 +674,7 @@ class AddGame extends React.Component {
                                 }
                             </Downshift>
                         </Grid>
-                        <Grid item xs={12} md={2}>
+                        <Grid item xs={12} md={4} lg={3}>
                             {
                                 this.state.ranking_method === 'ranked' ?
                                     (
@@ -703,7 +703,7 @@ class AddGame extends React.Component {
                             }
                         </Grid>
 
-                        <Grid item xs={12} md={2}>
+                        <Grid item xs={12} md={4} lg={3}>
                             <Button
                                 size="small"
                                 variant="contained"
@@ -715,7 +715,7 @@ class AddGame extends React.Component {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={7} lg={5}>
                         <Table>
                             <TableHead>
                                 <TableRow>
