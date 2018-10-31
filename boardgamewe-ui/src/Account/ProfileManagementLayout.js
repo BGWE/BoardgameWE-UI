@@ -10,7 +10,7 @@ import CustomizedSnackbar from "../utils/UI/Snackbar";
 const styles = theme => ({
   paper: {
     marginTop: theme.spacing.unit * 8,
-    width: "500px",
+    maxWidth: "500px",
     margin:"auto",
     display: 'flex',
     flexDirection: 'column',
