@@ -357,8 +357,13 @@ class AddGame extends React.Component {
     }
 
     handleAddNewScore() {
-        if (this.state.selected_player && this.state.current_score !== "") {
+        console.log(this.state);
+        if (this.state.selected_player) {
             if (this.state.ranking_method === 'ranked') {
+                if (this.state.current_score === "") {
+                    return
+                }
+
                 console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
                 let current_scores = this.state.scores;
                 current_scores.push({
@@ -452,6 +457,29 @@ class AddGame extends React.Component {
         this.setState({win_lose_scores: current_scores.filter(function (_score) {
                 return !(_score.player.name === p_score.player.name && _score.win === p_score.win)
             })})
+    }
+
+    isScoreEmpty() {
+        console.log(this.state.ranking_method);
+        if (this.state.ranking_method === ''
+            || ((this.state.ranking_method !== "ranked") && (this.state.ranking_method !== "win_lose")) ) {
+            return true;
+        }
+
+        if (this.state.ranking_method === "ranked" && !this.state.scores) {
+            return true;
+        }
+
+        if (this.state.ranking_method === "win_lose" && !this.state.win_lose_scores) {
+            return true;
+        }
+
+        if (this.state.ranking_method === 'ranked') {
+            return this.state.scores.length <= 0;
+        }
+        else {
+            return this.state.win_lose_scores.length <= 0
+        }
     }
 
     render () {
@@ -794,6 +822,7 @@ class AddGame extends React.Component {
                             variant="contained"
                             color="secondary"
                             onClick={this.handleAddGame}
+                            disabled={this.isScoreEmpty()}
                         >
                             Confirm
                         </Button>
