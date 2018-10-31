@@ -31,6 +31,9 @@ const styles = theme => ({
     section_typography: {
         marginBottom: 10,
         marginTop: 10
+    },
+    button: {
+        textDecoration: "none"
     }
 });
 
