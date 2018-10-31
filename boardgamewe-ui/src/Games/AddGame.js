@@ -380,7 +380,7 @@ class AddGame extends React.Component {
                     player: this.state.selected_player,
                     win: this.state.is_winner
                 });
-                this.setState({scores: current_scores, is_winner: false})
+                this.setState({win_lose_scores: current_scores, is_winner: false})
             }
         }
     }
@@ -417,7 +417,7 @@ class AddGame extends React.Component {
             })
         }
         else {
-            game.players = this.state.scores.map(elem => {
+            game.players = this.state.win_lose_scores.map(elem => {
                 return {
                     'score': elem.win ? 1 : 0,
                     'user': elem.player.id
@@ -484,6 +484,9 @@ class AddGame extends React.Component {
 
     render () {
         const { classes } = this.props;
+
+        console.log("Render add game");
+        console.log(this.state);
 
         if (this.state.isLoading) {
             return (
