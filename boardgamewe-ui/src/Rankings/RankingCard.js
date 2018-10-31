@@ -18,7 +18,6 @@ const styles = theme => ({
     },
     panel: {
         width: '100%',
-        paddingTop: '24px',
     },
 
     details: {
