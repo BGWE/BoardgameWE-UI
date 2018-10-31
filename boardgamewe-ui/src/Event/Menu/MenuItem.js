@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -21,8 +21,13 @@ const styles = theme => ({
 
 class MenuItem extends React.Component{
 
-    chooseIcon() {
+    constructor(props) {
+        super(props);
 
+        this.chooseIcon = this.chooseIcon.bind(this);
+    }
+
+    chooseIcon() {
         switch(this.props.name){
             case 'Dashboard':
                 return <DashboardIcon />;

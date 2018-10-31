@@ -30,7 +30,7 @@ import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import Typography from "@material-ui/core/Typography/Typography";
 
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Game, {GameRankingMethods} from "../utils/api/Game";
 
 const game_durations = [
@@ -357,24 +357,31 @@ class AddGame extends React.Component {
     }
 
     handleAddNewScore() {
-        if (this.state.ranking_method === 'ranked') {
-            console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
-            let current_scores = this.state.scores;
-            current_scores.push({
-                player: this.state.selected_player,
-                score: this.state.current_score
-            });
-            this.setState({scores: current_scores, current_score: ""})
-        }
+        console.log(this.state);
+        if (this.state.selected_player) {
+            if (this.state.ranking_method === 'ranked') {
+                if (this.state.current_score === "") {
+                    return
+                }
 
-        else {
-            console.log('Adding ' + this.state.selected_player.name + ' - Win:' + this.state.is_winner);
-            let current_scores = this.state.win_lose_scores;
-            current_scores.push({
-                player: this.state.selected_player,
-                win: this.state.is_winner
-            });
-            this.setState({scores: current_scores, is_winner: false})
+                console.log('Adding ' + this.state.selected_player.name + ' - ' + this.state.current_score);
+                let current_scores = this.state.scores;
+                current_scores.push({
+                    player: this.state.selected_player,
+                    score: this.state.current_score
+                });
+                this.setState({scores: current_scores, current_score: ""})
+            }
+
+            else {
+                console.log('Adding ' + this.state.selected_player.name + ' - Win:' + this.state.is_winner);
+                let current_scores = this.state.win_lose_scores;
+                current_scores.push({
+                    player: this.state.selected_player,
+                    win: this.state.is_winner
+                });
+                this.setState({win_lose_scores: current_scores, is_winner: false})
+            }
         }
     }
 
@@ -410,7 +417,7 @@ class AddGame extends React.Component {
             })
         }
         else {
-            game.players = this.state.scores.map(elem => {
+            game.players = this.state.win_lose_scores.map(elem => {
                 return {
                     'score': elem.win ? 1 : 0,
                     'user': elem.player.id
@@ -422,7 +429,7 @@ class AddGame extends React.Component {
             console.log(game);
             await game.save();
 
-            setTimeout(() => this.props.history.goBack(), 1500);
+            setTimeout(() => this.props.history.goBack(), 1200);
 
         } catch (e) {
             console.log(e);
@@ -452,8 +459,34 @@ class AddGame extends React.Component {
             })})
     }
 
+    isScoreEmpty() {
+        console.log(this.state.ranking_method);
+        if (this.state.ranking_method === ''
+            || ((this.state.ranking_method !== "ranked") && (this.state.ranking_method !== "win_lose")) ) {
+            return true;
+        }
+
+        if (this.state.ranking_method === "ranked" && !this.state.scores) {
+            return true;
+        }
+
+        if (this.state.ranking_method === "win_lose" && !this.state.win_lose_scores) {
+            return true;
+        }
+
+        if (this.state.ranking_method === 'ranked') {
+            return this.state.scores.length <= 0;
+        }
+        else {
+            return this.state.win_lose_scores.length <= 0
+        }
+    }
+
     render () {
         const { classes } = this.props;
+
+        console.log("Render add game");
+        console.log(this.state);
 
         if (this.state.isLoading) {
             return (
@@ -537,7 +570,7 @@ class AddGame extends React.Component {
                     justify="center"
                     spacing={24}
                 >
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={10} lg={8}>
                         <Typography
                             variant="h4"
                         >
@@ -545,8 +578,8 @@ class AddGame extends React.Component {
                         </Typography>
                     </Grid>
 
-                    <Grid item xs={12} md={8} container spacing={24} >
-                        <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={10} lg={8} container spacing={24}>
+                        <Grid item xs={12} md={4} lg={4}>
                             <Downshift
                                 onChange={(item) => this.handleDownshiftChange(item.provided_board_game, 'selected_board_game')}
                                 itemToString={item => {
@@ -563,7 +596,7 @@ class AddGame extends React.Component {
                                                     fullWidth: true,
                                                     classes,
                                                     InputProps: getInputProps({
-                                                        placeholder: 'Search a board game',
+                                                        placeholder: 'Search board game',
                                                         id: 'bg-downshift',
                                                     }),
                                                 })}
@@ -587,7 +620,7 @@ class AddGame extends React.Component {
                             </Downshift>
                         </Grid>
 
-                        <Grid item xs={5} md={3}>
+                        <Grid item xs={12} md={4} lg={3}>
                             <FormControl className={classes.formControl}>
                                 <InputLabel htmlFor="age-native-simple"> Ranking method </InputLabel>
                                 <Select
@@ -604,7 +637,7 @@ class AddGame extends React.Component {
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={5} md={3}>
+                        <Grid item xs={12} md={4} lg={3}>
                             <TextField
                                 id="duration-select"
                                 select
@@ -632,8 +665,8 @@ class AddGame extends React.Component {
 
                     </Grid>
 
-                    <Grid item xs={12} md={8} container spacing={24}>
-                        <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={10} lg={8} container spacing={24}>
+                        <Grid item xs={12} md={4} lg={4}>
                             <Downshift
                                 onChange={(item) => this.handleDownshiftChange(item.user, 'selected_player')}
                                 itemToString={item => {
@@ -672,7 +705,7 @@ class AddGame extends React.Component {
                                 }
                             </Downshift>
                         </Grid>
-                        <Grid item xs={12} md={2}>
+                        <Grid item xs={12} md={4} lg={3}>
                             {
                                 this.state.ranking_method === 'ranked' ?
                                     (
@@ -701,7 +734,7 @@ class AddGame extends React.Component {
                             }
                         </Grid>
 
-                        <Grid item xs={12} md={2}>
+                        <Grid item xs={12} md={4} lg={3}>
                             <Button
                                 size="small"
                                 variant="contained"
@@ -713,7 +746,7 @@ class AddGame extends React.Component {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={7} lg={5}>
                         <Table>
                             <TableHead>
                                 <TableRow>
@@ -792,6 +825,7 @@ class AddGame extends React.Component {
                             variant="contained"
                             color="secondary"
                             onClick={this.handleAddGame}
+                            disabled={this.isScoreEmpty()}
                         >
                             Confirm
                         </Button>

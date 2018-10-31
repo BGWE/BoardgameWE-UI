@@ -1,4 +1,16 @@
 import * as jwt from "jsonwebtoken";
+import moment from "moment-timezone";
+
+export function formatDatetime(iso8601) {
+    const datetime = moment(iso8601).tz(moment.tz.guess());
+    return datetime.format("LLL");
+}
+
+export function formatDate(iso8601) {
+    const datetime = moment(iso8601).tz(moment.tz.guess());
+    return datetime.format("LL");
+}
+
 
 export function htmlDecode(input) {
     let e = document.createElement('div');
@@ -30,9 +42,6 @@ export function getFirstName(player) {
 }
 
 export function getRankingBest (ranking) {
-
-    console.log(ranking);
-
     if (ranking.length > 2 && ranking.slice(0, 3).every(a => a.win)) {
         return getFirstName(ranking[0].player) + ", " + getFirstName(ranking[1].player) + ",...";
     }  else if (ranking.length >= 2 && ranking.slice(0, 2).every(a => a.win)) {
@@ -46,4 +55,19 @@ export function getRankingBest (ranking) {
 
 export function getTokenPayload(token) {
     return jwt.decode(token);
+}
+
+export function convertToISO(stringDate) {
+    let date = new Date(stringDate);
+    console.log(date);
+    console.log(date.toISOString());
+    return date.toISOString()
+}
+
+/**
+ * @return {string}
+ */
+export function ISODateToNormalDate(ISODate) {
+    let date = new Date(ISODate);
+    return date.getDate() + '-' + (date.getMonth()+1) + '-' + date.getFullYear();
 }

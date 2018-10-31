@@ -115,6 +115,15 @@ export default class Event extends Model {
         return data;
     }
 
+    static get attendedEventsUri() {
+        return `events/current`;
+    }
+
+    static async fetchAttendedEvents() {
+        let {data} = await axios.get(Event.attendedEventsUri);
+        return data;
+    }
+
     /**
      * Subscribe connected user to the event
      */

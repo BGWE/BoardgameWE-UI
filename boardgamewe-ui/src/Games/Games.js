@@ -18,11 +18,12 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
 import Divider from "@material-ui/core/Divider/Divider";
 import ExpansionPanelActions from "@material-ui/core/ExpansionPanelActions/ExpansionPanelActions";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid/Grid";
 
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 import GameTable from "./GameTable";
+import * as Helper from "../utils/Helper";
 
 const styles = theme => ({
     root: {
@@ -162,8 +163,6 @@ class Games extends React.Component {
     render () {
         const { classes } = this.props;
 
-        console.log(this.state.games);
-
         if (this.state.isLoading) {
             return (
                 <div className={this.state.is_mobile ? classes.mobileRoot : classes.root}>
@@ -250,18 +249,17 @@ class Games extends React.Component {
 
                                 game.players[0].winner = true;
 
-                                let created_at = new Date(game.createdAt);
                                 return (
                                     <ExpansionPanel key={game.id} >
                                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                             <Typography className={classes.heading}> {game.board_game.name} </Typography>
-                                            <Typography className={classes.secondaryHeading}> {created_at.toLocaleString("fr-BE")} </Typography>
+                                            <Typography className={classes.secondaryHeading}> {Helper.formatDatetime(game.createdAt)} </Typography>
                                             {
                                                 game.duration ? <Typography className={classes.secondaryHeading}> Lasted {game.duration ? game.duration : ""} minutes </Typography> : ""
                                             }
 
                                         </ExpansionPanelSummary>
-                                        <ExpansionPanelDetails style={{width: "80%", alignItems: 'center'}}>
+                                        <ExpansionPanelDetails style={{justifyItems: 'center'}}>
                                             <GameTable
                                                 game={game}
                                                 modifier={a => a}

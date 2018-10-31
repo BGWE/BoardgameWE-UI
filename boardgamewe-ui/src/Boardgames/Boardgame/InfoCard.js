@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -18,10 +18,9 @@ const styles = theme => ({
         fontSize: 14,
     },
     pos: {
-        marginBottom: 12,
     },
     card: {
-        height:140,
+        height:130,
         width:140
     }
 });

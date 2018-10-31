@@ -7,7 +7,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary/Expan
 import Chip from "@material-ui/core/Chip/Chip";
 import Avatar from "@material-ui/core/Avatar/Avatar";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails/ExpansionPanelDetails";
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid/Grid";
 
 
@@ -18,7 +18,6 @@ const styles = theme => ({
     },
     panel: {
         width: '100%',
-        paddingTop: '24px',
     },
 
     details: {
