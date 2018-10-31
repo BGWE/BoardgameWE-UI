@@ -391,7 +391,8 @@ class AddGame extends React.Component {
             return
         }
 
-        if (this.state.scores.length <= 0) {
+        if ((this.state.ranking_method === "ranked" && this.state.scores.length <= 0) ||
+            (this.state.ranking_method === "win_lose" && this.state.win_lose_scores.length <= 0)) {
             this.setState({no_score_open: true});
             return
         }
