@@ -151,9 +151,11 @@ class Games extends React.Component {
 
     async handleDeleteGame() {
         try {
-            await this.props.eventModel.remove(this.state.game_to_delete);
+            await this.state.game_to_delete.delete();
         } catch (e) {
             console.log(e);
+        }
+        finally {
             this.setState({
                 isLoading:true
             });
@@ -272,7 +274,7 @@ class Games extends React.Component {
                                                 key="close"
                                                 aria-label="Close"
                                                 color="inherit"
-                                                onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game.id})}>
+                                                onClick={() => this.setState({confirm_delete_open: true, game_to_delete: game})}>
                                                 <DeleteIcon/>
                                             </IconButton>
                                         </ExpansionPanelActions>
