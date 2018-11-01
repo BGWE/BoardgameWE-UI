@@ -7,6 +7,7 @@ import TableHead from "@material-ui/core/TableHead/TableHead";
 import Table from "@material-ui/core/Table/Table";
 import TableBody from "@material-ui/core/TableBody/TableBody";
 import {withStyles} from '@material-ui/core/styles';
+import {rank} from "../utils/Helper";
 
 const colors = {
     gold: "#FFD700",
@@ -101,10 +102,13 @@ class GameTable extends React.Component {
         }
     }
 
+    getRankedPlayers(game) {
+        return rank(game.players, p => p.score, game.ranking_method === "POINTS_LOWER_BETTER");
+    }
+
     render () {
         const { classes } = this.props;
 
-        var rank = 0;
         return (
             <Table padding={"dense"}>
                 <TableHead>
@@ -118,9 +122,9 @@ class GameTable extends React.Component {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {this.props.game ? this.props.game.players.slice(0, 10).map(player => (
+                    {this.props.game ? this.getRankedPlayers(this.props.game).map(player => (
                         <TableRow key={player.id_user} className={player.winner ? classes.winnerRow : null}>
-                            <TableCell> {this.getIcon(rank += 1, classes)} </TableCell>
+                            <TableCell> {this.getIcon(player.rank, classes)} </TableCell>
                             <TableCell className={player.winner ? classes.winnerCell : null}> {player.name ? player.name.split(" ")[0] : player.user.name} </TableCell>
                             {
                                 this.props.isWinLose ? null:
