@@ -13,6 +13,7 @@ import PlaceIcon from "@material-ui/icons/Place";
 import {Link} from "react-router-dom";
 import Button from "@material-ui/core/Button/Button";
 import GameExpensionPanel from "../Games/GameExpensionPanel";
+import {compareGamesByCreation} from "../utils/api/Game";
 
 const styles = theme => ({
     root: {
@@ -68,6 +69,7 @@ class Dashboard extends React.Component {
             let gcbgb_ranking = await this.props.eventModel.fetchRanking('gcbgb');
             let victory_ranking = await this.props.eventModel.fetchRanking('victory_count');
             let games = await this.props.eventModel.fetchLatestGames();
+            games = games.sort(compareGamesByCreation);
 
             this.setState({
                 gcbgb_ranking: gcbgb_ranking,

@@ -1,5 +1,6 @@
 import Model from "./Model.js";
 import axios from "axios";
+import moment from "moment-timezone";
 
 /** Enum providing the game ranking methods */
 export const GameRankingMethods = Object.freeze({
@@ -65,5 +66,17 @@ export default class Game extends Model {
         });
 
         return processedCollection;
+    }
+}
+
+export function compareGamesByCreation(game1, game2) {
+    let moment1 = moment(game1.createdAt);
+    let moment2 = moment(game2.createdAt);
+    if (moment1.isBefore(moment2)) {
+        return 1
+    } else if (moment1.isAfter(moment2)) {
+        return -1
+    } else {
+        return 0
     }
 }

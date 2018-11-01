@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import PropTypes from 'prop-types';
+import moment from "moment-timezone";
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddIcon from '@material-ui/icons/Add';
@@ -24,6 +25,7 @@ import Grid from "@material-ui/core/Grid/Grid";
 import ConfirmDeleteDialog from "../Boardgames/Dialog/ConfirmDeleteDialog";
 import GameTable from "./GameTable";
 import * as Helper from "../utils/Helper";
+import {compareGamesByCreation} from "../utils/api/Game";
 
 const styles = theme => ({
     root: {
@@ -113,6 +115,8 @@ class Games extends React.Component {
     async reload() {
         try {
             let games = await this.props.eventModel.fetchGames();
+            games = games.sort(compareGamesByCreation);
+
 
             this.setState({
                 games: games,
