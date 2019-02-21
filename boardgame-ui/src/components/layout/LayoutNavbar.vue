@@ -39,7 +39,7 @@
           </div>
           <div v-else class="navbar-item has-dropdown is-hoverable">
             <a class="navbar-link">
-              {{currentUser.username}}
+              {{currentUser.name}} {{currentUser.surname[0]}}.
             </a>
 
             <div class="navbar-dropdown">

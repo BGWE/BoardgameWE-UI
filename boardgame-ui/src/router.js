@@ -41,6 +41,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'event',
+    path: '/event/:eventid',
+    component: require('./components/EventPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./components/NotFoundPage.vue').default,

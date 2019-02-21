@@ -17,7 +17,9 @@
           </div>
           <footer class="card-footer">
             <div class="buttons">
-              <button class="button is-primary">{{$t('events.view')}}</button>
+              <router-link :to="{name: 'event', params:{eventid: event.id}}" class="button is-primary">
+                {{$t('events.view')}}
+              </router-link>
               <button class="button">{{$t('events.join')}}</button>
             </div>
           </footer>
