@@ -17,19 +17,19 @@
     <nav class="level is-mobile">
         <div class="level-item has-text-centered">
             <div>
-            <p class="heading">Games played</p>
+            <p class="heading">{{$t('event.level.games-played')}}</p>
             <p class="title">{{games ? games.length : 0}}</p>
             </div>
         </div>
         <div class="level-item has-text-centered">
             <div>
-            <p class="heading">Board Games</p>
+            <p class="heading">{{$t('event.level.board-games')}}</p>
             <p class="title">{{event.provided_board_games ? event.provided_board_games.length : 0}}</p>
             </div>
         </div>
         <div class="level-item has-text-centered">
             <div>
-            <p class="heading">Attendees</p>
+            <p class="heading">{{$t('event.level.attendees')}}</p>
             <p class="title">{{event.attendees ? event.attendees.length : 0}}</p>
             </div>
         </div>
