@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "yarn watch-translations & vue-cli-service serve",
-    "build": "translations2json && vue-cli-service build",
+    "build": "npm run translations2json && vue-cli-service build",
     "lint": "vue-cli-service lint",
     "watch-translations": "onchange -i 'src/locales/translations.csv' -- yarn translations2json",
     "translations2json": "i18n-csv2json-cli --from src/locales/translations.csv --to src/locales/json --format"
