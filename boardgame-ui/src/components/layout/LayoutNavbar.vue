@@ -21,9 +21,10 @@
               {{$t('navbar.events')}}
             </router-link>
 
-            <a class="navbar-item">
+            <router-link :to="{name: 'library'}" class="navbar-item">
               {{$t('navbar.my-library')}}
-            </a>
+            </router-link>
+
           </template>
 
           <a class="navbar-item">

@@ -47,6 +47,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'library',
+    path: '/library',
+    component: require('./components/LibraryPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./components/NotFoundPage.vue').default,

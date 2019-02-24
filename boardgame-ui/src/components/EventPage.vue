@@ -1,7 +1,6 @@
 <template>
   <div>
-
-    <section class="hero is-primary">
+    <section class="hero is-primary is-bold">
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
@@ -14,7 +13,7 @@
         </div>
     </section>
 
-    <nav class="level is-mobile">
+    <nav class="level is-mobile" id="event-level">
         <div class="level-item has-text-centered">
             <div>
             <p class="heading">{{$t('event.level.games-played')}}</p>
@@ -68,4 +67,8 @@ export default {
 </script>
 
 <style scoped>
+#event-level {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 </style>

@@ -25,7 +25,5 @@ export default {
 </script>
 
 <style>
-.app-content {
-  padding-top: 20px;
-}
+
 </style>
