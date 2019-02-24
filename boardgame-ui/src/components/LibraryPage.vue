@@ -6,7 +6,6 @@
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 
 export default {
-  name: "LibraryPage",
   components: {
     HeroTitlePageLayout
   },
