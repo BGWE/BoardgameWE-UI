@@ -43,16 +43,31 @@ const actions = {
   },
 
   async fetchUser({commit}) {
-    let user = await User.fetchCurrent();
+    let user = null;
+
+    try {
+      user = await User.fetchCurrent();
+    } catch (e) {
+      console.log("Error while fetching current user.")
+
+      cleanAuthenticationState();
+      commit('setCurrentUser', null);
+      return;
+    }
+    
     commit('setCurrentUser', user);
   },
 
   logout({commit}) {
-    delete axios.defaults.headers.common['Authentication'];
-    window.localStorage.removeItem('accessToken');
+    cleanAuthenticationState()
     commit('setCurrentUser', null);
   }
 };
+
+function cleanAuthenticationState() {
+  delete axios.defaults.headers.common['Authentication'];
+  window.localStorage.removeItem('accessToken');
+}
 
 const store = new Vuex.Store({
   state,
