@@ -21,7 +21,7 @@ const mutations = {
 };
 
 const actions = {
-  async initializeStore({state, dispatch}) {
+  async initializeStore({state, commit, dispatch}) {
     if(state.initialized) {
       return;
     }
@@ -33,6 +33,7 @@ const actions = {
 
     axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
     await dispatch('fetchUser');
+    commit('setInitialized');
   },
 
   async login({dispatch}, {username, password}) {
