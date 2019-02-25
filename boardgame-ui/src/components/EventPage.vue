@@ -34,7 +34,7 @@
         </div>
     </nav>
  
-    <b-tabs v-model="activeTab">
+    <b-tabs v-model="activeTab" type="is-boxed">
       <b-tab-item :label="$t('event.tab.dashboard')">
 
       </b-tab-item>
