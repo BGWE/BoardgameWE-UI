@@ -33,17 +33,28 @@
             </div>
         </div>
     </nav>
+ 
+    <b-tabs v-model="activeTab">
+      <b-tab-item :label="$t('event.tab.dashboard')">
 
-    <div class="tabs is-medium">
-        <ul>
-            <li class="is-active"><a>{{$t('event.tab.dashboard')}}</a></li>
-            <li><a>{{$t('event.tab.boardgames')}}</a></li>
-            <li><a>{{$t('event.tab.games')}}</a></li>
-            <li><a>{{$t('event.tab.rankings')}}</a></li>
-            <li><a>{{$t('event.tab.matchmaking')}}</a></li>
-            
-        </ul>
-    </div>
+      </b-tab-item>
+
+      <b-tab-item :label="$t('event.tab.boardgames')">
+
+      </b-tab-item>
+
+      <b-tab-item :label="$t('event.tab.games')">
+
+      </b-tab-item>
+
+      <b-tab-item :label="$t('event.tab.rankings')">
+
+      </b-tab-item>
+
+      <b-tab-item :label="$t('event.tab.matchmaking')">
+
+      </b-tab-item>
+    </b-tabs>
 
   </div>
 </template>
@@ -54,6 +65,7 @@ import Event from '@/utils/api/Event';
 export default {
   data() {
     return {
+      activeTab: 0,
       event: {},
       games: [],
     };
