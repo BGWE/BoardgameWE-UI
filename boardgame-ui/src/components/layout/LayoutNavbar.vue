@@ -26,10 +26,6 @@
             </router-link>
 
           </template>
-
-          <a class="navbar-item">
-            {{$t('navbar.all-board-games')}}
-          </a>
         </div>
 
         <div class="navbar-end">

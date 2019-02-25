@@ -2,7 +2,6 @@ key,en,fr
 app.appName,Board Game Companion,
 navbar.events,Events,
 navbar.my-library,My library,
-navbar.all-board-games,All board games,
 navbar.log-in,Log in,
 navbar.log-out,Log out,
 navbar.preferences,Preferences,
