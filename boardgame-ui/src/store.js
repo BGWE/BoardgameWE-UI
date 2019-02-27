@@ -48,8 +48,9 @@ const actions = {
 
     try {
       user = await User.fetchCurrent();
-    } catch (e) {
-      console.log("Error while fetching current user.")
+    } 
+    catch (e) {
+      console.log('Error while fetching current user.');
 
       cleanAuthenticationState();
       commit('setCurrentUser', null);
@@ -60,7 +61,7 @@ const actions = {
   },
 
   logout({commit}) {
-    cleanAuthenticationState()
+    cleanAuthenticationState();
     commit('setCurrentUser', null);
   }
 };
