@@ -44,7 +44,7 @@
       </b-tab-item>
 
       <b-tab-item :label="$t('event.tab.games')">
-
+        <EventGamesTab v-if="games.length > 0" :games="games"></EventGamesTab>
       </b-tab-item>
 
       <b-tab-item :label="$t('event.tab.rankings')">
@@ -55,11 +55,11 @@
 
       </b-tab-item>
     </b-tabs>
-
   </div>
 </template>
 
 <script>
+import EventGamesTab from '@/components/EventGamesTab';
 import Event from '@/utils/api/Event';
 
 export default {
@@ -69,6 +69,9 @@ export default {
       event: {},
       games: [],
     };
+  },
+  components: {
+    EventGamesTab
   },
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
