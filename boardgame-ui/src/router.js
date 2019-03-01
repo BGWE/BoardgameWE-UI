@@ -53,6 +53,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'preferences',
+    path: '/preferences',
+    component: require('./components/PrefsPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./components/NotFoundPage.vue').default,
