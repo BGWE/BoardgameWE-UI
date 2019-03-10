@@ -157,11 +157,12 @@ export default {
       return Constants.RANKING_TABLE_TYPE_RANKED;
     },
 
-    columns: () => {
+    columns() {
+      console.log(this);
       return [
         {
           field: 'position',
-          label: '#',
+          label: this.$t('event.rankings.table.position'),
           formatter: (value) => {
             if (value > 3) {
               return `<span class="tag">${value}</span>`;
@@ -178,22 +179,16 @@ export default {
               winnerClass = 'has-background-bronze';
             }
 
-            // return `<div class="tags has-addons">
-            //           <span class="tag">${value}</span>
-            //           <span class="tag has-text-white ${winnerClass}">
-            //             <i class="fas fa-star"></i>
-            //           </span>
-            //         </div>`;
             return `<span class="tag ${winnerClass} has-text-white">${value}</span>`;
           }
         },
         {
           field: 'player',
-          label: 'Player'
+          label: this.$t('event.rankings.table.player')
         },
         {
           field: 'score',
-          label: 'Score'
+          label: this.$t('event.rankings.table.score')
         },
       ];
     },
