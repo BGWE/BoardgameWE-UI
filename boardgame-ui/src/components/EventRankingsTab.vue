@@ -3,7 +3,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Games won</p>
+            <p class="title">{{$t('event.rankings.games-won')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -17,7 +17,7 @@
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Games won (%)</p>
+            <p class="title">{{$t('event.rankings.games-won-percentage')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -31,7 +31,7 @@
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Games played</p>
+            <p class="title">{{$t('event.rankings.games-played')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -47,7 +47,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Different games played</p>
+            <p class="title">{{$t('event.rankings.different-games')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -61,7 +61,7 @@
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Games lost</p>
+            <p class="title">{{$t('event.rankings.games-lost')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -75,7 +75,7 @@
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Games lost (%)</p>
+            <p class="title">{{$t('event.rankings.games-lost-percentage')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -91,7 +91,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Games as last</p>
+            <p class="title">{{$t('event.rankings.games-last')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -105,7 +105,7 @@
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Games as last (%)</p>
+            <p class="title">{{$t('event.rankings.games-last-percentage')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
@@ -119,7 +119,7 @@
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
-            <p class="title">Great Canadian Blitz</p>
+            <p class="title">{{$t('event.rankings.gcb')}}</p>
             <div class="content">
               <RankingTable 
               :type="rankingTableType"
