@@ -29,7 +29,6 @@
 
 
 <script>
-import * as Constants from '@/utils/constants';
 
 export default {
   props: {
