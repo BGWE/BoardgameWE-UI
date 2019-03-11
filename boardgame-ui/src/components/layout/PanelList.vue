@@ -1,50 +1,35 @@
 <template>
   <div class="panel">
-    <a 
+    <PanelListElement
       v-for="(el, index) in elements"
-      v-on:click="elementSelected(index)"
-      class="panel-block"
-      v-bind:class="{expanded: isElementExpanded(index)}"
-      :key="index">
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title">
-              {{el.title}}
-            </p>
-            <a href="#" class="card-header-icon" aria-label="more options">
-              <span class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-            </a>
-          </header>
+      v-bind:key="index">
+      <template v-slot:title>
+        {{el.title}}
+      </template>
 
-          <div class="card-content" v-if="isElementExpanded(index)">
-          </div>
+      <template v-slot:content>
+        <div v-html="el.content"></div>
+      </template>
 
-          <div class="card-content" v-if="isElementExpanded(index)">
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-              <a href="#">@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a>
-              <br>
-              <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-            </div>
-          </div>
-          <footer class="card-footer">
-            <div class="card-footer-item" v-html="el.footer.left"></div>
-            <!-- <div class="card-footer-item" v-html="el.footer.right"></div> -->
-            <!-- <a href="#" class="">Edit</a> -->
-          </footer>
-        </div>
-      </a>
+      <template v-slot:footer>
+        <div class="card-footer-item" v-html="el.footer.left"></div>
+      </template>
+
+    </PanelListElement>
   </div>
 </template>
 
 <script>
+import PanelListElement from '@/components/layout/PanelListElement';
 export default {
   props: {
     elements: {
       required: true
     }
+  },
+
+  components: {
+    PanelListElement
   },
 
   data() {
