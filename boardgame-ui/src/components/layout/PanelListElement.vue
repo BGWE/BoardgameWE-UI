@@ -17,13 +17,13 @@
       </header>
 
       <div class="card-content" v-if="isExpanded">
-          <slot name="content">
-            CONTENT
-          </slot>
+          <slot name="content"></slot>
       </div>
 
       <footer class="card-footer">
+        <div class="card-footer-item">
           <slot name="footer"></slot>
+        </div>
       </footer>
     </div>
   </a>

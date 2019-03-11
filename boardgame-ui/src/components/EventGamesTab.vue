@@ -1,42 +1,45 @@
 <template>
     <div>
-        <PanelList :elements="formatGamesToDisplay()"></PanelList>
+        <PanelList>
+          <PanelListElement
+            v-for="(game, index) in games"
+            v-bind:key="index">
+            
+            <template v-slot:title>
+              {{game.board_game.name}}
+            </template>
+
+            <template v-slot:content>
+              
+            </template>
+
+            <template v-slot:footer>
+              <time :datetime="game.createdAt" class="is-size-7">{{formatDatetime(game.createdAt)}}</time>
+            </template>
+
+          </PanelListElement>
+        </PanelList>
     </div>
 </template>
 
 <script>
 import PanelList from '@/components/layout/PanelList';
+import PanelListElement from '@/components/layout/PanelListElement';
 
 import Event from '@/utils/api/Event';
 import * as Helper from '@/utils/helper';
 
 export default {
   components: {
-    PanelList
+    PanelList,
+    PanelListElement
   },
 
   props: ['games'],
 
-  computed: {
-    
-  },
 
   methods: {
-    formatGamesToDisplay: function() {
-      
-      console.log('games ', this.games);
-
-      let ret = this.games.map(game => {
-        return {
-          title: game.board_game.name,
-          footer: {
-            left: `<time datetime="${game.createdAt}" class="is-size-7">${Helper.formatDatetime(game.createdAt)}</time>`,
-          }
-        };
-      });
-      console.log(ret);
-      return ret;
-    }
+    formatDatetime: (datetime) => Helper.formatDatetime(datetime)
   },
 
   async created() {
