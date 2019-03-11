@@ -51,4 +51,18 @@ export default {
     margin-top: 1.5em;
     margin-bottom: 1.5em;
   }
+
+  .panel-block {
+    border: 0px;
+    padding: 0px;
+    padding-bottom: 0.5em;
+
+    max-width: 40em;
+    display: flex;
+    justify-content: center;
+  }
+
+  .panel-block:hover {
+    background-color: transparent;
+  }
 </style>
