@@ -26,36 +26,36 @@ const routes = [
   {
     name: 'home',
     path: '/',
-    component: require('./components/HomePage.vue').default,
+    component: require('./pages/HomePage.vue').default,
   },
   {
     name: 'login',
     path: '/login/:next?',
-    component: require('./components/LoginPage.vue').default,
+    component: require('./pages/LoginPage.vue').default,
     beforeEnter: guestOnly
   },
   {
     name: 'events',
     path: '/events',
-    component: require('./components/EventsPage.vue').default,
+    component: require('./pages/EventsPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
     name: 'event',
     path: '/event/:eventid',
-    component: require('./components/EventPage.vue').default,
+    component: require('./pages/EventPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
     name: 'library',
     path: '/library',
-    component: require('./components/LibraryPage.vue').default,
+    component: require('./pages/LibraryPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
     name: 'not-found',
     path: '*',
-    component: require('./components/NotFoundPage.vue').default,
+    component: require('./pages/NotFoundPage.vue').default,
   },
 ];
 
