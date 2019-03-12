@@ -48,7 +48,7 @@
       </b-tab-item>
 
       <b-tab-item :label="$t('event.tab.rankings')">
-
+        <EventRankingsTab v-if="games.length > 0" :rankings="rankings"></EventRankingsTab>
       </b-tab-item>
 
       <b-tab-item :label="$t('event.tab.matchmaking')">
@@ -61,24 +61,29 @@
 <script>
 import EventGamesTab from '@/components/event/EventGamesTab';
 import EventBoardGamesTab from '@/components/event/EventBoardGamesTab';
+import EventRankingsTab from '@/components/event/EventRankingsTab';
 import Event from '@/utils/api/Event';
 
 export default {
   components: {
     EventGamesTab,
-    EventBoardGamesTab
+    EventBoardGamesTab,
+    EventRankingsTab
   },
   data() {
     return {
       activeTab: 0,
       event: null,
       games: [],
+      rankings: []
     };
   },
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
 
-    this.games = await this.event.fetchGames(); //TODO Should we load that there?
+    //TODO Should we load those there?
+    this.games = await this.event.fetchGames();
+    this.rankings = await this.event.fetchRankings();
   }
 };
 </script>
