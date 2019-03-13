@@ -1,4 +1,8 @@
 key,en,fr
+home.hello,Hello,
+home.welcome,Welcome to,
+home.statistics,Statistics,
+home.recentActivities,Recent activities,
 app.appName,Board Game Companion,
 navbar.events,Events,
 navbar.my-library,My library,
