@@ -3,7 +3,24 @@
     <div class="box">
       <h2 class="subtitle">{{$t("board-game.add-modal.title")}}</h2>
 
-      <!-- TODO: library -->
+      <template v-if="filteredLibraryGames.length > 0">
+        <h2 class="subtitle is-6">{{$t("board-game.add-modal.from-library")}}</h2>
+        <div class="columns library-games is-mobile">
+          <div class="column" v-for="boardGame in filteredLibraryGames" :key="boardGame.id">
+            <board-game-preview class="is-small" :boardGame="boardGame">
+              <p class="has-text-centered">
+                <button class="button is-small is-primary"
+                          :class="{'is-loading': !isExcluded(boardGame) && boardGame.loading}"
+                          :disabled="isExcluded(boardGame)"
+                          @click="add(boardGame)">
+                    {{isExcluded(boardGame) ? $t('button.added') : $t('button.add')}}
+                </button>
+              </p>
+            </board-game-preview>
+          </div>
+        </div>
+        <hr>
+      </template>
 
       <b-field>
         <b-input :placeholder="$t('placeholder.search')" type="search" icon="search"
@@ -27,7 +44,7 @@
                 </button>
               </div>
           </div>
-          <hr>
+          <hr class="small-margin">
         </div>
 
         <template slot="empty">
@@ -45,22 +62,32 @@
 
 <script>
 import debounce from 'lodash.debounce';
+
+import BoardGamePreview from './BoardGamePreview';
+
 import BoardGame from '@/utils/api/BoardGame';
+import Library from '@/utils/api/Library';
 
 export default {
+  components: {BoardGamePreview},
   props: [
     'active',
-    'excludedIds'
+    'excludedIds',
+    'addFromLibrary'
   ],
   data() {
     return {
       data: [],
+      libraryGames: [],
+      filteredLibraryGames: [], // games not yet added to the board games list when opening the modal
       searchString: '',
       isFetching: false
     };
   },
   watch: {
     active() {
+      this.libraryGames.forEach(boardGame => boardGame.loading = false); // reinitialize loading state
+      this.filterLibraryGames();
       this.searchString = '';
       this.data = [];
     },
@@ -69,6 +96,10 @@ export default {
     }
   },
   methods: {
+    filterLibraryGames() {
+      this.filteredLibraryGames = this.libraryGames.filter(boardGame => !this.isExcluded(boardGame));
+    },
+
     searchBoardGames: debounce(async function() {
       let str = this.searchString;
       if(str.length < 3) {
@@ -79,7 +110,6 @@ export default {
       this.isFetching = true;
       try {
         this.data = await BoardGame.searchAll(str);
-        console.log(this.data);
       }
       catch(error) {
         console.log(error);
@@ -88,12 +118,20 @@ export default {
     }, 500),
 
     isExcluded(boardGame) {
-      return this.excludedIds.includes(Number(boardGame.id));
+      let id = Number(boardGame.bgg_id || boardGame.id);
+      return this.excludedIds.includes(id);
     },
 
     add(boardGame) {
       this.$set(boardGame, 'loading', true);
-      this.$emit('add', boardGame.id);
+      this.$emit('add', boardGame.bgg_id || boardGame.id);
+    }
+  },
+  async created() {
+    if(this.addFromLibrary) {
+      this.libraryGames = (await new Library().fetchGames()).map(item => item.board_game);
+      this.filterLibraryGames();
+      console.log(this.libraryGames);
     }
   }
 };
@@ -119,17 +157,17 @@ export default {
   }
 }
 
-hr {
+hr.small-margin {
   margin: 0.5em 0;
 }
-</style>
 
+.library-games {
+  max-width: 100%;
+  overflow: auto;
+}
 
-<style lang="scss">
-.add-board-game-modal {
-  .animation-content {
-    overflow: visible;
-  }
+.library-games .column {
+  max-width: 8em;
+  min-width: 8em;
 }
 </style>
-

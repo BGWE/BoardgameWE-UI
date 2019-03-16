@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <add-board-game-modal :active.sync="activeModal" :excludedIds="bggIdsUserGames"
+    <add-board-game-modal :active.sync="activeModal" :excludedIds="bggIdsUserGames" :addFromLibrary="addFromLibrary"
       @add="$emit('add', $event)">
     </add-board-game-modal>
   </div>
@@ -48,7 +48,8 @@ import AddBoardGameModal from './AddBoardGameModal';
 export default {
   props: [
     'boardGames',
-    'allBelongToUser' // if true, delete button available for all board game, if false, only available for boardGames in which belongsToUser is true
+    'allBelongToUser', // if true, delete button available for all board game, if false, only available for boardGames in which belongsToUser is true
+    'addFromLibrary'
   ],
   components: {
     BoardGamePreview,
