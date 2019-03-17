@@ -9,7 +9,7 @@ const guestOnly = async (to, from, next) => {
     next();
     return;
   }
-  next({name: 'home'});
+  next({name: 'login'});
 };
 
 const authenticatedOnly = async (to, from, next) => {
