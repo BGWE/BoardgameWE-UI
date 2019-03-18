@@ -62,6 +62,17 @@ export default class User extends Model {
   }
 
   /**
+   * Fetch user latest activities
+   * @param userId (Optional) Identifier of the user (default: user identifier)
+   * @returns {Object} Response from backend
+   */
+  static async fetchActivities(userId) {
+    const id = userId || this.id;
+    let {data} = await axios.get(`/user/${id}/activities`);
+    return data;
+  }
+
+  /**
    * [ADMIN] Fetch the listing of users with their status
    * @return {Array} List of users and their status.
    */
