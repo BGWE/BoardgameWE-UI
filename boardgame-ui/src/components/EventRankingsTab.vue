@@ -1,7 +1,8 @@
 <template>
     <div>
-      <div class="tile is-ancestor">
-        <div class="tile is-parent is-4">
+      <div class="columns">
+
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-won')}}</p>
             <RankingTable 
@@ -13,7 +14,7 @@
           </article>
         </div>
 
-        <div class="tile is-parent is-4">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-won-percentage')}}</p>
               <RankingTable 
@@ -25,7 +26,7 @@
           </article>
         </div>
 
-        <div class="tile is-parent is-4">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-played')}}</p>
               <RankingTable 
@@ -38,8 +39,8 @@
         </div>
       </div>
 
-      <div class="tile is-ancestor">
-        <div class="tile is-parent is-4">
+      <div class="columns">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.different-games')}}</p>
               <RankingTable 
@@ -51,7 +52,7 @@
           </article>
         </div>
 
-        <div class="tile is-parent is-4">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-lost')}}</p>
               <RankingTable 
@@ -63,7 +64,7 @@
           </article>
         </div>
 
-        <div class="tile is-parent is-4">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-lost-percentage')}}</p>
               <RankingTable 
@@ -76,8 +77,8 @@
         </div>
       </div>
 
-      <div class="tile is-ancestor">
-        <div class="tile is-parent is-4">
+      <div class="columns">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-last')}}</p>
               <RankingTable 
@@ -89,7 +90,7 @@
           </article>
         </div>
 
-        <div class="tile is-parent is-4">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-last-percentage')}}</p>
               <RankingTable 
@@ -101,7 +102,7 @@
           </article>
         </div>
 
-        <div class="tile is-parent is-4">
+        <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.gcb')}}</p>
               <RankingTable 
