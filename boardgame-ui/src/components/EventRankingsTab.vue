@@ -4,42 +4,36 @@
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-won')}}</p>
-            <div class="content">
-              <RankingTable 
+            <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_COUNT])"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-won-percentage')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_PROP], true)"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-played')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_COUNT_GAMES])"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
       </div>
@@ -48,42 +42,36 @@
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.different-games')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_COUNT_UNIQUE_GAMES])"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-lost')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_COUNT])"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-lost-percentage')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_PROP], true)"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
       </div>
@@ -92,42 +80,36 @@
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-last')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST])"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-last-percentage')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST_PROP], true)"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
 
         <div class="tile is-parent is-4">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.gcb')}}</p>
-            <div class="content">
               <RankingTable 
               :type="rankingTableType"
               :columns="columns"
               :data="formattedRanking(rankings[EVENT_RANKING_GCBGBG])"
               :onRowClass="onRowClass"
               :perPage="perPage"></RankingTable>
-            </div>
           </article>
         </div>
       </div>

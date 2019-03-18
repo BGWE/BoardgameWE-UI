@@ -4,7 +4,6 @@
       :data="data" 
       :mobile-cards=false
       :paginated="paginated"
-      :pagination-simple=true
       :per-page="perPage"
       :row-class="onRowClass"
       :loading="loading">
