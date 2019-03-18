@@ -20,7 +20,7 @@
       <b-loading :is-full-page="false" :active.sync="isFetching" />
       <section class="section" v-if="ongoingEvent">
         <router-link tag="button" class="button is-large is-fullwidth" :to="{name: 'event', params: {eventid: ongoingEvent.id}}">
-          <p>Ongoing: {{ongoingEvent.name}}</p> <span class="icon"><i class="fa fa-arrow-right"/></span>
+          <p>{{ongoingEvent.name}}</p> <span class="icon"><i class="fa fa-arrow-right"/></span>
         </router-link>
       </section>
 
