@@ -16,14 +16,15 @@
       </div>
     </section>
 
-    <div v-if="currentUser">
+    <div class="container">
+      <b-loading :is-full-page="false" :active.sync="isFetching" />
       <section class="section" v-if="ongoingEvent">
         <router-link tag="button" class="button is-large is-fullwidth" :to="{name: 'event', params: {eventid: ongoingEvent.id}}">
           <p>Ongoing: {{ongoingEvent.name}}</p> <span class="icon"><i class="fa fa-arrow-right"/></span>
         </router-link>
       </section>
 
-      <section class="section">
+      <section class="section" v-if=userStats>
         <div class="columns">
           <div class="column has-text-centered">
             <p class="heading">{{$t('home.stats.owned')}}</p>
@@ -43,7 +44,7 @@
           <div class="column has-text-centered" v-if="userStats.most_played.count > 0">
             <p class="heading">{{$t('home.stats.most_played')}}</p>
             <p class="title">{{userStats.most_played.board_game.name}}</p>
-            <p>({{userStats.owned}} {{$t('home.stats.times')}})</p>
+            <p>({{userStats.most_played.count}} {{$t('home.stats.times')}})</p>
           </div>
 
           <div class="column has-text-centered" v-if="userStats.most_played.count > 0">
@@ -53,31 +54,32 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" v-if="userActivities">
         <h2 class="subtitle">{{$t('home.recent-activities')}}</h2>
-        <div class="box">
-          <p>Played a lot...</p>
-        </div>
-
-        <div class="box">
-          <p>Played a lot...</p>
-        </div>
+        <ActivityBox v-for="index in userActivities.length" :key=index :activity=userActivities[index-1] ></ActivityBox>
       </section>
     </div>
   </div>
+
 </template>
 
 <script>
 import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
+import ActivityBox from '@/components/activities/ActivityBox';
 
 export default {
   name: 'HomePage',
   data() {
     return {
       userStats: null,
-      ongoingEvent: null
+      userActivities: null,
+      ongoingEvent: null,
+      isFetching: false
     };
+  },
+  components: {
+    ActivityBox
   },
   computed: {
     currentUser() {
@@ -88,11 +90,15 @@ export default {
     if (!this.currentUser) {
       return;
     }
-    this.userStats = await User.fetchStats(this.currentUser.id);
-    let ongoingEvents = await Event.fetchAll(true, true);
+    this.isFetching = true;
+    const id = this.currentUser.id;
+    this.userStats = await User.fetchStats(id);
+    this.userActivities = await User.fetchActivities(id);
+    let ongoingEvents = await Event.fetchAll(true, [id]);
     if (ongoingEvents.length > 0) {
       this.ongoingEvent = ongoingEvents[0];
     }
+    this.isFetching = false;
   }
 };
 </script>
@@ -107,8 +113,8 @@ export default {
   }
 
   .section {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 
   .level {
