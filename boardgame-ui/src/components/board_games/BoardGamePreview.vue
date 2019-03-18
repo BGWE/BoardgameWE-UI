@@ -6,8 +6,9 @@
     </div>
     <div class="card-content">
       <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
-      <p class="board-game-name">{{boardGame.name}}</p>
-      <p class="is-size-7 has-text-centered">({{boardGame.year_published}})</p>
+      <p class="board-game-name has-text-centered">{{boardGame.name}}</p>
+      <p class="board-game-year has-text-centered">({{boardGame.year_published}})</p>
+      <div class="board-game-slot"><slot></slot></div>
     </div>
   </div>
 </template>
@@ -21,7 +22,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .board-game-image {
   background-position: center center;
   background-repeat: no-repeat;
@@ -32,7 +33,10 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: center;
+}
+
+.board-game-year {
+  font-size: 0.75em;
 }
 
 .card-image {
@@ -48,5 +52,23 @@ export default {
   position: absolute;
   top: 0.3rem;
   right: 0.3rem;
+}
+
+.board-game-slot {
+  margin-top: 0.5em;
+}
+
+.card.is-small {
+  .card-content {
+    padding: 0.25em 0.75em;
+  }
+
+  .board-game-name {
+    font-size: 0.8em;
+  }
+
+  .board-game-year {
+    font-size: 0.6em;
+  }
 }
 </style>

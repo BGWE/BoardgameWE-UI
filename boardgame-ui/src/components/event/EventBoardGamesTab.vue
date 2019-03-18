@@ -2,7 +2,9 @@
   <div class="wrapper">
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <template v-if="!loading">
-      <board-game-list :board-games="boardGames" @add="addBoardGame" @delete="deleteBoardGame"></board-game-list>
+      <board-game-list :board-games="boardGames" :addFromLibrary="true"
+        @add="addBoardGame" @delete="deleteBoardGame">
+      </board-game-list>
     </template>
   </div>
 </template>

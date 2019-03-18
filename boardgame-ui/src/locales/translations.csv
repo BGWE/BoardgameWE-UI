@@ -64,3 +64,5 @@ event.rankings.gcb,Great Canadian Blitz,
 event.rankings.table.position,#,
 event.rankings.table.player,Player
 event.rankings.table.score,Score,
+library.title,My library,
+board-game.add-modal.from-library,From my library,
