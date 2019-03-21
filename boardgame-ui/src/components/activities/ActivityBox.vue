@@ -5,7 +5,7 @@
                 <figure class="is-64x64"><span><i class="fa-3x far fa-calendar-alt"></i></span></figure>
             </div>
             <div class="media-content">
-                {{$t("activity.event.join")}} <strong>{{activity.event.name}}</strong>.
+                <i18n path="activity.event.join"> <strong place="eventName">{{activity.event.name}}</strong> </i18n>.
                 <br/>
                 <p class="activity-datetime">{{activity.datetime}}</p>
             </div>
@@ -15,7 +15,7 @@
                 <figure class="image is-64x64"><img class="is-rounded" :src=activity.board_game.thumbnail /></figure>
             </div>
             <div class="media-content">
-                {{$t("activity.game.played")}} <strong>{{activity.board_game.name}}</strong>.
+                <i18n path="activity.game.played"> <strong place="gameName">{{activity.board_game.name}}</strong> </i18n>.
                 <br/>
                 <p class="activity-datetime">{{activity.datetime}}</p>
             </div>
@@ -25,7 +25,9 @@
                 <figure class="image is-64x64"><img class="is-rounded" :src=activity.board_game.thumbnail /></figure>
             </div>
             <div class="media-content">
-                {{$t("activity.library.added")}} <strong>{{activity.board_game.name}}</strong> {{$t("activity.library.library")}}.
+                <i18n path="activity.library.added_game"> 
+                    <strong place="gameName">{{activity.board_game.name}}</strong> 
+                </i18n>.
                 <br/>
                 <p class="activity-datetime">{{activity.datetime}}</p>
             </div>

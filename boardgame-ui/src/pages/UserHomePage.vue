@@ -3,14 +3,15 @@
     <section class="hero is-dark">
       <div class="hero-body">
         <div class="container">
+
           <h1 class="title">
-            {{$t('home.hello')}} {{ currentUser ? currentUser.name : "" }} !
-            <span class="icon">
-              <i class="hero-smile fa fa-smile"></i>
-            </span>
+            <i18n path="home.hello"></i18n> {{currentUser.name}} !
+            <span class="icon"><i class="hero-smile fa fa-smile"></i></span>
           </h1>
           <h2 class="subtitle">
-            {{$t('home.welcome')}} {{$t('app.appName')}}.
+            <i18n path="home.welcome">
+              <i18n place="where" path="app.appName"></i18n>
+            </i18n>
           </h2>
         </div>
       </div>
@@ -27,35 +28,35 @@
       <section class="section" v-if=userStats>
         <div class="columns">
           <div class="column has-text-centered">
-            <p class="heading">{{$t('home.stats.owned')}}</p>
+            <p class="heading"><i18n path="home.stats.owned" /></p>
             <p class="title">{{userStats.owned}}</p>
           </div>
 
           <div class="column has-text-centered">
-            <p class="heading">{{$t('home.stats.played')}}</p>
+            <p class="heading"><i18n path="home.stats.played" /></p>
             <p class="title">{{userStats.played}}</p>
           </div>
 
           <div class="column has-text-centered">
-            <p class="heading">{{$t('home.stats.attended')}}</p>
+            <p class="heading"><i18n path="home.stats.attended" /></p>
             <p class="title">{{userStats.attended}}</p>
           </div>
 
           <div class="column has-text-centered" v-if="userStats.most_played.count > 0">
-            <p class="heading">{{$t('home.stats.most_played')}}</p>
+            <p class="heading"><i18n path="home.stats.most_played" /></p>
             <p class="title">{{userStats.most_played.board_game.name}}</p>
-            <p>({{userStats.most_played.count}} {{$t('home.stats.times')}})</p>
+            <p>({{userStats.most_played.count}} <i18n path="home.stats.times" />)</p>
           </div>
 
           <div class="column has-text-centered" v-if="userStats.most_played.count > 0">
-            <p class="heading">{{$t('home.stats.time_played')}}</p>
-            <p class="title">{{userStats.play_time}} {{$t('home.stats.minutes')}}</p>
+            <p class="heading"><i18n path="home.stats.time_played" /></p>
+            <p class="title">{{userStats.play_time}} <i18n path="home.stats.minutes" /></p>
           </div>
         </div>
       </section>
 
       <section class="section" v-if="userActivities">
-        <h2 class="subtitle">{{$t('home.recent-activities')}}</h2>
+        <h2 class="subtitle"><i18n path="home.recent-activities" /></h2>
         <activity-box v-for="index in userActivities.length" :key=index :activity=userActivities[index-1] ></activity-box>
       </section>
     </div>
