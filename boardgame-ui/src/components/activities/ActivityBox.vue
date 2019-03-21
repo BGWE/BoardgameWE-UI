@@ -7,7 +7,7 @@
             <div class="media-content">
                 <i18n path="activity.event.join"> <strong place="eventName">{{activity.event.name}}</strong> </i18n>.
                 <br/>
-                <p class="activity-datetime">{{activity.datetime}}</p>
+                <bgc-datetime :datetime=activity.datetime class="activity-datetime" />
             </div>
         </article>
         <article class="media" v-if="activity.type === 'game/play'">
@@ -17,7 +17,7 @@
             <div class="media-content">
                 <i18n path="activity.game.played"> <strong place="gameName">{{activity.board_game.name}}</strong> </i18n>.
                 <br/>
-                <p class="activity-datetime">{{activity.datetime}}</p>
+                <bgc-datetime :datetime=activity.datetime class="activity-datetime" />
             </div>
         </article>
         <article class="media" v-if="activity.type === 'library/add'">
@@ -25,11 +25,11 @@
                 <figure class="image is-64x64"><img class="is-rounded" :src=activity.board_game.thumbnail /></figure>
             </div>
             <div class="media-content">
-                <i18n path="activity.library.added_game"> 
-                    <strong place="gameName">{{activity.board_game.name}}</strong> 
+                <i18n path="activity.library.added_game">
+                    <strong place="gameName">{{activity.board_game.name}}</strong>
                 </i18n>.
                 <br/>
-                <p class="activity-datetime">{{activity.datetime}}</p>
+                <bgc-datetime :datetime=activity.datetime class="activity-datetime" />
             </div>
         </article>
     </div>
@@ -38,8 +38,11 @@
 
 
 <script>
+import BgcDatetime from '@/components/layout/BgcDatetime';
+
 export default {
   name: 'ActivityBox',
+  components: {BgcDatetime},
   props: {
     activity: {
       required: true
