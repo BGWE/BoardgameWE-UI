@@ -1,7 +1,7 @@
 <template>
   <div>
     <user-home-page v-if="currentUser"></user-home-page>
-    <guest-home-page></guest-home-page>
+    <guest-home-page v-else></guest-home-page>
   </div>
 </template>
 
