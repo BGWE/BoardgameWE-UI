@@ -35,6 +35,12 @@ const routes = [
     beforeEnter: guestOnly
   },
   {
+    name: 'register',
+    path: '/register',
+    component: require('./pages/LoginPage.vue').default,
+    beforeEnter: guestOnly
+  },
+  {
     name: 'events',
     path: '/events',
     component: require('./pages/EventsPage.vue').default,
@@ -55,7 +61,7 @@ const routes = [
   {
     name: 'preferences',
     path: '/preferences',
-    component: require('./components/PrefsPage.vue').default,
+    component: require('./pages/PrefsPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {

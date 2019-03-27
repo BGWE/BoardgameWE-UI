@@ -1,32 +1,80 @@
 <template>
-  <div class="box">
-    <h1 class="title">{{$t('login.title')}}</h1>
-    <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
-    <p v-else-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
-    <form @submit.prevent="login()">
-      <b-field :label="$t('label.username')">
-        <b-input v-model="username"></b-input>
-      </b-field>
-      <b-field :label="$t('label.password')">
-        <b-input v-model="password" type="password"></b-input>
-      </b-field>
-      <p class="control">
-        <button class="button is-primary is-fullwidth">{{$t('button.login')}}</button>
-      </p>
-    </form>
-  </div>
+  <section class="section">
+    <div class="box">
+      <h1 class="title">{{titleText}}</h1>
+      <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
+      <p v-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
+      <form @submit.prevent="validateBeforeSubmit">
+        <b-field  :label="$t('label.username')"
+                  :type="{'is-danger': errors.has('username')}"
+                  :message="errors.first('username')">
+          <b-input v-model="user.username" v-validate="'required'" name="username"></b-input>
+        </b-field>
+        <b-field  :label="$t('label.password')"
+                  :type="{'is-danger': errors.has('password')}"
+                  :message="errors.first('password')">
+          <b-input v-model="user.password" type="password" v-validate="{ required: true, min: this.registering ? 8 : 0 }" name="password" ref="password"></b-input>
+        </b-field>
+        <b-field  v-if="registering" :label="$t('label.confirmPassword')"
+                  :type="{'is-danger': errors.has('confirm-password')}"
+                  :message="errors.first('confirm-password')">
+          <b-input v-model="confirmPassword" type="password" v-validate="'required|confirmed:password'" name="password" :disabled="!user.password"></b-input>
+        </b-field>
+        <b-field v-if="registering" :label="$t('label.name')"
+                 :type="{'is-danger': errors.has('name')}"
+                 :message="errors.first('name')">
+          <b-input v-model="user.name" v-validate="'required|alpha'" name="name"></b-input>
+        </b-field>
+        <b-field v-if="registering" :label="$t('label.surname')"
+                 :type="{'is-danger': errors.has('surname')}"
+                 :message="errors.first('surname')">
+          <b-input v-model="user.surname" v-validate="'required|alpha'" name="surname"></b-input>
+        </b-field>
+        <b-field v-if="registering" :label="$t('label.email')"
+                 :type="{'is-danger': errors.has('email')}"
+                 :message="errors.first('email')">
+          <b-input v-model="user.email" type="email" v-validate="'required|email'" name="email"></b-input>
+        </b-field>
+        <p class="control">
+          <button class="button is-primary is-fullwidth">
+            {{submitButtonText}}
+          </button>
+        </p>
+      </form>
+      <button class="button is-light is-fullwidth" v-on:click="toggleRegister">
+        {{toggleButtonText}}
+      </button>
+    </div>
+  </section>
 </template>
 
 <script>
+import Vue from 'vue'
+import VeeValidate from 'vee-validate'
+import User from "../utils/api/User";
+
+Vue.use(VeeValidate, {
+  events: ''
+})
+
 export default {
   name: 'LoginPage',
+
   data() {
     return {
-      username: '',
-      password: '',
-      error: false
+      user : {
+        username: '',
+        password: '',
+        surname: '',
+        name: '',
+        email: '',
+      },
+      confirmPassword:'',
+      error: false,
+      registering: false
     };
   },
+
   computed: {
     hasNext() {
       return this.$route.query.next != null;
@@ -35,9 +83,19 @@ export default {
       return this.$route.query.next || {name: 'home'};
     },
     credentials() {
-      return {username: this.username, password: this.password};
+      return {username: this.user.username, password: this.user.password};
+    },
+    titleText() {
+      return this.registering ? this.$t('login.title.register') : this.$t('login.title.login');
+    },
+    submitButtonText() {
+      return this.registering ? this.$t('button.register') : this.$t('button.login');
+    },
+    toggleButtonText() {
+      return this.registering ? this.$t('button.toggleLogin') : this.$t('button.toggleRegister');
     }
   },
+
   methods: {
     async login() {
       try {
@@ -48,6 +106,33 @@ export default {
         console.log(error);
         this.error = true;
       }
+    },
+
+    async register() {
+      try {
+        await User.signUp(this.user.username, this.user.password, this.user.surname, this.user.name, this.user.email);
+      }
+      catch (error) {
+        console.log(error);
+        this.error = true;
+      }
+    },
+
+    validateBeforeSubmit() {
+      this.$validator.validateAll().then(async (valid) => {
+        if (valid) {
+          if (this.registering) {
+            this.register();
+            //this.$router.push();
+          } else {
+            this.login();
+          }
+        }
+      });
+    },
+
+    toggleRegister() {
+      this.registering = !this.registering;
     }
   }
 };
