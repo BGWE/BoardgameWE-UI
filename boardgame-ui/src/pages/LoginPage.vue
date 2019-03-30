@@ -20,6 +20,7 @@
                   :message="errors.first('confirm-password')">
           <b-input v-model="confirmPassword" type="password" v-validate="'required|confirmed:password'" name="password" :disabled="!user.password"></b-input>
         </b-field>
+        <p v-if="registering">{{$t('label.passwordHint')}}</p>
         <b-field v-if="registering" :label="$t('label.name')"
                  :type="{'is-danger': errors.has('name')}"
                  :message="errors.first('name')">
@@ -122,10 +123,26 @@ export default {
       this.$validator.validateAll().then(async (valid) => {
         if (valid) {
           if (this.registering) {
-            this.register();
-            //this.$router.push();
+            try {
+              this.register();
+              this.$toast.open({
+                message: this.$t('login.toast.register.success'),
+                type: 'is-success',
+                position: 'is-bottom'
+              });
+              this.toggleRegister();
+            }
+            catch (e) {
+              console.log(e);
+            }
           } else {
-            this.login();
+            try {
+              console.log("Trying to login");
+              this.login();
+            }
+            catch (e) {
+              console.log(e);
+            }
           }
         }
       });
