@@ -81,6 +81,7 @@ export default {
     
     //TODO Should we load those there?
     this.games = await this.event.fetchGames(); 
+    console.log('games ', this.games);
     this.rankings = await this.event.fetchRankings(); 
   }
 };

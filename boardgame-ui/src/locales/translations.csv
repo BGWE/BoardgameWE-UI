@@ -33,5 +33,6 @@ event.rankings.games-last,Games as last,
 event.rankings.games-last-percentage,Games as last (%),
 event.rankings.gcb,Great Canadian Blitz,
 event.rankings.table.position,#,
+event.rankings.table.win,Win,
 event.rankings.table.player,Player
 event.rankings.table.score,Score,

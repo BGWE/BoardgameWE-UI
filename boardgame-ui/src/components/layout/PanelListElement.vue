@@ -1,11 +1,10 @@
 <template>
   <a 
-    v-on:click="elementClicked()"
     class="panel-block"
     v-bind:class="{expanded: isExpanded}">
 
     <div class="card">
-      <header class="card-header">
+      <header class="card-header" v-on:click="elementClicked()">
             <p class="card-header-title">
               <slot name="title"></slot>
             </p>
@@ -42,7 +41,7 @@ export default {
       // console.log('selected %s', index);
       this.isExpanded = !this.isExpanded;
     },
-  },
+  }
 }
 </script>
 

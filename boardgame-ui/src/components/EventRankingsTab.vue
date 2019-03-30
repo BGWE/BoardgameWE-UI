@@ -7,10 +7,8 @@
             <p class="title">{{$t('event.rankings.games-won')}}</p>
             <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_COUNT])"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_COUNT])"></RankingTable>
           </article>
         </div>
 
@@ -19,10 +17,8 @@
             <p class="title">{{$t('event.rankings.games-won-percentage')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_PROP], true)"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_PROP], true)"></RankingTable>
           </article>
         </div>
 
@@ -31,10 +27,8 @@
             <p class="title">{{$t('event.rankings.games-played')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_COUNT_GAMES])"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_COUNT_GAMES])"></RankingTable>
           </article>
         </div>
       </div>
@@ -45,10 +39,8 @@
             <p class="title">{{$t('event.rankings.different-games')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_COUNT_UNIQUE_GAMES])"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_COUNT_UNIQUE_GAMES])"></RankingTable>
           </article>
         </div>
 
@@ -57,10 +49,8 @@
             <p class="title">{{$t('event.rankings.games-lost')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_COUNT])"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_COUNT])"></RankingTable>
           </article>
         </div>
 
@@ -69,10 +59,8 @@
             <p class="title">{{$t('event.rankings.games-lost-percentage')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_PROP], true)"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_PROP], true)"></RankingTable>
           </article>
         </div>
       </div>
@@ -83,10 +71,8 @@
             <p class="title">{{$t('event.rankings.games-last')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST])"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST])"></RankingTable>
           </article>
         </div>
 
@@ -95,10 +81,8 @@
             <p class="title">{{$t('event.rankings.games-last-percentage')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST_PROP], true)"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST_PROP], true)"></RankingTable>
           </article>
         </div>
 
@@ -107,10 +91,8 @@
             <p class="title">{{$t('event.rankings.gcb')}}</p>
               <RankingTable 
               :type="rankingTableType"
-              :columns="columns"
-              :data="formattedRanking(rankings[EVENT_RANKING_GCBGBG])"
-              :onRowClass="onRowClass"
-              :perPage="perPage"></RankingTable>
+              rankingMethod='POINTS_HIGHER_BETTER'
+              :data="formattedRanking(rankings[EVENT_RANKING_GCBGBG])"></RankingTable>
           </article>
         </div>
       </div>
@@ -120,9 +102,6 @@
 
 <script>
 import RankingTable from '@/components/layout/RankingTable';
-import * as Constants from '@/utils/constants';
-
-
 
 export default {
   components: {
@@ -137,43 +116,7 @@ export default {
 
   computed: {
     rankingTableType: () => {
-      return Constants.RANKING_TABLE_TYPE_RANKED;
-    },
-
-    columns() {
-      console.log(this);
-      return [
-        {
-          field: 'position',
-          label: this.$t('event.rankings.table.position'),
-          formatter: (value) => {
-            if (value > 3) {
-              return `<span class="tag">${value}</span>`;
-            }
-
-            let winnerClass = null;
-            if (value == 1) {
-              winnerClass = 'has-background-gold';
-            }
-            else if (value == 2) {
-              winnerClass = 'has-background-silver';
-            }
-            else if (value == 3) {
-              winnerClass = 'has-background-bronze';
-            }
-
-            return `<span class="tag ${winnerClass} has-text-white">${value}</span>`;
-          }
-        },
-        {
-          field: 'player',
-          label: this.$t('event.rankings.table.player')
-        },
-        {
-          field: 'score',
-          label: this.$t('event.rankings.table.score')
-        },
-      ];
+      return 'POINTS_HIGHER_BETTER';
     },
 
     EVENT_RANKING_COUNT_GAMES: () => 'count_games',
@@ -185,8 +128,6 @@ export default {
     EVENT_RANKING_IS_LAST_PROP: () => 'is_last_prop',
     EVENT_RANKING_VICTORY_COUNT: () => 'victory_count',
     EVENT_RANKING_VICTORY_PROP: () => 'victory_prop',
-
-    perPage: () => 5
   },
 
   methods: {
@@ -217,12 +158,6 @@ export default {
         };
       }));
     }, 
-
-    onRowClass: (row) => {
-      if (row.position === 1 || row.position === 2 || row.position === 3) {
-        return 'has-text-weight-semibold has-background-light';
-      }
-    }
   }
 };
 </script>
