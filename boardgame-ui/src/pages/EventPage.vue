@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="event">
     <section class="hero is-primary is-bold">
         <div class="hero-body">
             <div class="container">
@@ -40,11 +40,11 @@
       </b-tab-item>
 
       <b-tab-item :label="$t('event.tab.boardgames')">
-
+        <event-board-games-tab :event="event"></event-board-games-tab>
       </b-tab-item>
 
       <b-tab-item :label="$t('event.tab.games')">
-        <EventGamesTab v-if="games.length > 0" :games="games"></EventGamesTab>
+        <event-games-tab v-if="games.length > 0" :games="games"></event-games-tab>
       </b-tab-item>
 
       <b-tab-item :label="$t('event.tab.rankings')">
@@ -59,30 +59,32 @@
 </template>
 
 <script>
-import EventGamesTab from '@/components/EventGamesTab';
-import EventRankingsTab from '@/components/EventRankingsTab';
+import EventGamesTab from '@/components/event/EventGamesTab';
+import EventBoardGamesTab from '@/components/event/EventBoardGamesTab';
+import EventRankingsTab from '@/components/event/EventRankingsTab';
 import Event from '@/utils/api/Event';
 
 export default {
+  components: {
+    EventGamesTab,
+    EventBoardGamesTab,
+    EventRankingsTab
+  },
   data() {
     return {
       activeTab: 0,
-      event: {},
+      event: null,
       games: [],
       rankings: []
     };
   },
-  components: {
-    EventGamesTab,
-    EventRankingsTab
-  },
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
-    
+
     //TODO Should we load those there?
-    this.games = await this.event.fetchGames(); 
-    console.log('games ', this.games);
-    this.rankings = await this.event.fetchRankings(); 
+
+    this.games = await this.event.fetchGames();
+    this.rankings = await this.event.fetchRankings();
   }
 };
 </script>

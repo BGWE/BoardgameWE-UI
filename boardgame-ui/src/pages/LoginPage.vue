@@ -54,7 +54,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .box {
   max-width: 500px;
   margin: auto;
