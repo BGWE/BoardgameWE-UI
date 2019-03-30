@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "yarn watch-translations & vue-cli-service serve",
-    "build": "npm run translations2json && vue-cli-service build",
+    "serve": "yarn watch-translations & ./node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
+    "build": "npm run translations2json && ./node_modules/@vue/cli-service/bin/vue-cli-service.js build",
     "lint": "vue-cli-service lint",
-    "watch-translations": "onchange -i 'src/locales/translations.csv' -- yarn translations2json",
-    "translations2json": "i18n-csv2json-cli --from src/locales/translations.csv --to src/locales/json --format"
+    "watch-translations": "./node_modules/onchange/cli.js -i 'src/locales/translations.csv' -- yarn translations2json",
+    "translations2json": "./node_modules/i18n-csv2json-cli/bin/main.js --from src/locales/translations.csv --to src/locales/json --format"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.7.2",
