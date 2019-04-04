@@ -16,6 +16,9 @@ Vue.use(Buefy, {defaultIconPack: 'fas'});
 import axios from 'axios';
 axios.defaults.baseURL = process.env.VUE_APP_API;
 
+import VueYoutube from 'vue-youtube';
+Vue.use(VueYoutube);
+
 Vue.config.productionTip = false;
 
 new Vue({

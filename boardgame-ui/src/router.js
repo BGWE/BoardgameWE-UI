@@ -53,6 +53,11 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'boardgame',
+    path: '/boardgame/:id',
+    component: require('./pages/BoardGamePage.vue').default
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./pages/NotFoundPage.vue').default,
