@@ -26,6 +26,8 @@ const actions = {
       return;
     }
 
+    commit('setInitialized');
+
     let token = window.localStorage.accessToken;
     if(token == null) {
       return;
@@ -33,7 +35,6 @@ const actions = {
 
     axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
     await dispatch('fetchUser');
-    commit('setInitialized');
   },
 
   async login({dispatch}, {username, password}) {
@@ -48,7 +49,7 @@ const actions = {
 
     try {
       user = await User.fetchCurrent();
-    } 
+    }
     catch (e) {
       console.log('Error while fetching current user.');
 
@@ -56,7 +57,7 @@ const actions = {
       commit('setCurrentUser', null);
       return;
     }
-    
+
     commit('setCurrentUser', user);
   },
 
