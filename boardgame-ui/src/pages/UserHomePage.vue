@@ -57,7 +57,7 @@
 
       <section class="section" v-if="userActivities">
         <h2 class="subtitle"><i18n path="home.recent-activities" /></h2>
-        <activity-box v-for="index in userActivities.length" :key=index :activity=userActivities[index-1] ></activity-box>
+        <activity-box v-for="index in userActivities.length" :key="index" :activity="userActivities[index-1]" />
       </section>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default {
       userStats: null,
       userActivities: null,
       ongoingEvent: null,
-      isFetching: false
+      isFetching: true
     };
   },
   components: {
@@ -88,7 +88,6 @@ export default {
     }
   },
   async created() {
-    this.isFetching = true;
     const id = this.currentUser.id;
     this.userStats = await User.fetchStats(id);
     this.userActivities = await User.fetchActivities(id);

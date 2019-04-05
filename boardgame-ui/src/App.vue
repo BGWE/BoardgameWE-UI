@@ -4,7 +4,7 @@
 
     <div class="app-content">
       <div class="container">
-        <router-view></router-view>
+        <router-view v-if="initialized"></router-view>
       </div>
     </div>
   </div>
@@ -17,6 +17,11 @@ export default {
   name: 'app',
   components: {
     LayoutNavbar
+  },
+  computed: {
+    initialized() {
+      return this.$store.state.initialized;
+    }
   },
   created() {
     this.$store.dispatch('initializeStore');
