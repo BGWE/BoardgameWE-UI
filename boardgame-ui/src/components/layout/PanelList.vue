@@ -1,12 +1,13 @@
 <template>
   <div class="panel">
-    <a 
+    <a
       v-for="(el, index) in elements"
       v-on:click="elementSelected(index)"
       class="panel-block"
       v-bind:class="{expanded: isElementExpanded(index)}"
       :key="index">
         <div class="card">
+           <figure class="image is-64x64" :style="{backgroundImage: `url('${el.image}')`}"></figure>
           <header class="card-header">
             <p class="card-header-title">
               {{el.title}}
@@ -77,14 +78,31 @@ export default {
     max-width: 40em;
     display: flex;
     justify-content: center;
+
+    margin-bottom: 1.5em;
   }
 
   .panel-block:hover {
     background-color: transparent;
   }
 
-  .expanded {
-    margin-top: 1.5em;
-    margin-bottom: 1.5em;
+  .card-header {
+    padding-left: 90px;
+  }
+
+  figure.image {
+    text-align: center;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 32px;
+    position: absolute;
+    left: 15px;
+    top: 10px;
+  }
+
+  .card {
+    width: 600px;
+    margin: auto;
   }
 </style>

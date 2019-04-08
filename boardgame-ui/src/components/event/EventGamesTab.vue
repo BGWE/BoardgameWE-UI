@@ -18,17 +18,18 @@ export default {
   props: ['games'],
 
   computed: {
-    
+
   },
 
   methods: {
     formatGamesToDisplay: function() {
-      
+
       console.log('games ', this.games);
 
       let ret = this.games.map(game => {
         return {
           title: game.board_game.name,
+          image: game.board_game.thumbnail,
           footer: {
             left: `<time datetime="${game.createdAt}" class="is-size-7">${Helper.formatDatetime(game.createdAt)}</time>`,
           }
@@ -40,7 +41,7 @@ export default {
   },
 
   async created() {
-    this.event = await Event.fetch(this.$route.params.eventid);    
+    this.event = await Event.fetch(this.$route.params.eventid);
   }
 };
 </script>
