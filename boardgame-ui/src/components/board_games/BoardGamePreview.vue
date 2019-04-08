@@ -6,7 +6,9 @@
     </div>
     <div class="card-content">
       <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
-      <p class="board-game-name has-text-centered">{{boardGame.name}}</p>
+      <p class="board-game-name has-text-centered">
+        <router-link :to="{name: 'boardgame', params: {id: boardGame.id}}">{{boardGame.name}}</router-link>
+      </p>
       <p class="board-game-year has-text-centered">({{boardGame.year_published}})</p>
       <div class="board-game-slot"><slot></slot></div>
     </div>

@@ -39,7 +39,7 @@ export default class Library {
     if(this.userId != null) {
       throw new Error('Cannot add games in another user library');
     }
-    let {data} = await axios.post(this.uri, {games: gamesIds});
+    let {data} = await axios.post(this.uri, {board_games: gamesIds});
     return data;
   }
 
@@ -52,7 +52,7 @@ export default class Library {
     if(this.userId != null) {
       throw new Error('Cannot remove games from another user library');
     }
-    let {data} = await axios.delete(this.uri, {data: {games: gamesIds}});
+    let {data} = await axios.delete(this.uri, {data: {board_games: gamesIds}});
     return data;
   }
 

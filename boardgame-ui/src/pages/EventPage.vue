@@ -82,6 +82,7 @@ export default {
     this.event = await Event.fetch(this.$route.params.eventid);
 
     //TODO Should we load those there?
+
     this.games = await this.event.fetchGames();
     this.rankings = await this.event.fetchRankings();
   }
