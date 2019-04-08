@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="columns">
+      <div class="column is-full">
         <PanelList>
           <PanelListElement
             v-for="(game, index) in games"
@@ -16,11 +17,13 @@
             </template>
 
             <template v-slot:footer>
-              <time :datetime="game.createdAt" class="is-size-7">{{formatDatetime(game.createdAt)}}</time>
+              <h6 class="title is-6"><time :datetime="game.createdAt" class="is-size-7">{{formatDatetime(game.createdAt)}}</time></h6>
+              
             </template>
 
           </PanelListElement>
         </PanelList>
+      </div>
     </div>
 </template>
 
@@ -51,10 +54,8 @@ export default {
 
       for (let i = 0; i < players.length; i++) {
         const player = players[i];
-        console.log(player);
         const name = `${player.user.name} ${player.user.surname}`;
         const score = player.score;
-        console.log(score);
 
         if (game.ranking_method === 'WIN_LOSE') {
           data.push({
@@ -70,9 +71,6 @@ export default {
           })
         }
       }
-
-      console.log(data);
-
       return data;
     }
   },

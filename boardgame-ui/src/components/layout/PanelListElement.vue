@@ -1,46 +1,56 @@
 <template>
-  <a 
-    class="panel-block"
-    v-bind:class="{expanded: isExpanded}">
 
-    <div class="card">
-      <header class="card-header" v-on:click="elementClicked()">
-            <p class="card-header-title">
+  <b-collapse 
+    class="card" 
+    aria-id="contentIdForA11y3" 
+    :open="false"
+    v-bind:class="{opened: isOpen}"
+    v-on:open="open()"
+    v-on:close="close()">
+      <div
+          slot="trigger" 
+          slot-scope="props"
+          class="card-header"
+          role="button"
+          aria-controls="contentIdForA11y3">
+          <p class="card-header-title">
               <slot name="title"></slot>
-            </p>
-            <a href="#" class="card-header-icon" aria-label="more options">
-              <span class="icon">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-            </a>
-      </header>
-
-      <div class="card-content" v-if="isExpanded">
-          <slot name="content"></slot>
+          </p>
+          <a class="card-header-icon">
+              <b-icon
+                  :icon="props.open ? 'menu-down' : 'menu-up'">
+              </b-icon>
+          </a>
       </div>
-
+      <div class="card-content">
+              <slot name="content"></slot>
+      </div>
       <footer class="card-footer">
-        <div class="card-footer-item">
-          <slot name="footer"></slot>
-        </div>
+          <slot class="card-footer-item" name="footer"></slot>
       </footer>
-    </div>
-  </a>
+  </b-collapse>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      isExpanded: false
+      isOpen: false
     }
   },
 
   methods: {
-    elementClicked: function () {
-      // console.log('selected %s', index);
-      this.isExpanded = !this.isExpanded;
+    // elementClicked: function () {
+    //   // console.log('selected %s', index);
+    //   this.isExpanded = !this.isExpanded;
+    // },
+    open() {
+      this.isOpen = true;
     },
+
+    close(){  
+      this.isOpen = false;
+    }
   }
 }
 </script>

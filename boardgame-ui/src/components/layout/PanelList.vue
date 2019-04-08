@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <slot></slot>
-  </div>
+  </div>  
 </template>
 
 <script>
@@ -11,5 +11,12 @@ export default {
 </script>
 
 <style scoped>
+  .panel > .opened {
+    margin-top: 20px;
+    margin-bottom: 20px
+  }
 
+  .panel {
+    max-width: 600px;
+  }
 </style>
