@@ -40,9 +40,9 @@
             </a>
 
             <div class="navbar-dropdown">
-              <a class="navbar-item">
-                {{$t('navbar.preferences')}}
-              </a>
+                <router-link :to="{name: 'preferences'}" class="navbar-item">
+                  {{$t('navbar.preferences')}}
+                </router-link>
               <a @click="logout()" class="navbar-item">
                 {{$t('navbar.log-out')}}
               </a>
