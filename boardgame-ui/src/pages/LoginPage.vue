@@ -124,7 +124,7 @@ export default {
         if (valid) {
           if (this.registering) {
             try {
-              this.register();
+              await this.register();
               this.$toast.open({
                 message: this.$t('login.toast.register.success'),
                 type: 'is-success',
