@@ -4,34 +4,48 @@
       <h1 class="title">{{titleText}}</h1>
       <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
       <p v-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
+
       <form @submit.prevent="validateBeforeSubmit">
         <b-field  :label="$t('label.username')"
                   :type="{'is-danger': errors.has('username')}"
                   :message="errors.first('username')">
           <b-input v-model="user.username" v-validate="'required'" name="username"></b-input>
         </b-field>
-        <b-field  :label="$t('label.password')"
+        <b-field  password-reveal
+                  :label="$t('label.password')"
                   :type="{'is-danger': errors.has('password')}"
                   :message="errors.first('password')">
-          <b-input v-model="user.password" type="password" v-validate="{ required: true, min: this.registering ? 8 : 0 }" name="password" ref="password"></b-input>
+          <b-input v-model="user.password"
+                   password-reveal type="password"
+                   v-validate="{ required: true, min: this.registering ? 8 : 0 }"
+                   name="password" ref="password"></b-input>
         </b-field>
-        <b-field  v-if="registering" :label="$t('label.confirmPassword')"
+
+        <b-field  v-if="registering"
+                  :label="$t('label.confirmPassword')"
                   :type="{'is-danger': errors.has('confirm-password')}"
                   :message="errors.first('confirm-password')">
-          <b-input v-model="confirmPassword" type="password" v-validate="'required|confirmed:password'" name="password" :disabled="!user.password"></b-input>
+          <b-input v-model="confirmPassword"
+                   password-reveal type="password"
+                   v-validate="'required|confirmed:password'"
+                   name="password"
+                   :disabled="!user.password"></b-input>
         </b-field>
         <p v-if="registering">{{$t('label.passwordHint')}}</p>
-        <b-field v-if="registering" :label="$t('label.name')"
+        <b-field v-if="registering"
+                 :label="$t('label.name')"
                  :type="{'is-danger': errors.has('name')}"
                  :message="errors.first('name')">
           <b-input v-model="user.name" v-validate="'required|alpha'" name="name"></b-input>
         </b-field>
-        <b-field v-if="registering" :label="$t('label.surname')"
+        <b-field v-if="registering"
+                 :label="$t('label.surname')"
                  :type="{'is-danger': errors.has('surname')}"
                  :message="errors.first('surname')">
           <b-input v-model="user.surname" v-validate="'required|alpha'" name="surname"></b-input>
         </b-field>
-        <b-field v-if="registering" :label="$t('label.email')"
+        <b-field v-if="registering"
+                 :label="$t('label.email')"
                  :type="{'is-danger': errors.has('email')}"
                  :message="errors.first('email')">
           <b-input v-model="user.email" type="email" v-validate="'required|email'" name="email"></b-input>
@@ -42,21 +56,17 @@
           </button>
         </p>
       </form>
+
       <button class="button is-light is-fullwidth" v-on:click="toggleRegister">
         {{toggleButtonText}}
       </button>
+
     </div>
   </section>
 </template>
 
 <script>
-import Vue from 'vue'
-import VeeValidate from 'vee-validate'
-import User from "../utils/api/User";
-
-Vue.use(VeeValidate, {
-  events: ''
-})
+import User from '../utils/api/User';
 
 export default {
   name: 'LoginPage',
@@ -135,9 +145,10 @@ export default {
             catch (e) {
               console.log(e);
             }
-          } else {
+          }
+          else {
             try {
-              console.log("Trying to login");
+              console.log('Trying to login');
               this.login();
             }
             catch (e) {

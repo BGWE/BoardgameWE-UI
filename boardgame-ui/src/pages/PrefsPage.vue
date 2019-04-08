@@ -4,6 +4,7 @@
     <b-loading v-if="isLoading"></b-loading>
     <section v-if="currentUser" class="section">
       <h2 class="title">{{$t('preferences.sections.account')}}</h2>
+
       <form @submit.prevent="updatePersonalInfo('form-personal')" class="settings" data-vv-scope="form-personal">
         <b-field :label="$t('label.username')"
                  :type="{'is-danger': errors.has('form-personal.username')}"
@@ -46,36 +47,31 @@
                  :message="errors.first('form-password.new-password')">
           <b-input type="password" password-reveal v-model="newPassword" name="new-password"
                    v-validate="'required|min:8'"
-                   ref="new-password"></b-input>
+                   ref="new-password">
+          </b-input>
         </b-field>
 
         <b-field :label="$t('label.confirmNewPassword')"
                  :type="{'is-danger': errors.has('form-password.confirm-new-password')}"
                  :message="errors.first('form-password.confirm-new-password')">
-          <b-input type="password" password-reveal v-model="confirmPassword"
-                   name="confirm-new-password"
+          <b-input type="password" password-reveal v-model="confirmPassword" name="confirm-new-password"
                    v-validate="'required_if:new-password|confirmed:new-password'"
-                   :disabled="!newPassword"
-                   password-reveal></b-input>
+                   :disabled="!newPassword">
+          </b-input>
         </b-field>
         <p>{{$t('label.passwordHint')}}</p>
         <button type="submit" class="button is-primary">
           {{$t('label.updatePassword')}}
         </button>
       </form>
+
     </section>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import VeeValidate from 'vee-validate'
-import BLoading from "buefy/src/components/loading/Loading";
-
-Vue.use(VeeValidate, {
-  events: ''
-})
+import BLoading from 'buefy/src/components/loading/Loading';
 
 export default {
   components: {
@@ -90,7 +86,7 @@ export default {
       password: null,
       newPassword: null,
       confirmPassword: null
-    }
+    };
   },
 
   computed: {
@@ -109,7 +105,7 @@ export default {
 
       try {
         await this.user.save();
-        this.$store.commit("setCurrentUser", this.user.clone());
+        this.$store.commit('setCurrentUser', this.user.clone());
         this.$toast.open({
           message: this.$t('toast.profile.update.success'),
           type: 'is-success',
@@ -132,7 +128,7 @@ export default {
       this.user.oldPassword = this.password;
       try {
         await this.user.save();
-        this.$store.commit("setCurrentUser", this.user);
+        this.$store.commit('setCurrentUser', this.user);
         this.$toast.open({
           message: this.$t('toast.password.update.success'),
           type: 'is-success',
@@ -163,7 +159,7 @@ export default {
     this.user = this.currentUser.clone();
     this.isLoading = false;
   },
-}
+};
 </script>
 
 <style scoped>

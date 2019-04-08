@@ -13,6 +13,9 @@ import store from './store';
 import Buefy from 'buefy';
 Vue.use(Buefy, {defaultIconPack: 'fas'});
 
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate, {events: ''});
+
 import axios from 'axios';
 axios.defaults.baseURL = process.env.VUE_APP_API;
 
