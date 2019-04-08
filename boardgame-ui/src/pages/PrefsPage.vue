@@ -128,7 +128,7 @@ export default {
         return;
       }
 
-      user.password = this.newPassword;
+      this.user.password = this.newPassword;
       user.oldPassword = this.password;
       try {
         await this.user.save();
