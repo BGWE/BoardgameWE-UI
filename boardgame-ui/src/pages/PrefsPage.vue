@@ -129,7 +129,7 @@ export default {
       }
 
       this.user.password = this.newPassword;
-      user.oldPassword = this.password;
+      this.user.oldPassword = this.password;
       try {
         await this.user.save();
         this.$store.commit("setCurrentUser", this.user);
