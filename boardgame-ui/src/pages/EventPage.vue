@@ -47,7 +47,7 @@
         <event-games-tab v-if="games.length > 0" :games="games"></event-games-tab>
       </b-tab-item>
 
-      <b-tab-item :label="$t('event.tab.rankings')">
+      <b-tab-item v-if="!event.hide_rankings" :label="$t('event.tab.rankings')">
         <EventRankingsTab v-if="games.length > 0" :rankings="rankings"></EventRankingsTab>
       </b-tab-item>
 
@@ -82,8 +82,11 @@ export default {
     this.event = await Event.fetch(this.$route.params.eventid);
 
     //TODO Should we load those there?
+
     this.games = await this.event.fetchGames();
-    this.rankings = await this.event.fetchRankings();
+    if (!this.event.hide_rankings) {
+      this.rankings = await this.event.fetchRankings();
+    }
   }
 };
 </script>
