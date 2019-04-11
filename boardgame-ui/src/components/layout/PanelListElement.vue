@@ -7,7 +7,6 @@
     v-bind:class="{opened: isOpen}"
     v-on:open="open()"
     v-on:close="close()">
-      <slot name="thumbnail"></slot>
       <div
           slot="trigger" 
           slot-scope="props"

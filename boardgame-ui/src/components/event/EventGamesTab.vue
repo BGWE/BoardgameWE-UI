@@ -5,10 +5,6 @@
           <PanelListElement
             v-for="(game, index) in games"
             v-bind:key="index">
-
-            <template v-slot:thumbnail>
-                <figure class="image is-64x64" :style="{backgroundImage: `url('${game.board_game.image}')`}"></figure>
-            </template>
             
             <template v-slot:title>
               {{game.board_game.name}}
@@ -46,7 +42,11 @@ export default {
     RankingTable
   },
 
-  props: ['games'],
+  data() {
+    return {
+      games: []
+    }
+  },
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
@@ -83,7 +83,9 @@ export default {
 
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
-  }
+    this.games = await this.event.fetchGames();
+  },
+
 };
 </script>
 
