@@ -42,8 +42,11 @@ export default {
     RankingTable
   },
 
-  props: ['games'],
-
+  data() {
+    return {
+      games: []
+    }
+  },
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
@@ -60,15 +63,16 @@ export default {
         if (game.ranking_method === 'WIN_LOSE') {
           data.push({
             'player': name,
-            'score': score
-          })
-        } else {
+            'score': score,
+          });
+        } 
+        else {
           // score, player
           data.push({
             'position': i+1,
             'player': name,
-            'score': score
-          })
+            'score': score,
+          });
         }
       }
       return data;
@@ -78,8 +82,10 @@ export default {
 
 
   async created() {
-    this.event = await Event.fetch(this.$route.params.eventid);    
-  }
+    this.event = await Event.fetch(this.$route.params.eventid);
+    this.games = await this.event.fetchGames();
+  },
+
 };
 </script>
 

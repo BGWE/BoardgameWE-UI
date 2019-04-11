@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="rankings">
       <div class="columns">
 
         <div class="column">
@@ -98,19 +98,24 @@
       </div>
     </div>
 
+    <!-- <div v-else>
+      <b-loading :is-full-page="false" :active="true" :can-cancel="true"></b-loading>
+    </div> -->
+
 </template>
 
 <script>
 import RankingTable from '@/components/layout/RankingTable';
+import Event from '@/utils/api/Event';
 
 export default {
   components: {
     RankingTable
   },
 
-  props: {
-    rankings: {
-      required: true
+  data() {
+    return {
+      rankings: [],
     }
   },
 
@@ -158,7 +163,16 @@ export default {
         };
       }));
     }, 
-  }
+  },
+
+  async created() {
+    this.event = await Event.fetch(this.$route.params.eventid);
+    if (!this.event.hide_rankings) {
+      this.rankings = await this.event.fetchRankings();
+      console.log('received');
+    }
+  },
+
 };
 </script>
 

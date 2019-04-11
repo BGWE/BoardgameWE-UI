@@ -34,7 +34,7 @@
         </div>
     </nav>
 
-    <b-tabs v-model="activeTab" type="is-boxed" size="is-medium">
+    <!-- <b-tabs v-model="activeTab" type="is-boxed" size="is-medium">
       <b-tab-item :label="$t('event.tab.dashboard')">
 
       </b-tab-item>
@@ -54,7 +54,44 @@
       <b-tab-item :label="$t('event.tab.matchmaking')">
 
       </b-tab-item>
-    </b-tabs>
+    </b-tabs> -->
+
+    <div class="tabs is-boxed is-medium">
+      <ul>
+        <li v-bind:class="{'is-active': isTabActive('dashboard')}">
+          <router-link :to="{name: 'event_dashboard'}" class="navbar-item" >
+            {{$t('event.tab.dashboard')}}
+          </router-link>
+        </li>
+
+        <li v-bind:class="{'is-active': isTabActive('board_games')}">
+          <router-link :to="{name: 'event_board_games'}" class="navbar-item" >
+            {{$t('event.tab.boardgames')}}
+          </router-link>
+        </li>
+
+        <li v-bind:class="{'is-active': isTabActive('games')}">
+          <router-link :to="{name: 'event_games'}" class="navbar-item">
+            {{$t('event.tab.games')}}
+          </router-link>
+        </li>
+
+        <li v-bind:class="{'is-active': isTabActive('rankings')}">
+          <router-link :to="{name: 'event_rankings'}" class="navbar-item">
+            {{$t('event.tab.rankings')}}
+          </router-link>
+        </li>
+
+        <li v-bind:class="{'is-active': isTabActive('matchmaking')}">
+          <router-link :to="{name: 'event_matchmaking'}" class="navbar-item" >
+            {{$t('event.tab.matchmaking')}}
+          </router-link>
+        </li>
+      </ul>
+    </div>
+
+    <router-view :event="event"></router-view>
+
   </div>
 </template>
 
@@ -70,24 +107,41 @@ export default {
     EventBoardGamesTab,
     EventRankingsTab
   },
+
   data() {
     return {
-      activeTab: 0,
       event: null,
       games: [],
-      rankings: []
+      rankings: {}
     };
   },
+
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
 
     //TODO Should we load those there?
 
     this.games = await this.event.fetchGames();
-    if (!this.event.hide_rankings) {
-      this.rankings = await this.event.fetchRankings();
-    }
-  }
+  },
+
+  methods: {
+    isTabActive: function(tabName) {
+      return tabName == this.activeTabId();
+    },
+
+    activeTabId: function() {
+      let splittedUrl = this.$route.path.split('/');
+      return splittedUrl[splittedUrl.length - 1];
+    },
+  },
+
+  computed: {
+    getRankings: function() {
+      console.log('get, ', this.rankings);
+      return this.rankings;
+    },
+    
+  },
 };
 </script>
 

@@ -134,8 +134,12 @@ export default {
   
 
   computed: {
-    RANKING_TABLE_TYPE_GROUPED() { return 'RANKING_TABLE_TYPE_GROUPED '},
-    RANKING_TABLE_TYPE_RANKED() { return 'RANKING_TABLE_TYPE_RANKED '},
+    RANKING_TABLE_TYPE_GROUPED() { 
+      return 'RANKING_TABLE_TYPE_GROUPED';
+    },
+    RANKING_TABLE_TYPE_RANKED() { 
+      return 'RANKING_TABLE_TYPE_RANKED';
+    },
     perPage: () => 5,
 
     loading() {

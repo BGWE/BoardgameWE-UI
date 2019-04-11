@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       isOpen: false
-    }
+    };
   },
 
   methods: {
@@ -52,7 +52,7 @@ export default {
       this.isOpen = false;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -73,5 +73,25 @@ export default {
 
   .panel-block:hover {
     background-color: transparent;
+  }
+
+  figure.image {
+    text-align: center;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 32px;
+    position: absolute;
+    left: 15px;
+    top: 10px;
+  }
+
+  .card {
+    width: 600px;
+    margin: auto;
+  }
+
+  .card-header {
+    padding-left: 90px;
   }
 </style>
