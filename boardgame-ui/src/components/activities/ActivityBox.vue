@@ -1,6 +1,6 @@
 <template>
     <div v-if=activity class="activity-container">
-        <article class="media" v-if="activity.type === 'event/join'">
+        <article class="media" v-if="activity.type === 'user/join_event'">
             <div class="media-left calendar-media-left">
                 <figure class="image is-64x64"><span><i class="fa-3x far fa-calendar-alt"></i></span></figure>
             </div>
@@ -16,7 +16,7 @@
                 <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
             </div>
         </article>
-        <article class="media" v-if="activity.type === 'game/play'">
+        <article class="media" v-if="activity.type === 'user/play_game'">
             <div class="media-left">
                 <figure class="image is-64x64 is-rounded" :style="{backgroundImage: `url('${activity.board_game.thumbnail}')`}">
                 </figure>
@@ -33,7 +33,7 @@
                 <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
             </div>
         </article>
-        <article class="media" v-if="activity.type === 'library/add'">
+        <article class="media" v-if="activity.type === 'user/add_library'">
             <div class="media-left">
                 <figure class="image is-64x64 is-rounded" :style="{backgroundImage: `url('${activity.board_game.thumbnail}')`}">
                 </figure>
