@@ -1,29 +1,6 @@
 <template>
 
-  <div class="card">
-    <header class="card-header">
-      <p class="card-header-title">
-        <slot name="title"></slot>
-      </p>
-      <!-- <a class="card-header-icon">
-          <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
-      </a> -->
-
-      <span class="card-header-icon" aria-label="more options">
-        <span class="icon">
-          <i class="fas fa-angle-down" aria-hidden="true"></i>
-        </span>
-      </span>
-    </header>
-    <div class="card-content">
-      <slot name="content"></slot>
-    </div>
-    <footer class="card-footer">
-      <slot class="card-footer-item" name="footer"></slot>
-    </footer>
-  </div>
-
-  <!-- <b-collapse 
+  <b-collapse 
     class="card" 
     aria-id="contentIdForA11y3" 
     :open="false"
@@ -51,7 +28,7 @@
       <footer class="card-footer">
           <slot class="card-footer-item" name="footer"></slot>
       </footer>
-  </b-collapse> -->
+  </b-collapse>
 </template>
 
 <script>
@@ -108,7 +85,7 @@ export default {
     left: 15px;
     top: 10px;
   }
-/* 
+
   .card {
     width: 600px;
     margin: auto;
@@ -116,5 +93,5 @@ export default {
 
   .card-header {
     padding-left: 90px;
-  } */
+  }
 </style>
