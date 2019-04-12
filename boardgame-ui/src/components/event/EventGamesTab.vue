@@ -1,6 +1,7 @@
 <template>
   <div class="tabwrapper">
-    <div class="columns">
+    <b-loading :is-full-page="false" :active="loading"></b-loading>
+    <div class="columns" v-if="!loading">
       <div class="column is-full">
         <PanelList>
           <PanelListElement
@@ -60,6 +61,7 @@ export default {
 
   data() {
     return {
+      loading: true,
       games: []
     }
   },
@@ -98,6 +100,8 @@ export default {
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
     this.games = await this.event.fetchGames();
+
+    this.loading = false;
   },
 
 };
