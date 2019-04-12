@@ -2,6 +2,7 @@
   <div class="card" v-bind:class="{'element-open': this.isOpen}">
 
     <header class="card-header" @click="isOpen = !isOpen">
+      <slot name="img"></slot>
       <p class="card-header-title">
         <slot name="title"></slot>
       </p>
@@ -83,11 +84,20 @@ export default {
     border-radius: 32px;
     position: absolute;
     left: 15px;
-    top: 10px;
+    top: 0.5em;
   }
 
   .card {
     margin-bottom: 0.5em;
+  }
+
+  .card-header {
+    height: 5em;
+  }
+
+  .card-header-title {
+    /* padding: 2em; */
+    padding-left: 6em;
   }
 
   .card-content {
@@ -100,4 +110,5 @@ export default {
     margin-top: 1em;
     margin-bottom: 1em;
   }
+
 </style>

@@ -12,6 +12,10 @@
               {{game.board_game.name}}
             </template>
 
+            <template v-slot:img>
+              <figure class="image is-64x64 is-rounded" :style="{backgroundImage: `url('${game.board_game.image}')`}"></figure>
+            </template>
+
             <template v-slot:content>
               <div>
                 <RankingTable 
