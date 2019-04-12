@@ -1,4 +1,5 @@
 <template>
+  <div class="tabwrapper">
     <div class="columns">
       <div class="column is-full">
         <PanelList>
@@ -11,20 +12,33 @@
             </template>
 
             <template v-slot:content>
-              <RankingTable 
+              <div>
+                <RankingTable 
                 :rankingMethod="game.ranking_method"
                 :data="formattedRanking(game)"></RankingTable>
+              </div>
+            </template>
+
+            <template v-slot:buttons>
+              <a class="card-footer-item">
+                <span class="icon"><i class="far fa-edit"></i></span>
+                Edit
+              </a>
+              <a class="card-footer-item card-footer-item-danger">
+                <span class="icon"><i class="far fa-trash-alt"></i></span>
+                Delete
+              </a>
             </template>
 
             <template v-slot:footer>
-              <h6 class="title is-6"><time :datetime="game.createdAt" class="is-size-7">{{formatDatetime(game.createdAt)}}</time></h6>
-              
+              <h6 class="title is-6"><time :datetime="game.createdAt" class="is-size-7">{{formatDatetime(game.createdAt)}}</time></h6> 
             </template>
 
           </PanelListElement>
         </PanelList>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -75,8 +89,6 @@ export default {
     }
   },
 
-
-
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
   },
@@ -85,4 +97,8 @@ export default {
 </script>
 
 <style scoped>
+.card-footer-item-danger {
+  color: hsl(348, 100%, 61%);
+  font-weight:500;
+}
 </style>
