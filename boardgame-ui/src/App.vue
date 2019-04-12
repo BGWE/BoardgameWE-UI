@@ -39,4 +39,9 @@ export default {
 .has-background-bronze {
   background-color: rgb(205, 127, 50) !important;
 }
+
+.is-26x26 {
+  width: 26px;
+  height: 26px;
+}
 </style>
