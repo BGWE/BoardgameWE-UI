@@ -31,7 +31,9 @@
             </template>
 
             <template v-slot:footer>
-              <h6 class="title is-6"><time :datetime="game.createdAt" class="is-size-7">{{formatDatetime(game.createdAt)}}</time></h6> 
+              <span class="has-text-weight-light has-text-dark is-size-7 time-footer">
+                <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
+                </span>
             </template>
 
           </PanelListElement>
@@ -99,6 +101,9 @@ export default {
 <style scoped>
 .card-footer-item-danger {
   color: hsl(348, 100%, 61%);
-  font-weight:500;
+}
+
+.time-footer {
+  margin-left: 10px;
 }
 </style>

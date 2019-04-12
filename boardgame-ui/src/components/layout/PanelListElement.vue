@@ -92,13 +92,14 @@ export default {
     margin-bottom: 0.5em;
   }
 
+  .card-content {
+    padding-bottom: 0em;
+    padding: 1.2em;
+    
+  }
+
   .element-open {
     margin-top: 1em;
     margin-bottom: 1em;
   }
-
-  /*
-  .card-header {
-    padding-left: 90px;
-  } */
 </style>
