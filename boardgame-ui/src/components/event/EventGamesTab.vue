@@ -42,7 +42,11 @@ export default {
     RankingTable
   },
 
-  props: ['games'],
+  data() {
+    return {
+      games: []
+    }
+  },
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
@@ -79,6 +83,7 @@ export default {
 
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
+    this.games = await this.event.fetchGames();
   },
 
 };
