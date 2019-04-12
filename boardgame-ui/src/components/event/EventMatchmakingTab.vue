@@ -1,5 +1,5 @@
 <template>
-    <div>Matchmaking</div>
+    <div class="tabwrapper">Matchmaking</div>
 </template>
 
 <script>

@@ -14,8 +14,10 @@
           v-bind:key="col.field"
           :field="col.field" 
           :label="col.label">
+
           <div v-if="'formatter' in col" v-html="col.formatter(props.row[col.field], col.field)"></div>
           <div v-else>{{props.row[col.field]}}</div>
+
         </b-table-column>
       </template>
 
@@ -162,5 +164,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

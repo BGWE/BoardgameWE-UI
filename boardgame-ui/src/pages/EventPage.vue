@@ -150,4 +150,11 @@ export default {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+.tabwrapper {
+  position: relative;
+  min-height: 10em;
+  width: 90%;
+  margin: auto;
+}
 </style>

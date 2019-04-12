@@ -1,5 +1,5 @@
 <template>
-    <div v-if="rankings">
+    <div class="tabwrapper">
       <div class="columns">
 
         <div class="column">
@@ -97,11 +97,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <div v-else>
-      <b-loading :is-full-page="false" :active="true" :can-cancel="true"></b-loading>
-    </div> -->
-
 </template>
 
 <script>
@@ -177,5 +172,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

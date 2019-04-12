@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="tabwrapper">
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <template v-if="!loading">
       <board-game-list :board-games="boardGames" :addFromLibrary="true"
@@ -61,8 +61,4 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  position: relative;
-  min-height: 10em;
-}
 </style>

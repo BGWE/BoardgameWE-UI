@@ -1,34 +1,34 @@
 <template>
+  <div class="card" v-bind:class="{'element-open': this.isOpen}">
 
-  <b-collapse 
-    class="card" 
-    aria-id="contentIdForA11y3" 
-    :open="false"
-    v-bind:class="{opened: isOpen}"
-    v-on:open="open()"
-    v-on:close="close()">
-      <div
-          slot="trigger" 
-          slot-scope="props"
-          class="card-header"
-          role="button"
-          aria-controls="contentIdForA11y3">
-          <p class="card-header-title">
-              <slot name="title"></slot>
-          </p>
-          <a class="card-header-icon">
-              <b-icon
-                  :icon="props.open ? 'menu-down' : 'menu-up'">
-              </b-icon>
-          </a>
+    <header class="card-header" @click="isOpen = !isOpen">
+      <p class="card-header-title">
+        <slot name="title"></slot>
+      </p>
+
+      <a class="card-header-icon" aria-label="more options">
+        <span class="icon">
+          <i class="fas" aria-hidden="true" v-bind:class="{'fa-angle-down': !this.isOpen, 'fa-angle-up': this.isOpen}"></i>
+        </span>
+      </a>
+    </header>
+
+    <transition name="fade">
+      <div class="card-content" v-if="this.isOpen">
+        <slot name="content"></slot>
       </div>
-      <div class="card-content">
-              <slot name="content"></slot>
+    </transition>
+
+    <transition name="fade">
+      <div class="card-footer" v-if="this.isOpen">
+        <slot name="buttons"></slot>
       </div>
-      <footer class="card-footer">
-          <slot class="card-footer-item" name="footer"></slot>
-      </footer>
-  </b-collapse>
+    </transition>
+
+    <footer class="card-footer">
+      <slot class="card-footer-item" name="footer"></slot>
+    </footer>
+  </div>
 </template>
 
 <script>
@@ -87,11 +87,17 @@ export default {
   }
 
   .card {
-    width: 600px;
-    margin: auto;
+    margin-bottom: 0.5em;
   }
 
-  .card-header {
-    padding-left: 90px;
+  .card-content {
+    padding-bottom: 0em;
+    padding: 1.2em;
+    
+  }
+
+  .element-open {
+    margin-top: 1em;
+    margin-bottom: 1em;
   }
 </style>
