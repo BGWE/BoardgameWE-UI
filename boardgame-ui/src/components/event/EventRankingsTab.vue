@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="tabwrapper">
       <div class="columns">
 
         <div class="column">
@@ -97,20 +97,22 @@
         </div>
       </div>
     </div>
-
 </template>
 
 <script>
 import RankingTable from '@/components/layout/RankingTable';
+import Event from '@/utils/api/Event';
 
 export default {
   components: {
     RankingTable
   },
 
-  props: {
-    rankings: {
-      required: true
+  props: ['event'],
+
+  data() {
+    return {
+      rankings: [],
     }
   },
 
@@ -158,10 +160,16 @@ export default {
         };
       }));
     }, 
-  }
+  },
+
+  async created() {
+    if (!this.event.hide_rankings) {
+      this.rankings = await this.event.fetchRankings();
+    }
+  },
+
 };
 </script>
 
 <style scoped>
-
 </style>

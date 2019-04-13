@@ -1,34 +1,35 @@
 <template>
+  <div class="card" v-bind:class="{'element-open': this.isOpen}">
 
-  <b-collapse 
-    class="card" 
-    aria-id="contentIdForA11y3" 
-    :open="false"
-    v-bind:class="{opened: isOpen}"
-    v-on:open="open()"
-    v-on:close="close()">
-      <div
-          slot="trigger" 
-          slot-scope="props"
-          class="card-header"
-          role="button"
-          aria-controls="contentIdForA11y3">
-          <p class="card-header-title">
-              <slot name="title"></slot>
-          </p>
-          <a class="card-header-icon">
-              <b-icon
-                  :icon="props.open ? 'menu-down' : 'menu-up'">
-              </b-icon>
-          </a>
+    <header class="card-header" @click="isOpen = !isOpen">
+      <slot name="img"></slot>
+      <p class="card-header-title">
+        <slot name="title"></slot>
+      </p>
+
+      <a class="card-header-icon" aria-label="more options">
+        <span class="icon">
+          <i class="fas" aria-hidden="true" v-bind:class="{'fa-angle-down': !this.isOpen, 'fa-angle-up': this.isOpen}"></i>
+        </span>
+      </a>
+    </header>
+
+    <transition name="fade">
+      <div class="card-content" v-if="this.isOpen">
+        <slot name="content"></slot>
       </div>
-      <div class="card-content">
-              <slot name="content"></slot>
+    </transition>
+
+    <transition name="fade">
+      <div class="card-footer" v-if="this.isOpen">
+        <slot name="buttons"></slot>
       </div>
-      <footer class="card-footer">
-          <slot class="card-footer-item" name="footer"></slot>
-      </footer>
-  </b-collapse>
+    </transition>
+
+    <footer class="card-footer">
+      <slot class="card-footer-item" name="footer"></slot>
+    </footer>
+  </div>
 </template>
 
 <script>
@@ -36,7 +37,7 @@ export default {
   data() {
     return {
       isOpen: false
-    }
+    };
   },
 
   methods: {
@@ -52,7 +53,7 @@ export default {
       this.isOpen = false;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -74,4 +75,41 @@ export default {
   .panel-block:hover {
     background-color: transparent;
   }
+
+  figure.image {
+    text-align: center;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 32px;
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    margin-top: -32px;
+  }
+
+  .card {
+    margin-bottom: 0.8em;
+  }
+
+  .card-header {
+    position: relative;
+  }
+
+  .card-header-title {
+    padding: 0.8em;
+    padding-left: 6em;
+  }
+
+  .card-content {
+    padding-bottom: 0em;
+    padding: 1.2em;
+    
+  }
+
+  .element-open {
+    margin-top: 1.8em;
+    margin-bottom: 1.8em;
+  }
+
 </style>

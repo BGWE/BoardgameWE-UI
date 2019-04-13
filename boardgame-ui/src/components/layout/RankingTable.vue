@@ -14,8 +14,10 @@
           v-bind:key="col.field"
           :field="col.field" 
           :label="col.label">
+
           <div v-if="'formatter' in col" v-html="col.formatter(props.row[col.field], col.field)"></div>
           <div v-else>{{props.row[col.field]}}</div>
+
         </b-table-column>
       </template>
 
@@ -98,16 +100,18 @@ export default {
           label: this.$t('event.rankings.table.score')
         },
       ];
-      } else {
+      } 
+      
+      else {
         return [
           {
             field: 'score',
             label: this.$t('event.rankings.table.win'),
             formatter: (value) => {
               if (value == 1) {
-                return `<span class="tag has-background-gold has-text-white">1</span>`;
-              }
-              return `<span class="tag has-text-white">0</span>`;
+                return `<div class="tag has-background-gold has-text-white is-26x26"><i class="fas fa-trophy"></i></div>`;
+              } 
+              return '';
             }
           },
           {
@@ -134,8 +138,12 @@ export default {
   
 
   computed: {
-    RANKING_TABLE_TYPE_GROUPED() { return 'RANKING_TABLE_TYPE_GROUPED '},
-    RANKING_TABLE_TYPE_RANKED() { return 'RANKING_TABLE_TYPE_RANKED '},
+    RANKING_TABLE_TYPE_GROUPED() { 
+      return 'RANKING_TABLE_TYPE_GROUPED';
+    },
+    RANKING_TABLE_TYPE_RANKED() { 
+      return 'RANKING_TABLE_TYPE_RANKED';
+    },
     perPage: () => 5,
 
     loading() {
@@ -158,5 +166,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
