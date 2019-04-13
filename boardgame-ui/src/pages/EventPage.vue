@@ -1,16 +1,19 @@
 <template>
   <div v-if="event">
     <section class="hero is-primary is-bold">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">
-                    {{event.name}}
-                    </h1>
-                <h2 class="subtitle">
-                    {{event.location}}
-                </h2>
-            </div>
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            {{event.name}}
+            </h1>
+          <h2 class="subtitle">
+            {{event.location}} -
+            from <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.start" />
+            to <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.end" />
+          </h2>
+
         </div>
+      </div>
     </section>
 
     <nav class="level is-mobile" id="event-level">
@@ -100,9 +103,11 @@ import EventGamesTab from '@/components/event/EventGamesTab';
 import EventBoardGamesTab from '@/components/event/EventBoardGamesTab';
 import EventRankingsTab from '@/components/event/EventRankingsTab';
 import Event from '@/utils/api/Event';
+import BgcDatetime from '@/components/layout/BgcDatetime';
 
 export default {
   components: {
+    BgcDatetime,
     EventGamesTab,
     EventBoardGamesTab,
     EventRankingsTab
@@ -140,7 +145,7 @@ export default {
       console.log('get, ', this.rankings);
       return this.rankings;
     },
-    
+
   },
 };
 </script>
@@ -156,5 +161,9 @@ export default {
   min-height: 10em;
   width: 90%;
   margin: auto;
+}
+
+.hero-datetime {
+  font-style: italic;
 }
 </style>
