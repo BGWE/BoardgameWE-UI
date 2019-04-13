@@ -5,7 +5,7 @@
       <div class="column is-full">
         <PanelList>
           <PanelListElement
-            v-for="(game, index) in games"
+            v-for="(game, index) in reverseSortedGames"
             v-bind:key="index">
             
             <template v-slot:title>
@@ -69,22 +69,6 @@
       :onDelete="deleteGame"
       :onCancel="onCancelConfirmDeleteModal" 
       :content="$t('event.games.confirmGameDeletion')"/>
-    <!-- <b-modal :active="isConfirmDeleteModalActive" scroll="keep" :has-modal-card="true" :canCancel="true" :onCancel="onCancelConfirmDeleteModal">
-        <div class="card">
-            <div class="card-content">
-              <div class="content">
-                {{$t('event.games.confirmGameDeletion')}}
-              </div>
-            </div>
-            <footer class="card-footer">
-              <a href="#" class="card-footer-item" @click="onCancelConfirmDeleteModal">{{$t('event.games.cancel')}}</a>
-              <a href="#" class="card-footer-item card-footer-item-danger" @click="deleteGame(game)">
-                <span class="icon"><i class="far fa-trash-alt"></i></span>
-                {{$t('event.games.delete')}}
-              </a>
-            </footer>
-        </div>
-    </b-modal> -->
   </div>
 </template>
 
@@ -97,6 +81,8 @@ import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 import Event from '@/utils/api/Event';
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
+
+import moment from 'moment-timezone';
 
 export default {
   components: {
@@ -114,6 +100,25 @@ export default {
       isConfirmDeleteModalActive: false,
       gameToDelete: null,
       games: []
+    }
+  },
+
+  computed: {
+    sortedGames: function() {
+      if(!this.games || this.games.length == 0) { 
+        return []
+      }
+      
+      return this.games.slice().sort((a, b) => {
+        const datetimeA = moment(a).tz(moment.tz.guess());
+        const datetimeB = moment(b).tz(moment.tz.guess());
+
+        return datetimeA.isSameOrBefore(datetimeB);
+      });
+    },
+
+    reverseSortedGames: function() {
+      return this.sortedGames.slice().reverse();
     }
   },
 
