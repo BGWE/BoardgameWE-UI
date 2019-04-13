@@ -34,7 +34,7 @@
                 <div class="level-item has-text-centered">
                   <div>
                     <p class="heading">{{$t('boardgame.players')}}</p>
-                    <p class="subtitle">{{boardGame.min_players}} - {{boardGame.max_players}}</p>
+                    <p class="subtitle">{{playerCountDisplay}}</p>
                   </div>
                 </div>
                 <div class="level-item has-text-centered">
@@ -120,6 +120,13 @@ export default {
       let regex = new RegExp('\\?v=(.*)');
       let match = url.match(regex);
       return match ? match[1] : null;
+    },
+    playerCountDisplay() {
+      if (this.boardGame.min_players == this.boardGame.max_players) {
+        return this.boardGame.min_players;
+      }
+
+      return `${this.boardGame.min_players} - ${this.boardGame.max_players}`;
     }
   },
   methods: {
