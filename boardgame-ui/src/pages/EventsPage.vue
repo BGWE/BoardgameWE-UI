@@ -3,6 +3,14 @@
     <HeroTitlePageLayout :title="$t('events.title')"/>
 
     <section class="section">
+      <div class="columns">
+        <div class="column has-text-right">
+          <router-link tag="button" class="button is-primary" :to="{name: 'createEvent'}">
+              {{$t("events.add")}}
+          </router-link>
+        </div>
+      </div>
+
       <div class="columns is-multiline" >
         <div class="column is-one-quarter" v-for="event in events" :key="event.id">
           <div class="card">
@@ -19,10 +27,13 @@
             </div>
             <footer class="card-footer">
               <div class="buttons">
-                <router-link :to="{name: 'event', params:{eventid: event.id}}" class="button is-light">
+                <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-light">
                   {{$t('events.view')}}
                 </router-link>
                 <button class="button">{{$t('events.join')}}</button>
+                <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-danger">
+                  {{$t('events.edit')}}
+                </router-link>
               </div>
             </footer>
           </div>
@@ -48,6 +59,12 @@ export default {
     };
   },
 
+  methods: {
+    isUserEventOwner(userId) {
+      return (userId === this.$store.state.currentUser.id);
+    }
+  },
+
   async created() {
     this.events = await Event.fetchAll();
   }
@@ -56,7 +73,7 @@ export default {
 
 <style scoped>
 .column {
-  display: flex;
+  #display: flex;
 }
 .card {
   flex-grow: 1;

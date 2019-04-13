@@ -24,7 +24,6 @@ export default {
 
   props: {
     value: Date,
-    minDate: Date,
     name: String
   },
 

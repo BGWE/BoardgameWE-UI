@@ -47,9 +47,21 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'createEvent',
+    path: '/events/createEvent',
+    component: require('./pages/EventCreationPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'event',
     path: '/event/:eventid',
     component: require('./pages/EventPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'editEvent',
+    path: '/event/:eventid/edit',
+    component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
@@ -68,12 +80,6 @@ const routes = [
     name: 'boardgame',
     path: '/boardgame/:id',
     component: require('./pages/BoardGamePage.vue').default
-  },
-  {
-    name: 'eventCreation',
-    path: '/createEvent',
-    component: require('./pages/EventCreationPage.vue').default,
-    beforeEnter: authenticatedOnly
   },
   {
     name: 'not-found',
