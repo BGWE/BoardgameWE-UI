@@ -9,7 +9,24 @@
             v-bind:key="index">
             
             <template v-slot:title>
-              {{game.board_game.name}}
+              <div class="games-headers">
+                <div class="is-size-6-mobile">{{game.board_game.name}}</div>
+                <div class="games-subtitle field is-grouped is-grouped-multiline">
+                  <div class="control">
+                    <div class="tags has-addons">
+                      <span class="tag is-primary"><i class="fas fa-user"></i></span>
+                      <span class="tag is-light">{{game.players.length}}</span>
+                    </div>
+                  </div>
+
+                  <div class="control" v-if="game.duration">
+                    <div class="tags has-addons">
+                      <span class="tag is-primary"><i class="fas fa-stopwatch"></i></span>
+                      <span class="tag is-light">{{game.duration}} min</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </template>
 
             <template v-slot:img>
@@ -63,6 +80,8 @@ export default {
     RankingTable
   },
 
+  props: ['event'],
+
   data() {
     return {
       loading: true,
@@ -102,7 +121,6 @@ export default {
   },
 
   async created() {
-    this.event = await Event.fetch(this.$route.params.eventid);
     this.games = await this.event.fetchGames();
 
     this.loading = false;
@@ -119,4 +137,13 @@ export default {
 .time-footer {
   margin-left: 10px;
 }
+
+.games-title {
+  font-size: 1.1em;
+}
+
+.games-subtitle {
+  margin-top: 0.2em;
+}
+
 </style>

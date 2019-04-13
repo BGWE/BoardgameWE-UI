@@ -34,28 +34,6 @@
         </div>
     </nav>
 
-    <!-- <b-tabs v-model="activeTab" type="is-boxed" size="is-medium">
-      <b-tab-item :label="$t('event.tab.dashboard')">
-
-      </b-tab-item>
-
-      <b-tab-item :label="$t('event.tab.boardgames')">
-        <event-board-games-tab :event="event"></event-board-games-tab>
-      </b-tab-item>
-
-      <b-tab-item :label="$t('event.tab.games')">
-        <event-games-tab v-if="games.length > 0" :games="games"></event-games-tab>
-      </b-tab-item>
-
-      <b-tab-item v-if="!event.hide_rankings" :label="$t('event.tab.rankings')">
-        <EventRankingsTab v-if="games.length > 0" :rankings="rankings"></EventRankingsTab>
-      </b-tab-item>
-
-      <b-tab-item :label="$t('event.tab.matchmaking')">
-
-      </b-tab-item>
-    </b-tabs> -->
-
     <div class="tabs is-boxed is-medium">
       <ul>
         <li v-bind:class="{'is-active': isTabActive('dashboard')}">
