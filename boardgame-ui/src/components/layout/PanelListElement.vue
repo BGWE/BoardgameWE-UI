@@ -88,7 +88,7 @@ export default {
   }
 
   .card {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.8em;
   }
 
   .card-header {
@@ -107,8 +107,8 @@ export default {
   }
 
   .element-open {
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin-top: 1.8em;
+    margin-bottom: 1.8em;
   }
 
 </style>
