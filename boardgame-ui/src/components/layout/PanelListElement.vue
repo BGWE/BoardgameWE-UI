@@ -97,7 +97,7 @@ export default {
   }
 
   .card-header-title {
-    padding: 1.2em;
+    padding: 0.8em;
     padding-left: 6em;
   }
 

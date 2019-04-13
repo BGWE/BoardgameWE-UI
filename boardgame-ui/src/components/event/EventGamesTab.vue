@@ -44,11 +44,11 @@
             <template v-slot:buttons>
               <a class="card-footer-item">
                 <span class="icon"><i class="far fa-edit"></i></span>
-                Edit
+                {{$t('event.games.edit')}}
               </a>
-              <a class="card-footer-item card-footer-item-danger">
+              <a class="card-footer-item card-footer-item-danger" @click="confirmDeleteGame(game)">
                 <span class="icon"><i class="far fa-trash-alt"></i></span>
-                Delete
+                {{$t('event.games.delete')}}
               </a>
             </template>
 
@@ -62,6 +62,23 @@
         </PanelList>
       </div>
     </div>
+
+    <b-modal :active="isConfirmDeleteModalActive" scroll="keep" :has-modal-card="true" :canCancel="true" :onCancel="onCancelConfirmDeleteModal">
+        <div class="card">
+            <div class="card-content">
+              <div class="content">
+                {{$t('event.games.confirmGameDeletion')}}
+              </div>
+            </div>
+            <footer class="card-footer">
+              <a href="#" class="card-footer-item" @click="onCancelConfirmDeleteModal">{{$t('event.games.cancel')}}</a>
+              <a href="#" class="card-footer-item card-footer-item-danger" @click="deleteGame(game)">
+                <span class="icon"><i class="far fa-trash-alt"></i></span>
+                {{$t('event.games.delete')}}
+              </a>
+            </footer>
+        </div>
+    </b-modal>
   </div>
 </template>
 
@@ -71,6 +88,7 @@ import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
 
 import Event from '@/utils/api/Event';
+import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
 
 export default {
@@ -85,6 +103,8 @@ export default {
   data() {
     return {
       loading: true,
+      isConfirmDeleteModalActive: false,
+      gameToDelete: null,
       games: []
     }
   },
@@ -117,13 +137,34 @@ export default {
         }
       }
       return data;
+    },
+
+    confirmDeleteGame: function(game) {
+      this.gameToDelete = game;
+      this.isConfirmDeleteModalActive = true;
+    },
+
+    onCancelConfirmDeleteModal: function() {
+      this.isConfirmDeleteModalActive = false;
+      this.gameToDelete = null;
+    },
+
+    async deleteGame() {
+      await Game.deleteGame(this.gameToDelete.id);
+      this.onCancelConfirmDeleteModal();
+
+      this.reload();
+    },
+
+    async reload() {
+      this.loading = true;
+      this.games = await this.event.fetchGames();
+      this.loading = false;
     }
   },
 
   async created() {
-    this.games = await this.event.fetchGames();
-
-    this.loading = false;
+    this.reload();
   },
 
 };
