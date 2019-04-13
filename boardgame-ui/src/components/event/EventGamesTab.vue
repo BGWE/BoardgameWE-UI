@@ -63,7 +63,13 @@
       </div>
     </div>
 
-    <b-modal :active="isConfirmDeleteModalActive" scroll="keep" :has-modal-card="true" :canCancel="true" :onCancel="onCancelConfirmDeleteModal">
+    
+    <ConfirmDeleteModal 
+      :active="isConfirmDeleteModalActive" 
+      :onDelete="deleteGame"
+      :onCancel="onCancelConfirmDeleteModal" 
+      :content="$t('event.games.confirmGameDeletion')"/>
+    <!-- <b-modal :active="isConfirmDeleteModalActive" scroll="keep" :has-modal-card="true" :canCancel="true" :onCancel="onCancelConfirmDeleteModal">
         <div class="card">
             <div class="card-content">
               <div class="content">
@@ -78,7 +84,7 @@
               </a>
             </footer>
         </div>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 
@@ -86,6 +92,7 @@
 import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
+import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 
 import Event from '@/utils/api/Event';
 import Game from '@/utils/api/Game';
@@ -95,7 +102,8 @@ export default {
   components: {
     PanelList,
     PanelListElement,
-    RankingTable
+    RankingTable,
+    ConfirmDeleteModal
   },
 
   props: ['event'],
