@@ -161,7 +161,7 @@ export default {
   max-height: 50vh;
 }
 
->>> iframe {
+iframe {
   height: 360px;
 }
 </style>
