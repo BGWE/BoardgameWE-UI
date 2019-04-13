@@ -165,7 +165,6 @@ export default {
   async created() {
     if (!this.event.hide_rankings) {
       this.rankings = await this.event.fetchRankings();
-      console.log('received');
     }
   },
 
