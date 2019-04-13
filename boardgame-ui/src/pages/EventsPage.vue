@@ -30,7 +30,7 @@
                 <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-light">
                   {{$t('events.view')}}
                 </router-link>
-                <button class="button">{{$t('events.join')}}</button>
+                <button class="button" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">{{$t('events.join')}}</button>
                 <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-danger">
                   {{$t('events.edit')}}
                 </router-link>
@@ -55,25 +55,42 @@ export default {
 
   data() {
     return {
-      events: []
+      events: [],
+      attendedEvents: []
     };
   },
 
   methods: {
+    async reload() {
+      this.events = await Event.fetchAll();
+      this.attendedEvents = await Event.fetchAttendedEvents();
+    },
+
     isUserEventOwner(userId) {
       return (userId === this.$store.state.currentUser.id);
+    },
+
+    isAttendedEvent(eventId) {
+      return this.attendedEvents.find(e => e.id == eventId);      
+    },
+
+    async joinEvent(eventId) {
+      const event = await Event.fetch(eventId);
+      const data = await event.subscribe();
+
+      this.reload();
     }
   },
 
   async created() {
-    this.events = await Event.fetchAll();
+    this.reload();
   }
 };
 </script>
 
 <style scoped>
 .column {
-  #display: flex;
+  display: flex;
 }
 .card {
   flex-grow: 1;
