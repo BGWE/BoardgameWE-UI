@@ -15,3 +15,8 @@ export function dateToISO8601(date) {
   const dateString = moment(date).toISOString(keepOffset);
   return dateString;
 }
+
+export function ISO8601ToDate(iso8601) {
+  const date = moment(iso8601).tz(moment.tz.guess()).toDate();
+  return date;
+}

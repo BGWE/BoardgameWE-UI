@@ -57,6 +57,14 @@ export default {
   },
 
   created() {
+    if (this.value) {
+      this.date.setFullYear(this.value.getFullYear(), this.value.getMonth(), this.value.getDate());
+      this.time.setHours(this.value.getHours());
+      this.time.setMinutes(this.value.getMinutes());
+
+      this.dateTime.setFullYear(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
+      this.dateTime.setHours(this.time.getHours(), this.time.getMinutes());
+    }
     this.$emit('input', this.dateTime);
   }
 };
