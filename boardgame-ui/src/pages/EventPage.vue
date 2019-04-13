@@ -54,7 +54,7 @@
           </router-link>
         </li>
 
-        <li v-bind:class="{'is-active': isTabActive('rankings')}">
+        <li v-bind:class="{'is-active': isTabActive('rankings')}" v-if="!event.hide_rankings">
           <router-link :to="{name: 'event_rankings'}" class="navbar-item">
             {{$t('event.tab.rankings')}}
           </router-link>
