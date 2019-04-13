@@ -17,6 +17,7 @@ export default class Event extends Model {
     this.end = null;
     this.description = null;
     this.location = null;
+    this.hide_rankings = false;
   }
 
   static async fetchAll(ongoing, registered) {

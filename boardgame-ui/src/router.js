@@ -70,6 +70,12 @@ const routes = [
     component: require('./pages/BoardGamePage.vue').default
   },
   {
+    name: 'eventCreation',
+    path: '/createEvent',
+    component: require('./pages/EventCreationPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./pages/NotFoundPage.vue').default,
