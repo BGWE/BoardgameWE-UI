@@ -7,19 +7,19 @@
         <b-field horizontal :label="$t('event.edition.name')"
                  :type="{'is-danger': errors.has('form-eventCreation.name')}"
                  :message="errors.first('form-eventCreation.name')">
-          <b-input v-model="event.name" name="name" v-validate="'required'"></b-input>
+          <b-input v-model.trim="event.name" name="name" v-validate="'required'"></b-input>
         </b-field>
 
         <b-field horizontal :label="$t('event.edition.location')"
                  :type="{'is-danger': errors.has('form-eventCreation.location')}"
                  :message="errors.first('form-eventCreation.location')">
-          <b-input v-model="event.location" name="location" v-validate="'required'"></b-input>
+          <b-input v-model.trim="event.location" name="location" v-validate="'required'"></b-input>
         </b-field>
 
         <b-field horizontal :label="$t('event.edition.description')"
                  :type="{'is-danger': errors.has('form-eventCreation.description')}"
                  :message="errors.first('form-eventCreation.description')">
-          <b-input v-model="event.description" name="description" v-validate="'required'" maxlength="200" type="textarea"></b-input>
+          <b-input v-model.trim="event.description" name="description" v-validate="'required'" maxlength="200" type="textarea"></b-input>
         </b-field>
 
         <b-field horizontal
