@@ -56,16 +56,16 @@ export default {
   },
 
   methods: {
-    validateUser(userId) {
+    async validateUser(userId) {
       let data = User.setUserValidation(userId, true);
       console.log(data);
+      this.users = await User.fetchUsers();
     }
   },
 
   async created() {
     this.users = await User.fetchUsers();
     this.isLoading = false;
-    console.log(this.users);
   },
 };
 </script>
