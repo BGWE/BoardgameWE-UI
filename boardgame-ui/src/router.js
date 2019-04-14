@@ -93,6 +93,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'userValidation',
+    path: '/userValidation',
+    component: require('./pages/UserValidationPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'boardgame',
     path: '/boardgame/:id',
     component: require('./pages/BoardGamePage.vue').default

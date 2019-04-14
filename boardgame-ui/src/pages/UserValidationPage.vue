@@ -1,0 +1,75 @@
+<template>
+  <div>
+    <HeroTitlePageLayout :title="$t('uservalidation.title')"/>
+    <b-loading v-if="isLoading"></b-loading>
+    <section v-if="users" class="section">
+      <b-table :data="users" striped>
+        <template slot-scope="props">
+          <b-table-column field="id" :label="$t('uservalidation.table.id')" width="40" numeric>
+            {{ props.row.id }}
+          </b-table-column>
+
+          <b-table-column field="username" :label="$t('uservalidation.table.username')">
+            {{ props.row.username }}
+          </b-table-column>
+
+          <b-table-column field="email" :label="$t('uservalidation.table.email')">
+            {{ props.row.email }}
+          </b-table-column>
+
+          <b-table-column field="validated" :label="$t('uservalidation.table.validated')">
+            <span v-if="props.row.validated" class="tag is-success">
+              {{ $t('global.yes') }}
+            </span>
+            <span v-else class="tag is-danger">
+              {{ $t('global.no') }}
+            </span>
+          </b-table-column>
+
+          <b-table-column label="Validate" centered>
+            <button @click="validateUser(props.row.id)" class="button">
+              {{ $t('uservalidation.validate') }}
+            </button>
+          </b-table-column>
+        </template>
+      </b-table>
+    </section>
+  </div>
+</template>
+
+<script>
+import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
+import BLoading from 'buefy/src/components/loading/Loading';
+import User from '@/utils/api/User.js';
+
+export default {
+  components: {
+    BLoading,
+    HeroTitlePageLayout
+  },
+
+  data() {
+    return {
+      isLoading: true,
+      users: null,
+    };
+  },
+
+  methods: {
+    validateUser(userId) {
+      let data = User.setUserValidation(userId, true);
+      console.log(data);
+    }
+  },
+
+  async created() {
+    this.users = await User.fetchUsers();
+    this.isLoading = false;
+    console.log(this.users);
+  },
+};
+</script>
+
+<style scoped>
+
+</style>
