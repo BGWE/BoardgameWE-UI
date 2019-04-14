@@ -18,7 +18,7 @@ axios.defaults.baseURL = process.env.VUE_APP_API;
 
 import VueSocketIO from 'vue-socket.io-extended';
 import io from 'socket.io-client';
-Vue.use(VueSocketIO, io(process.env.VUE_APP_API), { store });
+Vue.use(VueSocketIO, io(process.env.VUE_APP_API, {autoConnect: false}), {store});
 
 Vue.config.productionTip = false;
 

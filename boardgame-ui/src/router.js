@@ -59,6 +59,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'test_timer',
+    path: '/test_timer',
+    component: require('./pages/TestTimer.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./pages/NotFoundPage.vue').default,
