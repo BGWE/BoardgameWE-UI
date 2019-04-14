@@ -35,6 +35,12 @@ const routes = [
     beforeEnter: guestOnly
   },
   {
+    name: 'register',
+    path: '/register',
+    component: require('./pages/LoginPage.vue').default,
+    beforeEnter: guestOnly
+  },
+  {
     name: 'events',
     path: '/events',
     component: require('./pages/EventsPage.vue').default,
@@ -44,7 +50,35 @@ const routes = [
     name: 'event',
     path: '/event/:eventid',
     component: require('./pages/EventPage.vue').default,
-    beforeEnter: authenticatedOnly
+    redirect: {name: 'event_dashboard'},
+    beforeEnter: authenticatedOnly,
+    children: [
+      {
+        name: 'event_dashboard',
+        path: 'dashboard',
+        component: require('./components/event/EventDashboardTab.vue').default,
+      },
+      {
+        name: 'event_board_games',
+        path: 'board_games',
+        component: require('./components/event/EventBoardGamesTab.vue').default,
+      },
+      {
+        name: 'event_games',
+        path: 'games',
+        component: require('./components/event/EventGamesTab.vue').default,
+      },
+      {
+        name: 'event_rankings',
+        path: 'rankings',
+        component: require('./components/event/EventRankingsTab.vue').default,
+      },
+      {
+        name: 'event_matchmaking',
+        path: 'matchmaking',
+        component: require('./components/event/EventMatchmakingTab.vue').default,
+      }
+    ]
   },
   {
     name: 'library',
@@ -63,6 +97,17 @@ const routes = [
     path: '/test_timer',
     component: require('./pages/TestTimer.vue').default,
     beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'preferences',
+    path: '/preferences',
+    component: require('./pages/PrefsPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'boardgame',
+    path: '/boardgame/:id',
+    component: require('./pages/BoardGamePage.vue').default
   },
   {
     name: 'not-found',

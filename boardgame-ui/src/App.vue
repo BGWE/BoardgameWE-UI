@@ -4,7 +4,7 @@
 
     <div class="app-content">
       <div class="container">
-        <router-view></router-view>
+        <router-view v-if="initialized"></router-view>
       </div>
     </div>
   </div>
@@ -17,6 +17,11 @@ export default {
   name: 'app',
   components: {
     LayoutNavbar
+  },
+  computed: {
+    initialized() {
+      return this.$store.state.initialized;
+    }
   },
   created() {
     this.$store.dispatch('initializeStore');
@@ -33,5 +38,10 @@ export default {
 }
 .has-background-bronze {
   background-color: rgb(205, 127, 50) !important;
+}
+
+.is-26x26 {
+  width: 26px;
+  height: 26px;
 }
 </style>

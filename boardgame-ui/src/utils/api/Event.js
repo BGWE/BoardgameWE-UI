@@ -147,4 +147,23 @@ export default class Event extends Model {
     let {data} = await axios.get(`event/${this.id}/ranking/${rankingType}`);
     return data;
   }
+
+  /**
+   * Fetch event statistics
+   * @returns {Object} Response from backend
+   */
+  async fetchStats() {
+    let {data} = await axios.get(`/event/${this.id}/stats`);
+    return data;
+  }
+
+  /**
+   * Fetch event latest activities
+   * @returns {Object} Response from backend
+   */
+  async fetchActivities() {
+    let {data} = await axios.get(`/event/${this.id}/activities`);
+    return data;
+  }
+
 }

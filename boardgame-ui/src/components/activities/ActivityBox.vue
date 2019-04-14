@@ -1,53 +1,108 @@
 <template>
-    <div v-if=activity class="activity-container">
-        <article class="media" v-if="activity.type === 'event/join'">
-            <div class="media-left calendar-media-left">
-                <figure class="is-64x64"><span><i class="fa-3x far fa-calendar-alt"></i></span></figure>
-            </div>
-            <div class="media-content">
-                <i18n path="activity.event.join"> <strong place="eventName">{{activity.event.name}}</strong> </i18n>.
-                <br/>
-                <bgc-datetime :datetime=activity.datetime class="activity-datetime" />
-            </div>
-        </article>
-        <article class="media" v-if="activity.type === 'game/play'">
-            <div class="media-left">
-                <figure class="image is-64x64"><img class="is-rounded" :src=activity.board_game.thumbnail /></figure>
-            </div>
-            <div class="media-content">
-                <i18n path="activity.game.played"> <strong place="gameName">{{activity.board_game.name}}</strong> </i18n>.
-                <br/>
-                <bgc-datetime :datetime=activity.datetime class="activity-datetime" />
-            </div>
-        </article>
-        <article class="media" v-if="activity.type === 'library/add'">
-            <div class="media-left">
-                <figure class="image is-64x64"><img class="is-rounded" :src=activity.board_game.thumbnail /></figure>
-            </div>
-            <div class="media-content">
-                <i18n path="activity.library.added_game">
-                    <strong place="gameName">{{activity.board_game.name}}</strong>
-                </i18n>.
-                <br/>
-                <bgc-datetime :datetime=activity.datetime class="activity-datetime" />
-            </div>
-        </article>
-    </div>
-    <div v-else-if=!activity></div>
+  <div class="activity-container">
+    <article class="media">
+      <ActivityBoxLeftMedia :activity="activity" :thumbnail="thumbnail"/>
+      <div class="media-content" v-if="activity.type === Types.EVENT_ADD_GAME">
+        <i18n path="activity.event.add_game">
+          <strong place="gameName">
+            <router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">
+              {{activity.board_game.name}}
+            </router-link>
+          </strong>
+          <strong place="userName">{{activity.user.name}}</strong>
+        </i18n>
+        <br/>
+        <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
+      </div>
+      <div class="media-content" v-else-if="activity.type === Types.EVENT_PLAY_GAME">
+        <i18n path="activity.event.play_game">
+          <player-list place="playerNames" :players="activity.game.players"></player-list>
+          <strong place="gameName">
+            <router-link :to="{name: 'boardgame', params: {id: activity.game.board_game.id}}">
+              {{activity.game.board_game.name}}
+            </router-link>
+          </strong>
+        </i18n>
+        <br/>
+        <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
+      </div>
+      <div class="media-content" v-else-if="activity.type === Types.EVENT_USER_JOIN">
+        <i18n path="activity.event.user_join">
+          <strong place="userName">{{activity.user.name}}</strong>
+        </i18n>
+        <br/>
+        <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
+      </div>
+      <div class="media-content" v-else-if="activity.type === Types.USER_JOIN_EVENT">
+        <i18n path="activity.user.join_event">
+          <strong place="eventName">
+            <router-link :to="{name: 'event', params: {eventid: activity.event.id}}">
+              {{activity.event.name}}
+            </router-link>
+          </strong>
+        </i18n>
+        <br/>
+        <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
+      </div>
+      <div class="media-content" v-else-if="activity.type === Types.USER_LIBRARY_ADD">
+        <i18n path="activity.user.library_add">
+          <strong place="gameName">
+            <router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">
+              {{activity.board_game.name}}
+            </router-link>
+          </strong>
+        </i18n>
+        <br/>
+        <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
+      </div>
+      <div class="media-content" v-else-if="activity.type === Types.USER_PLAY_GAME">
+        <i18n path="activity.user.play_game">
+          <strong place="gameName">
+            <router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">
+              {{activity.board_game.name}}
+            </router-link>
+          </strong>
+        </i18n>
+        <br/>
+        <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
+      </div>
+    </article>
+  </div>
 </template>
 
 
 <script>
 import BgcDatetime from '@/components/layout/BgcDatetime';
-
+import ActivityBoxLeftMedia from '@/components/activities/ActivityBoxLeftMedia';
+import PlayerList from '@/components/activities/PlayerList';
+import { ActivityTypes } from '@/utils/api/Activity';
 export default {
   name: 'ActivityBox',
-  components: {BgcDatetime},
+  components: { ActivityBoxLeftMedia, BgcDatetime, PlayerList },
   props: {
     activity: {
       required: true
     }
   },
+  data() {
+    return { Types: ActivityTypes };
+  },
+  computed: {
+    thumbnail() {
+      switch (this.activity.type) {
+        case ActivityTypes.EVENT_PLAY_GAME:
+          return this.activity.game.board_game.thumbnail;
+        case ActivityTypes.EVENT_ADD_GAME:
+        case ActivityTypes.USER_PLAY_GAME:
+        case ActivityTypes.USER_LIBRARY_ADD:
+          return this.activity.board_game.thumbnail;
+        case ActivityTypes.EVENT_USER_JOIN:
+        case ActivityTypes.USER_JOIN_EVENT:
+        default:
+          return null;
+      }
+    }
+  }
 };
 </script>
 
@@ -61,10 +116,5 @@ export default {
 .activity-datetime {
     color: #000000;
     font-size: 0.8em;
-}
-
-img {
-    max-width: 64px;
-    max-height: 64px;
 }
 </style>
