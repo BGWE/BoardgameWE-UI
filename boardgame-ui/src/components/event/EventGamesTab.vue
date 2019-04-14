@@ -22,7 +22,7 @@
                   <div class="control" v-if="game.duration">
                     <div class="tags has-addons">
                       <span class="tag is-primary"><i class="fas fa-stopwatch"></i></span>
-                      <span class="tag is-light">{{game.duration}} min</span>
+                      <span class="tag is-light">{{formatStrDuration(game.duration)}}</span>
                     </div>
                   </div>
                 </div>
@@ -124,6 +124,25 @@ export default {
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
+    
+    formatStrDuration: function(duration) {
+      const mDuration = moment.duration(duration, 'minutes');
+
+      let minutesLabel = this.$t('event.games.minutesShort');
+
+      if (mDuration.hours() > 0) {
+        let hoursLabel = this.$t('event.games.hoursShort');
+
+        if (mDuration.minutes() == 0) {
+          return `${mDuration.hours()} ${hoursLabel}`
+        }
+
+        return `${mDuration.hours()} ${hoursLabel} ${mDuration.minutes()}`
+      }
+      else {
+        return `${mDuration.minutes()} ${minutesLabel}`
+      }
+    },
 
     formattedRanking: function(game) {
       let players = game.players;
