@@ -56,7 +56,35 @@ const routes = [
     name: 'event',
     path: '/event/:eventid',
     component: require('./pages/EventPage.vue').default,
-    beforeEnter: authenticatedOnly
+    redirect: {name: 'event_dashboard'},
+    beforeEnter: authenticatedOnly,
+    children: [
+      {
+        name: 'event_dashboard',
+        path: 'dashboard',
+        component: require('./components/event/EventDashboardTab.vue').default,
+      },
+      {
+        name: 'event_board_games',
+        path: 'board_games',
+        component: require('./components/event/EventBoardGamesTab.vue').default,
+      },
+      {
+        name: 'event_games',
+        path: 'games',
+        component: require('./components/event/EventGamesTab.vue').default,
+      },
+      {
+        name: 'event_rankings',
+        path: 'rankings',
+        component: require('./components/event/EventRankingsTab.vue').default,
+      },
+      {
+        name: 'event_matchmaking',
+        path: 'matchmaking',
+        component: require('./components/event/EventMatchmakingTab.vue').default,
+      }
+    ]
   },
   {
     name: 'editEvent',

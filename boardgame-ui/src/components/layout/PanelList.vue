@@ -16,7 +16,9 @@ export default {
     margin-bottom: 20px
   }
 
-  .panel {
-    max-width: 600px;
+  .panel { 
+    max-width: 500px;
+    margin: auto;
   }
+
 </style>
