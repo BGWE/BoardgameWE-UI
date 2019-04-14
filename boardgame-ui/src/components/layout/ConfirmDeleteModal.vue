@@ -7,8 +7,8 @@
       <footer class="card-footer">
         <a href="#" class="card-footer-item" @click="onCancel">{{$t('label.cancel')}}</a>
         <a href="#" class="card-footer-item card-footer-item-danger" @click="this.onDelete">
-        <span class="icon"><i class="far fa-trash-alt"></i></span>
-        {{$t('label.delete')}}
+          <span class="icon"><i class="far fa-trash-alt"></i></span>
+          <span>{{$t('label.delete')}}</span>
         </a>
       </footer>
     </div>
