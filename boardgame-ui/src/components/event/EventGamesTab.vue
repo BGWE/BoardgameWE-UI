@@ -5,11 +5,28 @@
       <div class="column is-full">
         <PanelList>
           <PanelListElement
-            v-for="(game, index) in games"
+            v-for="(game, index) in reverseSortedGames"
             v-bind:key="index">
             
             <template v-slot:title>
-              {{game.board_game.name}}
+              <div class="games-headers">
+                <div class="is-size-6-mobile">{{game.board_game.name}}</div>
+                <div class="games-subtitle field is-grouped is-grouped-multiline">
+                  <div class="control">
+                    <div class="tags has-addons">
+                      <span class="tag is-primary"><i class="fas fa-user"></i></span>
+                      <span class="tag is-light">{{game.players.length}}</span>
+                    </div>
+                  </div>
+
+                  <div class="control" v-if="game.duration">
+                    <div class="tags has-addons">
+                      <span class="tag is-primary"><i class="fas fa-stopwatch"></i></span>
+                      <span class="tag is-light">{{game.duration}} min</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </template>
 
             <template v-slot:img>
@@ -27,11 +44,11 @@
             <template v-slot:buttons>
               <a class="card-footer-item">
                 <span class="icon"><i class="far fa-edit"></i></span>
-                Edit
+                {{$t('event.games.edit')}}
               </a>
-              <a class="card-footer-item card-footer-item-danger">
+              <a class="card-footer-item card-footer-item-danger" @click="confirmDeleteGame(game)">
                 <span class="icon"><i class="far fa-trash-alt"></i></span>
-                Delete
+                {{$t('event.games.delete')}}
               </a>
             </template>
 
@@ -45,6 +62,13 @@
         </PanelList>
       </div>
     </div>
+
+    
+    <ConfirmDeleteModal 
+      :active="isConfirmDeleteModalActive" 
+      :onDelete="deleteGame"
+      :onCancel="onCancelConfirmDeleteModal" 
+      :content="$t('event.games.confirmGameDeletion')"/>
   </div>
 </template>
 
@@ -52,21 +76,49 @@
 import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
+import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 
 import Event from '@/utils/api/Event';
+import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
+
+import moment from 'moment-timezone';
 
 export default {
   components: {
     PanelList,
     PanelListElement,
-    RankingTable
+    RankingTable,
+    ConfirmDeleteModal
   },
+
+  props: ['event'],
 
   data() {
     return {
       loading: true,
+      isConfirmDeleteModalActive: false,
+      gameToDelete: null,
       games: []
+    }
+  },
+
+  computed: {
+    sortedGames: function() {
+      if(!this.games || this.games.length == 0) { 
+        return []
+      }
+      
+      return this.games.slice().sort((a, b) => {
+        const datetimeA = moment(a).tz(moment.tz.guess());
+        const datetimeB = moment(b).tz(moment.tz.guess());
+
+        return datetimeA.isSameOrBefore(datetimeB);
+      });
+    },
+
+    reverseSortedGames: function() {
+      return this.sortedGames.slice().reverse();
     }
   },
 
@@ -98,14 +150,34 @@ export default {
         }
       }
       return data;
+    },
+
+    confirmDeleteGame: function(game) {
+      this.gameToDelete = game;
+      this.isConfirmDeleteModalActive = true;
+    },
+
+    onCancelConfirmDeleteModal: function() {
+      this.isConfirmDeleteModalActive = false;
+      this.gameToDelete = null;
+    },
+
+    async deleteGame() {
+      await Game.deleteGame(this.gameToDelete.id);
+      this.onCancelConfirmDeleteModal();
+
+      this.reload();
+    },
+
+    async reload() {
+      this.loading = true;
+      this.games = await this.event.fetchGames();
+      this.loading = false;
     }
   },
 
   async created() {
-    this.event = await Event.fetch(this.$route.params.eventid);
-    this.games = await this.event.fetchGames();
-
-    this.loading = false;
+    this.reload();
   },
 
 };
@@ -119,4 +191,13 @@ export default {
 .time-footer {
   margin-left: 10px;
 }
+
+.games-title {
+  font-size: 1.1em;
+}
+
+.games-subtitle {
+  margin-top: 0.2em;
+}
+
 </style>

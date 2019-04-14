@@ -84,7 +84,8 @@ export default {
     border-radius: 32px;
     position: absolute;
     left: 15px;
-    top: 0.5em;
+    top: 50%;
+    margin-top: -32px;
   }
 
   .card {
@@ -92,11 +93,11 @@ export default {
   }
 
   .card-header {
-    height: 5em;
+    position: relative;
   }
 
   .card-header-title {
-    /* padding: 2em; */
+    padding: 0.8em;
     padding-left: 6em;
   }
 

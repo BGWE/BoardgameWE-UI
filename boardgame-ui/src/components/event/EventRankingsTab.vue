@@ -108,6 +108,8 @@ export default {
     RankingTable
   },
 
+  props: ['event'],
+
   data() {
     return {
       rankings: [],
@@ -161,10 +163,8 @@ export default {
   },
 
   async created() {
-    this.event = await Event.fetch(this.$route.params.eventid);
     if (!this.event.hide_rankings) {
       this.rankings = await this.event.fetchRankings();
-      console.log('received');
     }
   },
 

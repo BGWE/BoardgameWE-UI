@@ -38,19 +38,6 @@ export default class User extends Model {
   }
 
   /**
-   * @param {String} username
-   * @param {String} password
-   * @param {String} surname
-   * @param {String} name
-   * @param {String} email
-   * @return {String} A JWT token if the authentication was performed successfully
-   */
-  static async signUp(username, password, surname, name, email) {
-    let {data} = await axios.post('user', {username, password, surname, name, email});
-    return data;
-  }
-
-  /**
    * Fetch user statistics
    * @param userId (Optional) Identifier of the user (default: user identifier)
    * @returns {Object} Response from backend
