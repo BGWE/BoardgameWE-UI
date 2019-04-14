@@ -27,12 +27,28 @@
             </div>
             <footer class="card-footer">
               <div class="buttons">
-                <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-light">
-                  {{$t('events.view')}}
+                <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
+                  <span class="icon is-small">
+                    <i class="fas fa-door-open"></i>
+                  </span>
+
+                  <span>{{$t('events.view')}}</span>
                 </router-link>
-                <button class="button" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">{{$t('events.join')}}</button>
-                <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-danger">
-                  {{$t('events.edit')}}
+                
+                <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
+                  <span class="icon is-small">
+                    <i class="fas fa-sign-in-alt"></i>
+                  </span>
+
+                  <span>{{$t('events.join')}}</span>
+                </button>
+                
+                <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-danger is-outlined">
+                  <span class="icon is-small">
+                    <i class="far fa-edit"></i>
+                  </span>
+
+                  <span>{{$t('events.edit')}}</span>
                 </router-link>
               </div>
             </footer>
