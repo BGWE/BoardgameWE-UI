@@ -27,7 +27,7 @@
           </b-table-column>
 
           <b-table-column label="Validate" centered>
-            <button @click="validateUser(props.row.id)" class="button">
+            <button v-if="!props.row.validated" @click="validateUser(props.row.id)" class="button">
               {{ $t('uservalidation.validate') }}
             </button>
           </b-table-column>

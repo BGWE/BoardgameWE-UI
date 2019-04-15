@@ -102,7 +102,7 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
-    name: 'userValidation',
+    name: 'uservalidation',
     path: '/userValidation',
     component: require('./pages/UserValidationPage.vue').default,
     beforeEnter: adminOnly
