@@ -40,9 +40,12 @@
             </a>
 
             <div class="navbar-dropdown">
-                <router-link :to="{name: 'preferences'}" class="navbar-item">
-                  {{$t('navbar.preferences')}}
-                </router-link>
+              <router-link :to="{name: 'preferences'}" class="navbar-item">
+                {{$t('navbar.preferences')}}
+              </router-link>
+              <router-link v-if="isUserAdmin" :to="{name: 'uservalidation'}" class="navbar-item">
+                {{$t('navbar.uservalidation')}}
+              </router-link>
               <a @click="logout()" class="navbar-item">
                 {{$t('navbar.log-out')}}
               </a>
@@ -65,6 +68,10 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
+    },
+
+    isUserAdmin() {
+      return this.currentUser.admin;
     }
   },
   methods: {
