@@ -1,6 +1,6 @@
 <template>
   <div class="board-game-list-wrapper">
-    <div class="columns">
+    <div class="columns is-vcentered">
       <div class="column is-narrow">
         <b-field>
           <b-input :placeholder="$t('placeholder.search')" type="search" icon="search" v-model="searchString"></b-input>
@@ -20,9 +20,16 @@
           <b-input v-model="nbPlayers" icon="users"></b-input>
         </b-field>
       </div>
+      <div v-if="!allBelongToUser" class="column is-narrow">
+        <b-field class="narrow">
+          <b-checkbox v-model="belongsToUserOnly">
+            {{ $t('board-games-list.belongsToUser') }}
+          </b-checkbox>
+        </b-field>
+      </div>
       <div class="column has-text-right">
         <button class="button is-primary" @click="activeModal = true">
-          {{$t("board-games-list.add")}}
+          {{$t('board-games-list.add')}}
         </button>
       </div>
     </div>
@@ -44,6 +51,7 @@
 <script>
 import BoardGamePreview from './BoardGamePreview';
 import AddBoardGameModal from './AddBoardGameModal';
+import BCheckbox from 'buefy/src/components/checkbox/Checkbox';
 
 export default {
   props: [
@@ -52,6 +60,7 @@ export default {
     'addFromLibrary'
   ],
   components: {
+    BCheckbox,
     BoardGamePreview,
     AddBoardGameModal
   },
@@ -68,7 +77,8 @@ export default {
       ],
       selectedSortOption: null,
       nbPlayers: null,
-      activeModal: false
+      activeModal: false,
+      belongsToUserOnly: false,
     };
   },
   computed: {
@@ -80,10 +90,12 @@ export default {
       let str = this.searchString.toLowerCase();
       let nbPlayers = Number(this.nbPlayers);
       let {asc, prop: sortProp} = this.selectedSortOption;
+      let gameBelongsToUserFilter = this.belongsToUserOnly;
 
       return this.boardGames.filter(boardGame => {
         return boardGame.name.toLowerCase().indexOf(str) >= 0
-          && (!nbPlayers || (boardGame.min_players <= nbPlayers && boardGame.max_players >= nbPlayers));
+          && (!nbPlayers || (boardGame.min_players <= nbPlayers && boardGame.max_players >= nbPlayers))
+          && (!gameBelongsToUserFilter || boardGame.belongsToUser);
       }).sort((a, b) => a[sortProp] < b[sortProp] ? (asc ? -1 : 1) : (asc ? 1 : -1));
     }
   },
