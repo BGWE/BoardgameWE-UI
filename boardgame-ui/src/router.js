@@ -56,6 +56,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'createEvent',
+    path: '/events/createEvent',
+    component: require('./pages/EventCreationPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'event',
     path: '/event/:eventid',
     component: require('./pages/EventPage.vue').default,
@@ -88,6 +94,12 @@ const routes = [
         component: require('./components/event/EventMatchmakingTab.vue').default,
       }
     ]
+  },
+  {
+    name: 'editEvent',
+    path: '/event/:eventid/edit',
+    component: require('./pages/EventCreationPage.vue').default,
+    beforeEnter: authenticatedOnly
   },
   {
     name: 'library',

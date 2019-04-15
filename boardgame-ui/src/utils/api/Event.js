@@ -17,6 +17,7 @@ export default class Event extends Model {
     this.end = null;
     this.description = null;
     this.location = null;
+    this.hide_rankings = false;
   }
 
   static async fetchAll(ongoing, registered) {
@@ -116,6 +117,11 @@ export default class Event extends Model {
       throw new Error('Cannot subscribe to an event with no ID');
     }
     let {data} = await axios.post(`event/${this.id}/subscribe`);
+    return data;
+  }
+
+  static async subscribeWithId(id) {
+    const data = new this({id}).subscribe();
     return data;
   }
 
