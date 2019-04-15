@@ -15,6 +15,7 @@ export default class Timer extends Model {
     this.creator = null;
     this.initial_duration = null;
     this.reload_increment = null;
+    this.current_player = null;
     this.player_timers = [];
   }
 
