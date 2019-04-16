@@ -104,7 +104,7 @@ export default {
 
 <style scoped>
 .column {
-  display: flex;
+  #display: flex;
 }
 .card {
   flex-grow: 1;
