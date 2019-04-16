@@ -1,8 +1,12 @@
 <template>
   <div class="tabwrapper">
-    <b-loading :is-full-page="false" :active="loading" />
-    <div class="columns" v-if="!loading">
+    <b-loading :is-full-page="false" :active="loading"></b-loading>
+    <event-add-game :event="event" v-if="addingGame" @addGame="addGame" @close="addingGame = false" />
+    <div class="columns" v-else-if="!loading">
       <div class="column is-full">
+        <p class="has-text-right limited-width">
+          <button class="button is-primary" @click="addingGame = true">{{$t('button.add-game')}}</button>
+        </p>
         <PanelList>
           <PanelListElement
             v-for="(game, index) in reverseSortedGames"
@@ -77,6 +81,7 @@ import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import EventAddGame from './EventAddGame';
 
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
@@ -88,7 +93,8 @@ export default {
     PanelList,
     PanelListElement,
     RankingTable,
-    ConfirmDeleteModal
+    ConfirmDeleteModal,
+    EventAddGame
   },
 
   props: ['event'],
@@ -98,7 +104,8 @@ export default {
       loading: true,
       isConfirmDeleteModalActive: false,
       gameToDelete: null,
-      games: []
+      games: [],
+      addingGame: false
     };
   },
 
@@ -170,6 +177,11 @@ export default {
       return data;
     },
 
+    addGame() {
+      this.reload();
+      this.addingGame = false;
+    },
+
     confirmDeleteGame: function(game) {
       this.gameToDelete = game;
       this.isConfirmDeleteModalActive = true;
@@ -216,6 +228,12 @@ export default {
 
 .games-subtitle {
   margin-top: 0.2em;
+}
+
+.limited-width {
+  max-width: 500px;
+  margin: auto;
+  margin-bottom: 1em;
 }
 
 </style>
