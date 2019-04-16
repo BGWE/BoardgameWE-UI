@@ -27,12 +27,28 @@
             </div>
             <footer class="card-footer">
               <div class="buttons">
-                <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-light">
-                  {{$t('events.view')}}
+                <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
+                  <span class="icon is-small">
+                    <i class="far fa-eye"></i>
+                  </span>
+
+                  <span>{{$t('events.view')}}</span>
                 </router-link>
-                <button class="button">{{$t('events.join')}}</button>
-                <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-danger">
-                  {{$t('events.edit')}}
+                
+                <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
+                  <span class="icon is-small">
+                    <i class="fas fa-sign-in-alt"></i>
+                  </span>
+
+                  <span>{{$t('events.join')}}</span>
+                </button>
+                
+                <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-info is-outlined">
+                  <span class="icon is-small">
+                    <i class="far fa-edit"></i>
+                  </span>
+
+                  <span>{{$t('events.edit')}}</span>
                 </router-link>
               </div>
             </footer>
@@ -55,18 +71,33 @@ export default {
 
   data() {
     return {
-      events: []
+      events: [],
+      attendedEvents: []
     };
   },
 
   methods: {
+    async reload() {
+      this.events = await Event.fetchAll();
+      this.attendedEvents = await Event.fetchAttendedEvents();
+    },
+
     isUserEventOwner(userId) {
       return (userId === this.$store.state.currentUser.id);
+    },
+
+    isAttendedEvent(eventId) {
+      return this.attendedEvents.find(e => e.id == eventId);      
+    },
+
+    async joinEvent(eventId) {
+      const data = await Event.subscribeWithId(eventId);
+      this.reload();
     }
   },
 
   async created() {
-    this.events = await Event.fetchAll();
+    this.reload();
   }
 };
 </script>

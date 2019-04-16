@@ -40,21 +40,21 @@
                    :label="$t('label.name')"
                    :type="{'is-danger': errors.has('name')}"
                    :message="errors.first('name')">
-            <b-input v-model="user.name" v-validate="'required|alpha'" name="name"></b-input>
+            <b-input v-model.trim="user.name" v-validate="'required|alpha'" name="name"></b-input>
           </b-field>
 
           <b-field v-if="registering"
                    :label="$t('label.surname')"
                    :type="{'is-danger': errors.has('surname')}"
                    :message="errors.first('surname')">
-            <b-input v-model="user.surname" v-validate="'required|alpha'" name="surname"></b-input>
+            <b-input v-model.trim="user.surname" v-validate="'required|alpha'" name="surname"></b-input>
           </b-field>
 
           <b-field v-if="registering"
                    :label="$t('label.email')"
                    :type="{'is-danger': errors.has('email')}"
                    :message="errors.first('email')">
-            <b-input v-model="user.email" type="email" v-validate="'required|email'" name="email"></b-input>
+            <b-input v-model.trim="user.email" type="email" v-validate="'required|email'" name="email"></b-input>
           </b-field>
 
           <p class="control">

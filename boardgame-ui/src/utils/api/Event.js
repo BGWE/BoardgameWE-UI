@@ -120,6 +120,11 @@ export default class Event extends Model {
     return data;
   }
 
+  static async subscribeWithId(id) {
+    const data = new this({id}).subscribe();
+    return data;
+  }
+
   async fetchRankings() {
     if(this.isNew()) {
       throw new Error('Cannot fetch rankings for an event with no ID');
