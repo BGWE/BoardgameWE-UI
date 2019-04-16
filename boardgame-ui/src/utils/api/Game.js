@@ -80,13 +80,4 @@ export default class Game extends Model {
       return this;
     }
   }
-
-  static async deleteGame(idGame) {
-    if(idGame == null) {
-      throw new Error('Cannot delete game with no ID.');
-    }
-
-    let {data} = await axios.delete(`game/${idGame}`);
-    return data;
-  }
 }

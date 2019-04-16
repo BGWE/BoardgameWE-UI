@@ -206,7 +206,7 @@ export default {
     },
 
     async deleteGame() {
-      await Game.deleteGame(this.gameToDelete.id);
+      await Game.delete(this.gameToDelete.id);
       this.onCancelConfirmDeleteModal();
 
       this.reload();
