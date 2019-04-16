@@ -1,11 +1,18 @@
 <template>
   <div class="tabwrapper">
     <b-loading :is-full-page="false" :active="loading"></b-loading>
-    <event-add-game :event="event" v-if="addingGame" @addGame="addGame" @close="addingGame = false" />
+    <event-add-edit-game
+      :event="event"
+      :editGame="editGame"
+      v-if="gameForm"
+      @addGame="savedGame"
+      @editGame="savedGame"
+      @close="gameForm = false"
+    />
     <div class="columns" v-else-if="!loading">
       <div class="column is-full">
         <p class="has-text-right limited-width">
-          <button class="button is-primary" @click="addingGame = true">{{$t('button.add-game')}}</button>
+          <button class="button is-primary" @click="openGameForm(null)">{{$t('button.add-game')}}</button>
         </p>
         <PanelList>
           <PanelListElement
@@ -46,7 +53,7 @@
             </template>
 
             <template v-slot:buttons>
-              <a class="card-footer-item">
+              <a class="card-footer-item" @click="openGameForm(game)">
                 <span class="icon"><i class="far fa-edit"></i></span>
                 {{$t('event.games.edit')}}
               </a>
@@ -81,7 +88,7 @@ import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
-import EventAddGame from './EventAddGame';
+import EventAddEditGame from './EventAddEditGame';
 
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
@@ -94,7 +101,7 @@ export default {
     PanelListElement,
     RankingTable,
     ConfirmDeleteModal,
-    EventAddGame
+    EventAddEditGame
   },
 
   props: ['event'],
@@ -105,7 +112,8 @@ export default {
       isConfirmDeleteModalActive: false,
       gameToDelete: null,
       games: [],
-      addingGame: false
+      gameForm: false,
+      editGame: null
     };
   },
 
@@ -177,9 +185,14 @@ export default {
       return data;
     },
 
-    addGame() {
+    openGameForm(game) {
+      this.editGame = game;
+      this.gameForm = true;
+    },
+
+    savedGame() {
       this.reload();
-      this.addingGame = false;
+      this.gameForm = false;
     },
 
     confirmDeleteGame: function(game) {

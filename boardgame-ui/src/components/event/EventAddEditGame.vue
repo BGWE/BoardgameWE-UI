@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
-    <h1 class="title">{{$t('add-game.title')}}</h1>
+    <h1 class="title">{{$t('add-edit-game.title')}}</h1>
     <form @submit.prevent="save()">
       <b-field
-        :label="$t('add-game.board-game.label')"
+        :label="$t('add-edit-game.board-game.label')"
         :type="{'is-danger': errors.has('boardGame')}"
         :message="errors.first('boardGame')"
       >
@@ -14,15 +14,15 @@
           icon="search"
           @select="selectBoardGame"
           name="boardGame"
-          :data-vv-as="$t('add-game.board-game.label')"
+          :data-vv-as="$t('add-edit-game.board-game.label')"
           v-validate="'required'"
         >
-          <template slot="empty">{{$t('add-game.board-game.no-result')}}</template>
+          <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
         </b-autocomplete>
       </b-field>
       <div class="columns">
         <div class="column">
-          <b-field :label="$t('add-game.ranking-method.label')">
+          <b-field :label="$t('add-edit-game.ranking-method.label')">
             <b-select v-model="game.ranking_method" expanded>
               <option v-for="method in allowedRankingMethods" :value="method" :key="method">
                 {{$t('global.ranking-method.' + method)}}
@@ -31,20 +31,20 @@
           </b-field>
         </div>
         <div class="column is-narrow">
-          <b-field :label="$t('add-game.game-duration.label')">
+          <b-field :label="$t('add-edit-game.game-duration.label')">
             <b-timepicker v-model="time" size="is-small" :min-time="minTime" :increment-minutes="15" inline />
           </b-field>
         </div>
       </div>
 
-      <h2 class="subtitle">{{$t('add-game.players.title')}}</h2>
+      <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
       <table class="table is-fullwidth">
         <thead>
           <tr>
-            <th>{{$t('add-game.players.user')}}</th>
-            <th v-if="ranked">{{$t('add-game.players.score')}}</th>
-            <th v-else>{{$t('add-game.players.winner')}}</th>
+            <th>{{$t('add-edit-game.players.user')}}</th>
+            <th v-if="ranked">{{$t('add-edit-game.players.score')}}</th>
+            <th v-else>{{$t('add-edit-game.players.winner')}}</th>
             <th class="has-text-white">.</th>
           </tr>
         </thead>
@@ -61,7 +61,7 @@
                   :users="users"
                   :excludedIds="selectedUsersIds"
                   :name="`user-${idx}`"
-                  :data-vv-as="$t('add-game.players.user')"
+                  :data-vv-as="$t('add-edit-game.players.user')"
                   v-validate="'required'"
                 />
               </b-field>
@@ -76,7 +76,7 @@
                   v-model="players[idx].score"
                   size="is-small"
                   :name="`score-${idx}`"
-                  :data-vv-as="$t('add-game.players.score')"
+                  :data-vv-as="$t('add-edit-game.players.score')"
                   v-validate="'required'"
                 />
               </b-field>
@@ -113,14 +113,12 @@ export default {
     UserAutocomplete
   },
   props: {
-    event: Object
+    event: Object,
+    editGame: Object
   },
   data() {
     return {
-      game: new Game({
-        id_event: this.event.id,
-        ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER
-      }),
+      game: null,
       searchString: '',
       time: null,
       minTime: null,
@@ -170,9 +168,11 @@ export default {
     }
   },
   watch: {
-    'game.ranking_method'() {
-      // reinitialize scores
-      this.players.forEach(player => player.score = null);
+    'game.ranking_method'(_, old) {
+      if(!old) {
+        return;
+      }
+      this.players.forEach(player => player.score = null); // reinitialize scores
     },
     time() {
       if(this.time < this.minTime) {
@@ -190,7 +190,7 @@ export default {
     removePlayer(idx) {
       if(this.players.length === 1) {
         this.$toast.open({
-          message: this.$t('add-game.must-have-at-least-one-player'),
+          message: this.$t('add-edit-game.must-have-at-least-one-player'),
           type: 'is-danger',
           position: 'is-bottom'
         });
@@ -202,7 +202,7 @@ export default {
       let result = await this.$validator.validateAll();
 
       if(!this.game.id_board_game) {
-        this.$validator.errors.add({field: 'boardGame', msg: this.$t('add-game.validation-error.board-game')});
+        this.$validator.errors.add({field: 'boardGame', msg: this.$t('add-edit-game.validation-error.board-game')});
         result = false;
       }
 
@@ -221,7 +221,7 @@ export default {
       try {
         await this.game.save();
         this.$toast.open({
-          message: this.$t('add-game.save-success'),
+          message: this.$t('add-edit-game.save-success'),
           type: 'is-success',
           position: 'is-bottom'
         });
@@ -230,7 +230,7 @@ export default {
       catch(error) {
         console.log(error);
         this.$toast.open({
-          message: this.$t('add-game.save-error'),
+          message: this.$t('add-edit-game.save-error'),
           type: 'is-danger',
           position: 'is-bottom'
         });
@@ -240,17 +240,39 @@ export default {
   async created() {
     this.boardGamesLinks = await this.event.fetchBoardGames();
 
-    this.players.push({user: this.currentUser, score: null});
-
-    let time = new Date();
-    time.setHours(0);
-    time.setMinutes(30);
-    this.time = time;
-
     let minTime = new Date();
     minTime.setHours(0);
     minTime.setMinutes(15);
     this.minTime = minTime;
+
+    let time = new Date();
+
+    if(this.editGame) {
+      this.game = this.editGame.clone();
+
+      this.searchString = this.game.board_game.name;
+
+      this.game.players.forEach(player => {
+        let score = this.ranked ? player.score : Boolean(player.score);
+        this.players.push({user: player.user, score});
+      });
+
+      time.setHours(Math.floor(this.game.duration / 60));
+      time.setMinutes(this.game.duration % 60);
+    }
+    else {
+      this.game = new Game({
+        id_event: this.event.id,
+        ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER
+      });
+
+      this.players.push({user: this.currentUser, score: null});
+
+      time.setHours(0);
+      time.setMinutes(30);
+    }
+
+    this.time = time;
   }
 };
 </script>

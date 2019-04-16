@@ -67,6 +67,20 @@ export default class Game extends Model {
     return processedCollection;
   }
 
+  /**
+   * @override (uri not consistent for delete, fetch and update => need to override default behaviour)
+   */
+  async save() {
+    if(this.isNew()) {
+      return super.save();
+    }
+    else {
+      let {data} = await axios.put(`/event/${this.id_event}/${this.className}/${this.id}`, this.getPublicProperties());
+      this.populate(data);
+      return this;
+    }
+  }
+
   static async deleteGame(idGame) {
     if(idGame == null) {
       throw new Error('Cannot delete game with no ID.');
