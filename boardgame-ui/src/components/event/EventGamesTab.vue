@@ -68,7 +68,7 @@
       :active="isConfirmDeleteModalActive" 
       :onDelete="deleteGame"
       :onCancel="onCancelConfirmDeleteModal" 
-      :content="$t('event.games.confirmGameDeletion')"/>
+      :content="$t('event.games.confirm-game-deletion')"/>
   </div>
 </template>
 
@@ -182,9 +182,25 @@ export default {
     },
 
     async deleteGame() {
-      await Game.deleteGame(this.gameToDelete.id);
-      this.onCancelConfirmDeleteModal();
 
+      try {
+        await Game.deleteGame(this.gameToDelete.id);
+        this.$toast.open({
+          message: this.$t('event.games.delete-game-success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('event.games.delete-game-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
+      
+      this.onCancelConfirmDeleteModal();
       this.reload();
     },
 
