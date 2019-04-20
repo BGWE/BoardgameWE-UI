@@ -70,12 +70,12 @@
   </div>
 </template>
 
-
 <script>
 import BgcDatetime from '@/components/layout/BgcDatetime';
 import ActivityBoxLeftMedia from '@/components/activities/ActivityBoxLeftMedia';
 import PlayerList from '@/components/activities/PlayerList';
 import { ActivityTypes } from '@/utils/api/Activity';
+
 export default {
   name: 'ActivityBox',
   components: { ActivityBoxLeftMedia, BgcDatetime, PlayerList },
@@ -110,7 +110,6 @@ export default {
 .activity-container {
     margin-top: 5px;
     margin-bottom: 5px;
-    height: 64px;
 }
 
 .activity-datetime {
