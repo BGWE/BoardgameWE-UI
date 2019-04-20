@@ -125,6 +125,16 @@ const routes = [
     component: require('./pages/BoardGamePage.vue').default
   },
   {
+    name: 'forgot-password',
+    path: '/auth/forgot_password',
+    component: require('./pages/ForgotPasswordPage.vue').default
+  },
+  {
+    name: 'reset-password',
+    path: '/auth/reset_password',
+    component: require('./pages/ResetPasswordPage.vue').default
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./pages/NotFoundPage.vue').default,

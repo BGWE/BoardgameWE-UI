@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-loading v-if="isLoading"></b-loading>
+    <b-loading :active="isLoading"></b-loading>
     <section v-if="user" class="section">
       <div class="box">
         <h1 class="title">{{titleText}}</h1>
@@ -68,24 +68,47 @@
           {{toggleButtonText}}
         </button>
 
+        <!-- <button v-if="!registering" class="button is-info is-fullwidth" v-on:click="isForgotPasswordModalActive = !isForgotPasswordModalActive">
+          {{$t('login.link.forgot-password')}}
+        </button> -->
+
+        <div v-if="!registering" class="forgot-password-box has-text-link">
+          <router-link :to="{name: 'forgot-password'}">
+            {{$t('login.link.forgot-password')}}
+          </router-link>
+        </div>
+        
+
+        <!-- <b-modal :active="isForgotPasswordModalActive" scroll="keep" width="510px">
+          <ForgotPasswordModal @cancel="closeForgotPasswordModal" @submit="submitForgotPassword" :email="forgotPasswordEmail"/>
+        </b-modal> -->
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import User from '../utils/api/User';
+import User from '@/utils/api/User';
+import Authentication from '@/utils/api/Authentication';
+
+import ForgotPasswordModal from '@/components/authentication/ForgotPasswordModal';
 
 export default {
   name: 'LoginPage',
+
+  components: {
+    ForgotPasswordModal
+  },
 
   data() {
     return {
       user : null,
       confirmPassword:'',
+      forgotPasswordEmail: '',
       error: false,
       registering: false,
-      isLoading: true
+      isLoading: true,
+      isForgotPasswordModalActive: false
     };
   },
 
@@ -112,13 +135,16 @@ export default {
 
   methods: {
     async login() {
+      this.isLoading = true;
       try {
         await this.$store.dispatch('login', this.credentials);
+        this.isLoading = false;
         this.$router.push(this.next);
       }
       catch(error) {
         console.log(error);
         this.error = true;
+        this.isLoading = false;
       }
     },
 
@@ -165,7 +191,7 @@ export default {
 
     toggleRegister() {
       this.registering = !this.registering;
-    }
+    },
   },
 
   created() {
@@ -183,5 +209,9 @@ export default {
 
 .error {
   color: red;
+}
+
+.forgot-password-box {
+  margin-top: 1em;
 }
 </style>
