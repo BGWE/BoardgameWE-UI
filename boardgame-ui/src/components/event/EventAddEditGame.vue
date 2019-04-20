@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper">
-    <h1 class="title">{{$t('add-edit-game.title')}}</h1>
-    <form @submit.prevent="save()">
+    <h1 class="title">{{$t(editGame ? 'edit-game.title' : 'add-game.title')}}</h1>
+    <b-loading :active="!game" :is-full-page="false" />
+    <form v-if="game" @submit.prevent="save()">
       <b-field
         :label="$t('add-edit-game.board-game.label')"
         :type="{'is-danger': errors.has('boardGame')}"
@@ -280,7 +281,9 @@ export default {
 <style lang="scss" scoped>
 .wrapper {
   max-width: 600px;
+  min-height: 20vh;
   margin: auto;
+  position: relative;
 }
 
 h2 {
