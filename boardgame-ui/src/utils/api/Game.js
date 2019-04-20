@@ -67,12 +67,17 @@ export default class Game extends Model {
     return processedCollection;
   }
 
-  static async deleteGame(idGame) {
-    if(idGame == null) {
-      throw new Error('Cannot delete game with no ID.');
+  /**
+   * @override (uri not consistent for delete, fetch and update => need to override default behaviour)
+   */
+  async save() {
+    if(this.isNew()) {
+      return super.save();
     }
-
-    let {data} = await axios.delete(`game/${idGame}`);
-    return data;
+    else {
+      let {data} = await axios.put(`/event/${this.id_event}/${this.className}/${this.id}`, this.getPublicProperties());
+      this.populate(data);
+      return this;
+    }
   }
 }
