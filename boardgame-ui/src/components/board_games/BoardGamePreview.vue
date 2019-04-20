@@ -1,6 +1,7 @@
 <template>
   <div class="card">
     <div class="card-image">
+      <div v-if="count > 1" class="count">{{count}}</div>
       <figure class="image is-3by2 board-game-image" :style="{backgroundImage: `url('${boardGame.image}')`}">
       </figure>
     </div>
@@ -20,11 +21,18 @@ export default {
   props: [
     'boardGame',
     'deleteButton'
-  ]
+  ],
+  computed: {
+    count() {
+      return this.boardGame.count || 1;
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/colors.scss";
+
 .board-game-image {
   background-position: center center;
   background-repeat: no-repeat;
@@ -43,6 +51,24 @@ export default {
 
 .card-image {
   border-bottom: 2px solid #eee;
+  position: relative;
+}
+
+.count {
+  position: absolute;
+  z-index: 10;
+  top: -0.5em;
+  right: -0.5em;
+  background: $primary;
+  width: 1.7em;
+  height: 1.7em;
+  font-size: 0.9em;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+  color: $primary-invert;
+  border: 3px solid white;
+  line-height: 1.2em;
 }
 
 .card-content {

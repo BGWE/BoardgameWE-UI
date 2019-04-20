@@ -1,0 +1,16 @@
+@import "~bulma/sass/utilities/_all";
+
+// Set your colors
+$primary: #46a1a4;
+$primary-invert: findColorInvert($primary);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+$custom_colors: (
+    "primary": ($primary, $primary-invert)
+);
+
+$colors: map-merge($colors, $custom_colors);
