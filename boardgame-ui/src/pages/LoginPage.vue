@@ -68,20 +68,11 @@
           {{toggleButtonText}}
         </button>
 
-        <!-- <button v-if="!registering" class="button is-info is-fullwidth" v-on:click="isForgotPasswordModalActive = !isForgotPasswordModalActive">
-          {{$t('login.link.forgot-password')}}
-        </button> -->
-
         <div v-if="!registering" class="forgot-password-box has-text-link">
           <router-link :to="{name: 'forgot-password'}">
             {{$t('login.link.forgot-password')}}
           </router-link>
         </div>
-        
-
-        <!-- <b-modal :active="isForgotPasswordModalActive" scroll="keep" width="510px">
-          <ForgotPasswordModal @cancel="closeForgotPasswordModal" @submit="submitForgotPassword" :email="forgotPasswordEmail"/>
-        </b-modal> -->
       </div>
     </section>
   </div>
