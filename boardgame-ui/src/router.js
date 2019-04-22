@@ -1,4 +1,3 @@
-
 import VueRouter from 'vue-router';
 import store from './store';
 
@@ -15,11 +14,21 @@ const guestOnly = async (to, from, next) => {
 const authenticatedOnly = async (to, from, next) => {
   await store.dispatch('initializeStore');
 
-  if(store.state.currentUser != null) {
+  if (store.state.currentUser != null) {
     next();
     return;
   }
   next({name: 'login', query: {next: to.fullPath}});
+};
+
+const adminOnly = async (to, from, next) => {
+  await store.dispatch('initializeStore');
+
+  if (store.state.currentUser != null && store.state.currentUser.admin === true) {
+    next();
+    return;
+  }
+  next({name: 'home'});
 };
 
 const routes = [
@@ -44,6 +53,12 @@ const routes = [
     name: 'events',
     path: '/events',
     component: require('./pages/EventsPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'createEvent',
+    path: '/events/createEvent',
+    component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
@@ -81,6 +96,12 @@ const routes = [
     ]
   },
   {
+    name: 'editEvent',
+    path: '/event/:eventid/edit',
+    component: require('./pages/EventCreationPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'library',
     path: '/library',
     component: require('./pages/LibraryPage.vue').default,
@@ -109,6 +130,12 @@ const routes = [
     path: '/preferences',
     component: require('./pages/PrefsPage.vue').default,
     beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'uservalidation',
+    path: '/userValidation',
+    component: require('./pages/UserValidationPage.vue').default,
+    beforeEnter: adminOnly
   },
   {
     name: 'boardgame',
