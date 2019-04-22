@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div class="columns is-multiline" >
+      <div class="columns events is-multiline" >
         <div class="column is-one-quarter" v-for="event in events" :key="event.id">
           <div class="card">
             <header class="card-header">
@@ -34,7 +34,7 @@
 
                   <span>{{$t('events.view')}}</span>
                 </router-link>
-                
+
                 <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
                   <span class="icon is-small">
                     <i class="fas fa-sign-in-alt"></i>
@@ -42,7 +42,7 @@
 
                   <span>{{$t('events.join')}}</span>
                 </button>
-                
+
                 <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-info is-outlined">
                   <span class="icon is-small">
                     <i class="far fa-edit"></i>
@@ -87,7 +87,7 @@ export default {
     },
 
     isAttendedEvent(eventId) {
-      return this.attendedEvents.find(e => e.id == eventId);      
+      return this.attendedEvents.find(e => e.id == eventId);
     },
 
     async joinEvent(eventId) {
@@ -103,7 +103,7 @@ export default {
 </script>
 
 <style scoped>
-.column {
+.events .column {
   display: flex;
 }
 .card {

@@ -1,13 +1,24 @@
 <template>
   <div class="tabwrapper">
     <b-loading :is-full-page="false" :active="loading"></b-loading>
-    <div class="columns" v-if="!loading">
+    <event-add-edit-game
+      :event="event"
+      :editGame="editGame"
+      v-if="gameForm"
+      @addGame="savedGame"
+      @editGame="savedGame"
+      @close="gameForm = false"
+    />
+    <div class="columns" v-else-if="!loading">
       <div class="column is-full">
+        <p class="has-text-right limited-width">
+          <button class="button is-primary" @click="openGameForm(null)">{{$t('button.add-game')}}</button>
+        </p>
         <PanelList>
           <PanelListElement
             v-for="(game, index) in reverseSortedGames"
             v-bind:key="index">
-            
+
             <template v-slot:title>
               <div class="games-headers">
                 <div class="is-size-6-mobile">{{game.board_game.name}}</div>
@@ -35,14 +46,14 @@
 
             <template v-slot:content>
               <div>
-                <RankingTable 
+                <RankingTable
                 :rankingMethod="game.ranking_method"
                 :data="formattedRanking(game)"></RankingTable>
               </div>
             </template>
 
             <template v-slot:buttons>
-              <a class="card-footer-item">
+              <a class="card-footer-item" @click="openGameForm(game)">
                 <span class="icon"><i class="far fa-edit"></i></span>
                 {{$t('event.games.edit')}}
               </a>
@@ -63,12 +74,12 @@
       </div>
     </div>
 
-    
-    <ConfirmDeleteModal 
-      :active="isConfirmDeleteModalActive" 
+
+    <ConfirmDeleteModal
+      :active="isConfirmDeleteModalActive"
       :onDelete="deleteGame"
-      :onCancel="onCancelConfirmDeleteModal" 
-      :content="$t('event.games.confirmGameDeletion')"/>
+      :onCancel="onCancelConfirmDeleteModal"
+      :content="$t('event.games.confirm-game-deletion')"/>
   </div>
 </template>
 
@@ -77,8 +88,8 @@ import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import EventAddEditGame from './EventAddEditGame';
 
-import Event from '@/utils/api/Event';
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
 
@@ -89,7 +100,8 @@ export default {
     PanelList,
     PanelListElement,
     RankingTable,
-    ConfirmDeleteModal
+    ConfirmDeleteModal,
+    EventAddEditGame
   },
 
   props: ['event'],
@@ -99,16 +111,18 @@ export default {
       loading: true,
       isConfirmDeleteModalActive: false,
       gameToDelete: null,
-      games: []
-    }
+      games: [],
+      gameForm: false,
+      editGame: null
+    };
   },
 
   computed: {
     sortedGames: function() {
-      if(!this.games || this.games.length == 0) { 
-        return []
+      if(!this.games || this.games.length == 0) {
+        return [];
       }
-      
+
       return this.games.slice().sort((a, b) => {
         const datetimeA = moment(a).tz(moment.tz.guess());
         const datetimeB = moment(b).tz(moment.tz.guess());
@@ -124,7 +138,7 @@ export default {
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
-    
+
     formatStrDuration: function(duration) {
       const mDuration = moment.duration(duration, 'minutes');
 
@@ -134,13 +148,13 @@ export default {
         let hoursLabel = this.$t('event.games.hoursShort');
 
         if (mDuration.minutes() == 0) {
-          return `${mDuration.hours()} ${hoursLabel}`
+          return `${mDuration.hours()} ${hoursLabel}`;
         }
 
-        return `${mDuration.hours()} ${hoursLabel} ${mDuration.minutes()}`
+        return `${mDuration.hours()} ${hoursLabel} ${mDuration.minutes()}`;
       }
       else {
-        return `${mDuration.minutes()} ${minutesLabel}`
+        return `${mDuration.minutes()} ${minutesLabel}`;
       }
     },
 
@@ -158,7 +172,7 @@ export default {
             'player': name,
             'score': score,
           });
-        } 
+        }
         else {
           // score, player
           data.push({
@@ -169,6 +183,16 @@ export default {
         }
       }
       return data;
+    },
+
+    openGameForm(game) {
+      this.editGame = game;
+      this.gameForm = true;
+    },
+
+    savedGame() {
+      this.reload();
+      this.gameForm = false;
     },
 
     confirmDeleteGame: function(game) {
@@ -182,9 +206,24 @@ export default {
     },
 
     async deleteGame() {
-      await Game.deleteGame(this.gameToDelete.id);
-      this.onCancelConfirmDeleteModal();
+      try {
+        await Game.delete(this.gameToDelete.id);
+        this.$toast.open({
+          message: this.$t('event.games.delete-game-success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('event.games.delete-game-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
 
+      this.onCancelConfirmDeleteModal();
       this.reload();
     },
 
@@ -217,6 +256,12 @@ export default {
 
 .games-subtitle {
   margin-top: 0.2em;
+}
+
+.limited-width {
+  max-width: 500px;
+  margin: auto;
+  margin-bottom: 1em;
 }
 
 </style>

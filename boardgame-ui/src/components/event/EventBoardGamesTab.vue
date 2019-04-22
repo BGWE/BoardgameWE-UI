@@ -32,12 +32,14 @@ export default {
         let belongsToUser = link.id_user === this.currentUser.id;
         let id = link.id_board_game;
         if(id in mapping) {
+          let bg = boardGames[mapping[id]];
+          bg.count++;
           if(belongsToUser) {
-            boardGames[mapping[id]].belongsToUser = true;
+            bg.belongsToUser = true;
           }
         }
         else {
-          boardGames.push({belongsToUser, ...link.provided_board_game});
+          boardGames.push({belongsToUser, count: 1, ...link.provided_board_game});
           mapping[id] = boardGames.length - 1;
         }
       }

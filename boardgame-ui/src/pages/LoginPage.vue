@@ -40,14 +40,14 @@
                    :label="$t('label.name')"
                    :type="{'is-danger': errors.has('name')}"
                    :message="errors.first('name')">
-            <b-input v-model.trim="user.name" v-validate="'required|alpha'" name="name"></b-input>
+            <b-input v-model.trim="user.name" v-validate="'required'" name="name"></b-input>
           </b-field>
 
           <b-field v-if="registering"
                    :label="$t('label.surname')"
                    :type="{'is-danger': errors.has('surname')}"
                    :message="errors.first('surname')">
-            <b-input v-model.trim="user.surname" v-validate="'required|alpha'" name="surname"></b-input>
+            <b-input v-model.trim="user.surname" v-validate="'required'" name="surname"></b-input>
           </b-field>
 
           <b-field v-if="registering"
