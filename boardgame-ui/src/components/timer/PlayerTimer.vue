@@ -1,11 +1,11 @@
 <template>
   <div class="card" v-bind:style="{['background-color']: player_timer.color}">
     <header class="card-header">
-      <p class="card-header-title">{{player_timer.user === null ? player_timer.name : player_timer.user.name}} ({{player_timer.turn_order}}) </p>
+      <p v-bind:style="{color: textColor}" class="card-header-title">{{playerName}}</p>
     </header>
     <div class="card-content">
       <div class="content">
-        <span>
+        <span class="time-counter" v-bind:style="{color: textColor}">
           <span class="hours">{{hours()}}</span>
           <span class="middle">:</span>
           <span class="minutes">{{minutes()}}</span>
@@ -31,6 +31,17 @@ export default {
       interval: null,
       elapsedMillis: 0
     };
+  },
+  computed: {
+    textColor() {
+      const match = this.player_timer.color.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/);
+      const red = parseInt(match[1], 16) / 255, green = parseInt(match[2], 16) / 255, blue = parseInt(match[3], 16) / 255; 
+      const luminance = (0.299 * red + 0.587 * green + 0.114 * blue);
+      return luminance > 0.5 ? '#000000' : '#FFFFFF'; // dark colors - white font
+    },
+    playerName() {
+      return this.player_timer.user === null ? this.player_timer.name : this.player_timer.user.name;
+    }
   },
   watch: {
     'player_timer.start': function(value) {
@@ -88,4 +99,7 @@ export default {
 </script>
 
 <style scoped>
+.card-header-title {
+  background-color: rgba(0, 0, 0, 0.1);
+};
 </style>

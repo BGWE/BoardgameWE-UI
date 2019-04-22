@@ -5,22 +5,26 @@
       <button class="button" v-on:click="stop"><span><i class="fas fa-pause"></i></span></button>
       <button class="button" v-on:click="prev"><span><i class="fas fa-backward"></i></span></button>
       <button class="button" v-on:click="next"><span><i class="fas fa-forward"></i></span></button>
+      <b-taglist attached>
+        <b-tag type="is-dark">Timer</b-tag>
+        <b-tag type="is-info">
+          <i18n v-bind:path="timerTypeI18nPath"/>
+        </b-tag>
+      </b-taglist>
     </div>
     <div>
-      <div class="section">
-        <h1>Timer ({{timer.id}} - {{timer.timer_type}})</h1>
-        <player-timer
-          class="card"
-          v-for="player_timer in turnSortedPlayerTimers" :key="player_timer.id"
-          :player_timer="player_timer" :player="player" />
-      </div>
+      <player-timer
+        class="card"
+        v-for="player_timer in turnSortedPlayerTimers" :key="player_timer.id"
+        :player_timer="player_timer" :timer="timer" />
     </div>
   </section>
 </template>
 
 <script>
-import Timer from '@/utils/api/Timer';
+import Timer, { TimerTypes } from '@/utils/api/Timer';
 import PlayerTimer from '@/components/timer/PlayerTimer';
+
 export default {
   name: 'TimerPage',
   components: {PlayerTimer},
@@ -39,6 +43,13 @@ export default {
         array[i] = player_timers[(this.timer.current_player + i) % n_players];
       }
       return array;
+    },
+    timerTypeI18nPath() {
+      return {
+        [TimerTypes.COUNT_UP]: 'timer.type.count_up',
+        [TimerTypes.COUNT_DOWN]: 'timer.type.count_down',
+        [TimerTypes.RELOAD]: 'timer.type.reload'
+      }[this.timer.timer_type];
     }
   },
   sockets: {
