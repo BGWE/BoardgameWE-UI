@@ -91,7 +91,7 @@ export default {
     },
 
     async joinEvent(eventId) {
-      const data = await Event.subscribeWithId(eventId);
+      await Event.subscribeWithId(eventId);
       this.reload();
     }
   },
