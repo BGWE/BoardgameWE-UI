@@ -46,7 +46,7 @@ const routes = [
   {
     name: 'register',
     path: '/register',
-    component: require('./pages/LoginPage.vue').default,
+    component: require('./pages/RegisterPage.vue').default,
     beforeEnter: guestOnly
   },
   {
