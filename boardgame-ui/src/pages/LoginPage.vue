@@ -86,7 +86,7 @@ export default {
 
       if (!result) {
         this.$toast.open({
-          message: 'Form is not valid! Please check the fields.',
+          message: this.$t('validation.invalid'),
           type: 'is-danger',
           position: 'is-bottom'
         });
