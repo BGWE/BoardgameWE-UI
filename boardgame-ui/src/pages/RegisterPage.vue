@@ -125,7 +125,7 @@
 
         if (!result) {
           this.$toast.open({
-            message: this.$t('validation.invalid'),
+            message: this.$t('global.invalid-form'),
             type: 'is-danger',
             position: 'is-bottom'
           });
