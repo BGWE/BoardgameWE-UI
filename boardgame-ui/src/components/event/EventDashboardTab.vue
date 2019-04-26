@@ -1,6 +1,6 @@
 <template>
-  <div class="tabwrapper">
-    <section class="section" v-if="stats">
+  <section class="tabwrapper">
+    <div class="section" v-if="stats">
       <h2 class="subtitle"><i18n path="home.statistics" /></h2>
       <div class="columns">
         <div class="column has-text-centered">
@@ -36,19 +36,24 @@
           <p class="title">{{stats.minutes_played || 0}} <i18n path="home.stats.minutes" /></p>
         </div>
 
-        <div class="column has-text-centered" v-if="stats.games_played > 0">
+        <div class="column has-text-centered">
           <p class="heading"><i18n path="event.stats.most_played" /></p>
-          <p class="title">{{stats.most_played.board_game.name}}</p>
-          <p>({{stats.most_played.count}} <i18n path="home.stats.times" />)</p>
+          <div v-if="stats.most_played.board_game">
+            <p class="title">{{stats.most_played.board_game.name}}</p>
+            <p>({{stats.most_played.count}} <i18n path="home.stats.times" />)</p>
+          </div>
+          <div v-else>
+            <p class="title"><i18n path="event.stats.none" /></p>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="section" v-if="activities">
+    <div class="section" v-if="activities">
       <h2 class="subtitle"><i18n path="home.recent-activities" /></h2>
       <activity-box v-for="index in activities.length" :key="index" :activity="activities[index-1]" />
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script>
