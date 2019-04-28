@@ -82,14 +82,8 @@
 import User from '@/utils/api/User';
 import Authentication from '@/utils/api/Authentication';
 
-import ForgotPasswordModal from '@/components/authentication/ForgotPasswordModal';
-
 export default {
   name: 'LoginPage',
-
-  components: {
-    ForgotPasswordModal
-  },
 
   data() {
     return {
@@ -99,7 +93,6 @@ export default {
       error: false,
       registering: false,
       isLoading: true,
-      isForgotPasswordModalActive: false
     };
   },
 

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import Authentication from '@/utils/api/Authentication';
+import User from '@/utils/api/User';
 
 export default {
   data() {
@@ -61,34 +61,26 @@ export default {
 
   computed: {
     token() {
-      return this.getToken();
-    },
-
-    userId() { 
-      return this.getUserId();
-    }
-  },
-
-  methods: {
-    getToken() {
       if (!('token' in this.$route.query)) {
         return null;
       }
       return this.$route.query.token;
-    }, 
+    },
 
-    getUserId() {
+    userId() { 
       if (!('id' in this.$route.query)) {
         return null;
       }
       return parseInt(this.$route.query.id, 10);
-    },
+    }
+  },
 
+  methods: {
     validateBeforeSubmit() {
       this.$validator.validateAll().then(async (valid) => {
         if (valid) {
           try {
-            await Authentication.resetPassword(this.getToken(), this.getUserId(), this.password);
+            await User.resetPassword(this.token, this.userId(), this.password);
             this.$toast.open({
               message: this.$t('auth.reset-password.success'),
               type: 'is-success',

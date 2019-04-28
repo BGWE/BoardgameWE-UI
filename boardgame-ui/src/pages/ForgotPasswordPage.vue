@@ -25,6 +25,7 @@
 
 <script>
 import Authentication from '@/utils/api/Authentication';
+import User from '@/utils/api/User';
 
 export default {
 
@@ -49,7 +50,7 @@ export default {
 
     async submitForgotPassword(email) {
       try {
-        await Authentication.forgotPassword(email);
+        await User.forgotPassword(email);
       } 
       catch (error) {
         console.log(error);
