@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-loading v-if="isLoading"></b-loading>
+    <b-loading :active="isLoading"></b-loading>
     <section v-if="user" class="section">
       <div class="box">
         <h1 class="title">{{titleText}}</h1>
@@ -68,13 +68,18 @@
           {{toggleButtonText}}
         </button>
 
+        <div v-if="!registering" class="forgot-password-box has-text-link">
+          <router-link :to="{name: 'forgot-password'}">
+            {{$t('login.link.forgot-password')}}
+          </router-link>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <script>
-import User from '../utils/api/User';
+import User from '@/utils/api/User';
 
 export default {
   name: 'LoginPage',
@@ -83,9 +88,10 @@ export default {
     return {
       user : null,
       confirmPassword:'',
+      forgotPasswordEmail: '',
       error: false,
       registering: false,
-      isLoading: true
+      isLoading: true,
     };
   },
 
@@ -112,13 +118,16 @@ export default {
 
   methods: {
     async login() {
+      this.isLoading = true;
       try {
         await this.$store.dispatch('login', this.credentials);
+        this.isLoading = false;
         this.$router.push(this.next);
       }
       catch(error) {
         console.log(error);
         this.error = true;
+        this.isLoading = false;
       }
     },
 
@@ -165,7 +174,7 @@ export default {
 
     toggleRegister() {
       this.registering = !this.registering;
-    }
+    },
   },
 
   created() {
@@ -183,5 +192,9 @@ export default {
 
 .error {
   color: red;
+}
+
+.forgot-password-box {
+  margin-top: 1em;
 }
 </style>
