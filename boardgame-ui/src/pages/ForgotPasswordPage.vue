@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import Authentication from '@/utils/api/Authentication';
 import User from '@/utils/api/User';
 
 export default {

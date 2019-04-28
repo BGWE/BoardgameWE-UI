@@ -80,7 +80,6 @@
 
 <script>
 import User from '@/utils/api/User';
-import Authentication from '@/utils/api/Authentication';
 
 export default {
   name: 'LoginPage',
