@@ -39,10 +39,10 @@ export default {
       return this.fullNamedUsers.filter(user => {
         return !this.excludedIds.includes(user.id) && (!str ||
           (user.name && user.name.toLowerCase().indexOf(str) >= 0 ||
-          user.surname && user.surname.toLowerCase().indexOf(str) >= 0 ||
-          user.fullname && user.fullname.toLowerCase().indexOf(str) >= 0 ||
-          user.username && user.username.toLowerCase().indexOf(str) >= 0)
-          );
+           user.surname && user.surname.toLowerCase().indexOf(str) >= 0 ||
+           user.fullname && user.fullname.toLowerCase().indexOf(str) >= 0 ||
+           user.username && user.username.toLowerCase().indexOf(str) >= 0)
+        );
       });
     }
   },

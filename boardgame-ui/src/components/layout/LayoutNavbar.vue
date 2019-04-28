@@ -25,6 +25,10 @@
               {{$t('navbar.my-library')}}
             </router-link>
 
+            <router-link :to="{name: 'timers'}" class="navbar-item">
+              {{$t('navbar.timers')}}
+            </router-link>
+
           </template>
         </div>
 

@@ -7,7 +7,8 @@ import User from '@/utils/api/User';
 
 const state = {
   currentUser: null,
-  initialized: false
+  initialized: false,
+  socketInitialized: false
 };
 
 const mutations = {
@@ -17,6 +18,19 @@ const mutations = {
 
   setCurrentUser(state, user) {
     state.currentUser = user;
+  },
+
+  SOCKET_CONNECT() {
+    let token = window.localStorage.accessToken;
+    this._vm.$socket.emit('authenticate', {token});
+  },
+
+  SOCKET_AUTHENTICATED(state) {
+    state.socketInitialized = true;
+  },
+
+  SOCKET_UNAUTHORIZED() {
+    console.error('SOCKET_UNAUTHORIZED');
   }
 };
 
@@ -54,15 +68,21 @@ const actions = {
       console.log('Error while fetching current user.');
 
       cleanAuthenticationState();
+      this._vm.$socket.close();
       commit('setCurrentUser', null);
       return;
     }
 
     commit('setCurrentUser', user);
+
+    if(user) {
+      this._vm.$socket.open();
+    }
   },
 
   logout({commit}) {
     cleanAuthenticationState();
+    this._vm.$socket.close();
     commit('setCurrentUser', null);
   }
 };

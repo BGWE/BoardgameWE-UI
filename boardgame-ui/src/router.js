@@ -108,6 +108,24 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'timers',
+    path: '/timers',
+    component: require('./pages/TimersPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'timer',
+    path: '/timer/:timerid',
+    component: require('./pages/TimerPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'test_timer',
+    path: '/test_timer',
+    component: require('./pages/TestTimer.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'preferences',
     path: '/preferences',
     component: require('./pages/PrefsPage.vue').default,

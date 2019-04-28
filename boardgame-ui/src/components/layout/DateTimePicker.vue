@@ -42,20 +42,18 @@ export default {
       minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
     };
   },
-
   watch: {
-    date: function(newDate, oldDate) {
+    date: function(newDate) {
       this.dateTime.setFullYear(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
       this.$emit('input', this.dateTime);
     },
 
-    time: function(newTime, oldTime) {
+    time: function(newTime) {
       this.dateTime.setHours(newTime.getHours());
       this.dateTime.setMinutes(newTime.getMinutes());
       this.$emit('input', this.dateTime);
     }
   },
-
   created() {
     if (this.value) {
       this.date.setFullYear(this.value.getFullYear(), this.value.getMonth(), this.value.getDate());
