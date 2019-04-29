@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('preferences.title')"/>
-    <b-loading v-if="isLoading"></b-loading>
+    <b-loading :active="isLoading"/>
     <section v-if="currentUser" class="section">
       <h2 class="title">{{$t('preferences.sections.account')}}</h2>
 

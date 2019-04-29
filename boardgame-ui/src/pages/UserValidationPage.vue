@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('uservalidation.title')"/>
-    <b-loading v-if="isLoading"></b-loading>
+    <b-loading :active="isLoading"/>
     <section v-if="users" class="section">
       <b-table :data="users" striped>
         <template slot-scope="props">
