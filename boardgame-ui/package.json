@@ -12,7 +12,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.7.2",
     "axios": "^0.18.0",
-    "buefy": "^0.7.3",
+    "buefy": "^0.7.5",
     "lodash.debounce": "^4.0.8",
     "moment-timezone": "^0.5.23",
     "socket.io-client": "^2.2.0",
