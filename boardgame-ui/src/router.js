@@ -56,7 +56,7 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
-    name: 'createEvent',
+    name: 'createevent',
     path: '/events/createEvent',
     component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
@@ -117,6 +117,18 @@ const routes = [
     name: 'timer',
     path: '/timer/:timerid',
     component: require('./pages/TimerPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'createtimer',
+    path: '/timers/createTimer',
+    component: require('./pages/TimerCreationPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
+    name: 'edittimer',
+    path: '/timer/:timerid/edit',
+    component: require('./pages/TimerCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
