@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-loading v-if="isLoading"/>
+    <b-loading :active="isLoading"/>
     <section v-if="user" class="section">
       <div class="box">
         <h1 class="title"> {{$t('register.title')}} </h1>

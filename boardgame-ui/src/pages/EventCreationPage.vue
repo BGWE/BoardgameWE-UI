@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('event.edition.title')"/>
-    <b-loading v-if="isLoading"></b-loading>
+    <b-loading :active:="isLoading"/>
     <section v-if="event" class="section">
       <form @submit.prevent="createEvent('form-eventCreation')" data-vv-scope="form-eventCreation">
         <b-field horizontal :label="$t('event.edition.name')"
