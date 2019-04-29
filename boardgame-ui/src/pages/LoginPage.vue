@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-loading v-if="isLoading"/>
+    <b-loading :active="isLoading"/>
     <section v-if="user" class="section">
       <div class="box">
         <h1 class="title"> {{ $t('login.title') }} </h1>
@@ -32,6 +32,12 @@
           {{$t('button.toggleRegister')}}
         </router-link>
 
+        <div class="forgot-password-box has-text-link">
+          <router-link :to="{name: 'forgot-password'}">
+            {{$t('login.link.forgot-password')}}
+          </router-link>
+        </div>
+
       </div>
     </section>
   </div>
@@ -46,6 +52,8 @@ export default {
   data() {
     return {
       user : null,
+      confirmPassword:'',
+      forgotPasswordEmail: '',
       error: false,
       isLoading: true
     };
@@ -65,6 +73,7 @@ export default {
 
   methods: {
     async login() {
+      this.isLoading = true;
       let result = await this.validate();
 
       if (!result) {
@@ -73,11 +82,13 @@ export default {
 
       try {
         await this.$store.dispatch('login', this.credentials);
+        this.isLoading = false;
         this.$router.push(this.next);
       }
       catch(error) {
         console.log(error);
         this.error = true;
+        this.isLoading = false;
       }
     },
 
@@ -111,5 +122,9 @@ export default {
 
 .error {
   color: red;
+}
+
+.forgot-password-box {
+  margin-top: 1em;
 }
 </style>

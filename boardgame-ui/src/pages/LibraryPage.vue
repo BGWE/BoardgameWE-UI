@@ -33,11 +33,41 @@ export default {
     }
   },
   methods: {
-    async addBoardGame(id) {
-      this.libraryBoardGames = await this.library.addGameFromBgg(id);
+    async addBoardGame({bggId}) {
+      try {
+        this.libraryBoardGames = await this.library.addGameFromBgg(bggId);
+        this.$toast.open({
+          message: this.$t('library.toast.add-success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('library.toast.add-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
     },
     async deleteBoardGame(id) {
-      this.libraryBoardGames = await this.library.removeGames([id]);
+      try {
+        this.libraryBoardGames = await this.library.removeGames([id]);
+        this.$toast.open({
+          message: this.$t('library.toast.delete-success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('library.toast.delete-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
     }
   },
   async created() {

@@ -4,11 +4,7 @@
       <ActivityBoxLeftMedia :activity="activity" :thumbnail="thumbnail"/>
       <div class="media-content" v-if="activity.type === Types.EVENT_ADD_GAME">
         <i18n path="activity.event.add_game">
-          <strong place="gameName">
-            <router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">
-              {{activity.board_game.name}}
-            </router-link>
-          </strong>
+          <strong place="gameName"><router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">{{activity.board_game.name}}</router-link></strong>
           <strong place="userName">{{activity.user.name}}</strong>
         </i18n>
         <br/>
@@ -17,11 +13,7 @@
       <div class="media-content" v-else-if="activity.type === Types.EVENT_PLAY_GAME">
         <i18n path="activity.event.play_game">
           <player-list place="playerNames" :players="activity.game.players"></player-list>
-          <strong place="gameName">
-            <router-link :to="{name: 'boardgame', params: {id: activity.game.board_game.id}}">
-              {{activity.game.board_game.name}}
-            </router-link>
-          </strong>
+          <strong place="gameName"><router-link :to="{name: 'boardgame', params: {id: activity.game.board_game.id}}">{{activity.game.board_game.name}}</router-link></strong>
         </i18n>
         <br/>
         <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
@@ -35,33 +27,21 @@
       </div>
       <div class="media-content" v-else-if="activity.type === Types.USER_JOIN_EVENT">
         <i18n path="activity.user.join_event">
-          <strong place="eventName">
-            <router-link :to="{name: 'event', params: {eventid: activity.event.id}}">
-              {{activity.event.name}}
-            </router-link>
-          </strong>
+          <strong place="eventName"><router-link :to="{name: 'event', params: {eventid: activity.event.id}}">{{activity.event.name}}</router-link></strong>
         </i18n>
         <br/>
         <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
       </div>
       <div class="media-content" v-else-if="activity.type === Types.USER_LIBRARY_ADD">
         <i18n path="activity.user.library_add">
-          <strong place="gameName">
-            <router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">
-              {{activity.board_game.name}}
-            </router-link>
-          </strong>
+          <strong place="gameName"><router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">{{activity.board_game.name}}</router-link></strong>
         </i18n>
         <br/>
         <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
       </div>
       <div class="media-content" v-else-if="activity.type === Types.USER_PLAY_GAME">
         <i18n path="activity.user.play_game">
-          <strong place="gameName">
-            <router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">
-              {{activity.board_game.name}}
-            </router-link>
-          </strong>
+          <strong place="gameName"><router-link :to="{name: 'boardgame', params: {id: activity.board_game.id}}">{{activity.board_game.name}}</router-link></strong>
         </i18n>
         <br/>
         <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />

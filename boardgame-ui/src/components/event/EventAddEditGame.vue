@@ -217,7 +217,7 @@ export default {
       }
 
       this.game.duration = this.time.getHours()*60 + this.time.getMinutes();
-      this.game.players = this.players.map(({user, score}) => ({user: user.id, score: Number(score)}));
+      this.game.players = this.players.map(({user, score}) => ({id_user: user.id, score: Number(score)}));
 
       try {
         await this.game.save();
