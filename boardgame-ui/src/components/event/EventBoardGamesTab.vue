@@ -2,9 +2,13 @@
   <div class="tabwrapper">
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <template v-if="!loading">
-      <board-game-list :board-games="boardGames" :addFromLibrary="true"
-        @add="addBoardGame" @delete="deleteBoardGame">
-      </board-game-list>
+      <board-game-list
+        :boardGames="boardGames"
+        :addFromLibrary="true"
+        :canAdd="isAttendee"
+        @add="addBoardGame"
+        @delete="deleteBoardGame"
+      />
     </template>
   </div>
 </template>
@@ -14,7 +18,10 @@ import BoardGameList from '@/components/board_games/BoardGameList';
 import Library from '@/utils/api/Library';
 
 export default {
-  props: ['event'],
+  props: {
+    event: Object,
+    isAttendee: Boolean
+  },
   components: {BoardGameList},
   data() {
     return {
