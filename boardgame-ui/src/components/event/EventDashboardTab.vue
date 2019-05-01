@@ -24,7 +24,7 @@
           <p class="heading"><i18n path="event.stats.longest_game" /></p>
           <div v-if="stats.longest_game">
             <p class="title">{{stats.longest_game.board_game.name}}</p>
-            <p>({{stats.longest_game.duration}} <i18n path="home.stats.minutes" />)</p>
+            <p>(<bgc-duration :duration="stats.longest_game.duration" />)</p>
           </div>
           <div v-else>
             <p class="title"><i18n path="event.stats.none" /></p>
@@ -33,7 +33,7 @@
 
         <div class="column has-text-centered">
           <p class="heading"><i18n path="event.stats.time_played" /></p>
-          <p class="title">{{stats.minutes_played || 0}} <i18n path="home.stats.minutes" /></p>
+          <p class="title"><bgc-duration :duration="stats.minutes_played || 0" /></p>
         </div>
 
         <div class="column has-text-centered">
@@ -58,9 +58,13 @@
 
 <script>
 import ActivityBox from '@/components/activities/ActivityBox';
+import BgcDuration from '@/components/utils/BgcDuration';
 
 export default {
-  components: { ActivityBox },
+  components: {
+    ActivityBox,
+    BgcDuration
+  },
   props: ['event'],
   data() {
     return {

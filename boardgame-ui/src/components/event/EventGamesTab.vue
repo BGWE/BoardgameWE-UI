@@ -33,7 +33,7 @@
                   <div class="control" v-if="game.duration">
                     <div class="tags has-addons">
                       <span class="tag is-primary"><i class="fas fa-stopwatch"></i></span>
-                      <span class="tag is-light">{{formatStrDuration(game.duration)}}</span>
+                      <span class="tag is-light"><BgcDuration :duration="game.duration" /></span>
                     </div>
                   </div>
                 </div>
@@ -88,6 +88,7 @@ import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import BgcDuration from '@/components/utils/BgcDuration';
 import EventAddEditGame from './EventAddEditGame';
 
 import Game from '@/utils/api/Game';
@@ -101,7 +102,8 @@ export default {
     PanelListElement,
     RankingTable,
     ConfirmDeleteModal,
-    EventAddEditGame
+    EventAddEditGame,
+    BgcDuration
   },
 
   props: ['event'],
@@ -138,25 +140,6 @@ export default {
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
-
-    formatStrDuration: function(duration) {
-      const mDuration = moment.duration(duration, 'minutes');
-
-      let minutesLabel = this.$t('event.games.minutesShort');
-
-      if (mDuration.hours() > 0) {
-        let hoursLabel = this.$t('event.games.hoursShort');
-
-        if (mDuration.minutes() == 0) {
-          return `${mDuration.hours()} ${hoursLabel}`;
-        }
-
-        return `${mDuration.hours()} ${hoursLabel} ${mDuration.minutes()}`;
-      }
-      else {
-        return `${mDuration.minutes()} ${minutesLabel}`;
-      }
-    },
 
     formattedRanking: function(game) {
       let players = game.players;

@@ -50,7 +50,7 @@
 
           <div class="column has-text-centered" v-if="userStats.most_played.count > 0">
             <p class="heading"><i18n path="home.stats.time_played" /></p>
-            <p class="title">{{userStats.play_time}} <i18n path="home.stats.minutes" /></p>
+            <p class="title"><bgc-duration :duration="userStats.play_time" /></p>
           </div>
         </div>
       </section>
@@ -68,6 +68,7 @@
 import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
 import ActivityBox from '@/components/activities/ActivityBox';
+import BgcDuration from '@/components/utils/BgcDuration';
 
 export default {
   name: 'UserHomePage',
@@ -80,7 +81,8 @@ export default {
     };
   },
   components: {
-    ActivityBox
+    ActivityBox,
+    BgcDuration
   },
   computed: {
     currentUser() {
