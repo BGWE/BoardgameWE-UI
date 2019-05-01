@@ -9,9 +9,9 @@
       <div class="column is-narrow">
         <b-field>
           <b-select v-model="selectedSortOption">
-              <option v-for="option in sortOptions" :value="option" :key="option.label">
-                  {{ option.label }}
-              </option>
+            <option v-for="option in sortOptions" :value="option" :key="option.label">
+              {{ option.label }}
+            </option>
           </b-select>
         </b-field>
       </div>
@@ -20,14 +20,14 @@
           <b-input v-model="nbPlayers" icon="users"></b-input>
         </b-field>
       </div>
-      <div v-if="!allBelongToUser" class="column is-narrow">
+      <div v-if="!allBelongToUser && canAdd" class="column is-narrow">
         <b-field class="narrow">
           <b-checkbox v-model="belongsToUserOnly">
             {{ $t('board-games-list.belongsToUser') }}
           </b-checkbox>
         </b-field>
       </div>
-      <div class="column has-text-right">
+      <div v-if="canAdd" class="column has-text-right">
         <button class="button is-primary" @click="activeModal = true">
           {{$t('board-games-list.add')}}
         </button>
@@ -42,9 +42,12 @@
       </div>
     </div>
 
-    <add-board-game-modal :active.sync="activeModal" :excludedIds="bggIdsUserGames" :addFromLibrary="addFromLibrary"
-      @add="$emit('add', $event)">
-    </add-board-game-modal>
+    <add-board-game-modal
+      :active.sync="activeModal"
+      :excludedIds="bggIdsUserGames"
+      :addFromLibrary="addFromLibrary"
+      @add="$emit('add', $event)"
+    />
   </div>
 </template>
 
@@ -54,11 +57,15 @@ import AddBoardGameModal from './AddBoardGameModal';
 import BCheckbox from 'buefy/src/components/checkbox/Checkbox';
 
 export default {
-  props: [
-    'boardGames',
-    'allBelongToUser', // if true, delete button available for all board game, if false, only available for boardGames in which belongsToUser is true
-    'addFromLibrary'
-  ],
+  props: {
+    boardGames: Array,
+    allBelongToUser: Boolean, // if true, delete button available for all board game, if false, only available for boardGames in which belongsToUser is true
+    addFromLibrary: Boolean,
+    canAdd: {
+      type: Boolean,
+      default: true
+    }
+  },
   components: {
     BCheckbox,
     BoardGamePreview,

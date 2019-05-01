@@ -11,7 +11,7 @@
     />
     <div class="columns" v-else-if="!loading">
       <div class="column is-full">
-        <p class="has-text-right limited-width">
+        <p v-if="isAttendee" class="has-text-right limited-width">
           <button class="button is-primary" @click="openGameForm(null)">{{$t('button.add-game')}}</button>
         </p>
         <PanelList>
@@ -52,7 +52,7 @@
               </div>
             </template>
 
-            <template v-slot:buttons>
+            <template v-if="isAttendee" v-slot:buttons>
               <a class="card-footer-item" @click="openGameForm(game)">
                 <span class="icon"><i class="far fa-edit"></i></span>
                 {{$t('event.games.edit')}}
@@ -97,6 +97,11 @@ import * as Helper from '@/utils/helper';
 import moment from 'moment-timezone';
 
 export default {
+  props: {
+    event: Object,
+    isAttendee: Boolean
+  },
+
   components: {
     PanelList,
     PanelListElement,
@@ -105,8 +110,6 @@ export default {
     EventAddEditGame,
     BgcDuration
   },
-
-  props: ['event'],
 
   data() {
     return {

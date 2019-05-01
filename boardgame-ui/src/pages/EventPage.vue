@@ -61,7 +61,7 @@
       </ul>
     </div>
 
-    <router-view :event="event"></router-view>
+    <router-view :event="event" :isAttendee="isAttendee"></router-view>
 
   </div>
 </template>
@@ -87,6 +87,18 @@ export default {
       games: [],
       rankings: {}
     };
+  },
+
+  computed: {
+    currentUser() {
+      return this.$store.state.currentUser;
+    },
+    isAttendee() { // is current user attendee
+      if(!this.event) {
+        return false;
+      }
+      return this.event.attendees.some(attendee => attendee.id_user === this.currentUser.id);
+    }
   },
 
   async created() {
