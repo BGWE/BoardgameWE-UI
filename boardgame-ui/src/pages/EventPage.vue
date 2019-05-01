@@ -67,18 +67,12 @@
 </template>
 
 <script>
-import EventGamesTab from '@/components/event/EventGamesTab';
-import EventBoardGamesTab from '@/components/event/EventBoardGamesTab';
-import EventRankingsTab from '@/components/event/EventRankingsTab';
 import Event from '@/utils/api/Event';
 import BgcDatetime from '@/components/layout/BgcDatetime';
 
 export default {
   components: {
     BgcDatetime,
-    EventGamesTab,
-    EventBoardGamesTab,
-    EventRankingsTab
   },
 
   data() {
