@@ -17,7 +17,7 @@
             </b-select>
           </b-field>
 
-          <b-field :label="$t('add-edit-timer.timer.duration')">
+          <b-field  v-if="timer.timer_type === 'COUNT_DOWN' || timer.timer_type === 'RELOAD'" :label="$t('add-edit-timer.timer.duration')">
             <b-numberinput min="0" controls-position="compact" v-model="timer.initial_duration"/>
           </b-field>
 
@@ -32,6 +32,7 @@
           <thead>
           <tr>
             <th>{{$t('add-edit-game.players.user')}}</th>
+            <th> Color </th>
             <th class="has-text-white">.</th>
           </tr>
           </thead>
@@ -54,6 +55,9 @@
               </b-field>
             </td>
             <td>
+              <slider-picker v-model="players[idx].color"/>
+            </td>
+            <td>
               <button type="button" class="delete" @click="removePlayer(idx)"></button>
             </td>
           </tr>
@@ -68,7 +72,7 @@
         </table>
 
         <div class="buttons is-right">
-          <button class="button" type="button" @click="$emit('close')">{{$t('button.cancel')}}</button>
+          <router-link tag="button" class="button is-light" :to="{name: 'timers'}">{{$t('button.cancel')}}</router-link>
           <button class="button is-primary">{{$t('button.save')}}</button>
         </div>
 
@@ -82,14 +86,39 @@
 import Timer, { TimerTypes } from '@/utils/api/Timer';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
-import User from "../utils/api/User";
+import User from '@/utils/api/User';
+import { Slider } from 'vue-color';
+
+let defaultProps = {
+  hex: '#194d33e6',
+  hsl: {
+    h: 150,
+    s: 0.5,
+    l: 0.2,
+    a: 0.9
+  },
+  hsv: {
+    h: 150,
+    s: 0.66,
+    v: 0.30,
+    a: 0.9
+  },
+  rgba: {
+    r: 25,
+    g: 77,
+    b: 51,
+    a: 0.9
+  },
+  a: 0.9
+};
 
 export default {
   name: 'TimerEditionPage',
 
   components: {
     HeroTitlePageLayout,
-    UserAutocomplete
+    UserAutocomplete,
+    'slider-picker': Slider
   },
 
   data() {
@@ -121,7 +150,7 @@ export default {
 
   methods: {
     addPlayer() {
-      this.players.push({user: null});
+      this.players.push({user: null, color: defaultProps});
     },
 
     removePlayer(idx) {
@@ -143,8 +172,19 @@ export default {
         return;
       }
 
-      try {
+      for (let key in this.players) {
+        let player = this.players[key];
+        if (player.user.id != null) {
+          this.timer.player_timers.push({id_user: player.user.id, name: null, color: player.color.hex});
+        }
+        else {
+          this.timer.player_timers.push({id_user: null, name: player.user.name, color: player.color.hex});
+        }
+      }
 
+      try {
+        await this.timer.save();
+        this.$router.push({name: 'timers'});
       }
       catch (e) {
         console.log(e);
@@ -153,6 +193,8 @@ export default {
 
     async validate(scope) {
       let result = await this.$validator.validateAll(scope);
+
+      console.log(result);
 
       if (!result) {
         this.$toast.open({
@@ -170,14 +212,22 @@ export default {
     this.allUsers = await User.fetchUsers();
 
     if (this.$route.params.timerid) {
+      this.timer = await Timer.fetch(this.$route.params.timerid);
 
+      console.log(this.timer.player_timers);
+
+      for (let key in this.timer.player_timers) {
+        let player = this.timer.player_timers[key];
+        this.players.push({user: player.user});
+      }
     }
     else {
       this.timer = new Timer();
       this.timer.timer_type = TimerTypes.COUNT_UP;
       this.timer.initial_duration = 20;
-      this.players.push({user: this.currentUser});
-      this.timer.player_timers.push({id: this.currentUser.id});
+      this.timer.reload_increment = 0;
+
+      this.players.push({user: this.currentUser, color: defaultProps});
     }
 
     this.isLoading = false;
