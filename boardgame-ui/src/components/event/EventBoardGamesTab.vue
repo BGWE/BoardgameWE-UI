@@ -2,18 +2,26 @@
   <div class="tabwrapper">
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <template v-if="!loading">
-      <board-game-list :board-games="boardGames" :addFromLibrary="true"
-        @add="addBoardGame" @delete="deleteBoardGame">
-      </board-game-list>
+      <board-game-list
+        :boardGames="boardGames"
+        :addFromLibrary="true"
+        :canAdd="isAttendee"
+        @add="addBoardGame"
+        @delete="deleteBoardGame"
+      />
     </template>
   </div>
 </template>
 
 <script>
 import BoardGameList from '@/components/board_games/BoardGameList';
+import Library from '@/utils/api/Library';
 
 export default {
-  props: ['event'],
+  props: {
+    event: Object,
+    isAttendee: Boolean
+  },
   components: {BoardGameList},
   data() {
     return {
@@ -47,12 +55,73 @@ export default {
     }
   },
   methods: {
-    async addBoardGame(id) {
-      this.boardGamesLinks = await this.event.addBoardGameFromBgg(id);
+    async addBoardGame({bggId, inLibrary}) {
+      try {
+        this.boardGamesLinks = await this.event.addBoardGameFromBgg(bggId);
+
+        if(!inLibrary) {
+          this.$snackbar.open({
+            message: this.$t('event-board-games.snackbar.game-not-in-library'),
+            position: 'is-bottom',
+            actionText: this.$t('event-board-games.snackbar.add-game-to-library'),
+            onAction: () => this.addBoardGameToLibrary(bggId)
+          });
+        }
+        else {
+          this.$toast.open({
+            message: this.$t('event-board-games.toast.add-success'),
+            type: 'is-success',
+            position: 'is-bottom'
+          });
+        }
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('event-board-games.toast.add-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
     },
+
+    async addBoardGameToLibrary(bggId) {
+      try {
+        await new Library().addGameFromBgg(bggId);
+        this.$toast.open({
+          message: this.$t('event-board-games.toast.add-library-success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('event-board-games.toast.add-library-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
+    },
+
     async deleteBoardGame(id) {
-      await this.event.removeBoardGames([id]);
-      this.boardGamesLinks = await this.event.fetchBoardGames();
+      try {
+        await this.event.removeBoardGames([id]);
+        this.boardGamesLinks = await this.event.fetchBoardGames();
+        this.$toast.open({
+          message: this.$t('event-board-games.toast.delete-success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('event-board-games.toast.delete-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
     }
   },
   async created() {

@@ -28,7 +28,7 @@
                 <div class="level-item has-text-centered">
                   <div>
                     <p class="heading">{{$t('boardgame.duration.label')}}</p>
-                    <p class="subtitle">{{$t('boardgame.duration.value', {duration: boardGame.playing_time})}}</p>
+                    <p class="subtitle"><bgc-duration :duration="boardGame.playing_time" /></p>
                   </div>
                 </div>
                 <div class="level-item has-text-centered">
@@ -85,10 +85,12 @@
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import BoardGame from '@/utils/api/BoardGame';
+import BgcDuration from '@/components/utils/BgcDuration';
 
 export default {
   components: {
-    HeroTitlePageLayout
+    HeroTitlePageLayout,
+    BgcDuration
   },
   data() {
     return {
@@ -168,7 +170,7 @@ export default {
   max-height: 50vh;
 }
 
-iframe {
+>>> iframe {
   height: 360px;
 }
 </style>

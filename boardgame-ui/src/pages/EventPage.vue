@@ -39,56 +39,40 @@
 
     <div class="tabs is-boxed is-medium">
       <ul>
-        <li v-bind:class="{'is-active': isTabActive('dashboard')}">
-          <router-link :to="{name: 'event_dashboard'}" class="navbar-item" >
-            {{$t('event.tab.dashboard')}}
-          </router-link>
-        </li>
+        <router-link :to="{name: 'event_dashboard'}" tag="li">
+          <a class="navbar-item">{{$t('event.tab.dashboard')}}</a>
+        </router-link>
 
-        <li v-bind:class="{'is-active': isTabActive('board_games')}">
-          <router-link :to="{name: 'event_board_games'}" class="navbar-item" >
-            {{$t('event.tab.boardgames')}}
-          </router-link>
-        </li>
+        <router-link :to="{name: 'event_board_games'}" tag="li">
+          <a class="navbar-item">{{$t('event.tab.boardgames')}}</a>
+        </router-link>
 
-        <li v-bind:class="{'is-active': isTabActive('games')}">
-          <router-link :to="{name: 'event_games'}" class="navbar-item">
-            {{$t('event.tab.games')}}
-          </router-link>
-        </li>
+        <router-link :to="{name: 'event_games'}" tag="li">
+          <a class="navbar-item">{{$t('event.tab.games')}}</a>
+        </router-link>
 
-        <li v-bind:class="{'is-active': isTabActive('rankings')}" v-if="!event.hide_rankings">
-          <router-link :to="{name: 'event_rankings'}" class="navbar-item">
-            {{$t('event.tab.rankings')}}
-          </router-link>
-        </li>
+        <router-link v-if="!event.hide_rankings" :to="{name: 'event_rankings'}" tag="li">
+          <a class="navbar-item">{{$t('event.tab.rankings')}}</a>
+        </router-link>
 
-        <li v-bind:class="{'is-active': isTabActive('matchmaking')}">
-          <router-link :to="{name: 'event_matchmaking'}" class="navbar-item" >
-            {{$t('event.tab.matchmaking')}}
-          </router-link>
-        </li>
+        <router-link :to="{name: 'event_matchmaking'}" tag="li">
+          <a class="navbar-item">{{$t('event.tab.matchmaking')}}</a>
+        </router-link>
       </ul>
     </div>
 
-    <router-view :event="event"></router-view>
+    <router-view :event="event" :isAttendee="isAttendee"></router-view>
 
   </div>
 </template>
 
 <script>
-import EventGamesTab from '@/components/event/EventGamesTab';
-import EventBoardGamesTab from '@/components/event/EventBoardGamesTab';
-import EventRankingsTab from '@/components/event/EventRankingsTab';
 import Event from '@/utils/api/Event';
 import BgcDatetime from '@/components/layout/BgcDatetime';
 
 export default {
   components: {
     BgcDatetime,
-    EventGamesTab,
-    EventBoardGamesTab,
-    EventRankingsTab
   },
 
   data() {
@@ -99,32 +83,24 @@ export default {
     };
   },
 
+  computed: {
+    currentUser() {
+      return this.$store.state.currentUser;
+    },
+    isAttendee() { // is current user attendee
+      if(!this.event) {
+        return false;
+      }
+      return this.event.attendees.some(attendee => attendee.id_user === this.currentUser.id);
+    }
+  },
+
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
 
-    //TODO Should we load those there?
-
+    // TODO Should we load those there?
     this.games = await this.event.fetchGames();
-  },
-
-  methods: {
-    isTabActive: function(tabName) {
-      return tabName == this.activeTabId();
-    },
-
-    activeTabId: function() {
-      let splittedUrl = this.$route.path.split('/');
-      return splittedUrl[splittedUrl.length - 1];
-    },
-  },
-
-  computed: {
-    getRankings: function() {
-      console.log('get, ', this.rankings);
-      return this.rankings;
-    },
-
-  },
+  }
 };
 </script>
 

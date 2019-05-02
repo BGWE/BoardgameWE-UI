@@ -84,6 +84,11 @@ export default {
       isFetching: false
     };
   },
+  computed: {
+    bggIdsLibraryGames() {
+      return this.libraryGames.map(bg => bg.bgg_id);
+    }
+  },
   watch: {
     active() {
       this.libraryGames.forEach(boardGame => boardGame.loading = false); // reinitialize loading state
@@ -124,7 +129,9 @@ export default {
 
     add(boardGame) {
       this.$set(boardGame, 'loading', true);
-      this.$emit('add', boardGame.bgg_id || boardGame.id);
+      let bggId = Number(boardGame.bgg_id || boardGame.id);
+      let inLibrary = this.bggIdsLibraryGames.includes(bggId);
+      this.$emit('add', {bggId, inLibrary});
     }
   },
   async created() {

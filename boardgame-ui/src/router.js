@@ -46,7 +46,7 @@ const routes = [
   {
     name: 'register',
     path: '/register',
-    component: require('./pages/LoginPage.vue').default,
+    component: require('./pages/RegisterPage.vue').default,
     beforeEnter: guestOnly
   },
   {
@@ -143,6 +143,16 @@ const routes = [
     component: require('./pages/BoardGamePage.vue').default
   },
   {
+    name: 'forgot-password',
+    path: '/auth/forgot_password',
+    component: require('./pages/ForgotPasswordPage.vue').default
+  },
+  {
+    name: 'reset-password',
+    path: '/auth/reset_password',
+    component: require('./pages/ResetPasswordPage.vue').default
+  },
+  {
     name: 'not-found',
     path: '*',
     component: require('./pages/NotFoundPage.vue').default,
@@ -150,7 +160,8 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  routes // short for `routes: routes`
+  routes,
+  linkActiveClass: 'is-active'
 });
 
 export default router;

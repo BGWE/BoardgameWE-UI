@@ -11,7 +11,7 @@
     />
     <div class="columns" v-else-if="!loading">
       <div class="column is-full">
-        <p class="has-text-right limited-width">
+        <p v-if="isAttendee" class="has-text-right limited-width">
           <button class="button is-primary" @click="openGameForm(null)">{{$t('button.add-game')}}</button>
         </p>
         <PanelList>
@@ -33,7 +33,7 @@
                   <div class="control" v-if="game.duration">
                     <div class="tags has-addons">
                       <span class="tag is-primary"><i class="fas fa-stopwatch"></i></span>
-                      <span class="tag is-light">{{formatStrDuration(game.duration)}}</span>
+                      <span class="tag is-light"><BgcDuration :duration="game.duration" /></span>
                     </div>
                   </div>
                 </div>
@@ -52,7 +52,7 @@
               </div>
             </template>
 
-            <template v-slot:buttons>
+            <template v-if="isAttendee" v-slot:buttons>
               <a class="card-footer-item" @click="openGameForm(game)">
                 <span class="icon"><i class="far fa-edit"></i></span>
                 {{$t('event.games.edit')}}
@@ -88,6 +88,7 @@ import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import BgcDuration from '@/components/utils/BgcDuration';
 import EventAddEditGame from './EventAddEditGame';
 
 import Game from '@/utils/api/Game';
@@ -96,15 +97,19 @@ import * as Helper from '@/utils/helper';
 import moment from 'moment-timezone';
 
 export default {
+  props: {
+    event: Object,
+    isAttendee: Boolean
+  },
+
   components: {
     PanelList,
     PanelListElement,
     RankingTable,
     ConfirmDeleteModal,
-    EventAddEditGame
+    EventAddEditGame,
+    BgcDuration
   },
-
-  props: ['event'],
 
   data() {
     return {
@@ -138,25 +143,6 @@ export default {
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
-
-    formatStrDuration: function(duration) {
-      const mDuration = moment.duration(duration, 'minutes');
-
-      let minutesLabel = this.$t('event.games.minutesShort');
-
-      if (mDuration.hours() > 0) {
-        let hoursLabel = this.$t('event.games.hoursShort');
-
-        if (mDuration.minutes() == 0) {
-          return `${mDuration.hours()} ${hoursLabel}`;
-        }
-
-        return `${mDuration.hours()} ${hoursLabel} ${mDuration.minutes()}`;
-      }
-      else {
-        return `${mDuration.minutes()} ${minutesLabel}`;
-      }
-    },
 
     formattedRanking: function(game) {
       let players = game.players;
