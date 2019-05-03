@@ -77,6 +77,7 @@ export default {
       let result = await this.validate();
 
       if (!result) {
+        this.isLoading = false;
         return;
       }
 
