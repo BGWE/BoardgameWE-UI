@@ -37,7 +37,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(user, idx) in players" :key="user ? `user${user.id}` : idx">
+          <tr v-for="({user}, idx) in players" :key="user ? `user${user.id}` : idx">
             <td>
               <b-field
                 :type="{'is-danger': errors.has(`user-${idx}`)}"
@@ -218,7 +218,7 @@ export default {
 
       for (let key in this.timer.player_timers) {
         let player = this.timer.player_timers[key];
-        this.players.push({user: player.user});
+        this.players.push({user: player.user, color: player.color});
       }
     }
     else {

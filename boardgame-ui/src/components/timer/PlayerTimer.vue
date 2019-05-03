@@ -12,7 +12,7 @@
           <span class="middle">:</span>
           <span class="seconds">{{seconds()}}</span>
           <span class="middle">.</span>
-          <span lcass="millis">{{millis()}}</span>
+          <span class="millis">{{millis()}}</span>
         </span>
       </div>
     </div>
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     textColor() {
-      const match = this.player_timer.color.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/);
+      const match = this.player_timer.color.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?$/);
       const red = parseInt(match[1], 16) / 255, green = parseInt(match[2], 16) / 255, blue = parseInt(match[3], 16) / 255; 
       const luminance = (0.299 * red + 0.587 * green + 0.114 * blue);
       return luminance > 0.5 ? '#000000' : '#FFFFFF'; // dark colors - white font
