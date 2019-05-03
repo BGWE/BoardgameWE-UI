@@ -42,7 +42,6 @@
         </b-field>
 
         <b-field horizontal>
-          <button class="button" type="button" @click="$emit('close')">{{$t('button.cancel')}}</button>
           <button type="submit" class="button is-primary">{{$t('event.edition.submit')}}</button>
         </b-field>
 
