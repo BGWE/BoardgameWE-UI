@@ -150,7 +150,7 @@ export default {
 
       for (let i = 0; i < players.length; i++) {
         const player = players[i];
-        const name = `${player.user.name} ${player.user.surname}`;
+        const name = player.user ? `${player.user.name} ${player.user.surname}` : `${player.name}`;
         const score = player.score;
 
         if (game.ranking_method === 'WIN_LOSE') {
