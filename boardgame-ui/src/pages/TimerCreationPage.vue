@@ -172,6 +172,7 @@ export default {
         return;
       }
 
+      this.timer.player_timers = [];
       for (let key in this.players) {
         let player = this.players[key];
         if (player.user.id != null) {
