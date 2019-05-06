@@ -4,9 +4,6 @@
         v-bind:class="{'is-bold': this.is_selected}">
     <div class="media-left player-name-box has-text-centered" v-bind:class="{'has-text-weight-bold': this.is_selected}">
       <p v-bind:style="{color: textColor}">{{playerName}}</p>
-      <!-- <span v-if="this.is_running && this.is_selected">
-        <i class="fas fa-spin fa-circle-notch is-size-6" v-bind:style="{color: textColor}"></i>
-      </span> -->
     </div>
     <div class="media-content" v-bind:class="{'has-text-weight-semibold': this.is_selected}">
       <div class="content">
@@ -134,7 +131,6 @@ export default {
 }
 
 .player-timer {
-  /* max-width: 75%; */
   margin: 1em;
 
   opacity: 0.3;
