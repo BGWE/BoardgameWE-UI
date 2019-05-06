@@ -160,7 +160,8 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  routes // short for `routes: routes`
+  routes,
+  linkActiveClass: 'is-active'
 });
 
 export default router;

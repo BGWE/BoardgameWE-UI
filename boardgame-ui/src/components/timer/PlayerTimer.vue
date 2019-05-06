@@ -30,6 +30,7 @@
 <script>
 import moment from 'moment';
 import { iso8601ToMoment } from '@/utils/helper';
+import { TimerTypes } from '@/utils/api/Timer';
 
 export default {
   name: 'PlayerTimer',
@@ -37,7 +38,7 @@ export default {
   data() {
     return {
       interval: null,
-      elapsedMillis: 0
+      display_time: 0  // time to display in the timer
     };
   },
   computed: {
@@ -53,6 +54,7 @@ export default {
   },
   watch: {
     'player_timer.start': function(value) {
+      this.refreshElapsed();
       if(value) {
         this.startInterval();
       }
@@ -64,20 +66,33 @@ export default {
   methods: {
     refreshElapsed() {
       const start = this.player_timer.start;
-      const since_start = start !== null ? moment().diff(iso8601ToMoment(this.player_timer.start)) : 0;
-      this.elapsedMillis = this.player_timer.elapsed + since_start;
+      /**
+       * If necessary, can be improved: recorded start time (server time) is diff-ed with the current browser time 
+       * which might cause a difference if server and browser do not have the same time.
+       */
+      const since_start = start !== null ? moment().utc().diff(iso8601ToMoment(this.player_timer.start)) : 0;
+      const elapsed = moment.duration(this.player_timer.elapsed).add(since_start);
+      if (this.timer.timer_type === TimerTypes.COUNT_UP) {
+        this.display_time = elapsed;
+      } 
+      else {
+        this.display_time = moment.duration(this.timer.initial_duration).subtract(elapsed);
+        if (this.display_time.milliseconds() < 0) {
+          this.display_time = moment.duration(0);
+        }
+      } 
     },
     hours() {
-      return this.format(Math.floor(this.elapsedMillis / (1000 * 60 * 60)), 2);
+      return this.format(this.display_time.hours(), 2);
     },
     minutes() {
-      return this.format(Math.floor(this.elapsedMillis / (1000 * 60)) % 60, 2);
+      return this.format(this.display_time.minutes(), 2);
     },
     seconds() {
-      return this.format(Math.floor(this.elapsedMillis / 1000) % 60, 2);
+      return this.format(this.display_time.seconds(), 2);
     },
     millis() {
-      return this.format(this.elapsedMillis % 1000, 3);
+      return this.format(this.display_time.milliseconds(), 3);
     },
     format(d, l) {
       let v = String(d);
