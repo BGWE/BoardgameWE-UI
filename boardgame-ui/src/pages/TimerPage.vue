@@ -1,22 +1,55 @@
 <template>
   <section v-if=timer>
-    <div class="section timer_buttons">
-      <button class="button" v-on:click="start"><span><i class="fas fa-play"></i></span></button>
-      <button class="button" v-on:click="stop"><span><i class="fas fa-pause"></i></span></button>
-      <button class="button" v-on:click="prev"><span><i class="fas fa-backward"></i></span></button>
-      <button class="button" v-on:click="next"><span><i class="fas fa-forward"></i></span></button>
-      <b-taglist attached>
+    <b-loading :is-full-page="true" :active="isLoading" :can-cancel="true"></b-loading>
+
+    <div class="section">
+      <div class="has-text-centered row-buttons">
+        <a class="button timer-button" 
+          v-on:click="isRunning ? stop() : start()"
+          :class="isRunning ? 'timer-button-active' : ''">
+          <span>
+            <i class="fas" :class="isRunning ? 'fa-pause' : 'fa-play'"></i>
+          </span>
+        </a>
+        <a 
+          class="button timer-button" 
+          v-on:click="prev"><span><i class="fas fa-arrow-left"></i></span>
+        </a>
+        <a 
+          class="button timer-button" 
+          v-on:click="next"><span><i class="fas fa-arrow-right"></i></span>
+        </a>
+      </div>
+      
+      <!-- <b-taglist attached>
         <b-tag type="is-dark">Timer</b-tag>
         <b-tag type="is-info">
           <i18n v-bind:path="timerTypeI18nPath"/>
         </b-tag>
-      </b-taglist>
+      </b-taglist> -->
     </div>
     <div>
-      <player-timer
-        class="card"
-        v-for="player_timer in turnSortedPlayerTimers" :key="player_timer.id"
-        :player_timer="player_timer" :timer="timer" />
+      <draggable 
+        :list="players" 
+        :disabled="!enabled"
+        @start="dragging = true"
+        @end="dragging = false">
+
+        <transition-group type="transition" name="flip-list">
+        
+        <player-timer
+          class="card"
+          v-for="(player_timer, key) in players" 
+          :key="player_timer.id"
+          :player_timer="player_timer" 
+          :timer="timer"
+          :is_selected="key === timer.current_player"
+          :is_running="isRunning"
+          v-bind:class="{'timer-button-first' : key === timer.current_player}" />
+
+        </transition-group>
+
+      </draggable>
     </div>
   </section>
 </template>
@@ -25,25 +58,23 @@
 import Timer, { TimerTypes } from '@/utils/api/Timer';
 import PlayerTimer from '@/components/timer/PlayerTimer';
 
+import draggable from 'vuedraggable'
+
 export default {
   name: 'TimerPage',
-  components: {PlayerTimer},
+  components: {PlayerTimer, draggable},
   data() {
     return {
-      timer: null
+      timer: null,
+      isLoading: false,
+      isRunning: false,
+      enabled: true,
+      dragging: false,
+      players: [],
     };
   },
   computed: {
-    turnSortedPlayerTimers() {
-      const n_players = this.timer.player_timers.length;
-      let  player_timers = this.timer.player_timers.slice(0);
-      player_timers.sort((p1, p2) => p1.turn_order - p2.turn_order);
-      let array = new Array(n_players);
-      for (let i = 0; i < n_players; ++i) {
-        array[i] = player_timers[(this.timer.current_player + i) % n_players];
-      }
-      return array;
-    },
+    
     timerTypeI18nPath() {
       return {
         [TimerTypes.COUNT_UP]: 'timer.type.count_up',
@@ -68,6 +99,12 @@ export default {
     timer_prev(timer) {
       this.setTimer(timer);
     },
+    change_player_turn_order(timer) {
+      console.log("GOT REPLY FOR change_player_turn_order");
+      console.log(timer);
+      this.isLoading = false;
+      this.setTimer(timer);
+    },
     error(error) {
       console.log(error);
     }
@@ -75,6 +112,18 @@ export default {
   methods: {
     setTimer(timer) {
       this.timer = timer;
+      this.players = this.turnPlayerTimers();
+
+      let isRunning = false;
+      for (let i = 0; i < this.players.length; i++) {
+        const player = this.players[i];
+        if (player.start !== null) {
+          isRunning = true;
+          break;
+        }
+      }
+
+      this.isRunning = isRunning;
     },
     start() {
       this.$socket.emit('timer_start');
@@ -93,8 +142,52 @@ export default {
     },
     unfollow() {
       this.$socket.emit('timer_unfollow');
-    }
+    },
+    turnPlayerTimers() {
+      const n_players = this.timer.player_timers.length;
+      let  player_timers = this.timer.player_timers.slice(0);
+      player_timers.sort((p1, p2) => p1.turn_order - p2.turn_order);
+      // let array = new Array(n_players);
+      // for (let i = 0; i < n_players; ++i) {
+      //   array[i] = player_timers[(this.timer.current_player + i) % n_players];
+      // }
+      return player_timers;
+    },
+    arePlayersOrderedListEqual(l1, l2) {
+      if (l1.length != l2.length) {
+        return false;
+      }
+
+      for (let i = 0; i < l1.length; i++) {
+        const timerPlayer1 = l1[i];
+        const timerPlayer2 = l2[i];
+
+        if (timerPlayer1.turn_order != timerPlayer2.turn_order) {
+          return false;
+        }
+      }
+
+      return true;
+    },
   },
+
+  watch: {
+    players: function(val) {
+      if (!this.arePlayersOrderedListEqual(val, this.turnPlayerTimers())) {
+        // Order changed
+        console.log(val.map(p => p.turn_order))
+        for (let i = 0; i < val.length; i++) {
+          const player = val[i];
+          player.turn_order = i;
+        }
+        console.log(val.map(p => p.turn_order))
+        
+        this.isLoading = true;
+        this.$socket.emit('change_player_turn_order', val);
+      }
+    },
+  },
+
   async created() {
     this.setTimer(await Timer.fetch(this.$route.params.timerid));
     this.follow();
@@ -102,7 +195,7 @@ export default {
   beforeDestroy() {
     this.unfollow();
     this.timer = null;
-  }
+  },
 };
 </script>
 
@@ -113,5 +206,48 @@ export default {
 
 .card {
   margin-bottom: 5px;
+}
+
+.row-buttons {
+  /* width: 333px; */
+  margin: auto;
+}
+
+.timer-button {
+  border-radius: 50%;
+  min-width: 4em;
+  min-height: 4em;
+  width: 5em;
+  height: 5em;
+  margin-left: 0.1em;
+  margin-right: 0.1em;
+
+
+  margin: 0.5em;
+}
+
+.timer-button:active {
+  color: grey;
+  border-color: grey;
+}
+
+.timer-button-active {
+  color: hsl(204, 86%, 53%);
+  border-color: hsl(204, 86%, 53%);
+}
+
+.timer-button span{
+  font-size: 1.5em;
+}
+
+.timer-button-first {
+  /* margin-bottom: 1.5em; */
+}
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
 }
 </style>
