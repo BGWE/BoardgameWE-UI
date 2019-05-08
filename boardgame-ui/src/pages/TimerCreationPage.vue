@@ -32,7 +32,7 @@
           <thead>
           <tr>
             <th>{{$t('add-edit-game.players.user')}}</th>
-            <th> Color </th>
+            <th>{{$t('global.color')}}</th>
             <th class="has-text-white">.</th>
           </tr>
           </thead>
