@@ -215,8 +215,6 @@ export default {
     if (this.$route.params.timerid) {
       this.timer = await Timer.fetch(this.$route.params.timerid);
 
-      console.log(this.timer.player_timers);
-
       for (let key in this.timer.player_timers) {
         let player = this.timer.player_timers[key];
         this.players.push({user: player.user, color: player.color});
