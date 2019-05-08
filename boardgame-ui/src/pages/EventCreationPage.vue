@@ -42,9 +42,7 @@
         </b-field>
 
         <b-field horizontal>
-          <button type="submit" class="button is-primary">
-            {{$t('event.edition.submit')}}
-          </button>
+          <button type="submit" class="button is-primary">{{$t('event.edition.submit')}}</button>
         </b-field>
 
       </form>
