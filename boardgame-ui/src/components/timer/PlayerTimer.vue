@@ -1,9 +1,11 @@
 <template>
-  <div class="card" v-bind:style="{['background-color']: player_timer.color}">
-    <header class="card-header">
-      <p v-bind:style="{color: textColor}" class="card-header-title">{{playerName}}</p>
-    </header>
-    <div class="card-content">
+  <div class="box media player-timer" 
+        v-bind:style="{['background-color']: player_timer.color}" 
+        v-bind:class="{'is-bold': this.is_selected}">
+    <div class="media-left player-name-box has-text-centered" v-bind:class="{'has-text-weight-bold': this.is_selected}">
+      <p v-bind:style="{color: textColor}">{{playerName}}</p>
+    </div>
+    <div class="media-content" v-bind:class="{'has-text-weight-semibold': this.is_selected}">
       <div class="content">
         <span class="time-counter" v-bind:style="{color: textColor}">
           <span class="hours">{{hours()}}</span>
@@ -16,6 +18,9 @@
         </span>
       </div>
     </div>
+    <div>
+      <span><i class="fa fa-bars" v-bind:style="{color: textColor}"></i></span>
+    </div>
   </div>
 </template>
 
@@ -26,7 +31,7 @@ import { TimerTypes } from '@/utils/api/Timer';
 
 export default {
   name: 'PlayerTimer',
-  props: ['timer', 'player_timer'],
+  props: ['timer', 'player_timer', 'is_selected', 'is_running'],
   data() {
     return {
       interval: null,
@@ -38,7 +43,7 @@ export default {
       const match = this.player_timer.color.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?$/);
       const red = parseInt(match[1], 16) / 255, green = parseInt(match[2], 16) / 255, blue = parseInt(match[3], 16) / 255; 
       const luminance = (0.299 * red + 0.587 * green + 0.114 * blue);
-      return luminance > 0.5 ? '#000000' : '#FFFFFF'; // dark colors - white font
+      return luminance > 0.5 ? '#494949' : '#FFFFFF'; // dark colors - white font
     },
     playerName() {
       return this.player_timer.user === null ? this.player_timer.name : this.player_timer.user.name;
@@ -116,5 +121,31 @@ export default {
 <style scoped>
 .card-header-title {
   background-color: rgba(0, 0, 0, 0.1);
-};
+}
+
+.player-timer.is-bold {
+  opacity: 1;
+  -moz-box-shadow:    0px 0px 8px 5px #eeeeee;
+  -webkit-box-shadow: 0px 0px 8px 5px #eeeeee;
+  box-shadow:         0px 0px 8px 5px #eeeeee;
+}
+
+.player-timer {
+  margin: 1em;
+
+  opacity: 0.3;
+}
+
+.player-name-box {
+  width: 25%;
+}
+
+.button.is-outlined.is-arrow {
+  background-color: transparent;
+  border-color: black;
+  color: black;
+
+  margin-left: 5px;
+}
+
 </style>
