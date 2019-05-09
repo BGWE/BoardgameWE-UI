@@ -43,7 +43,7 @@ export default {
       const match = this.player_timer.color.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?$/);
       const red = parseInt(match[1], 16) / 255, green = parseInt(match[2], 16) / 255, blue = parseInt(match[3], 16) / 255; 
       const luminance = (0.299 * red + 0.587 * green + 0.114 * blue);
-      return luminance > 0.5 ? '#494949' : '#FFFFFF'; // dark colors - white font
+      return luminance > 0.72 ? '#494949' : '#FFFFFF'; // dark colors - white font
     },
     playerName() {
       return this.player_timer.user === null ? this.player_timer.name : this.player_timer.user.name;
