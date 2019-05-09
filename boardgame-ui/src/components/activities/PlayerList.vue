@@ -9,7 +9,7 @@
     </span>
     <span v-else>
       <span v-for="name in names.slice(0, 3)" :key="name" ><strong>{{name}}</strong>,&nbsp;</span>
-      <strong> {{names[3]}} </strong>...
+      <strong>{{names[3]}}</strong>...
     </span>
   </span>
 </template>

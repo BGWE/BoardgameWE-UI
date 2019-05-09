@@ -82,16 +82,7 @@ export default {
       players: [],
     };
   },
-  computed: {
-    
-    timerTypeI18nPath() {
-      return {
-        [TimerTypes.COUNT_UP]: 'timer.type.count_up',
-        [TimerTypes.COUNT_DOWN]: 'timer.type.count_down',
-        [TimerTypes.RELOAD]: 'timer.type.reload'
-      }[this.timer.timer_type];
-    }
-  },
+
   sockets: {
     connect() {
       console.log('connect');
@@ -162,6 +153,14 @@ export default {
   },
 
   computed: {
+    timerTypeI18nPath() {
+      return {
+        [TimerTypes.COUNT_UP]: 'timer.type.count_up',
+        [TimerTypes.COUNT_DOWN]: 'timer.type.count_down',
+        [TimerTypes.RELOAD]: 'timer.type.reload'
+      }[this.timer.timer_type];
+    },
+
     currentPlayer: function() {
       return this.players[this.timer.current_player];
     },
