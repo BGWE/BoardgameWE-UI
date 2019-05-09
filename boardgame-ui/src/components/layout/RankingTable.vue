@@ -127,7 +127,8 @@ export default {
         if (row.position === 1 || row.position === 2 || row.position === 3) {
           return 'has-text-weight-semibold has-background-light';
         }
-      } else {
+      } 
+      else {
         if (row.score === 1) {
           return 'has-text-weight-semibold has-background-light';
         }
