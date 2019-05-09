@@ -80,12 +80,12 @@ export default class User extends Model {
   }
 
   static async forgotPassword(email) {
-    let {data} = await axios.post(`user/forgot_password`, {email: email});
+    let {data} = await axios.post('user/forgot_password', {email: email});
     return data;
   }
 
   static async resetPassword(token, id, password) {
-    let {data} = await axios.post(`user/reset_password`, {token: token, id: id, password: password});
+    let {data} = await axios.post('user/reset_password', {token: token, id: id, password: password});
     return data;
   }
 }
