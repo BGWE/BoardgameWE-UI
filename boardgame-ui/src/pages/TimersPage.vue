@@ -56,19 +56,17 @@
                   <nav class="level is-mobile footer-level">
                     <div class="level-left">
                       <router-link 
-                        :to="{name: 'timer', params: {timerid: 1}}"
+                        :to="{name: 'createtimer', params: {id: timer.id}}"
                         class="level-item">
                         <span class="icon is-small has-text-info">
                           <i class="far fa-edit"></i>
                         </span>
                       </router-link>
-                      <router-link 
-                        :to="{name: 'timer', params: {timerid: 1}}"
-                        class="level-item">
+                      <a class="level-item">
                         <span class="icon is-small has-text-danger">
                           <i class="far fa-trash-alt"></i>
                         </span>
-                      </router-link>
+                      </a>
                     </div>
                   </nav>
                 </div>
