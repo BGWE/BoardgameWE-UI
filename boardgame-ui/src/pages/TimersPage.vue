@@ -11,55 +11,75 @@
         </div>
       </div>
 
-      <div class="columns is-centered">
+      <div class="columns is-centered timers-list">
         <div class="column">
-          <router-link 
-            tag="div"
-            class="box timer-box"
+          <router-link             
             v-for="timer in timers" 
             v-bind:key="timer.id"
             :to="{name: 'timer', params: {timerid: timer.id}}">
+            <div class="box timer-box">
 
-            <article class="media">
-              <div class="media-left" v-if="timer.game !== null">
-                <figure class="image is-64x64">
-                  <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
-                </figure>
-              </div>
-              
-              <div class="media-content">
-                <div class="content">
-                  <b-taglist>
-                    <b-tag 
-                      rounded
-                      type="is-info"
-                      size="is-small"
-                      v-for="player in timer.player_timers"
-                      v-bind:key="player.id">{{getPlayerName(player)}}</b-tag>
-                  </b-taglist>
+              <article class="media">
+                <div class="media-left" v-if="timer.game !== null">
+                  <figure class="image is-64x64">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
+                  </figure>
                 </div>
                 
-                <nav class="level is-mobile-small-device">
-                  <div class="level-left">
-                    <p class="is-size-7"><i18n path="timers.timer"/> | {{timer.id}}</p>
-                  </div>
+                <div class="media-content">
+                  
+                  <nav class="level is-mobile-small-device header-level">
+                    <div class="level-left">
+                      <p class="is-size-7"><i18n path="timers.timer"/> | {{timer.id}}</p>
+                    </div>
 
-                  <div class="level-item is-hidden-small-device">
-                    <p class="is-size-7">{{elapsedFromNow(mostRecentPlayer(timer.player_timers).updatedAt)}}</p>
-                  </div>
+                    <div class="level-item is-hidden-small-device">
+                      <p class="is-size-7">{{elapsedFromNow(mostRecentPlayer(timer.player_timers).updatedAt)}}</p>
+                    </div>
 
-                  <div class="level-right">
-                    <p class="is-size-7"><i18n path="timers.created-by"/> <span class="name"> {{isCurrentUserTimerCreator(timer.creator.id) ? $t('timers.creator.you') : timer.creator.name}}</span></p>
-                  </div>
-                </nav>
-              </div>
+                    <div class="level-right">
+                      <p class="is-size-7"><i18n path="timers.created-by"/> <span class="name"> {{isCurrentUserTimerCreator(timer.creator.id) ? $t('timers.creator.you') : timer.creator.name}}</span></p>
+                    </div>
+                  </nav>
 
-              <div class="media-right is-vertical-center is-media-right">
-                <span>
-                  <i class="fas fa-chevron-right"></i>
-                </span>
-              </div>
-            </article>
+                  <div class="content players-list">
+                    <b-taglist>
+                      <b-tag 
+                        rounded
+                        type="is-info"
+                        size="is-small"
+                        v-for="player in timer.player_timers"
+                        v-bind:key="player.id">{{getPlayerName(player)}}</b-tag>
+                    </b-taglist>
+                  </div>
+                  
+                  <nav class="level is-mobile footer-level">
+                    <div class="level-left">
+                      <router-link 
+                        :to="{name: 'timer', params: {timerid: 1}}"
+                        class="level-item">
+                        <span class="icon is-small has-text-info">
+                          <i class="far fa-edit"></i>
+                        </span>
+                      </router-link>
+                      <router-link 
+                        :to="{name: 'timer', params: {timerid: 1}}"
+                        class="level-item">
+                        <span class="icon is-small has-text-danger">
+                          <i class="far fa-trash-alt"></i>
+                        </span>
+                      </router-link>
+                    </div>
+                  </nav>
+                </div>
+
+                <div class="media-right is-vertical-center is-media-right arrow-right">
+                  <span>
+                    <i class="fas fa-chevron-right"></i>
+                  </span>
+                </div>
+              </article>
+            </div>
           </router-link>
         </div>
       </div>
@@ -98,10 +118,6 @@ export default {
     this.timers = await Timer.getCurrentUserTimers();
   },
   methods: {
-    timerSelected(timer) {
-      this.$router.push({ name: 'timer', params: { timerid: timer.id } });
-    },
-
     isCurrentUserTimerCreator(timerCreatorId) {
       let currentUser = this.$store.state.currentUser;
       return currentUser.id == timerCreatorId;
@@ -132,6 +148,10 @@ export default {
 </script>
 
 <style scoped>
+.timers-list {
+
+}
+
 .name {
   font-style: italic;
 }
@@ -148,10 +168,32 @@ export default {
 .is-vertical-center {
   display: flex;
   align-items: center;
+
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .is-media-right {
   margin-left: 2em;
+}
+
+.header-level {
+  margin-bottom: 0.3em;
+}
+
+.footer-level {
+  margin-top: 0.4em;
+  margin-left: 0.1em;
+}
+
+.content.players-list {
+  border-top: 1px #f2f2f2 solid;
+  border-bottom: 1px #f2f2f2 solid;
+
+  padding-bottom: 0.7em;
+  padding-top: 0.7em;
+
+  margin-bottom: 0em;
 }
 
 @media (max-width: 400px) {
