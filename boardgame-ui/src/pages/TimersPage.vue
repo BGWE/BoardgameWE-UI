@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div class="columns is-centered timers-list">
+      <div class="columns is-centered">
         <div class="column">
           <router-link             
             v-for="timer in timers" 
@@ -148,9 +148,6 @@ export default {
 </script>
 
 <style scoped>
-.timers-list {
-
-}
 
 .name {
   font-style: italic;
