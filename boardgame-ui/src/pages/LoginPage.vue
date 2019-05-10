@@ -18,7 +18,7 @@
                     :label="$t('label.password')"
                     :type="{'is-danger': errors.has('password')}"
                     :message="errors.first('password')">
-            <b-input v-model="user.password" password-reveal type="password" v-validate="required" name="password"/>
+            <b-input v-model="user.password" password-reveal type="password" v-validate="'required'" name="password"/>
           </b-field>
 
           <p class="control">
