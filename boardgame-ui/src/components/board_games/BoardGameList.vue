@@ -34,7 +34,11 @@
       </div>
     </div>
 
-    <div class="columns is-multiline">
+    <div class="has-text-centered has-text-grey" v-if="filteredBoardGames.length === 0">
+      {{$t(boardGames.length === 0 ? 'board-games-list.no-games' : 'board-games-list.no-games-fitting-criteria')}}
+    </div>
+
+    <div v-else class="columns is-multiline">
       <div class="column is-2" v-for="boardGame in filteredBoardGames" :key="boardGame.id">
         <board-game-preview :boardGame="boardGame" :deleteButton="allBelongToUser || boardGame.belongsToUser"
           @delete="$emit('delete', boardGame.id)">
