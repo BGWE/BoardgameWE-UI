@@ -108,6 +108,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'wishlist',
+    path: '/wishlist',
+    component: require('./pages/WishListPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'timers',
     path: '/timers',
     component: require('./pages/TimersPage.vue').default,
