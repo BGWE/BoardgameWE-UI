@@ -225,8 +225,8 @@ export default {
 
     this.boardGames = await BoardGame.fetchAll();
 
-    if (this.$route.params.timerid) {
-      this.timer = await Timer.fetch(this.$route.params.timerid);
+    if (this.$route.params.id) {
+      this.timer = await Timer.fetch(this.$route.params.id);
 
       for (let key in this.timer.player_timers) {
         let player = this.timer.player_timers[key];

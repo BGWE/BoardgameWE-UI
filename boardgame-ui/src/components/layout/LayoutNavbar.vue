@@ -2,7 +2,7 @@
   <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
     <div class="container">
       <div class="navbar-brand">
-        <router-link :to="{name: 'home'}" class="navbar-item">
+        <router-link :to="{name: 'home'}" class="navbar-item" :class="{'is-active': false}">
           <strong>{{$t('app.appName')}}</strong>
         </router-link>
 
@@ -86,3 +86,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  .navbar-item.is-active {
+    background-color: white;
+  }
+</style>

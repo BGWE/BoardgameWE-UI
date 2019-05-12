@@ -121,13 +121,13 @@ const routes = [
   },
   {
     name: 'createtimer',
-    path: '/timers/createTimer',
+    path: '/timers/edit',
     component: require('./pages/TimerCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
     name: 'edittimer',
-    path: '/timer/:timerid/edit',
+    path: '/timer/:id/edit',
     component: require('./pages/TimerCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
