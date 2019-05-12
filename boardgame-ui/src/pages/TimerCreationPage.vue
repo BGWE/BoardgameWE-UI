@@ -1,27 +1,27 @@
 <template>
   <div>
-    <HeroTitlePageLayout :title="$t('add-edit-timer.title')"/>
+    <HeroTitlePageLayout :title="$t('timer.add-edit.title')"/>
     <b-loading :active="isLoading"/>
     <section v-if="timer" class="section">
 
       <form @submit.prevent="createTimer('form-timerCreation')" data-vv-scope="form-timerCreation">
 
-        <h2 class="subtitle">{{$t('add-edit-timer.timer.title')}}</h2>
+        <h2 class="subtitle">{{$t('timer.add-edit.timer.title')}}</h2>
 
         <b-field grouped group-multiline>
-          <b-field :label="$t('add-edit-timer.timer.type')">
+          <b-field :label="$t('timer.add-edit.timer.type')">
             <b-select v-model="timer.timer_type">
-              <option v-for="method in timerTypeI18nPath" :value="method.type">
+              <option v-for="method in timerTypeI18nPath" v-bind:key="method" :value="method.type">
                 {{$t(method.i18nPath)}}
               </option>
             </b-select>
           </b-field>
 
-          <b-field  v-if="timer.timer_type === 'COUNT_DOWN' || timer.timer_type === 'RELOAD'" :label="$t('add-edit-timer.timer.duration')">
+          <b-field  v-if="timer.timer_type === 'COUNT_DOWN' || timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.duration')">
             <b-numberinput min="0" controls-position="compact" v-model="timer.initial_duration"/>
           </b-field>
 
-          <b-field v-if="timer.timer_type === 'RELOAD'" :label="$t('add-edit-timer.timer.reload-increment')">
+          <b-field v-if="timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.reload-increment')">
             <b-numberinput min="0" controls-position="compact" v-model="timer.reload_increment"/>
           </b-field>
         </b-field>
@@ -223,7 +223,7 @@ export default {
     else {
       this.timer = new Timer();
       this.timer.timer_type = TimerTypes.COUNT_UP;
-      this.timer.initial_duration = 20;
+      this.timer.initial_duration = 20000;
       this.timer.reload_increment = 0;
 
       this.players.push({user: this.currentUser, color: defaultProps});
