@@ -70,76 +70,76 @@
 </template>
 
 <script>
-  import User from '../utils/api/User';
+import User from '../utils/api/User';
 
-  export default {
-    name: 'LoginPage',
+export default {
+  name: 'LoginPage',
 
-    data() {
-      return {
-        user : null,
-        confirmPassword:'',
-        error: false,
-        registering: false,
-        isLoading: true
-      };
+  data() {
+    return {
+      user : null,
+      confirmPassword:'',
+      error: false,
+      registering: false,
+      isLoading: true
+    };
+  },
+
+  computed: {
+    hasNext() {
+      return this.$route.query.next != null;
     },
-
-    computed: {
-      hasNext() {
-        return this.$route.query.next != null;
-      },
-      next() {
-        return this.$route.query.next || {name: 'home'};
-      },
-      credentials() {
-        return {username: this.user.username, password: this.user.password};
-      }
+    next() {
+      return this.$route.query.next || {name: 'home'};
     },
-
-    methods: {
-      async register() {
-        let result = await this.validate();
-
-        if (!result) {
-          return;
-        }
-
-        try {
-          await this.user.save();
-          this.$toast.open({
-            message: this.$t('register.toast.success'),
-            type: 'is-success',
-            position: 'is-bottom'
-          });
-          this.$router.push({name: 'login'});
-        }
-        catch (error) {
-          console.log(error);
-          this.error = true;
-        }
-      },
-
-      async validate() {
-        let result = await this.$validator.validateAll();
-
-        if (!result) {
-          this.$toast.open({
-            message: this.$t('global.invalid-form'),
-            type: 'is-danger',
-            position: 'is-bottom'
-          });
-        }
-
-        return result;
-      }
-    },
-
-    created() {
-      this.user = new User();
-      this.isLoading = false;
+    credentials() {
+      return {username: this.user.username, password: this.user.password};
     }
-  };
+  },
+
+  methods: {
+    async register() {
+      let result = await this.validate();
+
+      if (!result) {
+        return;
+      }
+
+      try {
+        await this.user.save();
+        this.$toast.open({
+          message: this.$t('register.toast.success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+        this.$router.push({name: 'login'});
+      }
+      catch (error) {
+        console.log(error);
+        this.error = true;
+      }
+    },
+
+    async validate() {
+      let result = await this.$validator.validateAll();
+
+      if (!result) {
+        this.$toast.open({
+          message: this.$t('global.invalid-form'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
+
+      return result;
+    }
+  },
+
+  created() {
+    this.user = new User();
+    this.isLoading = false;
+  }
+};
 </script>
 
 <style scoped>

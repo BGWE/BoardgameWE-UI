@@ -48,60 +48,59 @@ export default {
   methods: {
     rankingTableTypeFromRankingMethod: function(rankingMethod) {
       switch (rankingMethod) {
-          case "WIN_LOSE":
-              return this.RANKING_TABLE_TYPE_GROUPED;
-              break;
+        case 'WIN_LOSE':
+          return this.RANKING_TABLE_TYPE_GROUPED;
+          break;
 
-          case "POINTS_HIGHER_BETTER":
-              return this.RANKING_TABLE_TYPE_RANKED;
-              break;
+        case 'POINTS_HIGHER_BETTER':
+          return this.RANKING_TABLE_TYPE_RANKED;
+          break;
 
-          case "POINTS_LOWER_BETTER":
-              return this.RANKING_TABLE_TYPE_RANKED;
-              break;        
-      
-          default:
-              return this.RANKING_TABLE_TYPE_RANKED;
-              break;
+        case 'POINTS_LOWER_BETTER':
+          return this.RANKING_TABLE_TYPE_RANKED;
+          break;
+
+        default:
+          return this.RANKING_TABLE_TYPE_RANKED;
+          break;
       }
     },
 
     columns: function(rankingType) {
       if (rankingType === this.RANKING_TABLE_TYPE_RANKED) {
         return [
-        {
-          field: 'position',
-          label: this.$t('event.rankings.table.position'),
-          formatter: (value) => {
-            if (value > 3) {
-              return `<span class="tag">${value}</span>`;
-            }
+          {
+            field: 'position',
+            label: this.$t('event.rankings.table.position'),
+            formatter: (value) => {
+              if (value > 3) {
+                return `<span class="tag">${value}</span>`;
+              }
 
-            let winnerClass = null;
-            if (value == 1) {
-              winnerClass = 'has-background-gold';
-            }
-            else if (value == 2) {
-              winnerClass = 'has-background-silver';
-            }
-            else if (value == 3) {
-              winnerClass = 'has-background-bronze';
-            }
+              let winnerClass = null;
+              if (value == 1) {
+                winnerClass = 'has-background-gold';
+              }
+              else if (value == 2) {
+                winnerClass = 'has-background-silver';
+              }
+              else if (value == 3) {
+                winnerClass = 'has-background-bronze';
+              }
 
-            return `<span class="tag ${winnerClass} has-text-white">${value}</span>`;
-          }
-        },
-        {
-          field: 'player',
-          label: this.$t('event.rankings.table.player')
-        },
-        {
-          field: 'score',
-          label: this.$t('event.rankings.table.score')
-        },
-      ];
-      } 
-      
+              return `<span class="tag ${winnerClass} has-text-white">${value}</span>`;
+            }
+          },
+          {
+            field: 'player',
+            label: this.$t('event.rankings.table.player')
+          },
+          {
+            field: 'score',
+            label: this.$t('event.rankings.table.score')
+          },
+        ];
+      }
       else {
         return [
           {

@@ -101,7 +101,6 @@
 
 <script>
 import RankingTable from '@/components/layout/RankingTable';
-import Event from '@/utils/api/Event';
 
 export default {
   components: {
@@ -113,7 +112,7 @@ export default {
   data() {
     return {
       rankings: [],
-    }
+    };
   },
 
   computed: {

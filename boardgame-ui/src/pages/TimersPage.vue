@@ -30,7 +30,7 @@
                   
                   <nav class="level is-mobile-small-device header-level">
                     <div class="level-left">
-                      <p class="is-size-7"><i18n path="timers.timer"/> | {{timer.id}}</p>
+                      <p class="is-size-7"><i18n path="timers.timer"/> | {{timer.id}} | <i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/></p> 
                     </div>
 
                     <div class="level-item is-hidden-small-device">
@@ -87,9 +87,8 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import Timer from '@/utils/api/Timer';
-import * as helper from '@/utils/helper';
-
+import Timer, { TimerTypes } from '@/utils/api/Timer';
+// import * as helper from '@/utils/helper';
 import moment from 'moment';
 import { iso8601ToMoment } from '@/utils/helper';
 
@@ -111,6 +110,15 @@ export default {
       ],
       timers: null
     };
+  },
+  computed: {
+    timerTypeI18nPathMap() {
+      return {
+        [TimerTypes.COUNT_UP]: 'timer.type.count_up',
+        [TimerTypes.COUNT_DOWN]: 'timer.type.count_down',
+        [TimerTypes.RELOAD]: 'timer.type.reload'
+      };
+    }
   },
   async created() {
     this.timers = await Timer.getCurrentUserTimers();
