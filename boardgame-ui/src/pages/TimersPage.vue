@@ -30,7 +30,7 @@
                   
                   <nav class="level is-mobile-small-device header-level">
                     <div class="level-left">
-                      <p class="is-size-7"><i18n path="timers.timer"/> | {{timer.id}} | <i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/></p> 
+                      <p class="is-size-7"><i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/> | {{timer.id}}</p> 
                     </div>
 
                     <div class="level-item is-hidden-small-device">
@@ -56,17 +56,17 @@
                   <nav class="level is-mobile footer-level">
                     <div class="level-left">
                       <router-link 
-                        :to="{name: 'createtimer', params: {id: timer.id}}"
+                        :to="{name: 'edittimer', params: {id: timer.id}}"
                         class="level-item">
                         <span class="icon is-small has-text-info">
                           <i class="far fa-edit"></i>
                         </span>
                       </router-link>
-                      <a class="level-item">
+                      <!-- <a class="level-item" @click="triggerConfirmDeleteModal(timer.id)">
                         <span class="icon is-small has-text-danger">
                           <i class="far fa-trash-alt"></i>
                         </span>
-                      </a>
+                      </a> -->
                     </div>
                   </nav>
                 </div>
@@ -82,13 +82,23 @@
         </div>
       </div>
     </section>
+
+    <!-- <ConfirmDeleteModal
+      :active="isConfirmDeleteModalActive"
+      :onDelete="deleteTimer"
+      :onCancel="onCancelConfirmDeleteModal"
+      :content="$t('event.games.confirm-game-deletion')"/> -->
   </div>
 </template>
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
+// import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+
 import Timer, { TimerTypes } from '@/utils/api/Timer';
+
 // import * as helper from '@/utils/helper';
+
 import moment from 'moment';
 import { iso8601ToMoment } from '@/utils/helper';
 
@@ -96,7 +106,8 @@ export default {
   name: 'TimersPage',
 
   components: {
-    HeroTitlePageLayout
+    HeroTitlePageLayout,
+    // ConfirmDeleteModal
   },
 
   data() {
@@ -108,7 +119,9 @@ export default {
         { field: 'creator', label: 'Creator', center: true },
         { field: 'createdAt', label: 'Created at' }
       ],
-      timers: null
+      timers: null,
+      // isConfirmDeleteModalActive: false,
+      // timerIdToDelete: null,
     };
   },
   computed: {
@@ -148,7 +161,21 @@ export default {
 
     elapsedFromNow(sinceTime) {
       return iso8601ToMoment(sinceTime).from(moment().tz(moment.tz.guess()));
-    }
+    },
+
+    // triggerConfirmDeleteModal(timerId) { 
+    //   this.isConfirmDeleteModalActive = true;
+    //   this.timerIdToDelete = timerId;
+    // },
+
+    // onCancelConfirmDeleteModal() {
+    //   this.isConfirmDeleteModalActive = false;
+    //   this.timerIdToDelete = null;
+    // },
+
+    // deleteTimer() {
+
+    // },
   }
 };
 </script>
