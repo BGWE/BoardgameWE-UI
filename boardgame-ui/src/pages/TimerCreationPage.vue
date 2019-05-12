@@ -26,6 +26,20 @@
           </b-field>
         </b-field>
 
+        <b-field :label="$t('add-edit-game.board-game.label')">
+          <b-autocomplete
+            v-model="searchString"
+            :data="filteredBoardGames"
+            field="name"
+            icon="search"
+            @select="selectBoardGame"
+            name="boardGame"
+            :data-vv-as="$t('add-edit-game.board-game.label')"
+          >
+            <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
+          </b-autocomplete>
+        </b-field>
+
         <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
         <table class="table is-fullwidth">
@@ -87,30 +101,8 @@ import Timer, { TimerTypes } from '@/utils/api/Timer';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import User from '@/utils/api/User';
+import BoardGame from '@/utils/api/BoardGame';
 import { Slider } from 'vue-color';
-
-let defaultProps = {
-  hex: '#194d33e6',
-  hsl: {
-    h: 150,
-    s: 0.5,
-    l: 0.2,
-    a: 0.9
-  },
-  hsv: {
-    h: 150,
-    s: 0.66,
-    v: 0.30,
-    a: 0.9
-  },
-  rgba: {
-    r: 25,
-    g: 77,
-    b: 51,
-    a: 0.9
-  },
-  a: 0.9
-};
 
 export default {
   name: 'TimerEditionPage',
@@ -127,6 +119,8 @@ export default {
       players: [],
       allUsers: null,
       timer: null,
+      boardGames: null,
+      searchString: '',
     };
   },
 
@@ -139,6 +133,15 @@ export default {
       return this.players.map(({user}) => user ? user.id : 0);
     },
 
+    filteredBoardGames() {
+      if (!this.searchString) {
+        return this.boardGames;
+      }
+
+      let str = this.searchString.toLowerCase();
+      return this.boardGames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
+    },
+
     timerTypeI18nPath() {
       return [
         {type: TimerTypes.COUNT_UP, i18nPath: 'timer.type.count_up'},
@@ -149,8 +152,16 @@ export default {
   },
 
   methods: {
+    selectBoardGame(option) {
+      this.timer.id_board_game = option ? option.id : null;
+    },
+
     addPlayer() {
-      this.players.push({user: null, color: defaultProps});
+      this.players.push({user: null, color: {hex : this.generateRandomColor()}});
+    },
+
+    generateRandomColor() {
+      return '#' + (~~(Math.random() * (1 << 24))).toString(16);
     },
 
     removePlayer(idx) {
@@ -212,12 +223,20 @@ export default {
   async created() {
     this.allUsers = await User.fetchUsers();
 
+    this.boardGames = await BoardGame.fetchAll();
+
     if (this.$route.params.id) {
       this.timer = await Timer.fetch(this.$route.params.id);
 
       for (let key in this.timer.player_timers) {
         let player = this.timer.player_timers[key];
         this.players.push({user: player.user, color: player.color});
+      }
+
+      if (this.timer.id_board_game != null) {
+        this.searchString = this.boardGames.find(function(element) {
+          return element.id === this.timer.id_board_game;
+        }).name;
       }
     }
     else {
@@ -226,7 +245,7 @@ export default {
       this.timer.initial_duration = 20000;
       this.timer.reload_increment = 0;
 
-      this.players.push({user: this.currentUser, color: defaultProps});
+      this.players.push({user: this.currentUser, color: {hex : this.generateRandomColor()}});
     }
 
     this.isLoading = false;
