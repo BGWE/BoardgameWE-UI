@@ -21,13 +21,7 @@
             <span v-if="props.row.validated" class="tag is-success">
               {{ $t('global.yes') }}
             </span>
-            <span v-else class="tag is-danger">
-              {{ $t('global.no') }}
-            </span>
-          </b-table-column>
-
-          <b-table-column label="Validate" centered>
-            <button v-if="!props.row.validated" @click="validateUser(props.row.id)" class="button">
+            <button v-else @click="validateUser(props.row.id)" class="button">
               {{ $t('uservalidation.validate') }}
             </button>
           </b-table-column>
