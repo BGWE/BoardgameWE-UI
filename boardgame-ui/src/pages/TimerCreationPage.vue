@@ -11,7 +11,7 @@
         <b-field grouped group-multiline>
           <b-field :label="$t('timer.add-edit.timer.type')">
             <b-select v-model="timer.timer_type">
-              <option v-for="method in timerTypeI18nPath" v-bind:key="method" :value="method.type">
+              <option v-for="method in timerTypeI18nPath" v-bind:key="method.i18nPath" :value="method.type">
                 {{$t(method.i18nPath)}}
               </option>
             </b-select>
@@ -69,7 +69,7 @@
               </b-field>
             </td>
             <td>
-              <slider-picker v-model="players[idx].color"/>
+              <verte v-model="players[idx].color" picker="square" model="hex"></verte>
             </td>
             <td>
               <button type="button" class="delete" @click="removePlayer(idx)"></button>
@@ -102,7 +102,8 @@ import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import User from '@/utils/api/User';
 import BoardGame from '@/utils/api/BoardGame';
-import { Slider } from 'vue-color';
+import Verte from 'verte';
+import 'verte/dist/verte.css';
 
 export default {
   name: 'TimerEditionPage',
@@ -110,7 +111,7 @@ export default {
   components: {
     HeroTitlePageLayout,
     UserAutocomplete,
-    'slider-picker': Slider
+    Verte,
   },
 
   data() {
@@ -157,7 +158,7 @@ export default {
     },
 
     addPlayer() {
-      this.players.push({user: null, color: {hex : this.generateRandomColor()}});
+      this.players.push({user: null, color: this.generateRandomColor()});
     },
 
     generateRandomColor() {
@@ -187,10 +188,10 @@ export default {
       for (let key in this.players) {
         let player = this.players[key];
         if (player.user.id != null) {
-          this.timer.player_timers.push({id_user: player.user.id, name: null, color: player.color.hex});
+          this.timer.player_timers.push({id_user: player.user.id, name: null, color: player.color});
         }
         else {
-          this.timer.player_timers.push({id_user: null, name: player.user.name, color: player.color.hex});
+          this.timer.player_timers.push({id_user: null, name: player.user.name, color: player.color});
         }
       }
 
@@ -245,7 +246,7 @@ export default {
       this.timer.initial_duration = 20000;
       this.timer.reload_increment = 0;
 
-      this.players.push({user: this.currentUser, color: {hex : this.generateRandomColor()}});
+      this.players.push({user: this.currentUser, color: this.generateRandomColor()});
     }
 
     this.isLoading = false;
