@@ -13,7 +13,65 @@
         </div>
       </b-field>
     </div> -->
+    <!-- <div class="board-game-header has-background-light has-text-grey-dark">
+      Hello
+    </div> -->
+    
+    <nav class="panel info-panel">
+      
+      <div class="panel-heading is-size-6" @click="isPanelExpanded = !isPanelExpanded">
+        <a class="dropdown-chevron">
+          <i class="fas fa-chevron-down" v-bind:class="{'fa-chevron-down' : !isPanelExpanded, 'fa-chevron-up' : isPanelExpanded}"></i>
+        </a>
+        <div class="player-name-header-wrapper">
+          <span 
+            class="player-name-header"
+            v-for="player in players" 
+            v-bind:key="player.id"
+            v-bind:class="{'current-player-header': player.id === currentPlayer.id}">
+            {{playerName(player)}}
+          </span>
+        </div>
+      </div>
 
+      <transition name="fade">
+        <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-if="!isRunning">
+          Press <i class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i> to start
+        </div>
+        <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-else>
+          <span class="panel-icon">
+            <i class="fas fa-stopwatch"></i>
+          </span>
+          <span class="time-counter" v-if="currentPlayerDisplayTime != 0">
+            <span class="hours">{{hours(currentPlayerDisplayTime)}}</span>
+            <span class="middle">:</span>
+            <span class="minutes">{{minutes(currentPlayerDisplayTime)}}</span>
+            <span class="middle">:</span>
+            <span class="seconds">{{seconds(currentPlayerDisplayTime)}}</span>
+            <span class="middle">.</span>
+            <span class="millis">{{millis(currentPlayerDisplayTime)}}</span>
+          </span>
+        </div>
+      </transition>
+      
+      <transition name="fade">
+        <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.board_game !== null">
+          <span class="panel-icon">
+            <i class="fas fa-dice"></i>
+          </span>
+          {{timer.board_game.name}}
+        </div>
+      </transition>
+
+      <transition name="fade">
+        <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
+          <span class="panel-icon">
+            <i class="far fa-hourglass"></i>
+          </span>
+          <i18n v-bind:path="timerTypeI18nPath"/>
+        </div>
+      </transition>
+    </nav>
 
     <div class="has-text-centered row-buttons">
       <a class="button timer-button"
@@ -55,6 +113,7 @@
           :timer="timer"
           :is_selected="key === timer.current_player"
           :is_running="isRunning"
+          @update_display_time="update_display_time"
           v-bind:class="{'timer-button-first' : key === timer.current_player}" />
 
         </transition-group>
@@ -80,6 +139,8 @@ export default {
       isRunning: false,
       dragging: false,
       players: [],
+      isPanelExpanded: false,
+      currentPlayerDisplayTime: 0,
     };
   },
   computed: {
@@ -94,8 +155,7 @@ export default {
       return this.players[this.timer.current_player];
     },
     currentPlayerName: function() {
-      let currentPlayer = this.currentPlayer;
-      return currentPlayer.user === null ? currentPlayer.name : currentPlayer.user.name;
+      return this.playerName(this.currentPlayer);
     },
     currentUser() {
       return this.$store.state.currentUser;
@@ -123,7 +183,7 @@ export default {
     },
     error(error) {
       console.log(error);
-    }
+    },
   },
   watch: {
     players: function(val) {
@@ -196,12 +256,76 @@ export default {
         }
       }
       return true;
+    },
+    playerName(player) {
+      return player.user === null ? player.name : player.user.name;
+    },
+    format(d, l) {
+      let v = String(d);
+      while (v.length < l) v = '0' + v;
+      return v;
+    },
+    hours(display_time) {
+      return this.format(display_time.hours(), 2);
+    },
+    minutes(display_time) {
+      return this.format(display_time.minutes(), 2);
+    },
+    seconds(display_time) {
+      return this.format(display_time.seconds(), 2);
+    },
+    millis(display_time) {
+      return this.format(display_time.milliseconds(), 3);
+    },
+    update_display_time(value) {
+      this.currentPlayerDisplayTime = value;
     }
   }
 };
 </script>
 
 <style scoped>
+.board-game-header {
+  height: 4em;
+  border: 1px solid hsl(0, 0%, 86%);
+
+  margin-top: 10px;
+
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.info-panel {
+  margin-top: 1em;
+
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.dropdown-chevron {
+  margin-right: 0.5em;
+  display: inline-block;
+}
+
+.player-name-header-wrapper {
+  display: inline-block;
+}
+
+.player-name-header.current-player-header {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.player-name-header {
+  margin-left: 0.3em;
+  font-size: 0.75rem;
+}
+
+.info-panel-block {
+  font-style: italic;
+}
+
 .button {
   margin-right: 3px;
 }
