@@ -1,22 +1,6 @@
 <template>
   <section v-if=timer>
-    <b-loading :is-full-page="true" :active="isLoading" :can-cancel="true"></b-loading>
-    <!-- <div>
-      <b-field grouped group-multiline>
-        <div class="control">
-          <b-taglist attached>
-            <b-tag type="is-dark">Timer</b-tag>
-            <b-tag type="is-info">
-              <i18n v-bind:path="timerTypeI18nPath"/>
-            </b-tag>
-          </b-taglist>
-        </div>
-      </b-field>
-    </div> -->
-    <!-- <div class="board-game-header has-background-light has-text-grey-dark">
-      Hello
-    </div> -->
-    
+    <b-loading :is-full-page="true" :active="isLoading" :can-cancel="true"></b-loading>    
     <nav class="panel info-panel">
       
       <div class="panel-heading is-size-6" @click="isPanelExpanded = !isPanelExpanded">
