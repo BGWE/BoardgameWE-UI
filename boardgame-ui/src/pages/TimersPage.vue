@@ -13,8 +13,8 @@
 
       <div class="columns is-centered">
         <div class="column">
-          <router-link             
-            v-for="timer in timers" 
+          <router-link
+            v-for="timer in timers"
             v-bind:key="timer.id"
             :to="{name: 'timer', params: {timerid: timer.id}}">
             <div class="box timer-box">
@@ -26,12 +26,12 @@
                     <img class="is-rounded" :src="timer.board_game.thumbnail">
                   </figure> -->
                 </div>
-                
+
                 <div class="media-content">
-                  
+
                   <nav class="level is-mobile-small-device header-level">
                     <div class="level-left">
-                      <p class="is-size-7"><i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/> | {{timer.id}}</p> 
+                      <p class="is-size-7"><i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/> | {{timer.id}}</p>
                     </div>
 
                     <div class="level-item is-hidden-small-device">
@@ -45,7 +45,7 @@
 
                   <div class="content players-list">
                     <b-taglist>
-                      <b-tag 
+                      <b-tag
                         rounded
                         type="is-info"
                         size="is-small"
@@ -53,21 +53,21 @@
                         v-bind:key="player.id">{{getPlayerName(player)}}</b-tag>
                     </b-taglist>
                   </div>
-                  
+
                   <nav class="level is-mobile footer-level">
                     <div class="level-left">
-                      <router-link 
+                      <router-link
                         :to="{name: 'edittimer', params: {id: timer.id}}"
                         class="level-item">
                         <span class="icon is-small has-text-info">
                           <i class="far fa-edit"></i>
                         </span>
                       </router-link>
-                      <!-- <a class="level-item" @click="triggerConfirmDeleteModal(timer.id)">
+                      <a class="level-item" @click="triggerConfirmDeleteModal(timer.id)">
                         <span class="icon is-small has-text-danger">
                           <i class="far fa-trash-alt"></i>
                         </span>
-                      </a> -->
+                      </a>
                     </div>
                   </nav>
                 </div>
@@ -84,17 +84,17 @@
       </div>
     </section>
 
-    <!-- <ConfirmDeleteModal
+    <confirm-delete-modal
       :active="isConfirmDeleteModalActive"
       :onDelete="deleteTimer"
       :onCancel="onCancelConfirmDeleteModal"
-      :content="$t('event.games.confirm-game-deletion')"/> -->
+      :content="$t('event.games.confirm-game-deletion')" />
   </div>
 </template>
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-// import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 
 import Timer, { TimerTypes } from '@/utils/api/Timer';
 
@@ -108,7 +108,7 @@ export default {
 
   components: {
     HeroTitlePageLayout,
-    // ConfirmDeleteModal
+    ConfirmDeleteModal
   },
 
   data() {
@@ -121,8 +121,8 @@ export default {
         { field: 'createdAt', label: 'Created at' }
       ],
       timers: null,
-      // isConfirmDeleteModalActive: false,
-      // timerIdToDelete: null,
+      isConfirmDeleteModalActive: false,
+      timerIdToDelete: null,
     };
   },
   computed: {
@@ -132,6 +132,17 @@ export default {
         [TimerTypes.COUNT_DOWN]: 'timer.type.count_down',
         [TimerTypes.RELOAD]: 'timer.type.reload'
       };
+    }
+  },
+  sockets: {
+    timer_delete(id_timer) {
+      this.timers = this.timers.filter(t => t.id !== id_timer);
+    },
+    error(err) {
+      this.$notification.open({
+        message: err.message,
+        type: 'is-error'
+      });
     }
   },
   async created() {
@@ -164,19 +175,20 @@ export default {
       return iso8601ToMoment(sinceTime).from(moment().tz(moment.tz.guess()));
     },
 
-    // triggerConfirmDeleteModal(timerId) { 
-    //   this.isConfirmDeleteModalActive = true;
-    //   this.timerIdToDelete = timerId;
-    // },
+    triggerConfirmDeleteModal(timerId) {
+      console.log('trigger');
+      this.isConfirmDeleteModalActive = true;
+      this.timerIdToDelete = timerId;
+    },
 
-    // onCancelConfirmDeleteModal() {
-    //   this.isConfirmDeleteModalActive = false;
-    //   this.timerIdToDelete = null;
-    // },
+    onCancelConfirmDeleteModal() {
+      this.isConfirmDeleteModalActive = false;
+      this.timerIdToDelete = null;
+    },
 
-    // deleteTimer() {
-
-    // },
+    deleteTimer() {
+      this.$socket.emit('timer_delete', this.timerIdToDelete);
+    }
   }
 };
 </script>

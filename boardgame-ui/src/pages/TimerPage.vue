@@ -120,18 +120,24 @@
 
       </draggable>
     </div>
+
+    <timer-deleted-modal
+      :active="timerDeletedModalActive"
+      :onLeave="returnToTimersList"
+      :content="$t('timer.deleted')"/>
   </section>
 </template>
 
 <script>
 import Timer, { TimerTypes } from '@/utils/api/Timer';
 import PlayerTimer from '@/components/timer/PlayerTimer';
+import TimerDeletedModal from '@/components/timer/TimerDeletedModal';
 
 import draggable from 'vuedraggable';
 
 export default {
   name: 'TimerPage',
-  components: {PlayerTimer, draggable},
+  components: {PlayerTimer, draggable, TimerDeletedModal},
   data() {
     return {
       timer: null,
@@ -141,6 +147,7 @@ export default {
       players: [],
       isPanelExpanded: false,
       currentPlayerDisplayTime: 0,
+      timerDeletedModalActive: false
     };
   },
   computed: {
@@ -176,6 +183,9 @@ export default {
     },
     timer_prev(timer) {
       this.setTimer(timer);
+    },
+    timer_delete() {
+      this.timerDeletedModalActive = true;
     },
     change_player_turn_order(timer) {
       this.isLoading = false;
@@ -237,6 +247,10 @@ export default {
     },
     unfollow() {
       this.$socket.emit('timer_unfollow');
+    },
+    returnToTimersList() {
+      this.timerDeletedModalActive = false;
+      this.$router.push({name: 'timers'});
     },
     turnPlayerTimers() {
       let player_timers = this.timer.player_timers.slice(0);

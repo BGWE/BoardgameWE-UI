@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-table 
-      :data="data" 
+    <b-table
+      :data="data"
       :mobile-cards=false
       :paginated="paginated"
       :per-page="perPage"
@@ -9,10 +9,10 @@
       :loading="loading">
 
       <template slot-scope="props">
-        <b-table-column 
+        <b-table-column
           v-for="col in columns(rankingTableTypeFromRankingMethod(rankingMethod))"
           v-bind:key="col.field"
-          :field="col.field" 
+          :field="col.field"
           :label="col.label">
 
           <div v-if="'formatter' in col" v-html="col.formatter(props.row[col.field], col.field)"></div>
@@ -50,19 +50,15 @@ export default {
       switch (rankingMethod) {
         case 'WIN_LOSE':
           return this.RANKING_TABLE_TYPE_GROUPED;
-          break;
 
         case 'POINTS_HIGHER_BETTER':
           return this.RANKING_TABLE_TYPE_RANKED;
-          break;
 
         case 'POINTS_LOWER_BETTER':
           return this.RANKING_TABLE_TYPE_RANKED;
-          break;
 
         default:
           return this.RANKING_TABLE_TYPE_RANKED;
-          break;
       }
     },
 
@@ -109,7 +105,7 @@ export default {
             formatter: (value) => {
               if (value == 1) {
                 return `<div class="tag has-background-gold has-text-white is-26x26"><i class="fas fa-trophy"></i></div>`;
-              } 
+              }
               return '';
             }
           },
@@ -126,22 +122,22 @@ export default {
         if (row.position === 1 || row.position === 2 || row.position === 3) {
           return 'has-text-weight-semibold has-background-light';
         }
-      } 
+      }
       else {
         if (row.score === 1) {
           return 'has-text-weight-semibold has-background-light';
         }
       }
-      
+
     }
   },
-  
+
 
   computed: {
-    RANKING_TABLE_TYPE_GROUPED() { 
+    RANKING_TABLE_TYPE_GROUPED() {
       return 'RANKING_TABLE_TYPE_GROUPED';
     },
-    RANKING_TABLE_TYPE_RANKED() { 
+    RANKING_TABLE_TYPE_RANKED() {
       return 'RANKING_TABLE_TYPE_RANKED';
     },
     perPage: () => 5,
@@ -158,7 +154,7 @@ export default {
       if(!this.data) {
         return false;
       }
-      
+
       return this.data.length > this.perPage;
     }
   },
