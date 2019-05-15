@@ -20,10 +20,11 @@
             <div class="box timer-box">
 
               <article class="media">
-                <div class="media-left" v-if="timer.game !== null">
-                  <figure class="image is-64x64">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Image">
-                  </figure>
+                <div class="media-left" v-if="timer.board_game !== null">
+                  <figure class="image is-64x64 is-rounded thumbnail" :style="{backgroundImage: `url('${timer.board_game.thumbnail}')`}"></figure>
+                  <!-- <figure class="image is-128x128">
+                    <img class="is-rounded" :src="timer.board_game.thumbnail">
+                  </figure> -->
                 </div>
 
                 <div class="media-content">
@@ -236,6 +237,14 @@ export default {
   padding-top: 0.7em;
 
   margin-bottom: 0em;
+}
+
+.thumbnail {
+  text-align: center;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 32px;
 }
 
 @media (max-width: 400px) {

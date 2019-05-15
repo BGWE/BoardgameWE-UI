@@ -58,7 +58,10 @@ export default {
       else {
         this.stopInterval();
       }
-    }
+    },
+    'display_time': function(value) {
+      this.$emit('update_display_time', value);
+    },
   },
   methods: {
     refreshElapsed() {

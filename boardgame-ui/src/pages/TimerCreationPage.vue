@@ -69,7 +69,11 @@
               </b-field>
             </td>
             <td>
-              <verte v-model="players[idx].color" picker="square" model="hex"></verte>
+              <verte 
+                v-model="players[idx].color" 
+                picker="square" 
+                model="hex"
+                :enableAlpha="false"></verte>
             </td>
             <td>
               <button type="button" class="delete" @click="removePlayer(idx)"></button>
