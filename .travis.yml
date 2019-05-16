@@ -38,7 +38,7 @@ deploy:
   acl: public_read
   region: eu-west-1
   skip_cleanup: true
-  local_dir: boardgamewe-ui/build
+  local_dir: boardgame-ui/dist
   on:
     branch: releases/v3.0
 
