@@ -1,94 +1,96 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('timers.title')"/>
-    <section class="section">
-
-      <div class="columns">
-        <div class="column has-text-right">
-          <router-link tag="button" class="button is-primary" :to="{name: 'createtimer'}">
-            {{$t("timers.add")}}
-          </router-link>
+    <div class="container">
+      <section class="section">
+        <div class="columns">
+          <div class="column has-text-right">
+            <router-link tag="button" class="button is-primary" :to="{name: 'createtimer'}">
+              {{$t("timers.add")}}
+            </router-link>
+          </div>
         </div>
-      </div>
 
-      <div class="columns is-centered">
-        <div class="column">
-          <router-link
-            v-for="timer in timers"
-            v-bind:key="timer.id"
-            :to="{name: 'timer', params: {timerid: timer.id}}">
-            <div class="box timer-box">
+        <div class="columns is-centered">
+          <div class="column">
+            <router-link
+              v-for="timer in timers"
+              v-bind:key="timer.id"
+              :to="{name: 'timer', params: {timerid: timer.id}}">
+              <div class="box timer-box">
 
-              <article class="media">
-                <div class="media-left">
-                  <figure v-if="timer.board_game !== null" class="image is-64x64 is-rounded thumbnail" :style="{backgroundImage: `url('${timer.board_game.thumbnail}')`}"></figure>
-                  <figure v-else class="image is-64x64 is-rounded thumbnail">
-                    <img :src="require('@/assets/stopwatch-icon.svg')" />
-                  </figure>
-                </div>
-
-                <div class="media-content">
-
-                  <nav class="level is-mobile-small-device header-level">
-                    <div class="level-left">
-                      <p class="is-size-7"><i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/> | {{timer.id}}</p>
-                    </div>
-
-                    <div class="level-item is-hidden-small-device">
-                      <p class="is-size-7">{{elapsedFromNow(mostRecentPlayer(timer.player_timers).updatedAt)}}</p>
-                    </div>
-
-                    <div class="level-right">
-                      <p class="is-size-7"><i18n path="timers.created-by"/> <span class="name"> {{isCurrentUserTimerCreator(timer.creator.id) ? $t('timers.creator.you') : timer.creator.name}}</span></p>
-                    </div>
-                  </nav>
-
-                  <div class="content players-list">
-                    <b-taglist>
-                      <b-tag
-                        rounded
-                        type="is-info"
-                        size="is-small"
-                        v-for="player in timer.player_timers"
-                        v-bind:key="player.id">{{getPlayerName(player)}}</b-tag>
-                    </b-taglist>
+                <article class="media">
+                  <div class="media-left">
+                    <figure v-if="timer.board_game !== null" class="image is-64x64 is-rounded thumbnail" :style="{backgroundImage: `url('${timer.board_game.thumbnail}')`}"></figure>
+                    <figure v-else class="image is-64x64 is-rounded thumbnail">
+                      <img :src="require('@/assets/stopwatch-icon.svg')" />
+                    </figure>
                   </div>
 
-                  <nav class="level is-mobile footer-level">
-                    <div class="level-left">
-                      <router-link
-                        :to="{name: 'edittimer', params: {id: timer.id}}"
-                        class="level-item">
-                        <span class="icon is-small has-text-info">
-                          <i class="far fa-edit"></i>
-                        </span>
-                      </router-link>
-                      <a class="level-item" @click="triggerConfirmDeleteModal(timer.id)">
-                        <span class="icon is-small has-text-danger">
-                          <i class="far fa-trash-alt"></i>
-                        </span>
-                      </a>
+                  <div class="media-content">
+
+                    <nav class="level is-mobile-small-device header-level">
+                      <div class="level-left">
+                        <p class="is-size-7"><i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/> | {{timer.id}}</p>
+                      </div>
+
+                      <div class="level-item is-hidden-small-device">
+                        <p class="is-size-7">{{elapsedFromNow(mostRecentPlayer(timer.player_timers).updatedAt)}}</p>
+                      </div>
+
+                      <div class="level-right">
+                        <p class="is-size-7"><i18n path="timers.created-by"/> <span class="name"> {{isCurrentUserTimerCreator(timer.creator.id) ? $t('timers.creator.you') : timer.creator.name}}</span></p>
+                      </div>
+                    </nav>
+
+                    <div class="content players-list">
+                      <b-taglist>
+                        <b-tag
+                          rounded
+                          type="is-info"
+                          size="is-small"
+                          v-for="player in timer.player_timers"
+                          v-bind:key="player.id">{{getPlayerName(player)}}</b-tag>
+                      </b-taglist>
                     </div>
-                  </nav>
-                </div>
 
-                <div class="media-right is-vertical-center is-media-right arrow-right">
-                  <span>
-                    <i class="fas fa-chevron-right"></i>
-                  </span>
-                </div>
-              </article>
-            </div>
-          </router-link>
+                    <nav class="level is-mobile footer-level">
+                      <div class="level-left">
+                        <router-link
+                          :to="{name: 'edittimer', params: {id: timer.id}}"
+                          class="level-item">
+                          <span class="icon is-small has-text-info">
+                            <i class="far fa-edit"></i>
+                          </span>
+                        </router-link>
+                        <a class="level-item" @click="triggerConfirmDeleteModal(timer.id)">
+                          <span class="icon is-small has-text-danger">
+                            <i class="far fa-trash-alt"></i>
+                          </span>
+                        </a>
+                      </div>
+                    </nav>
+                  </div>
+
+                  <div class="media-right is-vertical-center is-media-right arrow-right">
+                    <span>
+                      <i class="fas fa-chevron-right"></i>
+                    </span>
+                  </div>
+                </article>
+              </div>
+            </router-link>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <confirm-delete-modal
-      :active="isConfirmDeleteModalActive"
-      :onDelete="deleteTimer"
-      :onCancel="onCancelConfirmDeleteModal"
-      :content="$t('event.games.confirm-game-deletion')" />
+      <confirm-delete-modal
+        :active="isConfirmDeleteModalActive"
+        :onDelete="deleteTimer"
+        :onCancel="onCancelConfirmDeleteModal"
+        :content="$t('event.games.confirm-game-deletion')"
+      />
+    </div>
   </div>
 </template>
 

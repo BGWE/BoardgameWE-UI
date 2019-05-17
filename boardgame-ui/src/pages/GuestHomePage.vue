@@ -1,6 +1,6 @@
 <template>
     <div>
-      <section class="hero is-dark">
+      <section class="hero is-secondary">
         <div class="hero-body">
           <div class="container">
             <h1 class="title">
