@@ -95,6 +95,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors.scss";
+@import "~bulma/sass/utilities/mixins.sass";
 
 .navbar-brand {
   font-weight: bold;
@@ -110,8 +111,8 @@ export default {
   background-color: transparent;
 }
 
-@media (min-width: 768px) {
-  .navbar-link-wrapper { 
+@include desktop {
+  .navbar-link-wrapper {
     padding: 0.75em;
   }
 
@@ -129,17 +130,17 @@ export default {
 
   .hero.is-dark-secondary .navbar-dropdown.is-boxed > .navbar-item {
     color: $secondary;
-  } 
+  }
 
   .hero.is-dark-secondary .navbar-dropdown.is-boxed > .navbar-item:hover {
     color: $secondary;
     background-color: white;
-  } 
+  }
 
   .hero.is-dark-secondary .navbar-dropdown.is-boxed > .navbar-item.is-active {
     color: $secondary;
     background-color: white;
-  } 
+  }
 }
 
 </style>
