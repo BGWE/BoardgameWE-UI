@@ -72,11 +72,9 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import BLoading from 'buefy/src/components/loading/Loading';
 
 export default {
   components: {
-    BLoading,
     HeroTitlePageLayout
   },
 

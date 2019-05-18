@@ -53,8 +53,6 @@
 </template>
 
 <script>
-import BLoading from 'buefy/src/components/loading/Loading';
-import BCheckbox from 'buefy/src/components/checkbox/Checkbox';
 import Event from '@/utils/api/Event.js';
 import * as helper from '@/utils/helper';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
@@ -64,8 +62,6 @@ export default {
   name: 'EventEditionPage',
 
   components: {
-    BCheckbox,
-    BLoading,
     HeroTitlePageLayout,
     DateTimePicker
   },
