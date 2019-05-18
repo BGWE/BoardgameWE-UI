@@ -5,7 +5,7 @@
       :event="event"
       v-if="showTimerForm"
       @timerCreated="timerSaved"
-      @formClosed="showTimerForm = false"
+      @close="showTimerForm = false"
     />
     
     <div class="columns" v-else-if="!loading">

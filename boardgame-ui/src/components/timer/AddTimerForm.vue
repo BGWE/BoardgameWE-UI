@@ -1,11 +1,12 @@
 <template>
   <div class="wrapper">
     <b-loading :active="isLoading"/>
-    
-
-    <form @submit.prevent="createTimer('form-timerCreation')" data-vv-scope="form-timerCreation">
-
+    <form @submit.prevent="createTimer('form-timerCreation')" data-vv-scope="form-timerCreation" v-if="timer">
       <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
+
+      <b-field v-if="event" :label="$t('timer.add-edit.event')" >
+        <p>{{event.name}}</p>
+      </b-field>
 
       <b-field grouped group-multiline>
         <b-field :label="$t('timer.add-edit.timer.type')">
@@ -126,7 +127,7 @@ export default {
 
   data() {
     return {
-      isLoading: true,
+      isLoading: false,
       players: [],
       allUsers: null,
       timer: null,
@@ -230,6 +231,7 @@ export default {
   },
 
   async created() {
+    this.isLoading = true;
     this.allUsers = await User.fetchUsers();
 
     this.boardGames = await BoardGame.fetchAll();
@@ -253,8 +255,11 @@ export default {
       this.timer.timer_type = TimerTypes.COUNT_UP;
       this.timer.initial_duration = 20000;
       this.timer.reload_increment = 0;
-
       this.players.push({user: this.currentUser, color: this.generateRandomColor()});
+    }
+
+    if (this.event) {
+      this.timer.id_event = this.event.id;
     }
 
     this.isLoading = false;
