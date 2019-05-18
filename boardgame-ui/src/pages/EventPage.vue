@@ -1,21 +1,15 @@
 <template>
   <div v-if="event">
-    <section class="hero is-secondary">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            {{event.name}}
-            </h1>
-          <h2 class="subtitle">
-            {{event.location}} -
-            from <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.start" />
-            to <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.end" />
-          </h2>
-
-        </div>
-      </div>
-
-      <div class="hero-foot">
+    <hero-title-page-layout>
+      <h1 class="title">
+        {{event.name}}
+        </h1>
+      <h2 class="subtitle">
+        {{event.location}} -
+        from <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.start" />
+        to <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.end" />
+      </h2>
+      <template #footer>
         <nav class="tabs is-boxed">
           <div class="container">
             <ul>
@@ -41,8 +35,9 @@
             </ul>
           </div>
         </nav>
-      </div>
-    </section>
+      </template>
+    </hero-title-page-layout>
+
     <div class="container">
       <router-view :event="event" :isAttendee="isAttendee"></router-view>
     </div>
@@ -52,10 +47,12 @@
 <script>
 import Event from '@/utils/api/Event';
 import BgcDatetime from '@/components/layout/BgcDatetime';
+import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 
 export default {
   components: {
-    BgcDatetime,
+    HeroTitlePageLayout,
+    BgcDatetime
   },
 
   data() {
