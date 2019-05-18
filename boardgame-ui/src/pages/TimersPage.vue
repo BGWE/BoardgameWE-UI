@@ -97,13 +97,8 @@
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
-
 import Timer, { TimerTypes } from '@/utils/api/Timer';
-
-// import * as helper from '@/utils/helper';
-
 import moment from 'moment';
-import { iso8601ToMoment } from '@/utils/helper';
 
 export default {
   name: 'TimersPage',
@@ -174,7 +169,7 @@ export default {
     },
 
     elapsedFromNow(sinceTime) {
-      return iso8601ToMoment(sinceTime).from(moment().tz(moment.tz.guess()));
+      return moment(sinceTime).from(moment());
     },
 
     triggerConfirmDeleteModal(timerId) {

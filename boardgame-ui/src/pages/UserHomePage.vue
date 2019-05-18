@@ -76,7 +76,6 @@ import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
 import ActivityBox from '@/components/activities/ActivityBox';
 import BgcDuration from '@/components/utils/BgcDuration';
-import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 
 export default {
   name: 'UserHomePage',
@@ -91,8 +90,7 @@ export default {
   },
   components: {
     ActivityBox,
-    BgcDuration,
-    HeroTitlePageLayout
+    BgcDuration
   },
   computed: {
     currentUser() {
