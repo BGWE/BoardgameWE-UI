@@ -96,7 +96,7 @@ const routes = [
     ]
   },
   {
-    name: 'editEvent',
+    name: 'editevent',
     path: '/event/:eventid/edit',
     component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
@@ -129,12 +129,6 @@ const routes = [
     name: 'edittimer',
     path: '/timer/:id/edit',
     component: require('./pages/TimerCreationPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
-  {
-    name: 'test_timer',
-    path: '/test_timer',
-    component: require('./pages/TestTimer.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
