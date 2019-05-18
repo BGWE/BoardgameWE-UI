@@ -1,14 +1,5 @@
 <template>
-  <div class="container">
-    <section class="section">
-      <div class="columns">
-        <div class="column has-text-right">
-          <router-link tag="button" class="button is-primary" :to="{name: 'createtimer'}">
-            {{$t("timers.add")}}
-          </router-link>
-        </div>
-      </div>
-
+  <div>
       <div class="columns is-centered">
         <div class="column">
           <router-link
@@ -80,14 +71,13 @@
           </router-link>
         </div>
       </div>
-    </section>
 
-    <confirm-delete-modal
-      :active="isConfirmDeleteModalActive"
-      :onDelete="deleteTimer"
-      :onCancel="onCancelConfirmDeleteModal"
-      :content="$t('timers.confirm-timer-deletion')"
-    />
+      <confirm-delete-modal
+        :active="isConfirmDeleteModalActive"
+        :onDelete="deleteTimer"
+        :onCancel="onCancelConfirmDeleteModal"
+        :content="$t('timers.confirm-timer-deletion')"
+      />
   </div>
 </template>
 

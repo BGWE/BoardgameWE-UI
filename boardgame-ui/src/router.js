@@ -107,6 +107,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'createeventtimer',
+    path: '/event/:eventid/timer',
+    component: require('./pages/TimerCreationPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'library',
     path: '/library',
     component: require('./pages/LibraryPage.vue').default,
