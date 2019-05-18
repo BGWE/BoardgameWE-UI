@@ -44,7 +44,16 @@
             <span class="panel-icon">
               <i class="fas fa-dice"></i>
             </span>
-            {{timer.board_game.name}}
+            <router-link :to="{name: 'boardgame', params: {id: timer.board_game.id}}">{{timer.board_game.name}}</router-link>
+          </div>
+        </transition>
+
+        <transition name="fade">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.id_event !== null">
+            <span class="panel-icon">
+              <i class="far fa-calendar-alt"></i>
+            </span>
+            <router-link :to="{name: 'event_timers', params: {eventid: timer.event.id}}">{{timer.event.name}}</router-link>
           </div>
         </transition>
 
