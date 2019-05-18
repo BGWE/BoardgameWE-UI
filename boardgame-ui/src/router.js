@@ -92,6 +92,11 @@ const routes = [
         name: 'event_matchmaking',
         path: 'matchmaking',
         component: require('./components/event/EventMatchmakingTab.vue').default,
+      },
+      {
+        name: 'event_timers',
+        path: 'timers',
+        component: require('./components/event/EventTimers.vue').default,
       }
     ]
   },

@@ -38,6 +38,10 @@
               <router-link :to="{name: 'event_matchmaking'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.matchmaking')}}</a>
               </router-link>
+
+              <router-link :to="{name: 'event_timers'}" tag="li">
+                <a class="navbar-item">{{$t('event.tab.timers')}}</a>
+              </router-link>
             </ul>
           </div>
         </nav>
