@@ -1,11 +1,13 @@
 <template>
-  <div class="wrapper">
+  <div>
     <hero-title-page-layout :title="$t('wish-list.title')"></hero-title-page-layout>
-    <b-loading :is-full-page="false" :active="loading"></b-loading>
-    <div class="section" v-if="!loading">
-      <board-game-list :board-games="boardGames" :allBelongToUser="true"
-        @add="addBoardGame" @delete="deleteBoardGame">
-      </board-game-list>
+    <div class="container">
+      <b-loading :is-full-page="false" :active="loading"></b-loading>
+      <div class="section" v-if="!loading">
+        <board-game-list :board-games="boardGames" :allBelongToUser="true"
+          @add="addBoardGame" @delete="deleteBoardGame">
+        </board-game-list>
+      </div>
     </div>
   </div>
 </template>

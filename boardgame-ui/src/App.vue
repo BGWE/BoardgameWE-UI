@@ -3,9 +3,7 @@
     <layout-navbar></layout-navbar>
 
     <div class="app-content">
-      <div class="container">
-        <router-view v-if="initialized"></router-view>
-      </div>
+      <router-view v-if="initialized"></router-view>
     </div>
   </div>
 </template>
