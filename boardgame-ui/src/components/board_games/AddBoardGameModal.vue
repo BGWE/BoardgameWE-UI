@@ -7,7 +7,7 @@
         <h2 class="subtitle is-6">{{$t("board-game.add-modal.from-library")}}</h2>
         <div class="columns library-games is-mobile">
           <div class="column" v-for="boardGame in filteredLibraryGames" :key="boardGame.id">
-            <board-game-preview class="is-small" :boardGame="boardGame">
+            <board-game-preview class="is-small" :boardGame="boardGame" :wishCount="countWished(boardGame)">
               <p class="has-text-centered">
                 <button class="button is-small is-primary"
                           :class="{'is-loading': !isExcluded(boardGame) && boardGame.loading}"
@@ -32,14 +32,16 @@
         <div v-for="boardGame in data" :key="boardGame.id">
           <div class="is-flex">
               <p class="is-size-7">
-                  {{boardGame.name}} <br>
-                  <span class="has-text-grey">{{boardGame.year}}</span>
+                {{boardGame.name}} <wish-list-count :count="countWished(boardGame)" /> <br>
+                <span class="has-text-grey">{{boardGame.year}}</span>
               </p>
               <div>
-                <button class="button is-small is-primary"
-                        :class="{'is-loading': !isExcluded(boardGame) && boardGame.loading}"
-                        :disabled="isExcluded(boardGame)"
-                        @click="add(boardGame)">
+                <button
+                  class="button is-small is-primary"
+                  :class="{'is-loading': !isExcluded(boardGame) && boardGame.loading}"
+                  :disabled="isExcluded(boardGame)"
+                  @click="add(boardGame)"
+                >
                   {{isExcluded(boardGame) ? $t('button.added') : $t('button.add')}}
                 </button>
               </div>
@@ -64,17 +66,22 @@
 import debounce from 'lodash.debounce';
 
 import BoardGamePreview from './BoardGamePreview';
+import WishListCount from '@/components/wish_list/WishListCount';
 
 import BoardGame from '@/utils/api/BoardGame';
 import Library from '@/utils/api/Library';
 
 export default {
-  components: {BoardGamePreview},
-  props: [
-    'active',
-    'excludedIds',
-    'addFromLibrary'
-  ],
+  props: {
+    active: Boolean,
+    excludedIds: Array,
+    addFromLibrary: Boolean,
+    wishedBoardGames: Array
+  },
+  components: {
+    BoardGamePreview,
+    WishListCount
+  },
   data() {
     return {
       data: [],
@@ -115,6 +122,7 @@ export default {
       this.isFetching = true;
       try {
         this.data = await BoardGame.searchAll(str);
+        this.sortBoardGames(this.data);
       }
       catch(error) {
         console.log(error);
@@ -132,11 +140,30 @@ export default {
       let bggId = Number(boardGame.bgg_id || boardGame.id);
       let inLibrary = this.bggIdsLibraryGames.includes(bggId);
       this.$emit('add', {bggId, inLibrary});
+    },
+
+    countWished(boardGame) {
+      if(!this.wishedBoardGames) {
+        return;
+      }
+      let bggId = Number(boardGame.bgg_id || boardGame.id);
+      let match = this.wishedBoardGames.find(wish => wish.board_game.bgg_id === bggId);
+      return match ? match.count : 0;
+    },
+
+    sortBoardGames(boardGames) {
+      boardGames.sort((a, b) => {
+        if(this.wishedBoardGames) { // most wished games to be displayed first
+          return this.countWished(b) - this.countWished(a);
+        }
+        return 0;
+      });
     }
   },
   async created() {
     if(this.addFromLibrary) {
       this.libraryGames = (await new Library().fetchGames()).map(item => item.board_game);
+      this.sortBoardGames(this.libraryGames);
       this.filterLibraryGames();
       console.log(this.libraryGames);
     }

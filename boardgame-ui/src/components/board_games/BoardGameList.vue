@@ -50,6 +50,7 @@
       :active.sync="activeModal"
       :excludedIds="bggIdsUserGames"
       :addFromLibrary="addFromLibrary"
+      :wishedBoardGames="wishedBoardGames"
       @add="$emit('add', $event)"
     />
   </div>
@@ -68,7 +69,8 @@ export default {
     canAdd: {
       type: Boolean,
       default: true
-    }
+    },
+    wishedBoardGames: Array
   },
   components: {
     BCheckbox,

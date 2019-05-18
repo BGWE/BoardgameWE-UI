@@ -172,4 +172,12 @@ export default class Event extends Model {
     return data;
   }
 
+  /**
+   * Fetch the board games that the event attendees have added to their wish to play list
+   * @returns {Array<id_board_game, count, board_game>} The list of wished board games, along with the number of attendees that want to play it
+   */
+  async fetchWishedBoardGames(exclude_current=null) {
+    let {data} = await axios.get(`/event/${this.id}/wish_to_play`, {exclude_current});
+    return data;
+  }
 }
