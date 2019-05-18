@@ -1,6 +1,6 @@
 <template>
   <div v-if="event">
-    <section class="hero is-primary is-bold">
+    <section class="hero is-secondary">
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
@@ -14,55 +14,38 @@
 
         </div>
       </div>
+
+      <div class="hero-foot">
+        <nav class="tabs is-boxed">
+          <div class="container">
+            <ul>
+              <router-link :to="{name: 'event_dashboard'}" tag="li">
+                <a class="navbar-item">{{$t('event.tab.dashboard')}}</a>
+              </router-link>
+
+              <router-link :to="{name: 'event_board_games'}" tag="li">
+                <a class="navbar-item">{{$t('event.tab.boardgames')}}</a>
+              </router-link>
+
+              <router-link :to="{name: 'event_games'}" tag="li">
+                <a class="navbar-item">{{$t('event.tab.games')}}</a>
+              </router-link>
+
+              <router-link v-if="!event.hide_rankings" :to="{name: 'event_rankings'}" tag="li">
+                <a class="navbar-item">{{$t('event.tab.rankings')}}</a>
+              </router-link>
+
+              <router-link :to="{name: 'event_matchmaking'}" tag="li">
+                <a class="navbar-item">{{$t('event.tab.matchmaking')}}</a>
+              </router-link>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </section>
-
-    <nav class="level is-mobile" id="event-level">
-        <div class="level-item has-text-centered">
-            <div>
-            <p class="heading">{{$t('event.level.games-played')}}</p>
-            <p class="title">{{games ? games.length : 0}}</p>
-            </div>
-        </div>
-        <div class="level-item has-text-centered">
-            <div>
-            <p class="heading">{{$t('event.level.board-games')}}</p>
-            <p class="title">{{event.provided_board_games ? event.provided_board_games.length : 0}}</p>
-            </div>
-        </div>
-        <div class="level-item has-text-centered">
-            <div>
-            <p class="heading">{{$t('event.level.attendees')}}</p>
-            <p class="title">{{event.attendees ? event.attendees.length : 0}}</p>
-            </div>
-        </div>
-    </nav>
-
-    <div class="tabs is-boxed is-medium">
-      <ul>
-        <router-link :to="{name: 'event_dashboard'}" tag="li">
-          <a class="navbar-item">{{$t('event.tab.dashboard')}}</a>
-        </router-link>
-
-        <router-link :to="{name: 'event_board_games'}" tag="li">
-          <a class="navbar-item">{{$t('event.tab.boardgames')}}</a>
-        </router-link>
-
-        <router-link :to="{name: 'event_games'}" tag="li">
-          <a class="navbar-item">{{$t('event.tab.games')}}</a>
-        </router-link>
-
-        <router-link v-if="!event.hide_rankings" :to="{name: 'event_rankings'}" tag="li">
-          <a class="navbar-item">{{$t('event.tab.rankings')}}</a>
-        </router-link>
-
-        <router-link :to="{name: 'event_matchmaking'}" tag="li">
-          <a class="navbar-item">{{$t('event.tab.matchmaking')}}</a>
-        </router-link>
-      </ul>
+    <div class="container">
+      <router-view :event="event" :isAttendee="isAttendee"></router-view>
     </div>
-
-    <router-view :event="event" :isAttendee="isAttendee"></router-view>
-
   </div>
 </template>
 
@@ -119,5 +102,9 @@ export default {
 
 .hero-datetime {
   font-style: italic;
+}
+
+.hero {
+  margin-bottom: 1rem;
 }
 </style>

@@ -2,10 +2,10 @@
   <div class="wrapper">
     <hero-title-page-layout :title="$t('library.title')"></hero-title-page-layout>
     <b-loading :is-full-page="false" :active="loading"></b-loading>
-    <div class="section" v-if="!loading">
-      <board-game-list :board-games="boardGames" :allBelongToUser="true"
-        @add="addBoardGame" @delete="deleteBoardGame">
-      </board-game-list>
+    <div class="container">
+      <div class="section" v-if="!loading">
+        <board-game-list :board-games="boardGames" :allBelongToUser="true" @add="addBoardGame" @delete="deleteBoardGame" />
+      </div>
     </div>
   </div>
 </template>

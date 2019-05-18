@@ -2,56 +2,58 @@
   <div>
     <HeroTitlePageLayout :title="$t('events.title')"/>
 
-    <section class="section">
-      <div class="columns">
-        <div class="column has-text-right">
-          <router-link tag="button" class="button is-primary" :to="{name: 'createevent'}">
-              {{$t("events.add")}}
-          </router-link>
+    <section class="container">
+      <div class="section">
+        <div class="columns">
+          <div class="column has-text-right">
+            <router-link tag="button" class="button is-primary" :to="{name: 'createevent'}">
+                {{$t("events.add")}}
+            </router-link>
+          </div>
         </div>
-      </div>
 
-      <div class="columns events is-multiline" >
-        <div class="column is-one-quarter" v-for="event in events" :key="event.id">
-          <div class="card">
-            <header class="card-header">
-              <p class="card-header-title">
-                {{event.name}}
-              </p>
-            </header>
-            <div class="card-content">
-              <div class="content">
-                {{event.description}} <br>
-                {{event.location}}
+        <div class="columns events is-multiline" >
+          <div class="column is-one-quarter" v-for="event in events" :key="event.id">
+            <div class="card">
+              <header class="card-header">
+                <p class="card-header-title">
+                  {{event.name}}
+                </p>
+              </header>
+              <div class="card-content">
+                <div class="content">
+                  {{event.description}} <br>
+                  {{event.location}}
+                </div>
               </div>
+              <footer class="card-footer">
+                <div class="buttons">
+                  <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
+                    <span class="icon is-small">
+                      <i class="far fa-eye"></i>
+                    </span>
+
+                    <span>{{$t('events.view')}}</span>
+                  </router-link>
+
+                  <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
+                    <span class="icon is-small">
+                      <i class="fas fa-sign-in-alt"></i>
+                    </span>
+
+                    <span>{{$t('events.join')}}</span>
+                  </button>
+
+                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editevent', params: {eventid: event.id}}" class="button is-info is-outlined">
+                    <span class="icon is-small">
+                      <i class="far fa-edit"></i>
+                    </span>
+
+                    <span>{{$t('events.edit')}}</span>
+                  </router-link>
+                </div>
+              </footer>
             </div>
-            <footer class="card-footer">
-              <div class="buttons">
-                <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
-                  <span class="icon is-small">
-                    <i class="far fa-eye"></i>
-                  </span>
-
-                  <span>{{$t('events.view')}}</span>
-                </router-link>
-
-                <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
-                  <span class="icon is-small">
-                    <i class="fas fa-sign-in-alt"></i>
-                  </span>
-
-                  <span>{{$t('events.join')}}</span>
-                </button>
-
-                <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editevent', params: {eventid: event.id}}" class="button is-info is-outlined">
-                  <span class="icon is-small">
-                    <i class="far fa-edit"></i>
-                  </span>
-
-                  <span>{{$t('events.edit')}}</span>
-                </router-link>
-              </div>
-            </footer>
           </div>
         </div>
       </div>

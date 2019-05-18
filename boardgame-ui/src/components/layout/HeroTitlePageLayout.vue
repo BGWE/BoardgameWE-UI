@@ -1,9 +1,9 @@
 <template>
-    <section class="hero is-light is-bold">
+    <section class="hero is-secondary">
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    {{this.title}}
+                  {{this.title}}
                 </h1>
             </div>
         </div>
@@ -14,6 +14,5 @@
 export default {
   name: 'HeroTitlePageLayout',
   props: ['title']
-  
 };
 </script>

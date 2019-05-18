@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <b-loading :active="isLoading"></b-loading>
     <section class="section">
       <div class="box">
@@ -50,7 +50,7 @@ export default {
     async submitForgotPassword(email) {
       try {
         await User.forgotPassword(email);
-      } 
+      }
       catch (error) {
         console.log(error);
         this.$toast.open({

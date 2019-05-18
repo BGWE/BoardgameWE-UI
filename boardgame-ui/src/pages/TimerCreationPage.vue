@@ -1,102 +1,104 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('timer.add-edit.title')"/>
-    <b-loading :active="isLoading"/>
-    <section v-if="timer" class="section">
+    <div class="container">
+      <b-loading :active="isLoading"/>
+      <section v-if="timer" class="section">
 
-      <form @submit.prevent="createTimer('form-timerCreation')" data-vv-scope="form-timerCreation">
+        <form @submit.prevent="createTimer('form-timerCreation')" data-vv-scope="form-timerCreation">
 
-        <h2 class="subtitle">{{$t('timer.add-edit.timer.title')}}</h2>
+          <h2 class="subtitle">{{$t('timer.add-edit.timer.title')}}</h2>
 
-        <b-field grouped group-multiline>
-          <b-field :label="$t('timer.add-edit.timer.type')">
-            <b-select v-model="timer.timer_type">
-              <option v-for="method in timerTypeI18nPath" v-bind:key="method.i18nPath" :value="method.type">
-                {{$t(method.i18nPath)}}
-              </option>
-            </b-select>
+          <b-field grouped group-multiline>
+            <b-field :label="$t('timer.add-edit.timer.type')">
+              <b-select v-model="timer.timer_type">
+                <option v-for="method in timerTypeI18nPath" v-bind:key="method.i18nPath" :value="method.type">
+                  {{$t(method.i18nPath)}}
+                </option>
+              </b-select>
+            </b-field>
+
+            <b-field  v-if="timer.timer_type === 'COUNT_DOWN' || timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.duration')">
+              <b-numberinput min="0" controls-position="compact" v-model="timer.initial_duration"/>
+            </b-field>
+
+            <b-field v-if="timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.reload-increment')">
+              <b-numberinput min="0" controls-position="compact" v-model="timer.reload_increment"/>
+            </b-field>
           </b-field>
 
-          <b-field  v-if="timer.timer_type === 'COUNT_DOWN' || timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.duration')">
-            <b-numberinput min="0" controls-position="compact" v-model="timer.initial_duration"/>
+          <b-field :label="$t('add-edit-game.board-game.label')">
+            <b-autocomplete
+              v-model="searchString"
+              :data="filteredBoardGames"
+              field="name"
+              icon="search"
+              @select="selectBoardGame"
+              name="boardGame"
+              :data-vv-as="$t('add-edit-game.board-game.label')"
+            >
+              <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
+            </b-autocomplete>
           </b-field>
 
-          <b-field v-if="timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.reload-increment')">
-            <b-numberinput min="0" controls-position="compact" v-model="timer.reload_increment"/>
-          </b-field>
-        </b-field>
+          <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
-        <b-field :label="$t('add-edit-game.board-game.label')">
-          <b-autocomplete
-            v-model="searchString"
-            :data="filteredBoardGames"
-            field="name"
-            icon="search"
-            @select="selectBoardGame"
-            name="boardGame"
-            :data-vv-as="$t('add-edit-game.board-game.label')"
-          >
-            <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
-          </b-autocomplete>
-        </b-field>
+          <table class="table is-fullwidth">
+            <thead>
+            <tr>
+              <th>{{$t('add-edit-game.players.user')}}</th>
+              <th>{{$t('global.color')}}</th>
+              <th class="has-text-white">.</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="({user}, idx) in players" :key="user ? `user${user.id}` : idx">
+              <td>
+                <b-field
+                  :type="{'is-danger': errors.has(`user-${idx}`)}"
+                  :message="errors.first(`user-${idx}`)"
+                >
+                  <user-autocomplete
+                    size="is-small"
+                    v-model="players[idx].user"
+                    :users="allUsers"
+                    :excludedIds="selectedUsersIds"
+                    :name="`user-${idx}`"
+                    :data-vv-as="$t('add-edit-game.players.user')"
+                    v-validate="'required'"
+                  />
+                </b-field>
+              </td>
+              <td>
+                <verte
+                  v-model="players[idx].color"
+                  picker="square"
+                  model="hex"
+                  :enableAlpha="false"></verte>
+              </td>
+              <td>
+                <button type="button" class="delete" @click="removePlayer(idx)"></button>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" class="has-text-centered">
+                <button class="button is-small" type="button" @click="addPlayer()">
+                  {{$t('button.add-player')}}
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
 
-        <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
+          <div class="buttons is-right">
+            <router-link tag="button" class="button is-light" :to="{name: 'timers'}">{{$t('button.cancel')}}</router-link>
+            <button class="button is-primary">{{$t('button.save')}}</button>
+          </div>
 
-        <table class="table is-fullwidth">
-          <thead>
-          <tr>
-            <th>{{$t('add-edit-game.players.user')}}</th>
-            <th>{{$t('global.color')}}</th>
-            <th class="has-text-white">.</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="({user}, idx) in players" :key="user ? `user${user.id}` : idx">
-            <td>
-              <b-field
-                :type="{'is-danger': errors.has(`user-${idx}`)}"
-                :message="errors.first(`user-${idx}`)"
-              >
-                <user-autocomplete
-                  size="is-small"
-                  v-model="players[idx].user"
-                  :users="allUsers"
-                  :excludedIds="selectedUsersIds"
-                  :name="`user-${idx}`"
-                  :data-vv-as="$t('add-edit-game.players.user')"
-                  v-validate="'required'"
-                />
-              </b-field>
-            </td>
-            <td>
-              <verte 
-                v-model="players[idx].color" 
-                picker="square" 
-                model="hex"
-                :enableAlpha="false"></verte>
-            </td>
-            <td>
-              <button type="button" class="delete" @click="removePlayer(idx)"></button>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3" class="has-text-centered">
-              <button class="button is-small" type="button" @click="addPlayer()">
-                {{$t('button.add-player')}}
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        </form>
 
-        <div class="buttons is-right">
-          <router-link tag="button" class="button is-light" :to="{name: 'timers'}">{{$t('button.cancel')}}</router-link>
-          <button class="button is-primary">{{$t('button.save')}}</button>
-        </div>
-
-      </form>
-
-    </section>
+      </section>
+    </div>
   </div>
 </template>
 

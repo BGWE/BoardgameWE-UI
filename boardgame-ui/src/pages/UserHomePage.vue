@@ -1,9 +1,8 @@
 <template>
   <div>
-    <section class="hero is-dark">
+    <section class="hero is-secondary">
       <div class="hero-body">
         <div class="container">
-
           <h1 class="title">
             <i18n path="home.hello"></i18n> {{currentUser.name}} !
             <span class="icon"><i class="hero-smile fa fa-smile"></i></span>
@@ -19,10 +18,18 @@
 
     <div class="container">
       <b-loading :is-full-page="false" :active.sync="isFetching"></b-loading>
-      <section class="section" v-if="ongoingEvent">
-        <router-link tag="button" class="button is-large is-fullwidth" :to="{name: 'event', params: {eventid: ongoingEvent.id}}">
+      <section class="section ongoing-event-message" v-if="ongoingEvent">
+        <!-- <router-link tag="button" class="button is-large is-fullwidth" :to="{name: 'event', params: {eventid: ongoingEvent.id}}">
           <p>{{ongoingEvent.name}}</p> <span class="icon"><i class="fa fa-arrow-right"></i></span>
-        </router-link>
+        </router-link> -->
+        <b-message :title="ongoingEvent.name" type="is-info" has-icon :active="ongoingEvent && isOngoingEventMsgActive" aria-close-label="Close message">
+          <!-- <p></p> <span class="icon"><i class="fa fa-arrow-right"></i></span> -->
+          <!-- This event is currently ongoing. Click <router-link :to="{name: 'event', params: {eventid: ongoingEvent.id}}">here</router-link> to view. -->
+          <i18n path="home.ongoing-event">
+            <!-- <i18n place="here">rr</i18n> -->
+            <router-link :to="{name: 'event', params: {eventid: ongoingEvent.id}}" place="here"><i18n path="home.here"></i18n></router-link>
+          </i18n>
+        </b-message>
       </section>
 
       <section class="section" v-if=userStats>
@@ -69,6 +76,7 @@ import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
 import ActivityBox from '@/components/activities/ActivityBox';
 import BgcDuration from '@/components/utils/BgcDuration';
+import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 
 export default {
   name: 'UserHomePage',
@@ -77,12 +85,14 @@ export default {
       userStats: null,
       userActivities: null,
       ongoingEvent: null,
+      isOngoingEventMsgActive: true,
       isFetching: true
     };
   },
   components: {
     ActivityBox,
-    BgcDuration
+    BgcDuration,
+    HeroTitlePageLayout
   },
   computed: {
     currentUser() {
@@ -103,6 +113,11 @@ export default {
 </script>
 
 <style scoped>
+  .ongoing-event-message {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
   .hero-smile {
     font-size: 25px;
   }

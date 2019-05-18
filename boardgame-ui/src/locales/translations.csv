@@ -2,6 +2,8 @@ key,en,fr
 and,and,
 home.hello,Hello,
 home.welcome,Welcome to {where},
+home.ongoing-event,This event is currently ongoing. Click {here} to view.,
+home.here,here,
 home.statistics,Statistics,
 home.recent-activities,Recent activity,
 home.stats.played,Games played,

@@ -1,131 +1,117 @@
 <template>
-  <section v-if=timer>
-    <b-loading :is-full-page="true" :active="isLoading" :can-cancel="true"></b-loading>
-    <!-- <div>
-      <b-field grouped group-multiline>
-        <div class="control">
-          <b-taglist attached>
-            <b-tag type="is-dark">Timer</b-tag>
-            <b-tag type="is-info">
-              <i18n v-bind:path="timerTypeI18nPath"/>
-            </b-tag>
-          </b-taglist>
+  <div class="container">
+    <section v-if="timer">
+      <b-loading :is-full-page="true" :active="isLoading" :can-cancel="true"></b-loading>
+      <nav class="panel info-panel">
+
+        <div class="panel-heading is-size-6" @click="isPanelExpanded = !isPanelExpanded">
+          <a class="dropdown-chevron">
+            <i class="fas fa-chevron-down" v-bind:class="{'fa-chevron-down' : !isPanelExpanded, 'fa-chevron-up' : isPanelExpanded}"></i>
+          </a>
+          <div class="player-name-header-wrapper">
+            <span
+              class="player-name-header"
+              v-for="player in players"
+              v-bind:key="player.id"
+              v-bind:class="{'current-player-header': player.id === currentPlayer.id}">
+              {{playerName(player)}}
+            </span>
+          </div>
         </div>
-      </b-field>
-    </div> -->
-    <!-- <div class="board-game-header has-background-light has-text-grey-dark">
-      Hello
-    </div> -->
-    
-    <nav class="panel info-panel">
-      
-      <div class="panel-heading is-size-6" @click="isPanelExpanded = !isPanelExpanded">
-        <a class="dropdown-chevron">
-          <i class="fas fa-chevron-down" v-bind:class="{'fa-chevron-down' : !isPanelExpanded, 'fa-chevron-up' : isPanelExpanded}"></i>
-        </a>
-        <div class="player-name-header-wrapper">
-          <span 
-            class="player-name-header"
-            v-for="player in players" 
-            v-bind:key="player.id"
-            v-bind:class="{'current-player-header': player.id === currentPlayer.id}">
-            {{playerName(player)}}
+
+        <transition name="fade">
+          <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-if="!isRunning">
+            Press <i class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i> to start
+          </div>
+          <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-else>
+            <span class="panel-icon">
+              <i class="fas fa-stopwatch"></i>
+            </span>
+            <span class="time-counter" v-if="currentPlayerDisplayTime != 0">
+              <span class="hours">{{hours(currentPlayerDisplayTime)}}</span>
+              <span class="middle">:</span>
+              <span class="minutes">{{minutes(currentPlayerDisplayTime)}}</span>
+              <span class="middle">:</span>
+              <span class="seconds">{{seconds(currentPlayerDisplayTime)}}</span>
+              <span class="middle">.</span>
+              <span class="millis">{{millis(currentPlayerDisplayTime)}}</span>
+            </span>
+          </div>
+        </transition>
+
+        <transition name="fade">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.board_game !== null">
+            <span class="panel-icon">
+              <i class="fas fa-dice"></i>
+            </span>
+            {{timer.board_game.name}}
+          </div>
+        </transition>
+
+        <transition name="fade">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
+            <span class="panel-icon">
+              <i class="far fa-hourglass"></i>
+            </span>
+            <i18n v-bind:path="timerTypeI18nPath"/>
+          </div>
+        </transition>
+      </nav>
+
+      <div class="has-text-centered row-buttons">
+        <a class="button timer-button"
+          v-on:click="isRunning ? stop() : start()"
+          :class="isRunning ? 'timer-button-active' : ''">
+          <span>
+            <i class="fas" :class="isRunning ? 'fa-pause' : 'fa-play'"></i>
           </span>
-        </div>
+        </a>
+        <a
+          class="button timer-button"
+          v-on:click="prev"><span><i class="fas fa-arrow-left"></i></span>
+        </a>
+        <a
+          class="button timer-button"
+          v-on:click="next"><span><i class="fas fa-arrow-right"></i></span>
+        </a>
       </div>
 
-      <transition name="fade">
-        <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-if="!isRunning">
-          Press <i class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i> to start
-        </div>
-        <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-else>
-          <span class="panel-icon">
-            <i class="fas fa-stopwatch"></i>
-          </span>
-          <span class="time-counter" v-if="currentPlayerDisplayTime != 0">
-            <span class="hours">{{hours(currentPlayerDisplayTime)}}</span>
-            <span class="middle">:</span>
-            <span class="minutes">{{minutes(currentPlayerDisplayTime)}}</span>
-            <span class="middle">:</span>
-            <span class="seconds">{{seconds(currentPlayerDisplayTime)}}</span>
-            <span class="middle">.</span>
-            <span class="millis">{{millis(currentPlayerDisplayTime)}}</span>
-          </span>
-        </div>
-      </transition>
-      
-      <transition name="fade">
-        <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.board_game !== null">
-          <span class="panel-icon">
-            <i class="fas fa-dice"></i>
-          </span>
-          {{timer.board_game.name}}
-        </div>
-      </transition>
 
-      <transition name="fade">
-        <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
-          <span class="panel-icon">
-            <i class="far fa-hourglass"></i>
-          </span>
-          <i18n v-bind:path="timerTypeI18nPath"/>
-        </div>
-      </transition>
-    </nav>
+      <!-- <article class="box" v-bind:style="{['background-color']: currentPlayer.color}">
+        <p >{{currentPlayerName}}</p>
+      </article> -->
 
-    <div class="has-text-centered row-buttons">
-      <a class="button timer-button"
-        v-on:click="isRunning ? stop() : start()"
-        :class="isRunning ? 'timer-button-active' : ''">
-        <span>
-          <i class="fas" :class="isRunning ? 'fa-pause' : 'fa-play'"></i>
-        </span>
-      </a>
-      <a
-        class="button timer-button"
-        v-on:click="prev"><span><i class="fas fa-arrow-left"></i></span>
-      </a>
-      <a
-        class="button timer-button"
-        v-on:click="next"><span><i class="fas fa-arrow-right"></i></span>
-      </a>
-    </div>
+      <div>
+        <draggable
+          :list="players"
+          :disabled="isRunning"
+          @start="dragging = true"
+          @end="dragging = false">
 
+          <transition-group type="transition" name="flip-list">
 
-    <!-- <article class="box" v-bind:style="{['background-color']: currentPlayer.color}">
-      <p >{{currentPlayerName}}</p>
-    </article> -->
+          <player-timer
+            class="card"
+            v-for="(player_timer, key) in players"
+            :key="player_timer.id"
+            :player_timer="player_timer"
+            :timer="timer"
+            :is_selected="key === timer.current_player"
+            :is_running="isRunning"
+            @update_display_time="update_display_time"
+            v-bind:class="{'timer-button-first' : key === timer.current_player}" />
 
-    <div>
-      <draggable
-        :list="players"
-        :disabled="isRunning"
-        @start="dragging = true"
-        @end="dragging = false">
+          </transition-group>
 
-        <transition-group type="transition" name="flip-list">
+        </draggable>
+      </div>
 
-        <player-timer
-          class="card"
-          v-for="(player_timer, key) in players"
-          :key="player_timer.id"
-          :player_timer="player_timer"
-          :timer="timer"
-          :is_selected="key === timer.current_player"
-          :is_running="isRunning"
-          @update_display_time="update_display_time"
-          v-bind:class="{'timer-button-first' : key === timer.current_player}" />
-
-        </transition-group>
-
-      </draggable>
-    </div>
-
-    <timer-deleted-modal
-      :active="timerDeletedModalActive"
-      :onLeave="returnToTimersList"
-      :content="$t('timer.deleted')"/>
-  </section>
+      <timer-deleted-modal
+        :active="timerDeletedModalActive"
+        :onLeave="returnToTimersList"
+        :content="$t('timer.deleted')"/>
+    </section>
+  </div>
 </template>
 
 <script>
