@@ -2,7 +2,7 @@
   <div>
     <HeroTitlePageLayout :title="$t('timer.add-edit.title')"/>
     <div class="container">
-      <b-loading :active="isLoading"/>
+      <b-loading :is-full-page="false" :active="isLoading" />
       <section v-if="timer" class="section">
 
         <form @submit.prevent="createTimer('form-timerCreation')" data-vv-scope="form-timerCreation">

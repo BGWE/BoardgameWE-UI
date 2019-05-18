@@ -1,6 +1,5 @@
 <template>
   <div>
-    <b-loading :active="isLoading"/>
     <section v-if="user" class="section">
       <div class="box">
         <h1 class="title"> {{$t('register.title')}} </h1>
@@ -80,8 +79,7 @@ export default {
       user : null,
       confirmPassword:'',
       error: false,
-      registering: false,
-      isLoading: true
+      registering: false
     };
   },
 
@@ -137,7 +135,6 @@ export default {
 
   created() {
     this.user = new User();
-    this.isLoading = false;
   }
 };
 </script>

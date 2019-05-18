@@ -2,7 +2,7 @@
   <div>
     <HeroTitlePageLayout :title="$t('event.edition.title')"/>
     <div class="container">
-      <b-loading :active:="isLoading"/>
+      <b-loading :is-full-page="false" :active="!event" />
       <section v-if="event" class="section">
         <form @submit.prevent="createEvent('form-eventCreation')" data-vv-scope="form-eventCreation">
           <b-field horizontal :label="$t('event.edition.name')"
@@ -72,7 +72,6 @@ export default {
 
   data() {
     return {
-      isLoading: true,
       event: null,
       startDate: null,
       endDate: null,
@@ -118,7 +117,6 @@ export default {
   },
 
   async created() {
-    this.isLoading = false;
     if (this.$route.params.eventid) {
       this.event = await Event.fetch(this.$route.params.eventid);
       this.startDate = this.formatISO8601StringAsDate(this.event.start);
@@ -133,4 +131,7 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  min-height: 10em;
+}
 </style>
