@@ -44,7 +44,7 @@
                     <span>{{$t('events.join')}}</span>
                   </button>
 
-                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editevent', params: {eventid: event.id}}" class="button is-info is-outlined">
+                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editEvent', params: {eventid: event.id}}" class="button is-info is-outlined">
                     <span class="icon is-small">
                       <i class="far fa-edit"></i>
                     </span>
