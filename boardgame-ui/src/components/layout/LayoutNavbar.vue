@@ -38,9 +38,14 @@
                 </router-link>
               </div>
               <div v-else class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
-                  {{currentUser.name}} {{currentUser.surname[0]}}.
-                </a>
+                <span class="navbar-link-wrapper">
+                  <a class="navbar-link navbar-link-custom">
+                    <span class="icon">
+                      <i class="fas fa-user-circle"></i>
+                    </span>
+                    {{currentUser.name}} {{currentUser.surname[0]}}.
+                  </a>
+                </span>
 
                 <div class="navbar-dropdown is-boxed">
                   <router-link :to="{name: 'preferences'}" class="navbar-item">
@@ -89,6 +94,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/colors.scss";
+
 .navbar-brand {
   font-weight: bold;
   text-transform: uppercase;
@@ -98,4 +105,37 @@ export default {
     max-height: 2.5em !important;
   }
 }
+
+@media (min-width: 768px) {
+  .navbar-link-wrapper { 
+    padding: 0.75em;
+  }
+
+  .hero.is-dark-secondary .navbar-item.has-dropdown .navbar-link-wrapper > .navbar-link.navbar-link-custom {
+    color: $secondary;
+    background-color: white;
+    border-radius: 4px;
+
+    // padding: 10px;
+  }
+
+  .navbar-link.navbar-link-custom > .icon {
+    margin-right: .1875em;
+  }
+
+  .hero.is-dark-secondary .navbar-dropdown.is-boxed > .navbar-item {
+    color: $secondary;
+  } 
+
+  .hero.is-dark-secondary .navbar-dropdown.is-boxed > .navbar-item:hover {
+    color: $secondary;
+    background-color: white;
+  } 
+
+  .hero.is-dark-secondary .navbar-dropdown.is-boxed > .navbar-item.is-active {
+    color: $secondary;
+    background-color: white;
+  } 
+}
+
 </style>
