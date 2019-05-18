@@ -106,6 +106,10 @@ export default {
   }
 }
 
+.navbar-brand > .navbar-item.router-link-exact-active.is-active {
+  background-color: transparent;
+}
+
 @media (min-width: 768px) {
   .navbar-link-wrapper { 
     padding: 0.75em;
