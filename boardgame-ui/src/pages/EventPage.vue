@@ -57,9 +57,7 @@ export default {
 
   data() {
     return {
-      event: null,
-      games: [],
-      rankings: {}
+      event: null
     };
   },
 
@@ -77,9 +75,6 @@ export default {
 
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
-
-    // TODO Should we load those there?
-    this.games = await this.event.fetchGames();
   }
 };
 </script>
