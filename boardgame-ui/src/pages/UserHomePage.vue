@@ -1,20 +1,16 @@
 <template>
   <div>
-    <section class="hero is-secondary">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            <i18n path="home.hello"></i18n> {{currentUser.name}} !
-            <span class="icon"><i class="hero-smile fa fa-smile"></i></span>
-          </h1>
-          <h2 class="subtitle">
-            <i18n path="home.welcome">
-              <i18n place="where" path="app.appName"></i18n>
-            </i18n>
-          </h2>
-        </div>
-      </div>
-    </section>
+    <hero-title-page-layout>
+      <h1 class="title">
+        <i18n path="home.hello"></i18n> {{currentUser.name}} !
+        <span class="icon"><i class="hero-smile fa fa-smile"></i></span>
+      </h1>
+      <h2 class="subtitle">
+        <i18n path="home.welcome">
+          <i18n place="where" path="app.appName"></i18n>
+        </i18n>
+      </h2>
+    </hero-title-page-layout>
 
     <div class="container">
       <b-loading :is-full-page="false" :active.sync="isFetching"></b-loading>
@@ -76,6 +72,7 @@ import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
 import ActivityBox from '@/components/activities/ActivityBox';
 import BgcDuration from '@/components/utils/BgcDuration';
+import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 
 export default {
   name: 'UserHomePage',
@@ -90,7 +87,8 @@ export default {
   },
   components: {
     ActivityBox,
-    BgcDuration
+    BgcDuration,
+    HeroTitlePageLayout
   },
   computed: {
     currentUser() {

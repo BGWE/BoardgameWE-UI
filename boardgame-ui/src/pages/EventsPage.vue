@@ -6,7 +6,7 @@
       <div class="section">
         <div class="columns">
           <div class="column has-text-right">
-            <router-link tag="button" class="button is-primary" :to="{name: 'createevent'}">
+            <router-link tag="button" class="button is-primary" :to="{name: 'create-event'}">
                 {{$t("events.add")}}
             </router-link>
           </div>
@@ -44,7 +44,7 @@
                     <span>{{$t('events.join')}}</span>
                   </button>
 
-                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editevent', params: {eventid: event.id}}" class="button is-info is-outlined">
+                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
                     <span class="icon is-small">
                       <i class="far fa-edit"></i>
                     </span>

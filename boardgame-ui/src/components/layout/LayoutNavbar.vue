@@ -51,7 +51,7 @@
                   <router-link :to="{name: 'preferences'}" class="navbar-item">
                     {{$t('navbar.preferences')}}
                   </router-link>
-                  <router-link v-if="isUserAdmin" :to="{name: 'uservalidation'}" class="navbar-item">
+                  <router-link v-if="isUserAdmin" :to="{name: 'user-validation'}" class="navbar-item">
                     {{$t('navbar.uservalidation')}}
                   </router-link>
                   <a @click="logout()" class="navbar-item">
