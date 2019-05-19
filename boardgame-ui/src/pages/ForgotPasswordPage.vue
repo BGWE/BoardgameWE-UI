@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <b-loading :active="isLoading"></b-loading>
+    <b-loading :is-full-page="false" :active="isLoading" />
     <section class="section">
       <div class="box">
         <h1 class="title">{{$t('login.link.forgot-password')}}</h1>

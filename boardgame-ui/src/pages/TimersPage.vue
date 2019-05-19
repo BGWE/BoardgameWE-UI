@@ -5,13 +5,13 @@
       <section class="section">
         <div class="columns">
           <div class="column has-text-right">
-            <router-link tag="button" class="button is-primary" :to="{name: 'createtimer'}">
+            <router-link tag="button" class="button is-primary" :to="{name: 'create-timer'}">
               {{$t("timers.add")}}
             </router-link>
           </div>
         </div>
-        <timer-list 
-          :timers="this.timers" 
+        <timer-list
+          :timers="this.timers"
           @delete:timer="timerDeleted"
         />
       </section>
@@ -29,13 +29,13 @@ export default {
     HeroTitlePageLayout,
     TimerList
   },
-  
+
   data() {
     return {
       timers: null
     };
   },
-  
+
   async created() {
     this.timers = await Timer.getCurrentUserTimers();
   },

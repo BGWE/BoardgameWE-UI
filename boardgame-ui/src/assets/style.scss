@@ -9,3 +9,11 @@
 .section {
   padding: 1.5em;
 }
+
+.loading-overlay {
+  z-index: 1000;
+
+  .loading-icon {
+    z-index: 1000;
+  }
+}

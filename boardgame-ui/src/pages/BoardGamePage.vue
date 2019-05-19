@@ -161,6 +161,10 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+  position: relative;
+}
+
 .image-details {
   max-width: 500px;
   margin-left: auto;

@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
     <hero-title-page-layout :title="$t('library.title')"></hero-title-page-layout>
-    <b-loading :is-full-page="false" :active="loading"></b-loading>
     <div class="container">
+      <b-loading :is-full-page="false" :active="loading"></b-loading>
       <div class="section" v-if="!loading">
         <board-game-list :board-games="boardGames" :allBelongToUser="true" @add="addBoardGame" @delete="deleteBoardGame" />
       </div>
@@ -76,3 +76,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.container {
+  min-height: 10em;
+}
+</style>
