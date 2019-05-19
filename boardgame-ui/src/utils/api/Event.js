@@ -172,4 +172,9 @@ export default class Event extends Model {
     return data;
   }
 
+  async getCurrentUserTimers() {
+    let {data} = await axios.get(`event/${this.id}/timers`);
+    return data;
+  }
+
 }
