@@ -7,7 +7,7 @@
         <h2 class="subtitle is-6">{{$t("board-game.add-modal.from-library")}}</h2>
         <div class="columns library-games is-mobile">
           <div class="column" v-for="boardGame in filteredLibraryGames" :key="boardGame.id">
-            <board-game-preview class="is-small" :boardGame="boardGame" :wishCount="countWished(boardGame)">
+            <board-game-preview class="is-small" :boardGame="boardGame" :wishCount="boardGame.countWished">
               <p class="has-text-centered">
                 <button class="button is-small is-primary"
                           :class="{'is-loading': !isExcluded(boardGame) && boardGame.loading}"
@@ -32,7 +32,7 @@
         <div v-for="boardGame in data" :key="boardGame.id">
           <div class="is-flex">
               <p class="is-size-7">
-                {{boardGame.name}} <wish-list-count :count="countWished(boardGame)" /> <br>
+                {{boardGame.name}} <wish-list-count :count="boardGame.countWished" /> <br>
                 <span class="has-text-grey">{{boardGame.year}}</span>
               </p>
               <div>
@@ -121,8 +121,8 @@ export default {
 
       this.isFetching = true;
       try {
-        this.data = await BoardGame.searchAll(str);
-        this.sortBoardGames(this.data);
+        let data = await BoardGame.searchAll(str);
+        this.data = this.processBoardGames(data);
       }
       catch(error) {
         console.log(error);
@@ -142,28 +142,26 @@ export default {
       this.$emit('add', {bggId, inLibrary});
     },
 
-    countWished(boardGame) {
+    processBoardGames(boardGames) {
       if(!this.wishedBoardGames) {
-        return;
+        return boardGames;
       }
-      let bggId = Number(boardGame.bgg_id || boardGame.id);
-      let match = this.wishedBoardGames.find(wish => wish.board_game.bgg_id === bggId);
-      return match ? match.count : 0;
-    },
 
-    sortBoardGames(boardGames) {
-      boardGames.sort((a, b) => {
-        if(this.wishedBoardGames) { // most wished games to be displayed first
-          return this.countWished(b) - this.countWished(a);
-        }
-        return 0;
+      boardGames.forEach(boardGame => {
+        let bggId = Number(boardGame.bgg_id || boardGame.id);
+        let match = this.wishedBoardGames.find(wish => wish.board_game.bgg_id === bggId);
+        boardGame.countWished = match ? match.count : 0;
+      });
+
+      return boardGames.sort((a, b) => {
+        return b.countWished - a.countWished; // most wished games to be displayed first
       });
     }
   },
   async created() {
     if(this.addFromLibrary) {
-      this.libraryGames = (await new Library().fetchGames()).map(item => item.board_game);
-      this.sortBoardGames(this.libraryGames);
+      let libraryGames = (await new Library().fetchGames()).map(item => item.board_game);
+      this.libraryGames = this.processBoardGames(libraryGames);
       this.filterLibraryGames();
       console.log(this.libraryGames);
     }
