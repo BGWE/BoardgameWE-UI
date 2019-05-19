@@ -25,7 +25,6 @@ import AddTimerForm from '@/components/timer/AddTimerForm';
 import Event from '@/utils/api/Event';
 
 export default {
-  name: 'EventTimers',
   components: {TimerList, AddTimerForm},
   props: {
     event: {

@@ -183,7 +183,7 @@ export default {
   padding-top: 15px;
   padding-bottom: 15px;
 
-  max-width: 600px;
+  max-width: 500px;
   margin: auto;
   margin-bottom: 1em;
 }
