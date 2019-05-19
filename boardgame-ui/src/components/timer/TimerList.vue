@@ -2,6 +2,9 @@
   <div>
       <div class="columns is-centered">
         <div class="column">
+          <div class="container" v-if="timers.length === 0">
+            <p class="empty-list-message"><i18n path="timers.no-timer"/></p>
+          </div>
           <router-link
             v-for="timer in timers"
             v-bind:key="timer.id"
@@ -231,6 +234,11 @@ export default {
 
 .thumbnail.thumbnail-empty {
   background-color: hsl(0, 0%, 86%);
+}
+
+.empty-list-message {
+  text-align: center;
+  opacity: 0.5;
 }
 
 @media (max-width: 400px) {
