@@ -106,7 +106,7 @@ import Verte from 'verte';
 import 'verte/dist/verte.css';
 
 /**
- * emits: close, timerCreated
+ * emits: close, created:timer
  */
 export default {
   components: {
@@ -219,7 +219,7 @@ export default {
 
       try {
         await this.timer.save();
-        this.$emit('timerCreated', this.timer);
+        this.$emit('created:timer', this.timer);
       }
       catch (e) {
         console.log(e);

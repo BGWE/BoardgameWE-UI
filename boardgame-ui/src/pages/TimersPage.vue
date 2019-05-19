@@ -10,7 +10,10 @@
             </router-link>
           </div>
         </div>
-        <timer-list :timers="this.timers" />
+        <timer-list 
+          :timers="this.timers" 
+          @delete:timer="timerDeleted"
+        />
       </section>
     </div>
   </div>
@@ -26,13 +29,21 @@ export default {
     HeroTitlePageLayout,
     TimerList
   },
+  
   data() {
     return {
       timers: null
     };
   },
+  
   async created() {
     this.timers = await Timer.getCurrentUserTimers();
+  },
+
+  methods: {
+    timerDeleted(id_timer) {
+      this.timers = this.timers.filter(t => t.id !== id_timer);
+    }
   }
 };
 </script>

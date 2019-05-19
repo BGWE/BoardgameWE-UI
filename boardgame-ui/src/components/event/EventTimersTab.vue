@@ -5,7 +5,7 @@
       :event="event"
       :users="attendees"
       v-if="showTimerForm"
-      @timerCreated="timerSaved"
+      @created:timer="timerSaved"
       @close="showTimerForm = false"
     />
     
@@ -14,7 +14,10 @@
         <p v-if="isAttendee" class="has-text-right limited-width">
           <button class="button is-primary" @click="openTimerForm()">{{$t('timers.add')}}</button>
         </p>
-        <timer-list :timers="timers" />
+        <timer-list 
+          :timers="timers" 
+          @delete:timer="timerDeleted"
+        />
       </div>
     </div>
   </div>
@@ -64,6 +67,9 @@ export default {
     },
     openTimerForm() {
       this.showTimerForm = true;
+    },
+    timerDeleted(id_timer) {
+      this.timers = this.timers.filter(t => t.id !== id_timer);
     }
   }
 };

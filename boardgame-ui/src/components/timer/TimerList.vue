@@ -52,7 +52,7 @@
                           <i class="far fa-edit"></i>
                         </span>
                       </router-link>
-                      <a class="level-item" @click="triggerConfirmDeleteModal(timer.id)">
+                      <a class="level-item" @click.prevent.stop="triggerConfirmDeleteModal(timer.id)">
                         <span class="icon is-small has-text-danger">
                           <i class="far fa-trash-alt"></i>
                         </span>
@@ -86,14 +86,16 @@ import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 import { TimerTypes } from '@/utils/api/Timer';
 import moment from 'moment';
 
+/**
+ * Emits: delete:timer
+ */
 export default {
-  name: 'TimersList',
   components: {
     ConfirmDeleteModal
   },
   props: {
     timers: {
-      type: Array 
+      type: Array
     }
   },
   data() {
@@ -120,7 +122,8 @@ export default {
   },
   sockets: {
     timer_delete(id_timer) {
-      this.timers = this.timers.filter(t => t.id !== id_timer);
+      this.$emit('delete:timer', id_timer);
+      this.isConfirmDeleteModalActive = false;
     },
     error(err) {
       this.$notification.open({
@@ -128,7 +131,7 @@ export default {
         type: 'is-error'
       });
     }
-  }, 
+  },
   methods: {
     isCurrentUserTimerCreator(timerCreatorId) {
       let currentUser = this.$store.state.currentUser;
