@@ -8,7 +8,7 @@
         <b-input disabled :value="event.name" />
       </b-field>
 
-      <b-field grouped group-multiline>
+      <b-field>
         <b-field :label="$t('timer.add-edit.timer.type')">
           <b-select v-model="timer.timer_type">
             <option v-for="method in timerTypeI18nPath" v-bind:key="method.i18nPath" :value="method.type">
