@@ -59,7 +59,6 @@
 <script>
 import BoardGamePreview from './BoardGamePreview';
 import AddBoardGameModal from './AddBoardGameModal';
-import BCheckbox from 'buefy/src/components/checkbox/Checkbox';
 
 export default {
   props: {
@@ -73,7 +72,6 @@ export default {
     wishedBoardGames: Array
   },
   components: {
-    BCheckbox,
     BoardGamePreview,
     AddBoardGameModal
   },

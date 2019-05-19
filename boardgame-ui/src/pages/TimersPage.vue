@@ -5,7 +5,7 @@
       <section class="section">
         <div class="columns">
           <div class="column has-text-right">
-            <router-link tag="button" class="button is-primary" :to="{name: 'createtimer'}">
+            <router-link tag="button" class="button is-primary" :to="{name: 'create-timer'}">
               {{$t("timers.add")}}
             </router-link>
           </div>
@@ -57,7 +57,7 @@
                     <nav class="level is-mobile footer-level">
                       <div class="level-left">
                         <router-link
-                          :to="{name: 'edittimer', params: {id: timer.id}}"
+                          :to="{name: 'edit-timer', params: {id: timer.id}}"
                           class="level-item">
                           <span class="icon is-small has-text-info">
                             <i class="far fa-edit"></i>
@@ -97,13 +97,8 @@
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
-
 import Timer, { TimerTypes } from '@/utils/api/Timer';
-
-// import * as helper from '@/utils/helper';
-
 import moment from 'moment';
-import { iso8601ToMoment } from '@/utils/helper';
 
 export default {
   name: 'TimersPage',
@@ -174,7 +169,7 @@ export default {
     },
 
     elapsedFromNow(sinceTime) {
-      return iso8601ToMoment(sinceTime).from(moment().tz(moment.tz.guess()));
+      return moment(sinceTime).from(moment());
     },
 
     triggerConfirmDeleteModal(timerId) {

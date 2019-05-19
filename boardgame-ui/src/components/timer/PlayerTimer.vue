@@ -26,7 +26,6 @@
 
 <script>
 import moment from 'moment';
-import { iso8601ToMoment } from '@/utils/helper';
 import { TimerTypes } from '@/utils/api/Timer';
 
 export default {
@@ -70,7 +69,7 @@ export default {
        * If necessary, can be improved: recorded start time (server time) is diff-ed with the current browser time 
        * which might cause a difference if server and browser do not have the same time.
        */
-      const since_start = start !== null ? moment().utc().diff(iso8601ToMoment(this.player_timer.start)) : 0;
+      const since_start = start !== null ? moment().utc().diff(moment(this.player_timer.start)) : 0;
       const elapsed = moment.duration(this.player_timer.elapsed).add(since_start);
       if (this.timer.timer_type === TimerTypes.COUNT_UP) {
         this.display_time = elapsed;

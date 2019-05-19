@@ -9,6 +9,10 @@
         </slot>
       </div>
     </div>
+
+    <div class="hero-foot">
+      <slot name="footer"></slot>
+    </div>
   </section>
 </template>
 

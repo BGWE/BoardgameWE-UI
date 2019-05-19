@@ -56,8 +56,8 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
-    name: 'createevent',
-    path: '/events/createEvent',
+    name: 'create-event',
+    path: '/events/create',
     component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
@@ -65,38 +65,38 @@ const routes = [
     name: 'event',
     path: '/event/:eventid',
     component: require('./pages/EventPage.vue').default,
-    redirect: {name: 'event_dashboard'},
+    redirect: {name: 'event-dashboard'},
     beforeEnter: authenticatedOnly,
     children: [
       {
-        name: 'event_dashboard',
+        name: 'event-dashboard',
         path: 'dashboard',
         component: require('./components/event/EventDashboardTab.vue').default,
       },
       {
-        name: 'event_board_games',
-        path: 'board_games',
+        name: 'event-board-games',
+        path: 'board-games',
         component: require('./components/event/EventBoardGamesTab.vue').default,
       },
       {
-        name: 'event_games',
+        name: 'event-games',
         path: 'games',
         component: require('./components/event/EventGamesTab.vue').default,
       },
       {
-        name: 'event_rankings',
+        name: 'event-rankings',
         path: 'rankings',
         component: require('./components/event/EventRankingsTab.vue').default,
       },
       {
-        name: 'event_matchmaking',
+        name: 'event-matchmaking',
         path: 'matchmaking',
         component: require('./components/event/EventMatchmakingTab.vue').default,
       }
     ]
   },
   {
-    name: 'editEvent',
+    name: 'edit-event',
     path: '/event/:eventid/edit',
     component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
@@ -126,21 +126,15 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
-    name: 'createtimer',
-    path: '/timers/edit',
+    name: 'create-timer',
+    path: '/timers/create',
     component: require('./pages/TimerCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
-    name: 'edittimer',
+    name: 'edit-timer',
     path: '/timer/:id/edit',
     component: require('./pages/TimerCreationPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
-  {
-    name: 'test_timer',
-    path: '/test_timer',
-    component: require('./pages/TestTimer.vue').default,
     beforeEnter: authenticatedOnly
   },
   {
@@ -150,24 +144,24 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
-    name: 'uservalidation',
-    path: '/userValidation',
+    name: 'user-validation',
+    path: '/user-validation',
     component: require('./pages/UserValidationPage.vue').default,
     beforeEnter: adminOnly
   },
   {
-    name: 'boardgame',
-    path: '/boardgame/:id',
+    name: 'board-game',
+    path: '/board-game/:id',
     component: require('./pages/BoardGamePage.vue').default
   },
   {
     name: 'forgot-password',
-    path: '/auth/forgot_password',
+    path: '/auth/forgot-password',
     component: require('./pages/ForgotPasswordPage.vue').default
   },
   {
     name: 'reset-password',
-    path: '/auth/reset_password',
+    path: '/auth/reset-password',
     component: require('./pages/ResetPasswordPage.vue').default
   },
   {
