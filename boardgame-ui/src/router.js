@@ -94,7 +94,7 @@ const routes = [
         component: require('./components/event/EventMatchmakingTab.vue').default,
       },
       {
-        name: 'event_timers',
+        name: 'event-timers',
         path: 'timers',
         component: require('./components/event/EventTimersTab.vue').default,
       }
@@ -107,7 +107,7 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   // { // to be re-worked in version 3.1
-  //   name: 'createeventtimer',
+  //   name: 'create-event-timer',
   //   path: '/event/:eventid/timer',
   //   component: require('./pages/TimerCreationPage.vue').default,
   //   beforeEnter: authenticatedOnly
@@ -136,12 +136,12 @@ const routes = [
     component: require('./pages/TimerCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
-  {
-    name: 'edit-timer',
-    path: '/timer/:id/edit',
-    component: require('./pages/TimerCreationPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
+  // { // to be re-worked in version 3.1
+  //   name: 'edit-timer',
+  //   path: '/timer/:id/edit',
+  //   component: require('./pages/TimerCreationPage.vue').default,
+  //   beforeEnter: authenticatedOnly
+  // },
   {
     name: 'preferences',
     path: '/preferences',

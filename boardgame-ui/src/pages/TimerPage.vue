@@ -53,7 +53,7 @@
             <span class="panel-icon">
               <i class="far fa-calendar-alt"></i>
             </span>
-            <router-link :to="{name: 'event_timers', params: {eventid: timer.event.id}}">{{timer.event.name}}</router-link>
+            <router-link :to="{name: 'event-timers', params: {eventid: timer.event.id}}">{{timer.event.name}}</router-link>
           </div>
         </transition>
 
