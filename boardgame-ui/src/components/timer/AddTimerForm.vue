@@ -258,7 +258,7 @@ export default {
       }
 
       if (this.timer.id_board_game != null) {
-        this.searchString = this.boardGames.find(function(element) {
+        this.searchString = this.boardGames.find(element => {
           return element.id === this.timer.id_board_game;
         }).name;
       }

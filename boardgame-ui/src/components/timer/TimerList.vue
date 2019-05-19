@@ -100,7 +100,6 @@ export default {
   },
   data() {
     return {
-      data: [],
       columns: [
         { field: 'id', label: 'ID', numeric: true },
         { field: 'board_game', label: 'Board game', center: true },
