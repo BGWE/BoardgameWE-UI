@@ -18,11 +18,11 @@
         </b-field>
 
         <b-field  v-if="timer.timer_type === 'COUNT_DOWN' || timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.duration')">
-          <b-numberinput min="0" controls-position="compact" v-model="timer.initial_duration"/>
+          <b-numberinput min="0" controls-position="compact" v-model="initial_duration_seconds"/>
         </b-field>
 
         <b-field v-if="timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.reload-increment')">
-          <b-numberinput min="0" controls-position="compact" v-model="timer.reload_increment"/>
+          <b-numberinput min="0" controls-position="compact" v-model="reload_increment_seconds"/>
         </b-field>
       </b-field>
 
@@ -133,6 +133,8 @@ export default {
       timer: null,
       boardGames: null,
       searchString: '',
+      initial_duration_seconds: 20,
+      reload_increment_seconds: 2
     };
   },
 
@@ -161,6 +163,15 @@ export default {
         {type: TimerTypes.RELOAD, i18nPath: 'timer.type.reload'}
       ];
     }
+  },
+
+  watch: {
+    initial_duration_seconds: function(val) {
+      this.timer.initial_duration = val * 1000;
+    },
+    reload_increment_seconds: function(val) {
+      this.timer.reload_increment = val * 1000;
+    },
   },
 
   methods: {
@@ -239,6 +250,10 @@ export default {
     if (this.$route.params.id) {
       this.timer = await Timer.fetch(this.$route.params.id);
 
+      // initialize for models
+      this.initial_duration_seconds = Math.floor(this.timer.initial_duration / 1000);
+      this.reload_increment_seconds = this.timer.reload_increment ? Math.floor(this.timer.initial_duration / 1000) : 0;
+
       for (let key in this.timer.player_timers) {
         let player = this.timer.player_timers[key];
         this.players.push({user: player.user, color: player.color});
@@ -253,8 +268,8 @@ export default {
     else {
       this.timer = new Timer();
       this.timer.timer_type = TimerTypes.COUNT_UP;
-      this.timer.initial_duration = 20000;
-      this.timer.reload_increment = 0;
+      this.timer.initial_duration = this.initial_duration_seconds * 1000;
+      this.timer.reload_increment = this.reload_increment_seconds * 1000;
       this.players.push({user: this.currentUser, color: this.generateRandomColor()});
     }
 
