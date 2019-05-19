@@ -1,13 +1,15 @@
 <template>
-    <section class="hero is-secondary">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">
-                  {{this.title}}
-                </h1>
-            </div>
-        </div>
-    </section>
+  <section class="hero is-secondary">
+    <div class="hero-body">
+      <div class="container">
+        <slot>
+          <h1 class="title">
+            {{this.title}}
+          </h1>
+        </slot>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>

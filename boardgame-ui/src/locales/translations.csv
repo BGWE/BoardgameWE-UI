@@ -215,6 +215,7 @@ event-board-games.toast.add-library-error,Failed to add the board game to your l
 event-board-games.toast.delete-success,Board game successfully deleted,
 event-board-games.toast.delete-error,Failed to delete the board game,
 wish-list.title,My wish list,
+wish-list.subtitle,Keep track of the board games you want to play,
 wish-list.toast.add-success,Board game successfully added to wish list,
 wish-list.toast.add-error,Failed to add the board game to wish list,
 wish-list.toast.delete-success,Board game successfully removed from wish list,

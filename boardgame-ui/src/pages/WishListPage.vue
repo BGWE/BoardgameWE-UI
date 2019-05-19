@@ -1,6 +1,9 @@
 <template>
   <div>
-    <hero-title-page-layout :title="$t('wish-list.title')"></hero-title-page-layout>
+    <hero-title-page-layout>
+      <h1 class="title">{{$t('wish-list.title')}}</h1>
+      <h2 class="subtitle">{{$t('wish-list.subtitle')}}</h2>
+    </hero-title-page-layout>
     <div class="container">
       <b-loading :is-full-page="false" :active="loading"></b-loading>
       <div class="section" v-if="!loading">
