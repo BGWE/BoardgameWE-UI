@@ -8,8 +8,8 @@
         <b-input disabled :value="event.name" />
       </b-field>
 
-      <b-field>
-        <b-field :label="$t('timer.add-edit.timer.type')">
+      <b-field grouped group-multiline>
+        <b-field :label="$t('timer.add-edit.timer.type')" class="timer-type">
           <b-select v-model="timer.timer_type">
             <option v-for="method in timerTypeI18nPath" v-bind:key="method.i18nPath" :value="method.type">
               {{$t(method.i18nPath)}}
@@ -18,11 +18,11 @@
         </b-field>
 
         <b-field  v-if="timer.timer_type === 'COUNT_DOWN' || timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.duration')">
-          <b-numberinput min="0" controls-position="compact" v-model="initial_duration_seconds"/>
+          <b-numberinput min="0" controls-position="compact" v-model="initial_duration_seconds" class="numberinput-custom"/>
         </b-field>
 
         <b-field v-if="timer.timer_type === 'RELOAD'" :label="$t('timer.add-edit.timer.reload-increment')">
-          <b-numberinput min="0" controls-position="compact" v-model="reload_increment_seconds"/>
+          <b-numberinput min="0" controls-position="compact" v-model="reload_increment_seconds" class="numberinput-custom"/>
         </b-field>
       </b-field>
 
@@ -292,5 +292,13 @@ export default {
 h2 {
   margin-bottom: 0.5em !important;
   text-align: center;
+}
+
+.timer-type {
+  margin-bottom: 0.75rem;
+}
+
+.numberinput-custom {
+  width: 11em;
 }
 </style>
