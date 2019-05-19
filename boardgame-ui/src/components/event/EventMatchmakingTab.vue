@@ -19,7 +19,7 @@
                 </div>
                 <div class="column">
                   <p>
-                    <router-link :to="{name: 'boardgame', params: {id: board_game.id}}">{{board_game.name}}</router-link>
+                    <router-link :to="{name: 'board-game', params: {id: board_game.id}}">{{board_game.name}}</router-link>
                   </p>
                   <hr>
                   <p>
