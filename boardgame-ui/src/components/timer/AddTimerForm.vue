@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <b-loading :active="isLoading"/>
-    <form @submit.prevent="createTimer('form-timerCreation')" data-vv-scope="form-timerCreation" v-if="timer">
+    <form @submit.prevent="createTimer()" v-if="timer">
       <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
 
       <b-field v-if="event" :label="$t('timer.add-edit.event')" >
