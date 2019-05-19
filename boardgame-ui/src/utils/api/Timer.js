@@ -18,7 +18,10 @@ export default class Timer extends Model {
   _initProperties() {
     super._initProperties();
 
-    this.game = null;
+    this.id_board_game = null;
+    this.id_event = null;
+    this.board_game = null;
+    this.event = null;
     this.creator = null;
     this.initial_duration = null;
     this.reload_increment = null;
