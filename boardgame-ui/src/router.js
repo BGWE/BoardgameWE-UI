@@ -106,24 +106,24 @@ const routes = [
     component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
-  {
-    name: 'createeventtimer',
-    path: '/event/:eventid/timer',
-    component: require('./pages/TimerCreationPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
+  // { // to be re-worked in version 3.1
+  //   name: 'createeventtimer',
+  //   path: '/event/:eventid/timer',
+  //   component: require('./pages/TimerCreationPage.vue').default,
+  //   beforeEnter: authenticatedOnly
+  // },
   {
     name: 'library',
     path: '/library',
     component: require('./pages/LibraryPage.vue').default,
     beforeEnter: authenticatedOnly
   },
-  {
-    name: 'timers',
-    path: '/timers',
-    component: require('./pages/TimersPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
+  // { // to be re-worked in version 3.1
+  //   name: 'timers',
+  //   path: '/timers',
+  //   component: require('./pages/TimersPage.vue').default,
+  //   beforeEnter: authenticatedOnly
+  // },
   {
     name: 'timer',
     path: '/timer/:timerid',
