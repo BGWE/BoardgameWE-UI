@@ -1,10 +1,11 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('timer.add-edit.title')"/>
-    <add-timer-form 
+    <add-timer-form
       class="form"
+      :users="users"
       @timerCreated="goBackToTimers"
-      @close="goBackToTimers" 
+      @close="goBackToTimers"
     />
   </div>
 </template>
@@ -14,11 +15,19 @@ import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import AddTimerForm from '@/components/timer/AddTimerForm';
 
 export default {
-  name: 'TimerEditionPage',
-
   components: {
     HeroTitlePageLayout,
     AddTimerForm
+  },
+
+  data() {
+    return {
+      users: []
+    };
+  },
+
+  async created() {
+    this.users = []; // async User.fetchAll(); // this request is not yet implemented
   },
 
   methods: {

@@ -3,6 +3,7 @@
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <add-timer-form
       :event="event"
+      :users="attendees"
       v-if="showTimerForm"
       @timerCreated="timerSaved"
       @close="showTimerForm = false"
@@ -42,6 +43,11 @@ export default {
       showTimerForm: false,
       loading: false
     };
+  },
+  computed: {
+    attendees() {
+      return this.event.attendees.map(attendee => attendee.user);
+    }
   },
   created() {
     this.reload();

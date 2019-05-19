@@ -60,7 +60,7 @@
               <user-autocomplete
                 size="is-small"
                 v-model="players[idx].user"
-                :users="allUsers"
+                :users="users"
                 :excludedIds="selectedUsersIds"
                 :name="`user-${idx}`"
                 :data-vv-as="$t('add-edit-game.players.user')"
@@ -101,7 +101,6 @@
 import Timer, { TimerTypes } from '@/utils/api/Timer';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import Event from '@/utils/api/Event';
-import User from '@/utils/api/User';
 import BoardGame from '@/utils/api/BoardGame';
 import Verte from 'verte';
 import 'verte/dist/verte.css';
@@ -110,8 +109,6 @@ import 'verte/dist/verte.css';
  * emits: close, timerCreated
  */
 export default {
-  name: 'TimerEditionPage',
-
   components: {
     UserAutocomplete,
     Verte,
@@ -122,6 +119,10 @@ export default {
       type: Event,
       required: false,
       default: null
+    },
+    users: { // list of selectable users 
+      type: Array,
+      required: true
     }
   },
 
@@ -129,7 +130,6 @@ export default {
     return {
       isLoading: false,
       players: [],
-      allUsers: null,
       timer: null,
       boardGames: null,
       searchString: '',
@@ -243,8 +243,6 @@ export default {
 
   async created() {
     this.isLoading = true;
-    this.allUsers = await User.fetchUsers();
-
     this.boardGames = await BoardGame.fetchAll();
 
     if (this.$route.params.id) {

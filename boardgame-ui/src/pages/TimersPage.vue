@@ -22,7 +22,6 @@ import TimerList from '@/components/timer/TimerList';
 import Timer from '@/utils/api/Timer';
 
 export default {
-  name: 'TimersPage',
   components: {
     HeroTitlePageLayout,
     TimerList
