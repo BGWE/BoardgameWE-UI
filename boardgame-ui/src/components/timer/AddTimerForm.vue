@@ -199,8 +199,8 @@ export default {
       this.players.splice(idx, 1);
     },
 
-    async createTimer(scope) {
-      let result = await this.validate(scope);
+    async createTimer() {
+      let result = await this.validate();
 
       if (!result) {
         return;
@@ -226,8 +226,8 @@ export default {
       }
     },
 
-    async validate(scope) {
-      let result = await this.$validator.validateAll(scope);
+    async validate() {
+      let result = await this.$validator.validateAll();
 
       if (!result) {
         this.$toast.open({
