@@ -5,7 +5,7 @@
       <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
 
       <b-field v-if="event" :label="$t('timer.add-edit.event')" >
-        <p>{{event.name}}</p>
+        <b-input disabled :value="event.name" />
       </b-field>
 
       <b-field grouped group-multiline>
