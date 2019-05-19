@@ -8,9 +8,8 @@
           <router-link
             v-for="timer in timers"
             v-bind:key="timer.id"
-            :to="{name: 'timer', params: {timerid: timer.id}}">
-            <div class="box timer-box">
-
+            :to="{name: 'timer', params: {timerid: timer.id}}"
+            class="box timer-box">
               <article class="media">
                 <div class="media-left">
                   <figure v-if="timer.board_game !== null" class="image is-64x64 is-rounded thumbnail" :style="{backgroundImage: `url('${timer.board_game.thumbnail}')`}"></figure>
@@ -70,7 +69,6 @@
                   </span>
                 </div>
               </article>
-            </div>
           </router-link>
         </div>
       </div>
