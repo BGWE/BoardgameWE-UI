@@ -13,23 +13,23 @@
         <nav class="tabs is-boxed">
           <div class="container">
             <ul>
-              <router-link :to="{name: 'event_dashboard'}" tag="li">
+              <router-link :to="{name: 'event-dashboard'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.dashboard')}}</a>
               </router-link>
 
-              <router-link :to="{name: 'event_board_games'}" tag="li">
+              <router-link :to="{name: 'event-board-games'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.boardgames')}}</a>
               </router-link>
 
-              <router-link :to="{name: 'event_games'}" tag="li">
+              <router-link :to="{name: 'event-games'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.games')}}</a>
               </router-link>
 
-              <router-link v-if="!event.hide_rankings" :to="{name: 'event_rankings'}" tag="li">
+              <router-link v-if="!event.hide_rankings" :to="{name: 'event-rankings'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.rankings')}}</a>
               </router-link>
 
-              <router-link :to="{name: 'event_matchmaking'}" tag="li">
+              <router-link :to="{name: 'event-matchmaking'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.matchmaking')}}</a>
               </router-link>
             </ul>
