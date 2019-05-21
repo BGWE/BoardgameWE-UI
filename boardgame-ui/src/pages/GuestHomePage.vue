@@ -91,8 +91,11 @@
 
 <script>
 import Application from '@/utils/api/Application';
+import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
+
 export default {
   name: 'GuestHomePage',
+  components: {HeroTitlePageLayout},
   data() {
     return {
       statistics: null
