@@ -104,7 +104,7 @@ export default {
             label: this.$t('event.rankings.table.win'),
             formatter: (value) => {
               if (value == 1) {
-                return `<div class="tag has-background-gold has-text-white is-26x26"><i class="fas fa-trophy"></i></div>`;
+                return '<div class="tag has-background-gold has-text-white is-26x26"><i class="fas fa-trophy"></i></div>';
               }
               return '';
             }

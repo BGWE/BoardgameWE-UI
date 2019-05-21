@@ -1,19 +1,15 @@
 <template>
     <div>
-      <section class="hero is-secondary">
-        <div class="hero-body">
-          <div class="container">
-            <h1 class="title">
-              <i18n path="home.hello"></i18n> !
-              <span class="icon"><i class="hero-smile fa fa-smile"></i></span>
-            </h1>
-            <h2 class="subtitle">
-              <i18n path="home.welcome"></i18n>
-              <i18n path="app.appName"></i18n>
-            </h2>
-          </div>
-        </div>
-      </section>
+      <hero-title-page-layout>
+        <h1 class="title">
+          <i18n path="home.hello"></i18n> !
+          <span class="icon"><i class="hero-smile fa fa-smile"></i></span>
+        </h1>
+        <h2 class="subtitle">
+          <i18n path="home.welcome"></i18n>
+          <i18n path="app.appName"></i18n>
+        </h2>
+      </hero-title-page-layout>
 
       <div class="container">
         <section class="content app-description">

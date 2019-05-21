@@ -1,48 +1,47 @@
 <template>
   <div v-if="event">
-    <section class="hero is-secondary">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            {{event.name}}
-            </h1>
-          <h2 class="subtitle">
-            {{event.location}} -
-            from <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.start" />
-            to <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.end" />
-          </h2>
-
-        </div>
-      </div>
-
-      <div class="hero-foot">
+    <hero-title-page-layout>
+      <h1 class="title">
+        {{event.name}}
+        </h1>
+      <h2 class="subtitle">
+        {{event.location}} -
+        from <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.start" />
+        to <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.end" />
+      </h2>
+      <template #footer>
         <nav class="tabs is-boxed">
           <div class="container">
             <ul>
-              <router-link :to="{name: 'event_dashboard'}" tag="li">
+              <router-link :to="{name: 'event-dashboard'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.dashboard')}}</a>
               </router-link>
 
-              <router-link :to="{name: 'event_board_games'}" tag="li">
+              <router-link :to="{name: 'event-board-games'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.boardgames')}}</a>
               </router-link>
 
-              <router-link :to="{name: 'event_games'}" tag="li">
+              <router-link :to="{name: 'event-games'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.games')}}</a>
               </router-link>
 
-              <router-link v-if="!event.hide_rankings" :to="{name: 'event_rankings'}" tag="li">
+              <router-link v-if="!event.hide_rankings" :to="{name: 'event-rankings'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.rankings')}}</a>
               </router-link>
 
-              <router-link :to="{name: 'event_matchmaking'}" tag="li">
+              <router-link :to="{name: 'event-matchmaking'}" tag="li">
                 <a class="navbar-item">{{$t('event.tab.matchmaking')}}</a>
+              </router-link>
+
+              <router-link :to="{name: 'event-timers'}" tag="li">
+                <a class="navbar-item">{{$t('event.tab.timers')}}</a>
               </router-link>
             </ul>
           </div>
         </nav>
-      </div>
-    </section>
+      </template>
+    </hero-title-page-layout>
+
     <div class="container">
       <router-view :event="event" :isAttendee="isAttendee"></router-view>
     </div>
@@ -52,17 +51,17 @@
 <script>
 import Event from '@/utils/api/Event';
 import BgcDatetime from '@/components/layout/BgcDatetime';
+import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 
 export default {
   components: {
-    BgcDatetime,
+    HeroTitlePageLayout,
+    BgcDatetime
   },
 
   data() {
     return {
-      event: null,
-      games: [],
-      rankings: {}
+      event: null
     };
   },
 
@@ -80,9 +79,6 @@ export default {
 
   async created() {
     this.event = await Event.fetch(this.$route.params.eventid);
-
-    // TODO Should we load those there?
-    this.games = await this.event.fetchGames();
   }
 };
 </script>

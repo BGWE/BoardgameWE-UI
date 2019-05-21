@@ -3,7 +3,7 @@
     <b-datepicker
       v-model="date"
       placeholder="Click to select..."
-      icon="calendar-today"
+      icon="calendar-day"
       :min-date="minDate">
     </b-datepicker>
 
@@ -16,20 +16,12 @@
 </template>
 
 <script>
-import BDatepicker from 'buefy/src/components/datepicker/Datepicker';
-import BTimepicker from 'buefy/src/components/timepicker/Timepicker';
-
 export default {
   name:'DateTimePicker',
 
   props: {
     value: Date,
     name: String
-  },
-
-  components: {
-    BDatepicker,
-    BTimepicker
   },
 
   data() {

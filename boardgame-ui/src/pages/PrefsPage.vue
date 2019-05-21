@@ -2,7 +2,6 @@
   <div>
     <HeroTitlePageLayout :title="$t('preferences.title')"/>
     <div class="container">
-      <b-loading :active="isLoading"/>
       <section v-if="currentUser" class="section">
         <h2 class="title">{{$t('preferences.sections.account')}}</h2>
 
@@ -73,17 +72,14 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import BLoading from 'buefy/src/components/loading/Loading';
 
 export default {
   components: {
-    BLoading,
     HeroTitlePageLayout
   },
 
   data() {
     return {
-      isLoading: true,
       user: null,
       password: null,
       newPassword: null,
@@ -157,15 +153,14 @@ export default {
     }
   },
 
-  async created() {
+  created() {
     this.user = this.currentUser.clone();
-    this.isLoading = false;
   },
 };
 </script>
 
 <style scoped>
-  .settings {
-    padding-bottom: 20px;
-  }
+.settings {
+  padding-bottom: 20px;
+}
 </style>

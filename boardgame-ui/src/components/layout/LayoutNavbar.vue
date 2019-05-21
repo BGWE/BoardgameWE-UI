@@ -26,10 +26,11 @@
                 <router-link :to="{name: 'library'}" class="navbar-item">
                   {{$t('navbar.my-library')}}
                 </router-link>
-
+                <!--  to be re-worked in version 3.1
                 <router-link :to="{name: 'timers'}" class="navbar-item">
                   {{$t('navbar.timers')}}
                 </router-link>
+                -->
               </template>
 
               <div v-if="!currentUser" class="navbar-item">
@@ -51,7 +52,7 @@
                   <router-link :to="{name: 'preferences'}" class="navbar-item">
                     {{$t('navbar.preferences')}}
                   </router-link>
-                  <router-link v-if="isUserAdmin" :to="{name: 'uservalidation'}" class="navbar-item">
+                  <router-link v-if="isUserAdmin" :to="{name: 'user-validation'}" class="navbar-item">
                     {{$t('navbar.uservalidation')}}
                   </router-link>
                   <a @click="logout()" class="navbar-item">
