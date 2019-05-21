@@ -2,19 +2,19 @@
     <div>
       <hero-title-page-layout>
         <h1 class="title">
-          <i18n path="home.hello"></i18n> !
+          <i18n path="home.hello"/> !
           <span class="icon"><i class="hero-smile fa fa-smile"></i></span>
         </h1>
         <h2 class="subtitle">
-          <i18n path="home.welcome"></i18n>
-          <i18n path="app.appName"></i18n>
+          <i18n path="home.welcome"/>
+          <i18n path="app.appName"/>
         </h2>
       </hero-title-page-layout>
 
       <div class="container">
         <section class="content app-description">
-          <h2>Connecting board game players</h2> 
-          <p><i18n path="app.appName"/> is an application for those who like playing to board games. It offers several features for connecting players and enhancing the board game playing experience.</p>
+          <h2><i18n path="home.description.title"/></h2>
+          <p><i18n path="app.appName"/> <i18n path="home.app_description" /></p>
         </section> 
 
         <section class="section content">
@@ -47,39 +47,51 @@
              <div class="column card feature-card is-secondary">
               <div class="card-image">
                 <figure class="image is-3by2 feature-figure">
-                  <img src="@/assets/feature-library.png">
+                  <img src="@/assets/feature-library.png" alt="library-feature">
                 </figure>
               </div>
 
               <div class="card-content">
-                <h3 class="feature-title">Keep track of your game library</h3>
-                <p>Register the board games you own.</p>
+                <h3 class="feature-title">
+                  <i18n path="home.features.library" />
+                </h3>
+                <p>
+                  <i18n path="home.features.library_description" />
+                </p>
               </div>
             </div>
 
             <div class="column card feature-card is-secondary">
               <div class="card-image">
                 <figure class="image is-3by2 feature-figure">
-                  <img src="@/assets/feature-event.png">
+                  <img src="@/assets/feature-event.png" alt="event-feature">
                 </figure>
               </div>
 
               <div class="card-content">
-                <h3 class="feature-title">Organize board game events</h3>
-                <p>Organize an event with friends, record your games and display rankings and statistics.</p>
+                <h3 class="feature-title">
+                  <i18n path="home.features.events" />
+                </h3>
+                <p>
+                  <i18n path="home.features.events_description" />
+                </p>
               </div>
             </div>
 
             <div class="column card feature-card is-secondary">
               <div class="card-image">
                 <figure class="image is-3by2 feature-figure">
-                  <img src="@/assets/feature-timer.png">
+                  <img src="@/assets/feature-timer.png" alt="timer-feature">
                 </figure>
               </div>
 
               <div class="card-content">
-                <h3 class="feature-title">A friend subject to analysis paralysis ?</h3>
-                <p>Use the distributed timer to track time of each player during a game.</p>
+                <h3 class="feature-title">
+                  <i18n path="home.features.timer"/>
+                </h3>
+                <p>
+                  <i18n path="home.features.timer_description"/>
+                </p>
               </div>
             </div>
 
