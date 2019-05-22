@@ -14,8 +14,12 @@
       <div class="container">
         <section class="content app-description">
           <h2><i18n path="home.description.title"/></h2>
-          <p><i18n path="app.appName"/> <i18n path="home.app_description" /></p>
-        </section> 
+          <p>
+            <i18n path="home.app_description">
+              <i18n place="appName" path="app.appName"></i18n>
+            </i18n>
+          </p>
+        </section>
 
         <section class="section content">
           <div class="columns" v-if="statistics">
