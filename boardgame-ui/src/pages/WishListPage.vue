@@ -7,9 +7,13 @@
     <div class="container">
       <b-loading :is-full-page="false" :active="loading"></b-loading>
       <div class="section" v-if="!loading">
-        <board-game-list :board-games="boardGames" :allBelongToUser="true"
-          @add="addBoardGame" @delete="deleteBoardGame">
-        </board-game-list>
+        <board-game-list
+          :board-games="boardGames"
+          :allBelongToUser="true"
+          :addFromLibrary="true"
+          @add="addBoardGame"
+          @delete="deleteBoardGame"
+        />
       </div>
     </div>
   </div>
