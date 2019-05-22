@@ -13,12 +13,12 @@ export default {
     formattedDuration() {
       let mDuration = moment.duration(this.duration, 'minutes');
 
-      if(mDuration.hours() > 0) {
+      if(mDuration.asHours() > 0) {
         let hoursLabel = this.$t('app.duration.hoursShort');
-        if(mDuration.minutes() == 0) {
-          return `${mDuration.hours()} ${hoursLabel}`;
+        if(mDuration.minutes() === 0) {
+          return `${Math.floor(mDuration.asHours())} ${hoursLabel}`;
         }
-        return `${mDuration.hours()} ${hoursLabel} ${mDuration.minutes()}`;
+        return `${Math.floor(mDuration.asHours())} ${hoursLabel} ${mDuration.minutes()}`;
       }
       else {
         return `${mDuration.minutes()} ${this.$t('app.duration.minutesShort')}`;
