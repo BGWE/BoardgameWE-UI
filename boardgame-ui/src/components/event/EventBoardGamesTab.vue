@@ -4,6 +4,7 @@
     <template v-if="!loading">
       <board-game-list
         :boardGames="boardGames"
+        :wishedBoardGames="wishedBoardGames"
         :addFromLibrary="true"
         :canAdd="isAttendee"
         @add="addBoardGame"
@@ -26,7 +27,8 @@ export default {
   data() {
     return {
       loading: true,
-      boardGamesLinks: []
+      boardGamesLinks: [],
+      wishedBoardGames: []
     };
   },
   computed: {
@@ -126,6 +128,7 @@ export default {
   },
   async created() {
     this.boardGamesLinks = await this.event.fetchBoardGames();
+    this.wishedBoardGames = await this.event.fetchWishedBoardGames();
     this.loading = false;
   }
 };

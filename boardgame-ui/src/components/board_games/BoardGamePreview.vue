@@ -1,9 +1,11 @@
 <template>
   <div class="card">
     <div class="card-image">
-      <div v-if="count > 1" class="count">{{count}}</div>
-      <figure class="image is-3by2 board-game-image" :style="{backgroundImage: `url('${boardGame.image}')`}">
-      </figure>
+      <div v-if="count > 1" class="count" :title="$t('boardgame.count-copies', {count})">
+        {{count}}
+      </div>
+      <wish-list-count v-else-if="wishCount" :count="wishCount" class="wishlist-count" />
+      <figure class="image is-3by2 board-game-image" :style="{backgroundImage: `url('${boardGame.image}')`}"></figure>
     </div>
     <div class="card-content">
       <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
@@ -17,11 +19,15 @@
 </template>
 
 <script>
+import WishListCount from '@/components/wish_list/WishListCount';
+
 export default {
-  props: [
-    'boardGame',
-    'deleteButton'
-  ],
+  props: {
+    'boardGame': Object,
+    'deleteButton': Boolean,
+    'wishCount': Number
+  },
+  components: {WishListCount},
   computed: {
     count() {
       return this.boardGame.count || 1;
@@ -60,15 +66,23 @@ export default {
   top: -0.5em;
   right: -0.5em;
   background: $primary;
-  width: 1.7em;
-  height: 1.7em;
+  width: 1.8em;
+  height: 1.8em;
   font-size: 0.9em;
   border-radius: 50%;
   text-align: center;
   font-weight: bold;
   color: $primary-invert;
   border: 3px solid white;
-  line-height: 1.2em;
+  line-height: 1.35em;
+}
+
+.wishlist-count {
+  position: absolute;
+  z-index: 10;
+  top: -0.5em;
+  right: -0.8em;
+  font-size: 0.9em;
 }
 
 .card-content {
@@ -97,6 +111,10 @@ export default {
 
   .board-game-year {
     font-size: 0.6em;
+  }
+
+  .wishlist-count {
+    font-size: 0.85em;
   }
 }
 </style>
