@@ -94,6 +94,15 @@ export default {
   computed: {
     bggIdsLibraryGames() {
       return this.libraryGames.map(bg => bg.bgg_id);
+    },
+    wishCounts() {
+      if(!this.wishedBoardGames) {
+        return {};
+      }
+      return this.wishedBoardGames.reduce((mapping, wish) => {
+        mapping[wish.board_game.bgg_id] = wish.count;
+        return mapping;
+      }, {});
     }
   },
   watch: {
@@ -149,8 +158,7 @@ export default {
 
       boardGames.forEach(boardGame => {
         let bggId = Number(boardGame.bgg_id || boardGame.id);
-        let match = this.wishedBoardGames.find(wish => wish.board_game.bgg_id === bggId);
-        boardGame.countWished = match ? match.count : 0;
+        boardGame.countWished = this.wishCounts[bggId] || 0;
       });
 
       return boardGames.sort((a, b) => {
