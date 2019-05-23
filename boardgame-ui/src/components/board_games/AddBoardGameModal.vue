@@ -7,13 +7,20 @@
         <h2 class="subtitle is-6">{{$t("board-game.add-modal.from-library")}}</h2>
         <div class="columns library-games is-mobile">
           <div class="column" v-for="boardGame in filteredLibraryGames" :key="boardGame.id">
-            <board-game-preview class="is-small" :boardGame="boardGame" :wishCount="boardGame.countWished">
+            <board-game-preview
+              class="is-small"
+              :boardGame="boardGame"
+              :wishCount="boardGame.countWished"
+              :providedByOther="boardGame.providedByOther"
+            >
               <p class="has-text-centered">
-                <button class="button is-small is-primary"
-                          :class="{'is-loading': !isExcluded(boardGame) && boardGame.loading}"
-                          :disabled="isExcluded(boardGame)"
-                          @click="add(boardGame)">
-                    {{isExcluded(boardGame) ? $t('button.added') : $t('button.add')}}
+                <button
+                  class="button is-small is-primary"
+                  :class="{'is-loading': !boardGame.providedByUser && boardGame.loading}"
+                  :disabled="boardGame.providedByUser"
+                  @click="add(boardGame)"
+                >
+                    {{boardGame.providedByUser ? $t('button.added') : $t('button.add')}}
                 </button>
               </p>
             </board-game-preview>
@@ -32,17 +39,24 @@
         <div v-for="boardGame in data" :key="boardGame.id">
           <div class="is-flex">
               <p class="is-size-7">
-                {{boardGame.name}} <wish-list-count :count="boardGame.countWished" /> <br>
+                <span :class="{'provided': boardGame.providedByOther}">
+                  {{boardGame.name}}
+                </span>
+                <span v-if="boardGame.providedByOther" :title="$t('boardgame.provided-by-other')" class="icon has-text-success">
+                  <i class="fas fa-check-circle fa-lg"></i>
+                </span>
+                <wish-list-count :count="boardGame.countWished" />
+                <br>
                 <span class="has-text-grey">{{boardGame.year}}</span>
               </p>
               <div>
                 <button
                   class="button is-small is-primary"
-                  :class="{'is-loading': !isExcluded(boardGame) && boardGame.loading}"
-                  :disabled="isExcluded(boardGame)"
+                  :class="{'is-loading': !boardGame.providedByUser && boardGame.loading}"
+                  :disabled="boardGame.providedByUser"
                   @click="add(boardGame)"
                 >
-                  {{isExcluded(boardGame) ? $t('button.added') : $t('button.add')}}
+                  {{boardGame.providedByUser ? $t('button.added') : $t('button.add')}}
                 </button>
               </div>
           </div>
@@ -74,7 +88,11 @@ import Library from '@/utils/api/Library';
 export default {
   props: {
     active: Boolean,
-    excludedIds: Array,
+    providedByUser: Array, // list of BGG ids of board games provided by current user
+    providedByOthers: { // list of BGG ids of board games provided by other users
+      type: Array,
+      default: () => []
+    },
     addFromLibrary: Boolean,
     wishedBoardGames: Array
   },
@@ -114,11 +132,15 @@ export default {
     },
     searchString() {
       this.searchBoardGames();
+    },
+    providedByUser(ids) {
+      this.libraryGames.forEach(bg => bg.providedByUser = ids.includes(bg.bgg_id));
+      this.data.forEach(bg => bg.providedByUser = ids.includes(Number(bg.id)));
     }
   },
   methods: {
     filterLibraryGames() {
-      this.filteredLibraryGames = this.libraryGames.filter(boardGame => !this.isExcluded(boardGame));
+      this.filteredLibraryGames = this.libraryGames.filter(boardGame => !boardGame.providedByUser);
     },
 
     searchBoardGames: debounce(async function() {
@@ -131,18 +153,13 @@ export default {
       this.isFetching = true;
       try {
         let data = await BoardGame.searchAll(str);
-        this.data = this.processBoardGames(data);
+        this.data = this.processBoardGames(data, false);
       }
       catch(error) {
         console.log(error);
       }
       this.isFetching = false;
     }, 500),
-
-    isExcluded(boardGame) {
-      let id = Number(boardGame.bgg_id || boardGame.id);
-      return this.excludedIds.includes(id);
-    },
 
     add(boardGame) {
       this.$set(boardGame, 'loading', true);
@@ -151,17 +168,27 @@ export default {
       this.$emit('add', {bggId, inLibrary});
     },
 
-    processBoardGames(boardGames) {
-      if(!this.wishedBoardGames) {
-        return boardGames;
-      }
-
+    processBoardGames(boardGames, sort=true) {
       boardGames.forEach(boardGame => {
         let bggId = Number(boardGame.bgg_id || boardGame.id);
         boardGame.countWished = this.wishCounts[bggId] || 0;
+        boardGame.providedByUser = this.providedByUser.includes(bggId);
+        boardGame.providedByOther = this.providedByOthers.includes(bggId);
       });
 
+      if(!sort) {
+        return boardGames;
+      }
+
       return boardGames.sort((a, b) => {
+        if(a.providedByOther !== b.providedByOther) {
+          if(a.providedByOther) {
+            return 1; // if provided by other, move to end of list
+          }
+          else {
+            return -1;
+          }
+        }
         return b.countWished - a.countWished; // most wished games to be displayed first
       });
     }
@@ -209,5 +236,10 @@ hr.small-margin {
 .library-games .column {
   max-width: 8em;
   min-width: 8em;
+}
+
+.provided {
+  color: rgba(0, 0, 0, 0.4);
+  font-style: italic;
 }
 </style>
