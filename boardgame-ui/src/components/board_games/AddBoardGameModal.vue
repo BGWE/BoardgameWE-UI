@@ -88,9 +88,9 @@ import Library from '@/utils/api/Library';
 export default {
   props: {
     active: Boolean,
-    providedByUser: Array, // list of BGG ids of board games provided by current user
+    providedByUser: Set, // list of BGG ids of board games provided by current user
     providedByOthers: { // list of BGG ids of board games provided by other users
-      type: Array,
+      type: Set,
       default: () => []
     },
     addFromLibrary: Boolean,
@@ -172,8 +172,8 @@ export default {
       boardGames.forEach(boardGame => {
         let bggId = Number(boardGame.bgg_id || boardGame.id);
         boardGame.countWished = this.wishCounts[bggId] || 0;
-        boardGame.providedByUser = this.providedByUser.includes(bggId);
-        boardGame.providedByOther = this.providedByOthers.includes(bggId);
+        boardGame.providedByUser = this.providedByUser.has(bggId);
+        boardGame.providedByOther = this.providedByOthers.has(bggId);
       });
 
       if(!sort) {
