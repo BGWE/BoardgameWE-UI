@@ -99,7 +99,7 @@ export default {
       return userBoardGames.map(boardGame => boardGame.bgg_id);
     },
     providedByOthers() {
-      let otherBoardGames = this.allBelongToUser ? [] : this.boardGames.filter(bg => !bg.belongsToUser);
+      let otherBoardGames = this.allBelongToUser ? [] : this.boardGames.filter(bg => !bg.belongsToUser || bg.count > 1);
       return otherBoardGames.map(boardGame => boardGame.bgg_id);
     },
     filteredBoardGames() {
