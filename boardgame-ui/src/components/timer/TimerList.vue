@@ -24,13 +24,22 @@
                     <div class="level-left">
                       <p class="is-size-7"><i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/> | {{timer.id}}</p>
                     </div>
-
-                    <div class="level-item is-hidden-small-device">
-                      <p class="is-size-7">{{elapsedFromNow(mostRecentPlayer(timer.player_timers).updatedAt)}}</p>
-                    </div>
-
-                    <div class="level-right">
-                      <p class="is-size-7"><i18n path="timers.created-by"/> <span class="name"> {{isCurrentUserTimerCreator(timer.creator.id) ? $t('timers.creator.you') : timer.creator.name}}</span></p>
+                    
+                    <div class="level-left">
+                      <!-- To be re-worked in 3.1, edit is not possible right now
+                      <router-link
+                        :to="{name: 'edit-timer', params: {id: timer.id}}"
+                        class="level-item">
+                        <span class="icon is-small has-text-info">
+                          <i class="far fa-edit"></i>
+                        </span>
+                      </router-link>
+                      -->
+                      <a class="level-right" @click.prevent.stop="triggerConfirmDeleteModal(timer.id)">
+                        <span class="icon is-small has-text-danger">
+                          <i class="far fa-trash-alt"></i>
+                        </span>
+                      </a>
                     </div>
                   </nav>
 
@@ -45,23 +54,14 @@
                     </b-taglist>
                   </div>
 
-                  <nav class="level is-mobile footer-level">
+                  <nav class="level is-mobile-small-device footer-level">
                     <div class="level-left">
-                      <!-- To be re-worked in 3.1, edit is not possible right now
-                      <router-link
-                        :to="{name: 'edit-timer', params: {id: timer.id}}"
-                        class="level-item">
-                        <span class="icon is-small has-text-info">
-                          <i class="far fa-edit"></i>
-                        </span>
-                      </router-link>
-                      -->
-                      <a class="level-item" @click.prevent.stop="triggerConfirmDeleteModal(timer.id)">
-                        <span class="icon is-small has-text-danger">
-                          <i class="far fa-trash-alt"></i>
-                        </span>
-                      </a>
+                      <p class="is-size-7">{{capitalizeFirstLetter(elapsedFromNow(mostRecentPlayer(timer.player_timers).updatedAt))}}</p>
                     </div>
+
+                    <div class="level-right">
+                        <p class="is-size-7"><i18n path="timers.created-by"/> <span class="name"> {{isCurrentUserTimerCreator(timer.creator.id) ? $t('timers.creator.you') : timer.creator.name}}</span></p>
+                      </div>
                   </nav>
                 </div>
 
@@ -173,6 +173,10 @@ export default {
 
     deleteTimer() {
       this.$socket.emit('timer_delete', this.timerIdToDelete);
+    },
+
+    capitalizeFirstLetter(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
     }
   }
 };
@@ -252,6 +256,10 @@ export default {
     -webkit-box-pack: justify;
     justify-content: space-between;
   }
+
+  .is-mobile-small-device > .level-right {
+    margin-top: 0.1em;
+  }
 }
 
 @media (min-width: 400px) {
@@ -261,6 +269,10 @@ export default {
 
   .is-mobile-small-device {
     display: flex;
+  }
+
+  .is-mobile-small-device > .level-right {
+    margin-top: 0px;
   }
 }
 
