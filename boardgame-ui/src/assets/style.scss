@@ -1,6 +1,8 @@
 // Import custom colors
 @import "./colors.scss";
 
+$dimensions: 16 24 32 48 64 80 96 128;
+
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
@@ -8,4 +10,22 @@
 
 .section {
   padding: 1.5em;
+}
+
+.loading-overlay {
+  z-index: 1000;
+
+  .loading-icon {
+    z-index: 1000;
+  }
+}
+
+figure.background {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+figure.is-rounded {
+  border-radius: 50%;
 }

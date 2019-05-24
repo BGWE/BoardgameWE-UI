@@ -34,18 +34,27 @@
       </div>
     </div>
 
-    <div class="columns is-multiline">
+    <div class="has-text-centered has-text-grey" v-if="filteredBoardGames.length === 0">
+      {{$t(boardGames.length === 0 ? 'board-games-list.no-games' : 'board-games-list.no-games-fitting-criteria')}}
+    </div>
+
+    <div v-else class="columns is-multiline">
       <div class="column is-2" v-for="boardGame in filteredBoardGames" :key="boardGame.id">
-        <board-game-preview :boardGame="boardGame" :deleteButton="allBelongToUser || boardGame.belongsToUser"
-          @delete="$emit('delete', boardGame.id)">
-        </board-game-preview>
+        <board-game-preview
+          :boardGame="boardGame"
+          :deleteButton="allBelongToUser || boardGame.belongsToUser"
+          :mobileVertical="false"
+          @delete="$emit('delete', boardGame.id)"
+        />
       </div>
     </div>
 
     <add-board-game-modal
       :active.sync="activeModal"
-      :excludedIds="bggIdsUserGames"
+      :providedByUser="providedByUser"
+      :providedByOthers="providedByOthers"
       :addFromLibrary="addFromLibrary"
+      :wishedBoardGames="wishedBoardGames"
       @add="$emit('add', $event)"
     />
   </div>
@@ -54,7 +63,6 @@
 <script>
 import BoardGamePreview from './BoardGamePreview';
 import AddBoardGameModal from './AddBoardGameModal';
-import BCheckbox from 'buefy/src/components/checkbox/Checkbox';
 
 export default {
   props: {
@@ -64,10 +72,10 @@ export default {
     canAdd: {
       type: Boolean,
       default: true
-    }
+    },
+    wishedBoardGames: Array
   },
   components: {
-    BCheckbox,
     BoardGamePreview,
     AddBoardGameModal
   },
@@ -89,9 +97,13 @@ export default {
     };
   },
   computed: {
-    bggIdsUserGames() {
+    providedByUser() {
       let userBoardGames = this.allBelongToUser ? this.boardGames : this.boardGames.filter(bg => bg.belongsToUser);
-      return userBoardGames.map(boardGame => boardGame.bgg_id);
+      return new Set(userBoardGames.map(boardGame => boardGame.bgg_id));
+    },
+    providedByOthers() {
+      let otherBoardGames = this.allBelongToUser ? [] : this.boardGames.filter(bg => !bg.belongsToUser || bg.count > 1);
+      return new Set(otherBoardGames.map(boardGame => boardGame.bgg_id));
     },
     filteredBoardGames() {
       let str = this.searchString.toLowerCase();

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <b-loading :active="isLoading"/>
+  <div class="wrapper">
+    <b-loading :is-full-page="false" :active="isLoading"/>
     <section v-if="user" class="section">
       <div class="box">
         <h1 class="title"> {{ $t('login.title') }} </h1>
@@ -116,6 +116,10 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+  position: relative;
+}
+
 .box {
   max-width: 500px;
   margin: auto;

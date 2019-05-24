@@ -6,7 +6,7 @@
       <div class="section">
         <div class="columns">
           <div class="column has-text-right">
-            <router-link tag="button" class="button is-primary" :to="{name: 'createevent'}">
+            <router-link tag="button" class="button is-primary" :to="{name: 'create-event'}">
                 {{$t("events.add")}}
             </router-link>
           </div>
@@ -22,9 +22,16 @@
               </header>
               <div class="card-content">
                 <div class="content">
-                  {{event.description}} <br>
-                  {{event.location}}
+                  {{event.description}}
                 </div>
+              </div>
+              <div class="location">
+                <span class="icon">
+                  <i class="fas fa-location-arrow"></i>
+                </span>
+                <span class="is-size-6 location-text">
+                  {{event.location}}
+                </span>
               </div>
               <footer class="card-footer">
                 <div class="buttons">
@@ -44,7 +51,7 @@
                     <span>{{$t('events.join')}}</span>
                   </button>
 
-                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'editevent', params: {eventid: event.id}}" class="button is-info is-outlined">
+                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
                     <span class="icon is-small">
                       <i class="far fa-edit"></i>
                     </span>
@@ -104,7 +111,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/assets/colors.scss";
 .events .column {
   display: flex;
 }
@@ -118,6 +126,20 @@ export default {
 }
 .buttons {
   margin: auto;
-  padding: 10px;
+  padding-top: 0.75em;
+  padding-bottom: 0.4em;
+  padding-left: 0.7em;
 }
+.location {
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 1px solid $grey-lighter;
+
+  font-style: italic;
+
+  // color: $grey;
+}
+.location-text {}
 </style>

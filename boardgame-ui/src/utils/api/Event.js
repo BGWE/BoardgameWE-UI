@@ -172,4 +172,27 @@ export default class Event extends Model {
     return data;
   }
 
+  /**
+   * Fetch the board games that the event attendees have added to their wish to play list
+   * @returns {Array<id_board_game, count, board_game>} The list of wished board games, along with the number of attendees that want to play it
+   */
+  async fetchWishedBoardGames({exclude_current, provided_games_only}={}) {
+    let {data} = await axios.get(`/event/${this.id}/wish_to_play`, {params: {exclude_current, provided_games_only}});
+    return data;
+  }
+
+  /**
+   * Fetch the matchmaking data for the event (based on wish lists of attendees)
+   * @returns {Array<board_game, users>} The list of matchmaking suggestions, each composed of a board game and the list of players that want to play it
+   */
+  async fetchMatchmaking() {
+    let {data} = await axios.get(`/event/${this.id}/matchmaking`);
+    return data;
+  }
+
+  async getCurrentUserTimers() {
+    let {data} = await axios.get(`event/${this.id}/timers`);
+    return data;
+  }
+
 }

@@ -49,7 +49,7 @@ export default {
       this.isOpen = true;
     },
 
-    close(){  
+    close(){
       this.isOpen = false;
     }
   }
@@ -77,11 +77,6 @@ export default {
   }
 
   figure.image {
-    text-align: center;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    border-radius: 32px;
     position: absolute;
     left: 15px;
     top: 50%;
@@ -104,7 +99,7 @@ export default {
   .card-content {
     padding-bottom: 0em;
     padding: 1.2em;
-    
+
   }
 
   .element-open {

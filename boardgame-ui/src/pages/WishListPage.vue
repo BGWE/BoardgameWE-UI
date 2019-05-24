@@ -1,10 +1,19 @@
 <template>
-  <div class="wrapper">
-    <hero-title-page-layout :title="$t('library.title')"></hero-title-page-layout>
+  <div>
+    <hero-title-page-layout>
+      <h1 class="title">{{$t('wish-list.title')}}</h1>
+      <h2 class="subtitle">{{$t('wish-list.subtitle')}}</h2>
+    </hero-title-page-layout>
     <div class="container">
       <b-loading :is-full-page="false" :active="loading"></b-loading>
       <div class="section" v-if="!loading">
-        <board-game-list :board-games="boardGames" :allBelongToUser="true" @add="addBoardGame" @delete="deleteBoardGame" />
+        <board-game-list
+          :board-games="boardGames"
+          :allBelongToUser="true"
+          :addFromLibrary="true"
+          @add="addBoardGame"
+          @delete="deleteBoardGame"
+        />
       </div>
     </div>
   </div>
@@ -13,7 +22,7 @@
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import BoardGameList from '@/components/board_games/BoardGameList';
-import Library from '@/utils/api/Library';
+import WishList from '@/utils/api/WishList';
 
 export default {
   components: {
@@ -23,21 +32,21 @@ export default {
   data() {
     return {
       loading: true,
-      libraryBoardGames: null,
-      library: new Library()
+      wishListBoardGames: null,
+      wishList: new WishList()
     };
   },
   computed: {
     boardGames() {
-      return this.libraryBoardGames.map(item => item.board_game);
+      return this.wishListBoardGames.map(item => item.board_game);
     }
   },
   methods: {
     async addBoardGame({bggId}) {
       try {
-        this.libraryBoardGames = await this.library.addGameFromBgg(bggId);
+        this.wishListBoardGames = await this.wishList.addBoardGameFromBgg(bggId);
         this.$toast.open({
-          message: this.$t('library.toast.add-success'),
+          message: this.$t('wish-list.toast.add-success'),
           type: 'is-success',
           position: 'is-bottom'
         });
@@ -45,7 +54,7 @@ export default {
       catch(error) {
         console.log(error);
         this.$toast.open({
-          message: this.$t('library.toast.add-error'),
+          message: this.$t('wish-list.toast.add-error'),
           type: 'is-danger',
           position: 'is-bottom'
         });
@@ -53,9 +62,9 @@ export default {
     },
     async deleteBoardGame(id) {
       try {
-        this.libraryBoardGames = await this.library.removeGames([id]);
+        this.wishListBoardGames = await this.wishList.removeBoardGames([id]);
         this.$toast.open({
-          message: this.$t('library.toast.delete-success'),
+          message: this.$t('wish-list.toast.delete-success'),
           type: 'is-success',
           position: 'is-bottom'
         });
@@ -63,7 +72,7 @@ export default {
       catch(error) {
         console.log(error);
         this.$toast.open({
-          message: this.$t('library.toast.delete-error'),
+          message: this.$t('wish-list.toast.delete-error'),
           type: 'is-danger',
           position: 'is-bottom'
         });
@@ -71,14 +80,8 @@ export default {
     }
   },
   async created() {
-    this.libraryBoardGames = await this.library.fetchGames();
+    this.wishListBoardGames = await this.wishList.fetchBoardGames();
     this.loading = false;
   }
 };
 </script>
-
-<style scoped>
-.container {
-  min-height: 10em;
-}
-</style>

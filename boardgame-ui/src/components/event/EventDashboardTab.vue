@@ -84,7 +84,7 @@ export default {
 
 
 <style scoped>
-.column > .title {
-  margin-bottom: 5px;
+.title {
+  margin-bottom: 0.25rem;
 }
 </style>

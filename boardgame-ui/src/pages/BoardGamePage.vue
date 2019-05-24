@@ -17,9 +17,28 @@
 
                 <hr>
 
-                <a class="button is-fullwidth" :href="bggUrl">
-                  {{$t('boardgame.view-in-bgg')}}
-                </a>
+                <div class="buttons">
+                  <div 
+                    class="button is-fullwidth" 
+                    @click="addToWishList"
+                    :disabled="isBoardGameInWishList()">
+                    <span class="icon is-small" v-if="isBoardGameInWishList()">
+                      <i class="fas fa-check"></i>
+                    </span>
+                    <span v-if="!isBoardGameInWishList()">
+                      {{$t('boardgame.add-wishlist')}}
+                    </span>
+                    <span v-else>
+                      {{$t('boardgame.already-in-wishlist')}}
+                    </span>
+                  </div>
+
+                  <a class="button is-fullwidth" :href="bggUrl">
+                    {{$t('boardgame.view-in-bgg')}}
+                  </a>
+                </div>
+
+                
               </div>
             </div>
             <div class="column">
@@ -87,6 +106,7 @@
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import BoardGame from '@/utils/api/BoardGame';
+import WishList from '@/utils/api/WishList';
 import BgcDuration from '@/components/utils/BgcDuration';
 
 export default {
@@ -99,7 +119,9 @@ export default {
       boardGame: null,
       loading: true,
       error: false,
-      videoUrl: ''
+      videoUrl: '',
+      wishList: new WishList(),
+      boardGamesInWishList: []
     };
   },
   computed: {
@@ -144,9 +166,51 @@ export default {
       catch(error) {
         console.log(error);
       }
+    },
+    async loadBoardGamesInWishList() {
+      try {
+        this.boardGamesInWishList = await this.wishList.fetchBoardGames();
+      }
+      catch(error) {
+        console.log(error);
+        this.error = true;
+      }
+    },
+    openAddToWishListToast: function(succesful){
+      if (succesful) {
+        this.$toast.open({
+          message: this.$t('wish-list.toast.add-success'),
+          type: 'is-success',
+          position: 'is-bottom'
+        });
+
+        this.loadBoardGamesInWishList();
+      }
+      else {
+        this.$toast.open({
+          message: this.$t('wish-list.toast.add-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
+    },
+    async addToWishList() {
+      try {
+        await this.wishList.addBoardGameFromBgg(this.boardGame.bgg_id);
+      }
+      catch(error) {
+        console.log(error);
+        this.openAddToWishListToast(false);
+        return;
+      }
+      this.openAddToWishListToast(true);
+    },
+    isBoardGameInWishList() {
+      return this.boardGamesInWishList.some(bg => bg.board_game.id == this.idBoardGame);
     }
   },
   async created() {
+    // fetch board game
     try {
       this.boardGame = await BoardGame.fetch(this.idBoardGame);
       console.log(this.boardGame);
@@ -155,12 +219,19 @@ export default {
       console.log(error);
       this.error = true;
     }
+
+    // fetch board games in wish list
+    this.loadBoardGamesInWishList();
     this.loading = false;
   }
 };
 </script>
 
 <style scoped>
+.wrapper {
+  position: relative;
+}
+
 .image-details {
   max-width: 500px;
   margin-left: auto;

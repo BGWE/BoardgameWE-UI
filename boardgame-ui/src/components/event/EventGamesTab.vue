@@ -14,6 +14,9 @@
         <p v-if="isAttendee" class="has-text-right limited-width">
           <button class="button is-primary" @click="openGameForm(null)">{{$t('button.add-game')}}</button>
         </p>
+        <p class="has-text-centered has-text-grey" v-if="games.length === 0">
+          {{$t('event.games.no-games')}}
+        </p>
         <PanelList>
           <PanelListElement
             v-for="(game, index) in reverseSortedGames"
@@ -41,7 +44,7 @@
             </template>
 
             <template v-slot:img>
-              <figure class="image is-64x64 is-rounded" :style="{backgroundImage: `url('${game.board_game.thumbnail}')`}"></figure>
+              <figure class="image is-64x64 is-rounded background" :style="{backgroundImage: `url('${game.board_game.thumbnail}')`}"></figure>
             </template>
 
             <template v-slot:content>
@@ -216,6 +219,9 @@ export default {
     async reload() {
       this.loading = true;
       this.games = await this.event.fetchGames();
+      this.games.sort((g1, g2) => {
+        return moment(g1.createdAt).diff(moment(g2.createdAt));
+      });
       this.loading = false;
     }
   },
