@@ -48,7 +48,8 @@
 
     <add-board-game-modal
       :active.sync="activeModal"
-      :excludedIds="bggIdsUserGames"
+      :providedByUser="providedByUser"
+      :providedByOthers="providedByOthers"
       :addFromLibrary="addFromLibrary"
       :wishedBoardGames="wishedBoardGames"
       @add="$emit('add', $event)"
@@ -93,9 +94,13 @@ export default {
     };
   },
   computed: {
-    bggIdsUserGames() {
+    providedByUser() {
       let userBoardGames = this.allBelongToUser ? this.boardGames : this.boardGames.filter(bg => bg.belongsToUser);
-      return userBoardGames.map(boardGame => boardGame.bgg_id);
+      return new Set(userBoardGames.map(boardGame => boardGame.bgg_id));
+    },
+    providedByOthers() {
+      let otherBoardGames = this.allBelongToUser ? [] : this.boardGames.filter(bg => !bg.belongsToUser || bg.count > 1);
+      return new Set(otherBoardGames.map(boardGame => boardGame.bgg_id));
     },
     filteredBoardGames() {
       let str = this.searchString.toLowerCase();
