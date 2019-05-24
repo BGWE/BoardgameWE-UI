@@ -90,6 +90,11 @@ export default {
       return this.currentUser.admin;
     }
   },
+  watch: {
+    $route(){
+      this.openedMenu = false;
+    }
+  },
   methods: {
     logout() {
       this.$store.dispatch('logout');
