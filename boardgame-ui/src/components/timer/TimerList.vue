@@ -6,7 +6,7 @@
             <p class="empty-list-message"><i18n path="timers.no-timer"/></p>
           </div>
           <router-link
-            v-for="timer in timers"
+            v-for="timer in orderedTimers"
             v-bind:key="timer.id"
             :to="{name: 'timer', params: {timerid: timer.id}}"
             class="box timer-box">
@@ -114,6 +114,11 @@ export default {
     };
   },
   computed: {
+    orderedTimers() {
+      return this.timers.sort((a, b) => {
+        return moment(this.mostRecentPlayer(b.player_timers).updatedAt).diff(moment(this.mostRecentPlayer(a.player_timers).updatedAt));
+      });
+    },
     timerTypeI18nPathMap() {
       return {
         [TimerTypes.COUNT_UP]: 'timer.type.count_up',
