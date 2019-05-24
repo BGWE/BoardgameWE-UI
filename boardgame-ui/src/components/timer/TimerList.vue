@@ -115,7 +115,7 @@ export default {
   },
   computed: {
     orderedTimers() {
-      return this.timers.sort((a, b) => {
+      return this.timers.slice(0).sort((a, b) => {
         return moment(this.mostRecentPlayer(b.player_timers).updatedAt).diff(moment(this.mostRecentPlayer(a.player_timers).updatedAt));
       });
     },
