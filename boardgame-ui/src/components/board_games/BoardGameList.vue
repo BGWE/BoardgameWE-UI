@@ -40,9 +40,12 @@
 
     <div v-else class="columns is-multiline">
       <div class="column is-2" v-for="boardGame in filteredBoardGames" :key="boardGame.id">
-        <board-game-preview :boardGame="boardGame" :deleteButton="allBelongToUser || boardGame.belongsToUser"
-          @delete="$emit('delete', boardGame.id)">
-        </board-game-preview>
+        <board-game-preview
+          :boardGame="boardGame"
+          :deleteButton="allBelongToUser || boardGame.belongsToUser"
+          :mobileVertical="false"
+          @delete="$emit('delete', boardGame.id)"
+        />
       </div>
     </div>
 

@@ -44,7 +44,7 @@
             </template>
 
             <template v-slot:img>
-              <figure class="image is-64x64 is-rounded" :style="{backgroundImage: `url('${game.board_game.thumbnail}')`}"></figure>
+              <figure class="image is-64x64 is-rounded background" :style="{backgroundImage: `url('${game.board_game.thumbnail}')`}"></figure>
             </template>
 
             <template v-slot:content>

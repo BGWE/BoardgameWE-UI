@@ -12,9 +12,9 @@
             class="box timer-box">
               <article class="media">
                 <div class="media-left">
-                  <figure v-if="timer.board_game !== null" class="image is-64x64 is-rounded thumbnail" :style="{backgroundImage: `url('${timer.board_game.thumbnail}')`}"></figure>
-                  <figure v-else class="image is-64x64 is-rounded thumbnail">
-                    <img :src="require('@/assets/stopwatch-icon.svg')" />
+                  <figure v-if="timer.board_game !== null" class="image is-64x64 is-rounded background" :style="{backgroundImage: `url('${timer.board_game.thumbnail}')`}"></figure>
+                  <figure v-else class="image is-64x64">
+                    <img class="is-rounded" :src="require('@/assets/stopwatch-icon.svg')" />
                   </figure>
                 </div>
 
@@ -231,14 +231,6 @@ export default {
   padding-top: 0.7em;
 
   margin-bottom: 0em;
-}
-
-.thumbnail {
-  text-align: center;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 32px;
 }
 
 .thumbnail.thumbnail-empty {

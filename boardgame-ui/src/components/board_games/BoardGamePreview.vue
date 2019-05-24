@@ -1,5 +1,6 @@
 <template>
-  <div class="card">
+<div :class="{'mobile-vertical': mobileVertical}">
+  <div class="card vertical">
     <div class="card-image">
       <div v-if="count > 1" class="count" :title="$t('boardgame.count-copies', {count})">
         {{count}}
@@ -9,7 +10,7 @@
         <i class="fa fa-check"></i>
       </span>
       <figure
-        class="image is-3by2 board-game-image"
+        class="image is-3by2 background"
         :class="{provided: providedByOther}"
         :style="{backgroundImage: `url('${boardGame.image}')`}">
       </figure>
@@ -23,6 +24,27 @@
       <div class="board-game-slot"><slot></slot></div>
     </div>
   </div>
+  <div class="card horizontal">
+    <div class="card-content">
+      <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
+      <div class="columns is-mobile">
+        <div class="column is-narrow">
+          <figure class="image background is-80x80 is-rounded" :style="{backgroundImage: `url('${boardGame.image}')`}"></figure>
+        </div>
+        <div class="column vertical-center">
+          <p>
+            <router-link :to="{name: 'board-game', params: {id: boardGame.id}}">{{boardGame.name}}</router-link>
+          </p>
+          <p class="board-game-year">({{boardGame.year_published}})</p>
+          <div v-if="count > 1" class="tags has-addons" :title="$t('boardgame.count-copies', {count})">
+            <span class="tag is-primary"><i class="fas fa-copy"></i></span>
+            <span class="tag is-light">{{count}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -33,7 +55,11 @@ export default {
     boardGame: Object,
     deleteButton: Boolean,
     wishCount: Number,
-    providedByOther: Boolean
+    providedByOther: Boolean,
+    mobileVertical: {
+      type: Boolean,
+      default: true
+    }
   },
   components: {WishListCount},
   computed: {
@@ -46,12 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors.scss";
-
-.board-game-image {
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
+@import "~bulma/sass/utilities/mixins.sass";
 
 figure.provided {
   filter: grayscale(100%);
@@ -125,7 +146,7 @@ figure.provided {
   margin-top: 0.5em;
 }
 
-.card.is-small {
+.is-small .card {
   .card-content {
     padding: 0.25em 0.75em;
   }
@@ -140,6 +161,32 @@ figure.provided {
 
   .wishlist-count {
     font-size: 0.85em;
+  }
+}
+
+.vertical-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tags {
+  margin-top: 0.75em;
+}
+
+@include desktop {
+  .card.horizontal {
+    display: none;
+  }
+}
+
+@include touch {
+  div:not(.mobile-vertical) > .card.vertical {
+    display: none;
+  }
+
+  .mobile-vertical .card.horizontal {
+    display: none;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="media-left">
     <figure v-if="useIcon" class="image is-64x64"><span><i class="fa-3x far fa-calendar-alt" /></span></figure>
-    <figure v-if="!useIcon" class="image is-64x64 is-rounded" :style="{backgroundImage: `url('${thumbnail}')`}" />
+    <figure v-if="!useIcon" class="image background is-64x64 is-rounded" :style="{backgroundImage: `url('${thumbnail}')`}" />
   </div>
 </template>
 
@@ -24,16 +24,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-  figure.image {
-    text-align: center;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  figure.is-rounded {
-    border-radius: 32px;
-  }
-</style>

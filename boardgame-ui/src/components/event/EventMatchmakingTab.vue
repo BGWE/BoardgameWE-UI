@@ -15,7 +15,7 @@
             <div class="card-content">
               <div class="columns is-mobile">
                 <div class="column is-narrow">
-                  <figure class="image" :style="{backgroundImage: `url('${board_game.thumbnail}')`}"></figure>
+                  <figure class="image background is-80x80 is-rounded" :style="{backgroundImage: `url('${board_game.thumbnail}')`}"></figure>
                 </div>
                 <div class="column">
                   <p>
@@ -97,16 +97,6 @@ export default {
 .other-wishes .column {
   max-width: 8em;
   min-width: 8em;
-}
-
-figure {
-  text-align: center;
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
 }
 
 .card hr {
