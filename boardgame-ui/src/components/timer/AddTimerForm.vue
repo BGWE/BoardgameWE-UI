@@ -70,6 +70,7 @@
           </td>
           <td>
             <verte
+              menuPosition="center"
               v-model="players[idx].color"
               picker="square"
               model="hex"
