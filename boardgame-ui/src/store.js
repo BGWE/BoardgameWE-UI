@@ -40,22 +40,22 @@ const actions = {
       return;
     }
 
-    commit('setInitialized');
-
     let token = window.localStorage.accessToken;
     if(token == null) {
+      commit('setInitialized');
       return;
     }
 
     axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
     await dispatch('fetchUser');
+    commit('setInitialized');
   },
 
   async login({dispatch}, {username, password}) {
     let token = await User.login(username, password);
     axios.defaults.headers.common['Authentication'] = `JWT ${token}`;
     window.localStorage.accessToken = token;
-    dispatch('fetchUser');
+    await dispatch('fetchUser');
   },
 
   async fetchUser({commit}) {
