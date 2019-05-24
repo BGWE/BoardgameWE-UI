@@ -5,7 +5,14 @@
         {{count}}
       </div>
       <wish-list-count v-else-if="wishCount" :count="wishCount" class="wishlist-count" />
-      <figure class="image is-3by2 board-game-image" :style="{backgroundImage: `url('${boardGame.image}')`}"></figure>
+      <span v-if="boardGame.providedByOther" :title="$t('boardgame.provided-by-other')" class="icon provided">
+        <i class="fa fa-check"></i>
+      </span>
+      <figure
+        class="image is-3by2 board-game-image"
+        :class="{provided: providedByOther}"
+        :style="{backgroundImage: `url('${boardGame.image}')`}">
+      </figure>
     </div>
     <div class="card-content">
       <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
@@ -23,9 +30,10 @@ import WishListCount from '@/components/wish_list/WishListCount';
 
 export default {
   props: {
-    'boardGame': Object,
-    'deleteButton': Boolean,
-    'wishCount': Number
+    boardGame: Object,
+    deleteButton: Boolean,
+    wishCount: Number,
+    providedByOther: Boolean
   },
   components: {WishListCount},
   computed: {
@@ -43,6 +51,11 @@ export default {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+figure.provided {
+  filter: grayscale(100%);
+  opacity: 0.75;
 }
 
 .board-game-name {
@@ -83,6 +96,18 @@ export default {
   top: -0.5em;
   right: -0.8em;
   font-size: 0.9em;
+}
+
+.icon.provided {
+  display: block;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  text-align: center;
+  color: $green;
+  font-size: 3em;
 }
 
 .card-content {
