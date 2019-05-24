@@ -219,6 +219,9 @@ export default {
     async reload() {
       this.loading = true;
       this.games = await this.event.fetchGames();
+      this.games.sort((g1, g2) => {
+        return moment(g1.createdAt).diff(moment(g2.createdAt));
+      });
       this.loading = false;
     }
   },
