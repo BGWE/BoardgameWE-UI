@@ -14,6 +14,9 @@
         <p v-if="isAttendee" class="has-text-right limited-width">
           <button class="button is-primary" @click="openGameForm(null)">{{$t('button.add-game')}}</button>
         </p>
+        <p class="has-text-centered has-text-grey" v-if="games.length === 0">
+          {{$t('event.games.no-games')}}
+        </p>
         <PanelList>
           <PanelListElement
             v-for="(game, index) in reverseSortedGames"
