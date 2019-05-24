@@ -44,7 +44,7 @@
             <span class="panel-icon">
               <i class="fas fa-dice"></i>
             </span>
-            <router-link :to="{name: 'boardgame', params: {id: timer.board_game.id}}">{{timer.board_game.name}}</router-link>
+            <router-link :to="{name: 'board-game', params: {id: timer.board_game.id}}">{{timer.board_game.name}}</router-link>
           </div>
         </transition>
 
