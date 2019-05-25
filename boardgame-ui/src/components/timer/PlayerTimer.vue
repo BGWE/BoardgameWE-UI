@@ -25,8 +25,7 @@
 </template>
 
 <script>
-import moment from 'moment';
-import Timer, { TimerTypes } from '@/utils/api/Timer';
+import Timer from '@/utils/api/Timer';
 
 export default {
   name: 'PlayerTimer',
