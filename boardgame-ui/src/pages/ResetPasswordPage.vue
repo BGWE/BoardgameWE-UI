@@ -80,7 +80,7 @@ export default {
       this.$validator.validateAll().then(async (valid) => {
         if (valid) {
           try {
-            await User.resetPassword(this.token, this.userId(), this.password);
+            await User.resetPassword(this.token, this.userId, this.password);
             this.$toast.open({
               message: this.$t('auth.reset-password.success'),
               type: 'is-success',
