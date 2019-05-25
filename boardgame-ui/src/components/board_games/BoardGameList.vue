@@ -1,6 +1,6 @@
 <template>
   <div class="board-game-list-wrapper">
-    <div class="columns is-vcentered">
+    <div class="columns is-vcentered is-multiline">
       <div class="column is-narrow">
         <b-field>
           <b-input :placeholder="$t('placeholder.search')" type="search" icon="search" v-model="searchString"></b-input>
@@ -16,12 +16,12 @@
         </b-field>
       </div>
       <div class="column is-narrow">
-        <b-field class="narrow">
+        <b-field class="narrow-field">
           <b-input v-model="nbPlayers" icon="users"></b-input>
         </b-field>
       </div>
       <div v-if="!allBelongToUser && canAdd" class="column is-narrow">
-        <b-field class="narrow">
+        <b-field class="narrow-field">
           <b-checkbox v-model="belongsToUserOnly">
             {{ $t('board-games-list.belongsToUser') }}
           </b-checkbox>
@@ -124,12 +124,16 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.board-game-list-wrapper .narrow.field {
+<style lang="scss" scoped>
+.narrow-field {
   max-width: 7em;
 
   &:not(:last-child) {
     margin-right: 1em;
   }
+}
+
+.column {
+  min-width: 140px;
 }
 </style>
