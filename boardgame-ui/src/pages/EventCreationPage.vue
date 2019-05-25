@@ -17,23 +17,21 @@
             <b-input v-model.trim="event.location" name="location" v-validate="'required'"></b-input>
           </b-field>
 
-          <b-field horizontal :label="$t('event.edition.description')"
-                  :type="{'is-danger': errors.has('form-eventCreation.description')}"
-                  :message="errors.first('form-eventCreation.description')">
-            <b-input v-model.trim="event.description" name="description" v-validate="'required'" maxlength="200" type="textarea"></b-input>
+          <b-field horizontal :label="$t('event.edition.description')">
+            <b-input v-model.trim="event.description" name="description" maxlength="200" type="textarea"></b-input>
           </b-field>
 
           <b-field horizontal
                   :label="$t('event.edition.startDateTime')"
                   :type="{'is-danger': errors.has('form-eventCreation.startDate')}"
                   :message="errors.first('form-eventCreation.startDate')">
-            <DateTimePicker v-model="startDate" name="startDate" v-validate="'required'" ref="startDate"></DateTimePicker>
+            <DateTimePicker v-model="startDate" name="startDate" :minDate="minDate" v-validate="'required'" ref="startDate"></DateTimePicker>
           </b-field>
           <b-field horizontal
                   :label="$t('event.edition.endDateTime')"
                   :type="{'is-danger': errors.has('form-eventCreation.endDate')}"
                   :message="errors.first('form-eventCreation.endDate')">
-            <DateTimePicker v-model="endDate" name="endDate" v-validate="'required|after:startDate'"></DateTimePicker>
+            <DateTimePicker v-model="endDate" name="endDate" :minDate="minDate" v-validate="'required|after:startDate'"></DateTimePicker>
           </b-field>
 
           <b-field horizontal>
@@ -67,10 +65,13 @@ export default {
   },
 
   data() {
+    const today = new Date();
+
     return {
       event: null,
       startDate: null,
       endDate: null,
+      minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate())
     };
   },
 
