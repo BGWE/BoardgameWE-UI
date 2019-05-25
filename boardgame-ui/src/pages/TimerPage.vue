@@ -225,7 +225,7 @@ export default {
   },
   methods: {
     setTimer(timer) {
-      this.timer = timer;
+      this.timer = new Timer(timer);
       this.players = this.turnPlayerTimers();
       this.isRunning = this.players.some((p => p.start !== null));
 
