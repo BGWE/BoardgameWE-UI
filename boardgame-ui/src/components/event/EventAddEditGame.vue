@@ -283,8 +283,10 @@ export default {
         this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
 
         gameData.id_timer = this.idTimer;
-        gameData.id_board_game = timer.id_board_game;
-        this.searchString = timer.board_game.name;
+        if(timer.board_game) {
+          gameData.id_board_game = timer.id_board_game;
+          this.searchString = timer.board_game.name;
+        }
 
         timer.player_timers.forEach(p => {
           this.players.push({ user: p.user, name: p.name, score: null });
