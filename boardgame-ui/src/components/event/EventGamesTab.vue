@@ -4,7 +4,7 @@
     <event-add-edit-game
       :event="event"
       :editGame="editGame"
-      :id_timer="id_timer"
+      :idTimer="idTimer"
       v-if="gameForm"
       @addGame="savedGame"
       @editGame="savedGame"
@@ -144,8 +144,8 @@ export default {
       return this.sortedGames.slice().reverse();
     },
 
-    id_timer() {
-      return this.$route.params.id_timer;
+    idTimer() {
+      return this.$route.params.idTimer;
     }
   },
 
@@ -185,9 +185,9 @@ export default {
     },
 
     savedGame() {
-      if (this.id_timer) {
+      if (this.idTimer) {
         this.reloadPageWithoutTimer();
-      } 
+      }
       else {
         this.reload();
         this.gameForm = false;
@@ -195,9 +195,9 @@ export default {
     },
 
     closeGameForm() {
-      if (this.id_timer) {
+      if (this.idTimer) {
         this.reloadPageWithoutTimer();
-      } 
+      }
       else {
         this.gameForm = false;
       }
@@ -205,7 +205,7 @@ export default {
 
     reloadPageWithoutTimer() {
       this.$route.push({
-        name: 'event-games', 
+        name: 'event-games',
         params: {
           eventid: this.event.id
         }
@@ -251,7 +251,7 @@ export default {
         return moment(g1.createdAt).diff(moment(g2.createdAt));
       });
       this.loading = false;
-      if (this.id_timer) {
+      if (this.idTimer) {
         this.openGameForm(null);
       }
     }

@@ -117,7 +117,7 @@ export default {
   props: {
     event: Object,
     editGame: Object,
-    id_timer: {
+    idTimer: {
       type: Number,
       required: false
     }
@@ -129,8 +129,7 @@ export default {
       time: null,
       minTime: null,
       players: [],
-      boardGamesLinks: null,
-      timer: null
+      boardGamesLinks: null
     };
   },
   computed: {
@@ -188,6 +187,13 @@ export default {
     }
   },
   methods: {
+    setTimeFromDuration(duration) { // arg duration to be provided in minutes
+      duration = Math.ceil(duration / 15) * 15; // get multiple of 15 minutes
+      let time = new Date();
+      time.setHours(Math.floor(duration / 60));
+      time.setMinutes(duration % 60);
+      this.time = time;
+    },
     selectBoardGame(option) {
       this.game.id_board_game = option ? option.id : null;
     },
@@ -252,8 +258,6 @@ export default {
     minTime.setMinutes(15);
     this.minTime = minTime;
 
-    let time = new Date();
-
     if(this.editGame) {
       this.game = this.editGame.clone();
 
@@ -264,8 +268,7 @@ export default {
         this.players.push({user: player.user, score});
       });
 
-      time.setHours(Math.floor(this.game.duration / 60));
-      time.setMinutes(this.game.duration % 60);
+      this.setTimeFromDuration(this.game.duration);
     }
     else {
       let gameData = {
@@ -273,25 +276,27 @@ export default {
         ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER
       };
 
-      if (this.id_timer) {
-        const timer = await Timer.fetch(this.id_timer);
-        const elapsed = timer.getTotalElapsed() / 1000;
-        time.setHours(Math.floor(elapsed / 3600));
-        time.setMinutes(Math.floor(elapsed / 60) % 60);
-        gameData.id_timer = this.id_timer;
+      if(this.idTimer) {
+        const timer = await Timer.fetch(this.idTimer);
+
+        this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
+
+        gameData.id_timer = this.idTimer;
         gameData.id_board_game = timer.id_board_game;
+        this.searchString = timer.board_game.name;
+
         timer.player_timers.forEach(p => {
           this.players.push({ user: p.user, name: p.name, score: null });
         });
-      } 
+      }
       else {
+        this.setTimeFromDuration(30); // default duration: 30 minutes
         this.players.push({user: this.currentUser, score: null});
       }
 
       this.game = new Game(gameData);
     }
 
-    this.time = time;
   }
 };
 </script>
