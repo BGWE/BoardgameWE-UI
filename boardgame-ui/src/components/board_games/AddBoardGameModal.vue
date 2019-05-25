@@ -134,8 +134,8 @@ export default {
       this.searchBoardGames();
     },
     providedByUser(ids) {
-      this.libraryGames.forEach(bg => bg.providedByUser = ids.includes(bg.bgg_id));
-      this.data.forEach(bg => bg.providedByUser = ids.includes(Number(bg.id)));
+      this.libraryGames.forEach(bg => bg.providedByUser = ids.has(bg.bgg_id));
+      this.data.forEach(bg => bg.providedByUser = ids.has(Number(bg.id)));
     }
   },
   methods: {
