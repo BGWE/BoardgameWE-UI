@@ -13,9 +13,9 @@
         </div>
 
         <b-collapse :open="true" aria-id="activeEventsId">
-          <div slot="trigger" slot-scope="props" role="button" aria-controls="activeEventsId">
+          <div class="title" slot="trigger" slot-scope="props" role="button" aria-controls="activeEventsId">
             <h2>
-              Active events <a><b-icon type="is-black" :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon></a>
+              Active events <span class="icon is-small"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
             </h2>
           </div>
 
@@ -27,8 +27,10 @@
         </b-collapse>
 
         <b-collapse :open="false" aria-id="pastEventsId">
-          <div slot="trigger" slot-scope="props" role="button" aria-controls="pastEventsId">
-            <h2>Past events</h2>
+          <div class="title" slot="trigger" slot-scope="props" role="button" aria-controls="pastEventsId">
+            <h2>
+              Past events <span class="icon is-small"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
+            </h2>
           </div>
           <div class="columns events is-multiline" >
             <div class="column is-one-quarter" v-for="event in pastEvents" :key="event.id">
@@ -44,7 +46,7 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import EventCard from "@/components/event/EventCard";
+import EventCard from '@/components/event/EventCard';
 import Event from '@/utils/api/Event';
 import moment from 'moment-timezone';
 
