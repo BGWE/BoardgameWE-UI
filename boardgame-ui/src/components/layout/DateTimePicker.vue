@@ -29,8 +29,7 @@ export default {
     return {
       date: new Date(),
       time: new Date(),
-      dateTime: new Date(),
-      //minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+      dateTime: new Date()
     };
   },
   watch: {
