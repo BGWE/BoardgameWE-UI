@@ -25,13 +25,13 @@
                   :label="$t('event.edition.startDateTime')"
                   :type="{'is-danger': errors.has('form-eventCreation.startDate')}"
                   :message="errors.first('form-eventCreation.startDate')">
-            <DateTimePicker v-model="startDate" name="startDate" :minDate="minDate" v-validate="'required'" ref="startDate"></DateTimePicker>
+            <DateTimePicker v-model="startDate" name="startDate" v-validate="'required'" ref="startDate"></DateTimePicker>
           </b-field>
           <b-field horizontal
                   :label="$t('event.edition.endDateTime')"
                   :type="{'is-danger': errors.has('form-eventCreation.endDate')}"
                   :message="errors.first('form-eventCreation.endDate')">
-            <DateTimePicker v-model="endDate" name="endDate" :minDate="minDate" v-validate="'required|after:startDate'"></DateTimePicker>
+            <DateTimePicker v-model="endDate" name="endDate" v-validate="'required|after:startDate'"></DateTimePicker>
           </b-field>
 
           <b-field horizontal>
@@ -65,13 +65,11 @@ export default {
   },
 
   data() {
-    const today = new Date();
-
     return {
       event: null,
+      editing: false,
       startDate: null,
-      endDate: null,
-      minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate())
+      endDate: null
     };
   },
 
@@ -115,6 +113,7 @@ export default {
 
   async created() {
     if (this.$route.params.eventid) {
+      this.editing = true;
       this.event = await Event.fetch(this.$route.params.eventid);
       this.startDate = this.formatISO8601StringAsDate(this.event.start);
       this.endDate = this.formatISO8601StringAsDate(this.event.end);
