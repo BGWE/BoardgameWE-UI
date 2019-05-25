@@ -1,19 +1,12 @@
 <template>
   <div class="tabwrapper">
-    <b-loading :is-full-page="false" :active="loading"></b-loading>
-    <event-add-edit-game
-      :event="event"
-      :editGame="editGame"
-      :idTimer="idTimer"
-      v-if="gameForm"
-      @addGame="savedGame"
-      @editGame="savedGame"
-      @close="closeGameForm"
-    />
-    <div class="columns" v-else-if="!loading">
+    <b-loading :is-full-page="false" :active="loading" />
+    <div class="columns" v-if="!loading">
       <div class="column is-full">
         <p v-if="isAttendee" class="has-text-right limited-width">
-          <button class="button is-primary" @click="openGameForm(null)">{{$t('button.add-game')}}</button>
+          <router-link :to="{name: 'add-game-event'}" class="button is-primary">
+            {{$t('button.add-game')}}
+          </router-link>
         </p>
         <p class="has-text-centered has-text-grey" v-if="games.length === 0">
           {{$t('event.games.no-games')}}
@@ -57,10 +50,10 @@
             </template>
 
             <template v-if="isAttendee" v-slot:buttons>
-              <a class="card-footer-item" @click="openGameForm(game)">
+              <router-link :to="{name: 'edit-game-event', params: {idGame: game.id}}" class="card-footer-item">
                 <span class="icon"><i class="far fa-edit"></i></span>
                 {{$t('event.games.edit')}}
-              </a>
+              </router-link>
               <a class="card-footer-item card-footer-item-danger" @click="confirmDeleteGame(game)">
                 <span class="icon"><i class="far fa-trash-alt"></i></span>
                 {{$t('event.games.delete')}}
@@ -93,7 +86,6 @@ import PanelListElement from '@/components/layout/PanelListElement';
 import RankingTable from '@/components/layout/RankingTable';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 import BgcDuration from '@/components/utils/BgcDuration';
-import EventAddEditGame from './EventAddEditGame';
 
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
@@ -111,7 +103,6 @@ export default {
     PanelListElement,
     RankingTable,
     ConfirmDeleteModal,
-    EventAddEditGame,
     BgcDuration
   },
 
@@ -120,9 +111,7 @@ export default {
       loading: true,
       isConfirmDeleteModalActive: false,
       gameToDelete: null,
-      games: [],
-      gameForm: false,
-      editGame: null
+      games: []
     };
   },
 
@@ -142,10 +131,6 @@ export default {
 
     reverseSortedGames: function() {
       return this.sortedGames.slice().reverse();
-    },
-
-    idTimer() {
-      return this.$route.params.idTimer;
     }
   },
 
@@ -177,39 +162,6 @@ export default {
         }
       }
       return data;
-    },
-
-    openGameForm(game) {
-      this.editGame = game;
-      this.gameForm = true;
-    },
-
-    savedGame() {
-      if (this.idTimer) {
-        this.reloadPageWithoutTimer();
-      }
-      else {
-        this.reload();
-        this.gameForm = false;
-      }
-    },
-
-    closeGameForm() {
-      if (this.idTimer) {
-        this.reloadPageWithoutTimer();
-      }
-      else {
-        this.gameForm = false;
-      }
-    },
-
-    reloadPageWithoutTimer() {
-      this.$route.push({
-        name: 'event-games',
-        params: {
-          eventid: this.event.id
-        }
-      });
     },
 
     confirmDeleteGame: function(game) {
@@ -251,9 +203,6 @@ export default {
         return moment(g1.createdAt).diff(moment(g2.createdAt));
       });
       this.loading = false;
-      if (this.idTimer) {
-        this.openGameForm(null);
-      }
     }
   },
 

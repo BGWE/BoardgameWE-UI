@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <h1 class="title">{{$t(editGame ? 'edit-game.title' : 'add-game.title')}}</h1>
+    <h1 class="title">{{$t(idGame ? 'edit-game.title' : 'add-game.title')}}</h1>
     <b-loading :active="!game" :is-full-page="false" />
     <form v-if="game" @submit.prevent="save()">
       <b-field
@@ -98,7 +98,7 @@
       </table>
 
       <div class="buttons is-right">
-        <button class="button" type="button" @click="$emit('close')">{{$t('button.cancel')}}</button>
+        <button class="button" type="button" @click="$router.go(-1)">{{$t('button.cancel')}}</button>
         <button class="button is-primary">{{$t('button.save')}}</button>
       </div>
     </form>
@@ -116,11 +116,6 @@ export default {
   },
   props: {
     event: Object,
-    editGame: Object,
-    idTimer: {
-      type: Number,
-      required: false
-    }
   },
   data() {
     return {
@@ -135,6 +130,12 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
+    },
+    idGame() {
+      return this.$route.params.idGame;
+    },
+    idTimer() {
+      return this.$route.query.idTimer;
     },
     boardGames() {
       if(!this.boardGamesLinks) {
@@ -238,7 +239,7 @@ export default {
           type: 'is-success',
           position: 'is-bottom'
         });
-        this.$emit('addGame', this.game);
+        this.$router.push({name: 'event-games'});
       }
       catch(error) {
         console.log(error);
@@ -258,8 +259,8 @@ export default {
     minTime.setMinutes(15);
     this.minTime = minTime;
 
-    if(this.editGame) {
-      this.game = this.editGame.clone();
+    if(this.idGame) {
+      this.game = await Game.fetch(this.idGame);
 
       this.searchString = this.game.board_game.name;
 

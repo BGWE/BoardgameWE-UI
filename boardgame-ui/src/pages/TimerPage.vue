@@ -71,7 +71,7 @@
             <span class="panel-icon">
               <i class="fas fa-external-link-alt"></i>
             </span>
-            <router-link :to="{name: 'event-games', params: {eventid: timer.event.id, idTimer: timer.id}}">
+            <router-link :to="{name: 'add-game-event', params: {eventid: timer.event.id}, query: {idTimer: timer.id}}">
               <i18n path="timer.create_game_from" />
             </router-link>
           </div>

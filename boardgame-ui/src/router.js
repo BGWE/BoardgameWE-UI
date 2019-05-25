@@ -79,10 +79,19 @@ const routes = [
         component: require('./components/event/EventBoardGamesTab.vue').default,
       },
       {
+        name: 'add-game-event',
+        path: 'games/add',
+        component: require('./components/event/EventAddEditGame').default
+      },
+      {
+        name: 'edit-game-event',
+        path: 'games/edit/:idGame',
+        component: require('./components/event/EventAddEditGame').default
+      },
+      {
         name: 'event-games',
         path: 'games',
-        component: require('./components/event/EventGamesTab.vue').default,
-        props: true
+        component: require('./components/event/EventGamesTab.vue').default
       },
       {
         name: 'event-rankings',
