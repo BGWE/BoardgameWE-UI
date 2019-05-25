@@ -158,6 +158,10 @@ figure.provided {
       border-radius: 40px;
     }
 
+    .card-image {
+      border-bottom: none;
+    }
+
     .card-content {
       flex: 1;
       text-align: left !important;
