@@ -82,6 +82,7 @@ const routes = [
         name: 'event-games',
         path: 'games',
         component: require('./components/event/EventGamesTab.vue').default,
+        props: true
       },
       {
         name: 'event-rankings',

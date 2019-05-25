@@ -4,10 +4,11 @@
     <event-add-edit-game
       :event="event"
       :editGame="editGame"
+      :id_timer="id_timer"
       v-if="gameForm"
       @addGame="savedGame"
       @editGame="savedGame"
-      @close="gameForm = false"
+      @close="closeGameForm"
     />
     <div class="columns" v-else-if="!loading">
       <div class="column is-full">
@@ -141,6 +142,10 @@ export default {
 
     reverseSortedGames: function() {
       return this.sortedGames.slice().reverse();
+    },
+
+    id_timer() {
+      return this.$route.params.id_timer;
     }
   },
 
@@ -180,8 +185,31 @@ export default {
     },
 
     savedGame() {
-      this.reload();
-      this.gameForm = false;
+      if (this.id_timer) {
+        this.reloadPageWithoutTimer();
+      } 
+      else {
+        this.reload();
+        this.gameForm = false;
+      }
+    },
+
+    closeGameForm() {
+      if (this.id_timer) {
+        this.reloadPageWithoutTimer();
+      } 
+      else {
+        this.gameForm = false;
+      }
+    },
+
+    reloadPageWithoutTimer() {
+      this.$route.push({
+        name: 'event-games', 
+        params: {
+          eventid: this.event.id
+        }
+      });
     },
 
     confirmDeleteGame: function(game) {
@@ -223,6 +251,9 @@ export default {
         return moment(g1.createdAt).diff(moment(g2.createdAt));
       });
       this.loading = false;
+      if (this.id_timer) {
+        this.openGameForm(null);
+      }
     }
   },
 

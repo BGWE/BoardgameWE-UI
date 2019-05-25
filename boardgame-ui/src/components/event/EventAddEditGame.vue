@@ -107,6 +107,7 @@
 
 <script>
 import Game, {GameRankingMethods} from '@/utils/api/Game';
+import Timer from '@/utils/api/Timer';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 
 export default {
@@ -115,7 +116,11 @@ export default {
   },
   props: {
     event: Object,
-    editGame: Object
+    editGame: Object,
+    id_timer: {
+      type: Number,
+      required: false
+    }
   },
   data() {
     return {
@@ -124,7 +129,8 @@ export default {
       time: null,
       minTime: null,
       players: [],
-      boardGamesLinks: null
+      boardGamesLinks: null,
+      timer: null
     };
   },
   computed: {
@@ -262,15 +268,27 @@ export default {
       time.setMinutes(this.game.duration % 60);
     }
     else {
-      this.game = new Game({
+      let gameData = {
         id_event: this.event.id,
         ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER
-      });
+      };
 
-      this.players.push({user: this.currentUser, score: null});
+      if (this.id_timer) {
+        const timer = await Timer.fetch(this.id_timer);
+        const elapsed = timer.getTotalElapsed() / 1000;
+        time.setHours(Math.floor(elapsed / 3600));
+        time.setMinutes(Math.floor(elapsed / 60) % 60);
+        gameData.id_timer = this.id_timer;
+        gameData.id_board_game = timer.id_board_game;
+        timer.player_timers.forEach(p => {
+          this.players.push({ user: p.user, name: p.name, score: null });
+        });
+      } 
+      else {
+        this.players.push({user: this.currentUser, score: null});
+      }
 
-      time.setHours(0);
-      time.setMinutes(30);
+      this.game = new Game(gameData);
     }
 
     this.time = time;

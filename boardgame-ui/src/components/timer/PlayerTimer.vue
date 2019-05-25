@@ -1,6 +1,6 @@
 <template>
-  <div class="box media player-timer" 
-        v-bind:style="{['background-color']: player_timer.color}" 
+  <div class="box media player-timer"
+        v-bind:style="{['background-color']: player_timer.color}"
         v-bind:class="{'is-bold': this.is_selected}">
     <div class="media-left player-name-box has-text-centered" v-bind:class="{'has-text-weight-bold': this.is_selected}">
       <p v-bind:style="{color: textColor}">{{playerName}}</p>
@@ -26,11 +26,16 @@
 
 <script>
 import moment from 'moment';
-import { TimerTypes } from '@/utils/api/Timer';
+import Timer, { TimerTypes } from '@/utils/api/Timer';
 
 export default {
   name: 'PlayerTimer',
-  props: ['timer', 'player_timer', 'is_selected', 'is_running'],
+  props: {
+    timer: Timer,
+    player_timer: Object,
+    is_selected: Boolean,
+    is_running: Boolean
+  },
   data() {
     return {
       interval: null,
@@ -40,7 +45,7 @@ export default {
   computed: {
     textColor() {
       const match = this.player_timer.color.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})?$/);
-      const red = parseInt(match[1], 16) / 255, green = parseInt(match[2], 16) / 255, blue = parseInt(match[3], 16) / 255; 
+      const red = parseInt(match[1], 16) / 255, green = parseInt(match[2], 16) / 255, blue = parseInt(match[3], 16) / 255;
       const luminance = (0.299 * red + 0.587 * green + 0.114 * blue);
       return luminance > 0.72 ? '#494949' : '#FFFFFF'; // dark colors - white font
     },
@@ -64,22 +69,7 @@ export default {
   },
   methods: {
     refreshElapsed() {
-      const start = this.player_timer.start;
-      /**
-       * If necessary, can be improved: recorded start time (server time) is diff-ed with the current browser time 
-       * which might cause a difference if server and browser do not have the same time.
-       */
-      const since_start = start !== null ? moment().utc().diff(moment(this.player_timer.start)) : 0;
-      const elapsed = moment.duration(this.player_timer.elapsed).add(since_start);
-      if (this.timer.timer_type === TimerTypes.COUNT_UP) {
-        this.display_time = elapsed;
-      } 
-      else {
-        this.display_time = moment.duration(this.timer.initial_duration).subtract(elapsed);
-        if (this.display_time.milliseconds() < 0) {
-          this.display_time = moment.duration(0);
-        }
-      } 
+      this.display_time = this.timer.getPlayerElapsed(this.player_timer);
     },
     hours() {
       return this.format(this.display_time.hours(), 2);

@@ -65,6 +65,17 @@
             <i18n v-bind:path="timerTypeI18nPath"/>
           </div>
         </transition>
+
+        <transition name="fade">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
+            <span class="panel-icon">
+              <i class="fas fa-external-link-alt"></i>
+            </span>
+            <router-link :to="{name: 'event-games', params: {eventid: timer.event.id, id_timer: timer.id}}">
+              <i18n path="timer.create_game_from" />
+            </router-link>
+          </div>
+        </transition>
       </nav>
 
       <div class="has-text-centered row-buttons">
