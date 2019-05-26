@@ -5,6 +5,15 @@
     <div class="app-content">
       <router-view v-if="initialized"></router-view>
     </div>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong> Board Game Componion</strong> by BGWE. Powered by <a href="https://bulma.io">Bulma</a>, <a href="https://vuejs.org">Vue.js</a>.
+        </p>
+      </div>
+    </footer>
+
   </div>
 </template>
 
