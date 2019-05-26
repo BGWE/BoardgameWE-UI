@@ -71,7 +71,10 @@
             <span class="panel-icon">
               <i class="fas fa-external-link-alt"></i>
             </span>
-            <router-link :to="{name: 'add-game-event', params: {eventid: timer.event.id}, query: {idTimer: timer.id}}">
+            <router-link v-if="timer.game" :to="{name: 'event-games', params: {eventid: timer.event.id}}">
+              <i18n path="timer.game_already_associated" />
+            </router-link>
+            <router-link v-else :to="{name: 'add-game-event', params: {eventid: timer.event.id}, query: {idTimer: timer.id}}">
               <i18n path="timer.create_game_from" />
             </router-link>
           </div>
