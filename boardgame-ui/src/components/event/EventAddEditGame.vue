@@ -108,6 +108,7 @@
 <script>
 import Game, {GameRankingMethods} from '@/utils/api/Game';
 import Timer from '@/utils/api/Timer';
+import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 
 export default {
@@ -115,7 +116,7 @@ export default {
     UserAutocomplete
   },
   props: {
-    event: Object,
+    event: Event,
   },
   data() {
     return {

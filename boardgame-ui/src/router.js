@@ -107,6 +107,11 @@ const routes = [
         name: 'event-timers',
         path: 'timers',
         component: require('./components/event/EventTimersTab.vue').default,
+      },
+      {
+        name: 'add-event-timer',
+        path: 'timers/add',
+        component: require('./components/event/EventAddTimer').default
       }
     ]
   },
