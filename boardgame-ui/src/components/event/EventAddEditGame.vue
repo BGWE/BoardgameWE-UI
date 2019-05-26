@@ -190,7 +190,7 @@ export default {
   },
   methods: {
     setTimeFromDuration(duration) { // arg duration to be provided in minutes
-      duration = Math.ceil(duration / 15) * 15; // get multiple of 15 minutes
+      duration = Math.round(duration / 15) * 15; // get multiple of 15 minutes
       let time = new Date();
       time.setHours(Math.floor(duration / 60));
       time.setMinutes(duration % 60);
