@@ -45,12 +45,12 @@
               </div>
               <div v-else class="navbar-item has-dropdown is-hoverable">
                 <span class="navbar-link-wrapper">
-                  <a class="navbar-link navbar-link-custom">
+                  <router-link :to="{name: 'user-profile', params: {id: currentUser.id}}" class="navbar-link navbar-link-custom">
                     <span class="icon">
                       <i class="fas fa-user-circle"></i>
                     </span>
                     {{currentUser.name}} {{currentUser.surname[0]}}.
-                  </a>
+                  </router-link>
                 </span>
 
                 <div class="navbar-dropdown is-boxed">
