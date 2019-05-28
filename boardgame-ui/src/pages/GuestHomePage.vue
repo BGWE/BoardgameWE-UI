@@ -24,22 +24,22 @@
         <section class="section content">
           <div class="columns" v-if="statistics">
             <div class="column has-text-centered">
-              <p class="heading"><i18n path="home.stats.active_users" /></p>
+              <p class="heading"><i18n path="stats.active_users" /></p>
               <p class="title">{{statistics.users_count}}</p>
             </div>
 
             <div class="column has-text-centered">
-              <p class="heading"><i18n path="home.stats.owned" /></p>
+              <p class="heading"><i18n path="stats.owned" /></p>
               <p class="title">{{statistics.board_games_owned_count}}</p>
             </div>
 
             <div class="column has-text-centered">
-              <p class="heading"><i18n path="home.stats.played" /></p>
+              <p class="heading"><i18n path="stats.played" /></p>
               <p class="title">{{statistics.games_count}}</p>
             </div>
 
             <div class="column has-text-centered">
-              <p class="heading"><i18n path="home.stats.events_organized" /></p>
+              <p class="heading"><i18n path="stats.events_organized" /></p>
               <p class="title">{{statistics.events_count}}</p>
             </div>
           </div>

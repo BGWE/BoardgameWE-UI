@@ -1,30 +1,35 @@
 <template>
-  <div class="wrapper">
-    <hero-title-page-layout :title="$t('library.title')"></hero-title-page-layout>
-    <div class="container">
-      <b-loading :is-full-page="false" :active="loading"></b-loading>
-      <div class="section" v-if="!loading">
-        <board-game-list :board-games="boardGames" :allBelongToUser="true" @add="addBoardGame" @delete="deleteBoardGame" />
-      </div>
-    </div>
+  <div>
+    <b-loading :is-full-page="false" :active="loading" />
+    <board-game-list
+      v-if="!loading"
+      :boardGames="boardGames"
+      :allBelongToUser="isCurrentUserProfile"
+      :canAdd="isCurrentUserProfile"
+      @add="addBoardGame"
+      @delete="deleteBoardGame"
+    />
   </div>
 </template>
 
 <script>
-import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import BoardGameList from '@/components/board_games/BoardGameList';
 import Library from '@/utils/api/Library';
+import User from '@/utils/api/User';
 
 export default {
+  props: {
+    user: User, // if null, library of current user
+    isCurrentUserProfile: Boolean
+  },
   components: {
-    HeroTitlePageLayout,
     BoardGameList
   },
   data() {
     return {
       loading: true,
-      libraryBoardGames: null,
-      library: new Library()
+      library: null,
+      libraryBoardGames: null
     };
   },
   computed: {
@@ -71,14 +76,10 @@ export default {
     }
   },
   async created() {
+    this.library = new Library(!this.isCurrentUserProfile ? this.user.id : null);
     this.libraryBoardGames = await this.library.fetchGames();
     this.loading = false;
   }
 };
 </script>
 
-<style scoped>
-.container {
-  min-height: 10em;
-}
-</style>

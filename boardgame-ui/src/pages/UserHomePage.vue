@@ -29,38 +29,7 @@
       </section>
 
       <section class="section" v-if=userStats>
-        <div class="columns">
-          <div class="column has-text-centered">
-            <p class="heading"><i18n path="home.stats.owned" /></p>
-            <p class="title">{{userStats.owned}}</p>
-          </div>
-
-          <div class="column has-text-centered">
-            <p class="heading"><i18n path="home.stats.played" /></p>
-            <p class="title">{{userStats.played}}</p>
-          </div>
-
-          <div class="column has-text-centered">
-            <p class="heading"><i18n path="home.stats.attended" /></p>
-            <p class="title">{{userStats.attended}}</p>
-          </div>
-
-          <div class="column has-text-centered" v-if="userStats.most_played.count > 0">
-            <p class="heading"><i18n path="home.stats.most_played" /></p>
-            <p class="title">{{userStats.most_played.board_game.name}}</p>
-            <p>({{userStats.most_played.count}} <i18n path="home.stats.times" />)</p>
-          </div>
-
-          <div class="column has-text-centered" v-if="userStats.most_played.count > 0">
-            <p class="heading"><i18n path="home.stats.time_played" /></p>
-            <p class="title"><bgc-duration :duration="userStats.play_time" /></p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" v-if="userActivities">
-        <h2 class="subtitle"><i18n path="home.recent-activities" /></h2>
-        <activity-box v-for="index in userActivities.length" :key="index" :activity="userActivities[index-1]" />
+        <user-activity :user="currentUser" />
       </section>
     </div>
   </div>
@@ -70,9 +39,8 @@
 <script>
 import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
-import ActivityBox from '@/components/activities/ActivityBox';
-import BgcDuration from '@/components/utils/BgcDuration';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
+import UserActivity from '@/components/user/UserActivity';
 
 export default {
   name: 'UserHomePage',
@@ -86,9 +54,8 @@ export default {
     };
   },
   components: {
-    ActivityBox,
-    BgcDuration,
-    HeroTitlePageLayout
+    HeroTitlePageLayout,
+    UserActivity
   },
   computed: {
     currentUser() {
@@ -109,25 +76,12 @@ export default {
 </script>
 
 <style scoped>
-  .ongoing-event-message {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
+.ongoing-event-message {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
 
-  .hero-smile {
-    font-size: 25px;
-  }
-
-  .button {
-    margin-top: 20px;
-  }
-
-  .section {
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
-
-  .column > .title {
-    margin-bottom: 5px;
-  }
+.hero-smile {
+  font-size: 25px;
+}
 </style>
