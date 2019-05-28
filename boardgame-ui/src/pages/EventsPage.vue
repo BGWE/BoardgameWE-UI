@@ -12,7 +12,7 @@
           </div>
         </div>
 
-        <b-collapse class="eventList" v-if="currentEvents" :open="true" aria-id="activeEventsId">
+        <b-collapse class="eventList" v-if="currentEvents()" :open="true" aria-id="activeEventsId">
           <div slot="trigger" slot-scope="props" role="button" aria-controls="activeEventsId">
             <h2 class="collapse-trigger-content">
               Active events <span class="icon is-small"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
@@ -20,21 +20,21 @@
           </div>
 
           <div class="columns events is-multiline">
-            <div class="column is-one-quarter" v-for="event in currentEvents" :key="event.id">
-              <EventCard :event="event" :attended-events="attendedEvents"/>
+            <div class="column is-one-quarter" v-for="event in currentEvents()" :key="event.id">
+              <EventCard :event="event" :attended-events.sync="attendedEvents"/>
             </div>
           </div>
         </b-collapse>
 
-        <b-collapse class="eventList" v-if="pastEvents" :open="false" aria-id="pastEventsId">
+        <b-collapse class="eventList" v-if="pastEvents()" :open="false" aria-id="pastEventsId">
           <div slot="trigger" slot-scope="props" role="button" aria-controls="pastEventsId">
             <h2 class="collapse-trigger-content">
               Past events <span class="icon is-small"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
             </h2>
           </div>
           <div class="columns events is-multiline" >
-            <div class="column is-one-quarter" v-for="event in pastEvents" :key="event.id">
-              <EventCard :event="event" :attended-events="attendedEvents"/>
+            <div class="column is-one-quarter" v-for="event in pastEvents()" :key="event.id">
+              <EventCard :event="event" :attended-events.sync="attendedEvents"/>
             </div>
           </div>
         </b-collapse>
@@ -56,6 +56,7 @@ export default {
     HeroTitlePageLayout
   },
 
+
   data() {
     return {
       isLoading: true,
@@ -65,33 +66,22 @@ export default {
   },
 
   methods: {
-    async reload() {
-      this.events = await Event.fetchAll();
-      this.attendedEvents = await Event.fetchAttendedEvents();
-      this.isLoading = false;
-    },
-
-    async joinEvent(eventId) {
-      await Event.subscribeWithId(eventId);
-      this.reload();
-    }
-  },
-
-  computed: {
     currentEvents() {
-      const today = moment().toISOString(true);
+      const today = moment().toISOString(false);
       return this.events.filter(event => event.end > today);
     },
 
     pastEvents() {
-      const today = moment().toISOString(true);
+      const today = moment().toISOString(false);
       return this.events.filter(event => event.end <= today);
     }
   },
 
   async created() {
     this.isLoading = true;
-    this.reload();
+    this.events = await Event.fetchAll();
+    this.attendedEvents = await Event.fetchAttendedEvents();
+    this.isLoading = false;
   }
 };
 </script>

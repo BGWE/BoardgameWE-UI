@@ -28,7 +28,7 @@
           <span>{{$t('events.view')}}</span>
         </router-link>
 
-        <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
+        <button class="button is-primary is-outlined" v-if="!isAttendedEvent" @click="joinEvent()">
           <span class="icon is-small">
             <i class="fas fa-sign-in-alt"></i>
           </span>
@@ -49,11 +49,18 @@
 </template>
 
 <script>
+import Event from '@/utils/api/Event';
 
 export default {
   props: {
-    event: Object,
+    event: Event,
     attendedEvents: Array
+  },
+
+  computed: {
+    isAttendedEvent() {
+      return this.attendedEvents.find(e => e.id === this.event.id);
+    }
   },
 
   methods: {
@@ -61,13 +68,9 @@ export default {
       return (userId === this.$store.state.currentUser.id);
     },
 
-    isAttendedEvent(eventId) {
-      return this.attendedEvents.find(e => e.id === eventId);
-    },
-
-    async joinEvent(eventId) {
-      await Event.subscribeWithId(eventId);
-      this.reload();
+    async joinEvent() {
+      await Event.subscribeWithId(this.event.id);
+      this.attendedEvents = await Event.fetchAttendedEvents();
     }
   }
 };
