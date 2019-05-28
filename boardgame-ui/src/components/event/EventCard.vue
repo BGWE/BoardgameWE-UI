@@ -70,7 +70,8 @@ export default {
 
     async joinEvent() {
       await Event.subscribeWithId(this.event.id);
-      this.attendedEvents = await Event.fetchAttendedEvents();
+      let attendedEvents = await Event.fetchAttendedEvents();
+      this.$emit('update:attendedEvents', attendedEvents);
     }
   }
 };
