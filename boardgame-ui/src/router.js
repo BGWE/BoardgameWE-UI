@@ -79,9 +79,19 @@ const routes = [
         component: require('./components/event/EventBoardGamesTab.vue').default,
       },
       {
+        name: 'add-game-event',
+        path: 'games/add',
+        component: require('./components/event/EventAddEditGame').default
+      },
+      {
+        name: 'edit-game-event',
+        path: 'games/edit/:idGame',
+        component: require('./components/event/EventAddEditGame').default
+      },
+      {
         name: 'event-games',
         path: 'games',
-        component: require('./components/event/EventGamesTab.vue').default,
+        component: require('./components/event/EventGamesTab.vue').default
       },
       {
         name: 'event-rankings',
@@ -97,6 +107,11 @@ const routes = [
         name: 'event-timers',
         path: 'timers',
         component: require('./components/event/EventTimersTab.vue').default,
+      },
+      {
+        name: 'add-event-timer',
+        path: 'timers/add',
+        component: require('./components/event/EventAddTimer').default
       }
     ]
   },
@@ -106,24 +121,34 @@ const routes = [
     component: require('./pages/EventCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
+  {
+    path: '/user/:id',
+    component: require('./pages/ProfilePage.vue').default,
+    beforeEnter: authenticatedOnly,
+    children: [
+      {
+        name: 'user-profile',
+        path: '/',
+        component: require('./components/user/UserActivity.vue').default
+      },
+      {
+        name: 'user-library',
+        path: 'library',
+        component: require('./components/user/UserLibrary.vue').default
+      },
+      {
+        name: 'user-wish-list',
+        path: 'wishlist',
+        component: require('./components/user/UserWishList.vue').default
+      }
+    ]
+  },
   // { // to be re-worked in version 3.1
   //   name: 'create-event-timer',
   //   path: '/event/:eventid/timer',
   //   component: require('./pages/TimerCreationPage.vue').default,
   //   beforeEnter: authenticatedOnly
   // },
-  {
-    name: 'library',
-    path: '/library',
-    component: require('./pages/LibraryPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
-  {
-    name: 'wishlist',
-    path: '/wishlist',
-    component: require('./pages/WishListPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
   // { // to be re-worked in version 3.1
   //   name: 'timers',
   //   path: '/timers',

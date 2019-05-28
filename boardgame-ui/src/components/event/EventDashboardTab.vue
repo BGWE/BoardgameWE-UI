@@ -40,7 +40,7 @@
           <p class="heading"><i18n path="event.stats.most_played" /></p>
           <div v-if="stats.most_played.board_game">
             <p class="title">{{stats.most_played.board_game.name}}</p>
-            <p>({{stats.most_played.count}} <i18n path="home.stats.times" />)</p>
+            <p>({{$tc('stats.count-times', stats.most_played.count)}})</p>
           </div>
           <div v-else>
             <p class="title"><i18n path="event.stats.none" /></p>
@@ -50,7 +50,7 @@
     </div>
 
     <div class="section" v-if="activities">
-      <h2 class="subtitle"><i18n path="home.recent-activities" /></h2>
+      <h2 class="subtitle"><i18n path="activity.title.recent-activities" /></h2>
       <activity-box v-for="index in activities.length" :key="index" :activity="activities[index-1]" />
     </div>
   </section>

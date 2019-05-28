@@ -23,14 +23,6 @@
                   {{$t('navbar.events')}}
                 </router-link>
 
-                <router-link :to="{name: 'library'}" class="navbar-item">
-                  {{$t('navbar.my-library')}}
-                </router-link>
-
-                <router-link :to="{name: 'wishlist'}" class="navbar-item">
-                  {{$t('navbar.my-wish-list')}}
-                </router-link>
-
                 <!--  to be re-worked in version 3.1
                 <router-link :to="{name: 'timers'}" class="navbar-item">
                   {{$t('navbar.timers')}}
@@ -45,20 +37,30 @@
               </div>
               <div v-else class="navbar-item has-dropdown is-hoverable">
                 <span class="navbar-link-wrapper">
-                  <a class="navbar-link navbar-link-custom">
+                  <router-link exact :to="{name: 'user-profile', params: {id: currentUser.id}}" class="navbar-link navbar-link-custom">
                     <span class="icon">
                       <i class="fas fa-user-circle"></i>
                     </span>
                     {{currentUser.name}} {{currentUser.surname[0]}}.
-                  </a>
+                  </router-link>
                 </span>
 
                 <div class="navbar-dropdown is-boxed">
+                  <router-link :to="{name: 'user-library', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-library')}}
+                  </router-link>
+                  <router-link :to="{name: 'user-wish-list', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-wish-list')}}
+                  </router-link>
+                  <template v-if="isUserAdmin">
+                    <hr class="navbar-divider">
+                    <router-link :to="{name: 'user-validation'}" class="navbar-item">
+                      {{$t('navbar.uservalidation')}}
+                    </router-link>
+                  </template>
+                  <hr class="navbar-divider">
                   <router-link :to="{name: 'preferences'}" class="navbar-item">
                     {{$t('navbar.preferences')}}
-                  </router-link>
-                  <router-link v-if="isUserAdmin" :to="{name: 'user-validation'}" class="navbar-item">
-                    {{$t('navbar.uservalidation')}}
                   </router-link>
                   <a @click="logout()" class="navbar-item">
                     {{$t('navbar.log-out')}}

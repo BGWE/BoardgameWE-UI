@@ -1,39 +1,40 @@
 <template>
   <div>
-    <hero-title-page-layout>
-      <h1 class="title">{{$t('wish-list.title')}}</h1>
-      <h2 class="subtitle">{{$t('wish-list.subtitle')}}</h2>
-    </hero-title-page-layout>
-    <div class="container">
-      <b-loading :is-full-page="false" :active="loading"></b-loading>
-      <div class="section" v-if="!loading">
-        <board-game-list
-          :board-games="boardGames"
-          :allBelongToUser="true"
-          :addFromLibrary="true"
-          @add="addBoardGame"
-          @delete="deleteBoardGame"
-        />
-      </div>
-    </div>
+    <b-loading :is-full-page="false" :active="loading" />
+    <template v-if="!loading">
+      <b-message type="is-info" has-icon icon-size="is-small">
+        {{ $t('wish-list.explanation.' + (isCurrentUserProfile ? 'current-user' : 'other-user'), {user: user.name}) }}
+      </b-message>
+      <board-game-list
+        :boardGames="boardGames"
+        :allBelongToUser="isCurrentUserProfile"
+        :canAdd="isCurrentUserProfile"
+        :addFromLibrary="true"
+        @add="addBoardGame"
+        @delete="deleteBoardGame"
+      />
+    </template>
   </div>
 </template>
 
 <script>
-import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import BoardGameList from '@/components/board_games/BoardGameList';
 import WishList from '@/utils/api/WishList';
+import User from '@/utils/api/User';
 
 export default {
+  props: {
+    user: User,
+    isCurrentUserProfile: Boolean
+  },
   components: {
-    HeroTitlePageLayout,
     BoardGameList
   },
   data() {
     return {
       loading: true,
-      wishListBoardGames: null,
-      wishList: new WishList()
+      wishList: null,
+      wishListBoardGames: null
     };
   },
   computed: {
@@ -80,6 +81,7 @@ export default {
     }
   },
   async created() {
+    this.wishList = new WishList(!this.isCurrentUserProfile ? this.user.id : null);
     this.wishListBoardGames = await this.wishList.fetchBoardGames();
     this.loading = false;
   }

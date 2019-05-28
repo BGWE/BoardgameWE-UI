@@ -120,6 +120,7 @@ export default {
     }
     else {
       this.event = new Event();
+      this.event.description = '';
       this.event.hide_rankings = false;
     }
   },

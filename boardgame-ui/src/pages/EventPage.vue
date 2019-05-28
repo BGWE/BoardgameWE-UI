@@ -1,6 +1,6 @@
 <template>
   <div v-if="event">
-    <hero-title-page-layout>
+    <hero-title-page-layout :tabs="tabs">
       <h1 class="title">
         {{event.name}}
         </h1>
@@ -9,37 +9,6 @@
         from <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.start" />
         to <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.end" />
       </h2>
-      <template #footer>
-        <nav class="tabs is-boxed">
-          <div class="container">
-            <ul>
-              <router-link :to="{name: 'event-dashboard'}" tag="li">
-                <a class="navbar-item">{{$t('event.tab.dashboard')}}</a>
-              </router-link>
-
-              <router-link :to="{name: 'event-board-games'}" tag="li">
-                <a class="navbar-item">{{$t('event.tab.boardgames')}}</a>
-              </router-link>
-
-              <router-link :to="{name: 'event-games'}" tag="li">
-                <a class="navbar-item">{{$t('event.tab.games')}}</a>
-              </router-link>
-
-              <router-link v-if="!event.hide_rankings" :to="{name: 'event-rankings'}" tag="li">
-                <a class="navbar-item">{{$t('event.tab.rankings')}}</a>
-              </router-link>
-
-              <router-link :to="{name: 'event-matchmaking'}" tag="li">
-                <a class="navbar-item">{{$t('event.tab.matchmaking')}}</a>
-              </router-link>
-
-              <router-link :to="{name: 'event-timers'}" tag="li">
-                <a class="navbar-item">{{$t('event.tab.timers')}}</a>
-              </router-link>
-            </ul>
-          </div>
-        </nav>
-      </template>
     </hero-title-page-layout>
 
     <div class="container">
@@ -66,6 +35,16 @@ export default {
   },
 
   computed: {
+    tabs() {
+      return [
+        {name: 'event-dashboard', text: this.$t('event.tab.dashboard')},
+        {name: 'event-board-games', text: this.$t('event.tab.boardgames')},
+        {name: 'event-games', text: this.$t('event.tab.games')},
+        ...(event && !event.hide_rankings ? [{name: 'event-rankings', text: this.$t('event.tab.rankings')}] : []),
+        {name: 'event-matchmaking', text: this.$t('event.tab.matchmaking')},
+        {name: 'event-timers', text: this.$t('event.tab.timers')}
+      ];
+    },
     currentUser() {
       return this.$store.state.currentUser;
     },
