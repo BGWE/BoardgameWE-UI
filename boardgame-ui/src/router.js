@@ -112,6 +112,11 @@ const routes = [
         name: 'add-event-timer',
         path: 'timers/add',
         component: require('./components/event/EventAddTimer').default
+      },
+      {
+        name: 'event-attendees',
+        path: 'attendees',
+        component: require('./components/event/EventAttendees').default
       }
     ]
   },
