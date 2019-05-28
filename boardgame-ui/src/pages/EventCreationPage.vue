@@ -17,10 +17,8 @@
             <b-input v-model.trim="event.location" name="location" v-validate="'required'"></b-input>
           </b-field>
 
-          <b-field horizontal :label="$t('event.edition.description')"
-                  :type="{'is-danger': errors.has('form-eventCreation.description')}"
-                  :message="errors.first('form-eventCreation.description')">
-            <b-input v-model.trim="event.description" name="description" v-validate="'required'" maxlength="200" type="textarea"></b-input>
+          <b-field horizontal :label="$t('event.edition.description')">
+            <b-input v-model.trim="event.description" name="description" maxlength="200" type="textarea"></b-input>
           </b-field>
 
           <b-field horizontal
@@ -69,8 +67,9 @@ export default {
   data() {
     return {
       event: null,
+      editing: false,
       startDate: null,
-      endDate: null,
+      endDate: null
     };
   },
 
@@ -114,12 +113,14 @@ export default {
 
   async created() {
     if (this.$route.params.eventid) {
+      this.editing = true;
       this.event = await Event.fetch(this.$route.params.eventid);
       this.startDate = this.formatISO8601StringAsDate(this.event.start);
       this.endDate = this.formatISO8601StringAsDate(this.event.end);
     }
     else {
       this.event = new Event();
+      this.event.description = '';
       this.event.hide_rankings = false;
     }
   },

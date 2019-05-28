@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <h1 class="title">{{$t(editGame ? 'edit-game.title' : 'add-game.title')}}</h1>
+    <h1 class="title">{{$t(idGame ? 'edit-game.title' : 'add-game.title')}}</h1>
     <b-loading :active="!game" :is-full-page="false" />
     <form v-if="game" @submit.prevent="save()">
       <b-field
@@ -98,7 +98,7 @@
       </table>
 
       <div class="buttons is-right">
-        <button class="button" type="button" @click="$emit('close')">{{$t('button.cancel')}}</button>
+        <button class="button" type="button" @click="$router.go(-1)">{{$t('button.cancel')}}</button>
         <button class="button is-primary">{{$t('button.save')}}</button>
       </div>
     </form>
@@ -107,6 +107,8 @@
 
 <script>
 import Game, {GameRankingMethods} from '@/utils/api/Game';
+import Timer from '@/utils/api/Timer';
+import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 
 export default {
@@ -114,8 +116,7 @@ export default {
     UserAutocomplete
   },
   props: {
-    event: Object,
-    editGame: Object
+    event: Event,
   },
   data() {
     return {
@@ -130,6 +131,12 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
+    },
+    idGame() {
+      return this.$route.params.idGame;
+    },
+    idTimer() {
+      return this.$route.query.idTimer;
     },
     boardGames() {
       if(!this.boardGamesLinks) {
@@ -182,6 +189,13 @@ export default {
     }
   },
   methods: {
+    setTimeFromDuration(duration) { // arg duration to be provided in minutes
+      duration = Math.round(duration / 15) * 15; // get multiple of 15 minutes
+      let time = new Date();
+      time.setHours(Math.floor(duration / 60));
+      time.setMinutes(duration % 60);
+      this.time = time;
+    },
     selectBoardGame(option) {
       this.game.id_board_game = option ? option.id : null;
     },
@@ -226,7 +240,7 @@ export default {
           type: 'is-success',
           position: 'is-bottom'
         });
-        this.$emit('addGame', this.game);
+        this.$router.push({name: 'event-games'});
       }
       catch(error) {
         console.log(error);
@@ -246,10 +260,8 @@ export default {
     minTime.setMinutes(15);
     this.minTime = minTime;
 
-    let time = new Date();
-
-    if(this.editGame) {
-      this.game = this.editGame.clone();
+    if(this.idGame) {
+      this.game = await Game.fetch(this.idGame);
 
       this.searchString = this.game.board_game.name;
 
@@ -258,22 +270,37 @@ export default {
         this.players.push({user: player.user, score});
       });
 
-      time.setHours(Math.floor(this.game.duration / 60));
-      time.setMinutes(this.game.duration % 60);
+      this.setTimeFromDuration(this.game.duration);
     }
     else {
-      this.game = new Game({
+      let gameData = {
         id_event: this.event.id,
         ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER
-      });
+      };
 
-      this.players.push({user: this.currentUser, score: null});
+      if(this.idTimer) {
+        const timer = await Timer.fetch(this.idTimer);
 
-      time.setHours(0);
-      time.setMinutes(30);
+        this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
+
+        gameData.id_timer = this.idTimer;
+        if(timer.board_game) {
+          gameData.id_board_game = timer.id_board_game;
+          this.searchString = timer.board_game.name;
+        }
+
+        timer.player_timers.forEach(p => {
+          this.players.push({ user: p.user, name: p.name, score: null });
+        });
+      }
+      else {
+        this.setTimeFromDuration(30); // default duration: 30 minutes
+        this.players.push({user: this.currentUser, score: null});
+      }
+
+      this.game = new Game(gameData);
     }
 
-    this.time = time;
   }
 };
 </script>

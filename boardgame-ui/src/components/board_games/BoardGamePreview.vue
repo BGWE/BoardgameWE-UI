@@ -1,48 +1,28 @@
 <template>
-<div :class="{'mobile-vertical': mobileVertical}">
-  <div class="card vertical">
-    <div class="card-image">
-      <div v-if="count > 1" class="count" :title="$t('boardgame.count-copies', {count})">
-        {{count}}
-      </div>
-      <wish-list-count v-else-if="wishCount" :count="wishCount" class="wishlist-count" />
-      <span v-if="boardGame.providedByOther" :title="$t('boardgame.provided-by-other')" class="icon provided">
-        <i class="fa fa-check"></i>
-      </span>
-      <figure
-        class="image is-3by2 background"
-        :class="{provided: providedByOther}"
-        :style="{backgroundImage: `url('${boardGame.image}')`}">
-      </figure>
+<div class="card" :class="{'mobile-vertical': mobileVertical}">
+  <div class="card-image">
+    <div v-if="count > 1" class="count" :title="$t('boardgame.count-copies', {count})">
+      {{count}}
     </div>
-    <div class="card-content">
-      <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
-      <p class="board-game-name has-text-centered">
-        <router-link :to="{name: 'board-game', params: {id: boardGame.id}}">{{boardGame.name}}</router-link>
-      </p>
-      <p class="board-game-year has-text-centered">({{boardGame.year_published}})</p>
-      <div class="board-game-slot"><slot></slot></div>
-    </div>
+    <wish-list-count v-else-if="wishCount" :count="wishCount" class="wishlist-count" />
+    <span v-if="boardGame.providedByOther" :title="$t('boardgame.provided-by-other')" class="icon provided">
+      <i class="fa fa-check"></i>
+    </span>
+    <figure
+      class="image is-3by2 background"
+      :class="{provided: providedByOther}"
+      :style="{backgroundImage: `url('${boardGame.image}')`}">
+    </figure>
   </div>
-  <div class="card horizontal">
-    <div class="card-content">
-      <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
-      <div class="columns is-mobile">
-        <div class="column is-narrow">
-          <figure class="image background is-80x80 is-rounded" :style="{backgroundImage: `url('${boardGame.image}')`}"></figure>
-        </div>
-        <div class="column vertical-center">
-          <p>
-            <router-link :to="{name: 'board-game', params: {id: boardGame.id}}">{{boardGame.name}}</router-link>
-          </p>
-          <p class="board-game-year">({{boardGame.year_published}})</p>
-          <div v-if="count > 1" class="tags has-addons" :title="$t('boardgame.count-copies', {count})">
-            <span class="tag is-primary"><i class="fas fa-copy"></i></span>
-            <span class="tag is-light">{{count}}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="card-content">
+    <a class="delete is-small" v-if="deleteButton" @click="$emit('delete')"></a>
+    <p class="board-game-name">
+      <router-link :to="{name: 'board-game', params: {id: boardGame.id}}" :title="boardGame.name">
+        {{boardGame.name}}
+      </router-link>
+    </p>
+    <p class="board-game-year">({{boardGame.year_published}})</p>
+    <div class="board-game-slot"><slot></slot></div>
   </div>
 </div>
 </template>
@@ -83,10 +63,12 @@ figure.provided {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: center;
 }
 
 .board-game-year {
   font-size: 0.75em;
+  text-align: center;
 }
 
 .card-image {
@@ -146,7 +128,7 @@ figure.provided {
   margin-top: 0.5em;
 }
 
-.is-small .card {
+.is-small.card {
   .card-content {
     padding: 0.25em 0.75em;
   }
@@ -164,29 +146,35 @@ figure.provided {
   }
 }
 
-.vertical-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+@include mobile {
+  .card:not(.mobile-vertical) {
+    display: flex;
+    flex-direction: row;
+    padding: 0.75em 1.5em;
 
-.tags {
-  margin-top: 0.75em;
-}
+    figure {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+    }
 
-@include desktop {
-  .card.horizontal {
-    display: none;
-  }
-}
+    .card-image {
+      border-bottom: none;
+    }
 
-@include touch {
-  div:not(.mobile-vertical) > .card.vertical {
-    display: none;
-  }
+    .card-content {
+      flex: 1;
+      text-align: left !important;
+      position: static;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-  .mobile-vertical .card.horizontal {
-    display: none;
+    .board-game-name, .board-game-year {
+      text-align: left;
+      white-space: initial;
+    }
   }
 }
 </style>

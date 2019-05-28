@@ -4,8 +4,8 @@
     <section v-if="user" class="section">
       <div class="box">
         <h1 class="title"> {{ $t('login.title') }} </h1>
-        <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
-        <p v-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
+        <p v-if="error" class="error">{{error}}</p>
+        <p v-else-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
 
         <form @submit.prevent="login">
           <b-field  :label="$t('label.username')"
@@ -54,7 +54,7 @@ export default {
       user : null,
       confirmPassword:'',
       forgotPasswordEmail: '',
-      error: false,
+      error: null,
       isLoading: true
     };
   },
@@ -88,7 +88,18 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.error = true;
+        if(!error.response || !error.response.status) {
+          this.error = this.$t('error.unexpected');
+        }
+        else if(error.response.status === 403) {
+          this.error = this.$t('error.account-not-validated');
+        }
+        else if(error.response.status === 401) {
+          this.error = this.$t('error.invalid-credentials');
+        }
+        else {
+          this.error = this.$t('error.unexpected');
+        }
         this.isLoading = false;
       }
     },
@@ -127,6 +138,7 @@ export default {
 
 .error {
   color: red;
+  margin-bottom: 0.5em;
 }
 
 .forgot-password-box {
