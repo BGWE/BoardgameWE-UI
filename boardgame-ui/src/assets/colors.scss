@@ -1,0 +1,23 @@
+@import "~bulma/sass/utilities/_all";
+
+// Set your colors
+$primary: #E66E50;
+$primary-invert: findColorInvert($primary);
+
+$secondary: #27475B;
+$dark-secondary: #1F3949;
+$secondary-invert: findColorInvert($primary);
+
+// Links
+$link: $secondary;
+$link-invert: $secondary-invert;
+$link-focus-border: $link;
+
+$custom_colors: (
+    "primary": ($primary, $primary-invert),
+    "secondary": ($secondary, $secondary-invert),
+    "dark-secondary": ($dark-secondary, $secondary-invert),
+    "link": ($link, $link-invert)
+);
+
+$colors: map-merge($colors, $custom_colors);
