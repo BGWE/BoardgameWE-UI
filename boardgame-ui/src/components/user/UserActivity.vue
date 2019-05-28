@@ -5,28 +5,28 @@
       <div class="columns stats">
         <div class="column has-text-centered">
           <p class="heading">{{$t('stats.owned')}}</p>
-          <p class="subtitle">{{stats.owned}}</p>
+          <p class="title">{{stats.owned}}</p>
         </div>
 
         <div class="column has-text-centered">
           <p class="heading">{{$t('stats.played')}}</p>
-          <p class="subtitle">{{stats.played}}</p>
+          <p class="title">{{stats.played}}</p>
         </div>
 
         <div class="column has-text-centered">
           <p class="heading">{{$t('stats.attended')}}</p>
-          <p class="subtitle">{{stats.attended}}</p>
+          <p class="title">{{stats.attended}}</p>
         </div>
 
         <div class="column has-text-centered" v-if="stats.most_played.count > 0">
           <p class="heading">{{$t('stats.most_played')}}</p>
-          <p class="subtitle">{{stats.most_played.board_game.name}}</p>
+          <p class="title">{{stats.most_played.board_game.name}}</p>
           <p>({{$tc('stats.count-times', stats.most_played.count)}})</p>
         </div>
 
         <div class="column has-text-centered" v-if="stats.most_played.count > 0">
           <p class="heading">{{$t('stats.time_played')}}</p>
-          <p class="subtitle"><bgc-duration :duration="stats.play_time" /></p>
+          <p class="title"><bgc-duration :duration="stats.play_time" /></p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export default {
 </script>
 
 <style scoped>
-.stats .subtitle {
+.stats .title {
   margin-bottom: 0.25rem;
 }
 </style>
