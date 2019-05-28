@@ -1,15 +1,19 @@
 <template>
   <div>
     <b-loading :is-full-page="false" :active="loading" />
-    <board-game-list
-      v-if="!loading"
-      :boardGames="boardGames"
-      :allBelongToUser="isCurrentUserProfile"
-      :canAdd="isCurrentUserProfile"
-      :addFromLibrary="true"
-      @add="addBoardGame"
-      @delete="deleteBoardGame"
-    />
+    <template v-if="!loading">
+      <b-message type="is-info" has-icon icon-size="is-small">
+        {{ $t('wish-list.explanation.' + (isCurrentUserProfile ? 'current-user' : 'other-user'), {user: user.name}) }}
+      </b-message>
+      <board-game-list
+        :boardGames="boardGames"
+        :allBelongToUser="isCurrentUserProfile"
+        :canAdd="isCurrentUserProfile"
+        :addFromLibrary="true"
+        @add="addBoardGame"
+        @delete="deleteBoardGame"
+      />
+    </template>
   </div>
 </template>
 

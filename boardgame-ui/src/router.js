@@ -134,18 +134,6 @@ const routes = [
   //   component: require('./pages/TimerCreationPage.vue').default,
   //   beforeEnter: authenticatedOnly
   // },
-  {
-    name: 'library',
-    path: '/library',
-    component: require('./pages/LibraryPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
-  {
-    name: 'wishlist',
-    path: '/wishlist',
-    component: require('./pages/WishListPage.vue').default,
-    beforeEnter: authenticatedOnly
-  },
   // { // to be re-worked in version 3.1
   //   name: 'timers',
   //   path: '/timers',
