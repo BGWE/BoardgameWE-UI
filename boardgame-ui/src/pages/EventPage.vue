@@ -40,7 +40,7 @@ export default {
         {name: 'event-dashboard', text: this.$t('event.tab.dashboard')},
         {name: 'event-board-games', text: this.$t('event.tab.boardgames')},
         {name: 'event-games', text: this.$t('event.tab.games')},
-        ...(event && !event.hide_rankings ? [{name: 'event-rankings', text: this.$t('event.tab.rankings')}] : []),
+        ...(this.event && !this.event.hide_rankings ? [{name: 'event-rankings', text: this.$t('event.tab.rankings')}] : []),
         {name: 'event-matchmaking', text: this.$t('event.tab.matchmaking')},
         {name: 'event-timers', text: this.$t('event.tab.timers')}
       ];
