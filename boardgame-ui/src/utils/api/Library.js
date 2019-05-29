@@ -26,7 +26,7 @@ export default class Library {
     if(this.userId != null) {
       throw new Error('Cannot add games in another user library');
     }
-    let {data} = await axios.post(`user/library_game/bgg/${bggId}`);
+    let {data} = await axios.post(`user/current/library_game/bgg/${bggId}`);
     return data;
   }
 
@@ -61,7 +61,7 @@ export default class Library {
       return `user/${this.userId}/library_games`;
     }
     else {
-      return 'user/library_games';
+      return 'user/current/library_games';
     }
   }
 }

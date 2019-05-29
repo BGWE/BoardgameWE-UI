@@ -26,7 +26,7 @@ export default class WishList {
     if(this.userId != null) {
       throw new Error('Cannot add games in another user wish list');
     }
-    let {data} = await axios.post(`user/wish_to_play/bgg/${bggId}`);
+    let {data} = await axios.post(`user/current/wish_to_play/bgg/${bggId}`);
     return data;
   }
 
@@ -61,7 +61,7 @@ export default class WishList {
       return `user/${this.userId}/wish_to_play`;
     }
     else {
-      return 'user/wish_to_play';
+      return 'user/current/wish_to_play';
     }
   }
 }
