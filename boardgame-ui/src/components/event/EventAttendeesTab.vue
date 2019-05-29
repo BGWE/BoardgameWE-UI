@@ -3,10 +3,10 @@
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <div class="columns" v-if="!loading">
       <div class="column is-full">
-        <p v-if="isAttendeeOrCreator" class="has-text-right limited-width">
+        <!-- <p v-if="isAttendeeOrCreator" class="has-text-right limited-width"> -->
           <!-- Disabled because page not yet implemented -->
-          <router-link disabled :to="{name: 'add-attendees'}" class="button is-primary"> {{$t('event.attendees.invite')}} </router-link>
-        </p>
+          <!-- <router-link disabled :to="{name: 'add-attendees'}" class="button is-primary"> {{$t('event.attendees.invite')}} </router-link> -->
+        <!-- </p> -->
 
         <section v-if="event.attendees" class="section limited-width">
           <b-table :data="event.attendees" striped>

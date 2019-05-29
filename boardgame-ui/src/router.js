@@ -116,7 +116,7 @@ const routes = [
       {
         name: 'event-attendees',
         path: 'attendees',
-        component: require('./components/event/EventAttendees').default
+        component: require('./components/event/EventAttendeesTab').default
       }
     ]
   },
