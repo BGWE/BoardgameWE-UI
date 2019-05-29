@@ -253,6 +253,7 @@ matchmaking.no-result,Could not find any relevant matchmaking for you. Consider 
 matchmaking.info-message,"This page lists the games of your wish list available at this event, and to which other event attendees want to play",
 matchmaking.some-games-other-attendees-want-to-play,Other on-demand board games,
 matchmaking.other-attendees,Also interested in playing,
+matchmaking.played,Played,
 profile.tab.dashboard,Dashboard,
 profile.tab.library,Library,
 profile.tab.wish-list,Wish list,

@@ -18,9 +18,20 @@
                   <figure class="image background is-80x80 is-rounded" :style="{backgroundImage: `url('${board_game.thumbnail}')`}"></figure>
                 </div>
                 <div class="column">
-                  <p>
-                    <router-link :to="{name: 'board-game', params: {id: board_game.id}}">{{board_game.name}}</router-link>
-                  </p>
+                  <div class="level">
+                    <div class="level-left">
+                      <p>
+                        <router-link :to="{name: 'board-game', params: {id: board_game.id}}">{{board_game.name}}</router-link>
+                      </p>
+                    </div>
+                    <div class="level-right">
+                      <button
+                        class="button is-small is-primary"
+                        @click="isPlayed(board_game)">
+                        {{$t('matchmaking.played')}}
+                      </button>
+                    </div>
+                  </div>
                   <hr>
                   <p>
                     <span class="list-others">{{$t('matchmaking.other-attendees')}}:</span>
@@ -50,6 +61,7 @@
 
 <script>
 import BoardGamePreview from '@/components/board_games/BoardGamePreview';
+import WishList from '@/utils/api/WishList';
 
 export default {
   props: {
@@ -64,6 +76,15 @@ export default {
       wishedByOthers: null
     };
   },
+  computed: {
+    currentUser() {
+      return this.$store.state.currentUser;
+    }
+  },
+  async created() {
+    await this.fetchMatchmaking();
+    await this.fetchWishedByOthers();
+  },
   methods: {
     async fetchMatchmaking() {
       this.matchmakings = await this.event.fetchMatchmaking();
@@ -72,11 +93,13 @@ export default {
       let wishes = await this.event.fetchWishedBoardGames({exclude_current: true, provided_games_only: true});
       let bgIdsMatchmakings = this.matchmakings.map(elem => elem.board_game.id);
       this.wishedByOthers = wishes.filter(wish => !bgIdsMatchmakings.includes(wish.id_board_game)); // display only games not present in matchmakings
+    },
+    async isPlayed(board_game) {
+      let wishlist = new WishList();
+      await wishlist.removeBoardGames([board_game.id]);
+      await this.fetchMatchmaking();
+      await this.fetchWishedByOthers();
     }
-  },
-  async created() {
-    await this.fetchMatchmaking();
-    await this.fetchWishedByOthers();
   }
 };
 </script>
