@@ -8,25 +8,41 @@
           <router-link disabled :to="{name: 'add-attendees'}" class="button is-primary"> {{$t('event.attendees.invite')}} </router-link>
         </p>
 
-        <div class="limited-width">
-          <router-link
-            v-for="attendee in event.attendees"
-            :key="attendee.user.id"
-            :to="{name: 'user-profile', params: {id: attendee.user.id}}">
-              <div class="card user-card">
-                <div class="card-content">
-                  {{attendee.user.name}}
-                </div>
-                <footer class="card-footer">
-                  <p class="card-footer-item">
-                    <i18n path="event.attendees.joined">
-                      <bgc-datetime place="datetime" :datetime="attendee.createdAt"></bgc-datetime>
-                    </i18n>
-                  </p>
-                </footer>
-              </div>
-          </router-link>
-        </div>
+        <section v-if="event.attendees" class="section limited-width">
+          <b-table :data="event.attendees" striped>
+            <template slot-scope="props">
+              <b-table-column field="username" :label="$t('label.name')">
+                {{ props.row.user.name }}
+              </b-table-column>
+
+              <b-table-column field="username" :label="$t('label.surname')">
+                {{ props.row.user.surname }}
+              </b-table-column>
+
+              <b-table-column field="username" :label="$t('label.username')">
+                {{ props.row.user.username }}
+              </b-table-column>
+
+              <b-table-column field="createdAt" :label="$t('event.attendees.joined-on')">
+                <bgc-datetime :datetime="props.row.createdAt"></bgc-datetime>
+              </b-table-column>
+
+              <b-table-column field="createdAt" :label="$t('event.attendees.host')">
+                <span class='tag is-success' v-if="event.id_creator == props.row.user.id">
+                    <i18n path='global.yes'></i18n>
+                </span>
+              </b-table-column>
+
+              <b-table-column field="username" :label="$t('label.profile')" centered>
+                <router-link :to="{name: 'user-profile', params: {id: props.row.user.id}}">
+                  <span class="icon">
+                    <i class="far fa-user-circle"></i>
+                  </span>
+                </router-link>
+              </b-table-column>
+            </template>
+          </b-table>
+        </section>
       </div>
     </div>
   </div>
@@ -61,7 +77,7 @@ export default {
 
 <style scoped>
 .limited-width {
-  max-width: 500px;
+  max-width: 600px;
   margin: auto;
   margin-bottom: 1em;
 }
