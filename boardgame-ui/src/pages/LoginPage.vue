@@ -28,11 +28,11 @@
           </p>
         </form>
 
-        <router-link tag="button" class="button is-light is-fullwidth" :to="{name: 'register'}">
+        <router-link tag="button" class="button is-light is-fullwidth has-top-padding" :to="{name: 'register'}">
           {{$t('button.toggleRegister')}}
         </router-link>
 
-        <div class="forgot-password-box has-text-link">
+        <div class="has-top-padding has-text-link">
           <router-link :to="{name: 'forgot-password'}">
             {{$t('login.link.forgot-password')}}
           </router-link>
@@ -141,7 +141,7 @@ export default {
   margin-bottom: 0.5em;
 }
 
-.forgot-password-box {
+.has-top-padding {
   margin-top: 1em;
 }
 </style>

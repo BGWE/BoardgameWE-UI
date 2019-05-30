@@ -1,8 +1,8 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('events.title')"/>
-
     <section class="container">
+      <b-loading :is-full-page="false" :active="isLoading"/>
       <div class="section">
         <div class="columns">
           <div class="column has-text-right">
@@ -12,57 +12,38 @@
           </div>
         </div>
 
-        <div class="columns events is-multiline" >
-          <div class="column is-one-quarter" v-for="event in events" :key="event.id">
-            <div class="card">
-              <header class="card-header">
-                <p class="card-header-title">
-                  {{event.name}}
-                </p>
-              </header>
-              <div class="card-content">
-                <div class="content">
-                  {{event.description}}
-                </div>
-              </div>
-              <div class="location">
-                <span class="icon">
-                  <i class="fas fa-location-arrow"></i>
-                </span>
-                <span class="is-size-6 location-text">
-                  {{event.location}}
-                </span>
-              </div>
-              <footer class="card-footer">
-                <div class="buttons">
-                  <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
-                    <span class="icon is-small">
-                      <i class="far fa-eye"></i>
-                    </span>
-
-                    <span>{{$t('events.view')}}</span>
-                  </router-link>
-
-                  <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
-                    <span class="icon is-small">
-                      <i class="fas fa-sign-in-alt"></i>
-                    </span>
-
-                    <span>{{$t('events.join')}}</span>
-                  </button>
-
-                  <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
-                    <span class="icon is-small">
-                      <i class="far fa-edit"></i>
-                    </span>
-
-                    <span>{{$t('events.edit')}}</span>
-                  </router-link>
-                </div>
-              </footer>
+        <section class="section">
+          <b-collapse class="eventList" :open="true" aria-id="activeEventsId">
+            <div slot="trigger" slot-scope="props" role="button" aria-controls="activeEventsId">
+              <h2 class="collapse-trigger-content subtitle">
+                {{$t("events.active")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i></span>
+              </h2>
             </div>
-          </div>
-        </div>
+
+            <div v-if="currentEvents()" class="columns events is-multiline">
+              <div class="column is-one-quarter" v-for="event in currentEvents()" :key="event.id">
+                <EventCard :event="event" :attended-events.sync="attendedEvents"/>
+              </div>
+            </div>
+            <p v-else>Sorry, there is currently no active event but if you are feeling lonely you can always <router-link :to="{name: 'create-event'}">create a new one</router-link> :)</p>
+          </b-collapse>
+        </section>
+
+        <section class="section">
+          <b-collapse class="eventList" v-if="pastEvents()" :open="false" aria-id="pastEventsId">
+            <div slot="trigger" slot-scope="props" role="button" aria-controls="pastEventsId">
+              <h2 class="collapse-trigger-content subtitle">
+                {{$t("events.past")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i></span>
+              </h2>
+            </div>
+            <div class="columns events is-multiline" >
+              <div class="column is-one-quarter" v-for="event in pastEvents()" :key="event.id">
+                <EventCard class="past" :event="event" :attended-events.sync="attendedEvents"/>
+              </div>
+            </div>
+          </b-collapse>
+        </section>
+
       </div>
     </section>
   </div>
@@ -70,76 +51,59 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-
+import EventCard from '@/components/event/EventCard';
 import Event from '@/utils/api/Event';
+import moment from 'moment-timezone';
 
 export default {
   components: {
+    EventCard,
     HeroTitlePageLayout
   },
 
+
   data() {
     return {
+      isLoading: true,
       events: [],
       attendedEvents: []
     };
   },
 
   methods: {
-    async reload() {
-      this.events = await Event.fetchAll();
-      this.attendedEvents = await Event.fetchAttendedEvents();
+    currentEvents() {
+      const today = moment().toISOString(false);
+      return this.events.filter(event => event.end > today);
     },
 
-    isUserEventOwner(userId) {
-      return (userId === this.$store.state.currentUser.id);
-    },
-
-    isAttendedEvent(eventId) {
-      return this.attendedEvents.find(e => e.id == eventId);
-    },
-
-    async joinEvent(eventId) {
-      await Event.subscribeWithId(eventId);
-      this.reload();
+    pastEvents() {
+      const today = moment().toISOString(false);
+      return this.events.filter(event => event.end <= today);
     }
   },
 
   async created() {
-    this.reload();
+    this.events = await Event.fetchAll();
+    this.attendedEvents = await Event.fetchAttendedEvents();
+    this.isLoading = false;
   }
 };
 </script>
 
-<style lang="scss" scoped>
-@import "@/assets/colors.scss";
+<style scoped>
 .events .column {
   display: flex;
 }
-.card {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-.card-content {
-  flex-grow: 1;
-}
-.buttons {
-  margin: auto;
-  padding-top: 0.75em;
-  padding-bottom: 0.4em;
-  padding-left: 0.7em;
-}
-.location {
-  padding-left: 1.5em;
-  padding-right: 1.5em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  border-top: 1px solid $grey-lighter;
 
-  font-style: italic;
-
-  // color: $grey;
+.eventList {
+  margin-bottom: 1rem;
 }
-.location-text {}
+
+.collapse-trigger-content {
+  padding-bottom: 0.5rem;
+}
+
+.past {
+  color: grey;
+}
 </style>
