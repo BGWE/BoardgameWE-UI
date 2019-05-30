@@ -37,21 +37,6 @@ export default {
 </script>
 
 <style>
-.has-background-gold {
-  background-color: rgb(249, 223, 75) !important;
-}
-.has-background-silver {
-  background-color: rgb(192,192,192) !important;
-}
-.has-background-bronze {
-  background-color: rgb(205, 127, 50) !important;
-}
-
-.is-26x26 {
-  width: 26px;
-  height: 26px;
-}
-
 .page-container {
   position: relative;  
   min-height: 100vh;
