@@ -52,16 +52,16 @@
             <b-input v-model.trim="user.email" type="email" v-validate="'required|email'" name="email"/>
           </b-field>
 
-          <p class="control">
+          <div class="buttons">
             <button class="button is-primary is-fullwidth">
               {{ $t('button.register') }}
             </button>
-          </p>
+            <router-link class="button is-light is-fullwidth" :to="{name: 'login'}">
+              {{ $t('button.toggleLogin') }}
+            </router-link>
+          </div>
         </form>
 
-        <router-link tag="button" class="button is-light is-fullwidth" :to="{name: 'login'}">
-          {{ $t('button.toggleLogin') }}
-        </router-link>
 
       </div>
     </section>
