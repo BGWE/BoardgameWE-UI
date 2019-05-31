@@ -12,7 +12,9 @@
     </hero-title-page-layout>
 
     <div class="container">
-      <router-view :event="event" :isAttendee="isAttendee"></router-view>
+      <div class="section">
+        <router-view :event="event" :isAttendee="isAttendee"/>
+      </div>
     </div>
   </div>
 </template>
@@ -64,18 +66,6 @@ export default {
 </script>
 
 <style scoped>
-#event-level {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.tabwrapper {
-  position: relative;
-  min-height: 10em;
-  width: 90%;
-  margin: auto;
-}
-
 .hero-datetime {
   font-style: italic;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="tabwrapper">
+  <div>
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <template v-if="!loading">
       <board-game-list
