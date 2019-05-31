@@ -36,7 +36,7 @@
           <span>{{$t('events.join')}}</span>
         </button>
 
-        <router-link v-if="isUserEventOwner(event.id_creator)" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
+        <router-link v-if="isUserEventOwner" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
           <span class="icon is-small">
             <i class="far fa-edit"></i>
           </span>
@@ -60,14 +60,14 @@ export default {
   computed: {
     isAttendedEvent() {
       return this.attendedEvents.find(e => e.id === this.event.id);
-    }
+    },
+
+    isUserEventOwner() {
+      return this.event.id_creator === this.$store.state.currentUser.id;
+    },
   },
 
   methods: {
-    isUserEventOwner(userId) {
-      return (userId === this.$store.state.currentUser.id);
-    },
-
     async joinEvent() {
       await Event.subscribeWithId(this.event.id);
       let attendedEvents = await Event.fetchAttendedEvents();

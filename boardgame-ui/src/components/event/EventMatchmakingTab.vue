@@ -1,5 +1,5 @@
 <template>
-  <div class="tabwrapper">
+  <div>
     <b-loading :active="!matchmakings" :is-full-page="false" />
     <b-message type="is-info" has-icon icon-size="is-small">
       {{$t('matchmaking.info-message')}}
