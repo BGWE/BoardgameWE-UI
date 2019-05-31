@@ -21,16 +21,15 @@
             <b-input v-model="user.password" password-reveal type="password" v-validate="'required'" name="password"/>
           </b-field>
 
-          <p class="control">
+          <div class="buttons">
             <button class="button is-primary is-fullwidth">
               {{$t('button.login')}}
             </button>
-          </p>
+            <router-link class="button is-light is-fullwidth has-top-padding" :to="{name: 'register'}">
+              {{$t('button.toggleRegister')}}
+            </router-link>
+          </div>
         </form>
-
-        <router-link tag="button" class="button is-light is-fullwidth has-top-padding" :to="{name: 'register'}">
-          {{$t('button.toggleRegister')}}
-        </router-link>
 
         <div class="has-top-padding has-text-link">
           <router-link :to="{name: 'forgot-password'}">
