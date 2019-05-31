@@ -14,11 +14,11 @@
 
     <div class="container">
       <b-loading :is-full-page="false" :active.sync="isFetching"></b-loading>
-      <section class="section ongoing-event-message" v-if="ongoingEvent">
+      <section class="section ongoing-event-message" v-if="ongoingEvent && isOngoingEventMsgActive">
         <!-- <router-link tag="button" class="button is-large is-fullwidth" :to="{name: 'event', params: {eventid: ongoingEvent.id}}">
           <p>{{ongoingEvent.name}}</p> <span class="icon"><i class="fa fa-arrow-right"></i></span>
         </router-link> -->
-        <b-message :title="ongoingEvent.name" type="is-info" has-icon :active="ongoingEvent && isOngoingEventMsgActive" aria-close-label="Close message">
+        <b-message :title="ongoingEvent.name" type="is-info" has-icon :active.sync="isOngoingEventMsgActive" aria-close-label="Close message">
           <!-- <p></p> <span class="icon"><i class="fa fa-arrow-right"></i></span> -->
           <!-- This event is currently ongoing. Click <router-link :to="{name: 'event', params: {eventid: ongoingEvent.id}}">here</router-link> to view. -->
           <i18n path="home.ongoing-event">
