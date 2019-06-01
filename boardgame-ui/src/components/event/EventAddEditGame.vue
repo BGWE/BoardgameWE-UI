@@ -183,6 +183,7 @@ export default {
       this.players.forEach(player => player.score = null); // reinitialize scores
     },
     time() {
+      console.log(this.time);
       if(this.time < this.minTime) {
         this.time = this.minTime;
       }
