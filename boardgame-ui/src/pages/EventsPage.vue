@@ -20,23 +20,24 @@
               </h2>
             </div>
 
-            <div v-if="currentEvents()" class="columns events is-multiline">
+            <div v-if="currentEvents().length > 0" class="columns events is-multiline">
               <div class="column is-one-quarter" v-for="event in currentEvents()" :key="event.id">
                 <EventCard :event="event" :attended-events.sync="attendedEvents"/>
               </div>
             </div>
+
             <p v-else>Sorry, there is currently no active event but if you are feeling lonely you can always <router-link :to="{name: 'create-event'}">create a new one</router-link> :)</p>
           </b-collapse>
         </section>
 
         <section class="section">
-          <b-collapse class="eventList" v-if="pastEvents()" :open="false" aria-id="pastEventsId">
+          <b-collapse class="eventList" v-if="pastEvents().length > 0" :open="false" aria-id="pastEventsId">
             <div slot="trigger" slot-scope="props" role="button" aria-controls="pastEventsId">
               <h2 class="collapse-trigger-content subtitle">
                 {{$t("events.past")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i></span>
               </h2>
             </div>
-            <div class="columns events is-multiline" >
+            <div class="columns events is-multiline">
               <div class="column is-one-quarter" v-for="event in pastEvents()" :key="event.id">
                 <EventCard class="past" :event="event" :attended-events.sync="attendedEvents"/>
               </div>
@@ -73,7 +74,9 @@ export default {
   methods: {
     currentEvents() {
       const today = moment().toISOString(false);
-      return this.events.filter(event => event.end > today);
+      let filteredEvents = this.events.filter(event => event.end > today);
+      console.log(filteredEvents);
+      return filteredEvents;
     },
 
     pastEvents() {
