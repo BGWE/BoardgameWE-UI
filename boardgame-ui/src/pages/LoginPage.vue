@@ -25,7 +25,7 @@
             <button class="button is-primary is-fullwidth">
               {{$t('button.login')}}
             </button>
-            <router-link class="button is-light is-fullwidth has-top-padding" :to="{name: 'register'}">
+            <router-link class="button is-light is-fullwidth" :to="{name: 'register'}">
               {{$t('button.toggleRegister')}}
             </router-link>
           </div>
