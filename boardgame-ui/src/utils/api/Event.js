@@ -2,6 +2,13 @@ import Model from './Model';
 import axios from 'axios';
 import Game from './Game';
 
+/** Enum providing the game ranking methods */
+export const EventVisibility = Object.freeze({
+  SECRET: 'SECRET',
+  PRIVATE: 'PRIVATE',
+  PUBLIC: 'PUBLIC'
+});
+
 export default class Event extends Model {
   /** @inheritdoc */
   static get className() {
@@ -18,19 +25,25 @@ export default class Event extends Model {
     this.description = null;
     this.location = null;
     this.hide_rankings = false;
+    this.visibility = EventVisibility.SECRET;
+    this.attendees_can_edit = false;
+    this.user_can_join = false;
+    this.invite_required = true;
   }
 
-  static async fetchAll(ongoing, registered) {
+  static async fetchAll({ongoing, registered, visibilities}) {
     let urlParams = {};
 
-    if ((ongoing === undefined && registered !== undefined) ||
-        (ongoing !== undefined && registered === undefined)) {
-      console.log('FetchAll events - Both ongoing and registered URL parameters should be provided to filter the events.');
+    if (ongoing !== undefined) {
+      urlParams['ongoing'] = ongoing;
     }
 
-    else if(ongoing !== undefined && registered !== undefined) {
-      urlParams['ongoing'] = ongoing;
-      urlParams['registered'] = registered.join(',');
+    if (registered !== undefined) {
+      urlParams['registered'] = registered;
+    }
+
+    if (visibilities !== undefined) {
+      urlParams['visibility'] = visibilities;
     }
 
     return super.fetchAll(urlParams);
@@ -97,15 +110,6 @@ export default class Event extends Model {
 
   async removeAttendees(attendeesIds) {
     let {data} = await axios.delete(this.attendeesUri, {data: {users: attendeesIds}});
-    return data;
-  }
-
-  static get attendedEventsUri() {
-    return 'events/current';
-  }
-
-  static async fetchAttendedEvents() {
-    let {data} = await axios.get(Event.attendedEventsUri);
     return data;
   }
 

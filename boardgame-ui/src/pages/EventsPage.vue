@@ -23,6 +23,7 @@
               <div class="card-content">
                 <div class="content">
                   {{event.description}}
+                  <b-tag type="is-info"><i18n :path="visibilityToI18n(event.visibility)"/></b-tag>
                 </div>
               </div>
               <div class="location">
@@ -43,7 +44,7 @@
                     <span>{{$t('events.view')}}</span>
                   </router-link>
 
-                  <button class="button is-primary is-outlined" v-if="!isAttendedEvent(event.id)" @click="joinEvent(event.id)">
+                  <button class="button is-primary is-outlined" v-if="event.current.can_join" @click="joinEvent(event.id)">
                     <span class="icon is-small">
                       <i class="fas fa-sign-in-alt"></i>
                     </span>
@@ -70,8 +71,7 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-
-import Event from '@/utils/api/Event';
+import Event, {EventVisibility} from '@/utils/api/Event';
 
 export default {
   components: {
@@ -87,21 +87,24 @@ export default {
 
   methods: {
     async reload() {
-      this.events = await Event.fetchAll();
-      this.attendedEvents = await Event.fetchAttendedEvents();
+      this.events = await Event.fetchAll({});
     },
 
     isUserEventOwner(userId) {
       return (userId === this.$store.state.currentUser.id);
     },
 
-    isAttendedEvent(eventId) {
-      return this.attendedEvents.find(e => e.id == eventId);
-    },
-
     async joinEvent(eventId) {
       await Event.subscribeWithId(eventId);
       this.reload();
+    },
+
+    visibilityToI18n(visibility) {
+      return {
+        [EventVisibility.PUBLIC]: 'event.visibility.public',
+        [EventVisibility.PRIVATE]: 'event.visibility.private',
+        [EventVisibility.SECRET]: 'event.visibility.secret'
+      }[visibility];
     }
   },
 
