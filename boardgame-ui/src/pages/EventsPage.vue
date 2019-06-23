@@ -20,9 +20,9 @@
               </h2>
             </div>
 
-            <div v-if="currentEvents().length > 0" class="columns events is-multiline">
-              <div class="column is-one-quarter" v-for="event in currentEvents()" :key="event.id">
-                <EventCard :event="event" :attended-events.sync="attendedEvents"/>
+            <div v-if="currentEvents.length > 0" class="columns events is-multiline">
+              <div class="column is-one-quarter" v-for="event in currentEvents" :key="event.id">
+                <EventCard :event="event" @join:event="eventJoined" />
               </div>
             </div>
 
@@ -31,15 +31,15 @@
         </section>
 
         <section class="section">
-          <b-collapse class="eventList" v-if="pastEvents().length > 0" :open="false" aria-id="pastEventsId">
+          <b-collapse class="eventList" v-if="pastEvents.length > 0" :open="false" aria-id="pastEventsId">
             <div slot="trigger" slot-scope="props" role="button" aria-controls="pastEventsId">
               <h2 class="collapse-trigger-content subtitle">
                 {{$t("events.past")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i></span>
               </h2>
             </div>
             <div class="columns events is-multiline">
-              <div class="column is-one-quarter" v-for="event in pastEvents()" :key="event.id">
-                <EventCard class="past" :event="event" :attended-events.sync="attendedEvents"/>
+              <div class="column is-one-quarter" v-for="event in pastEvents" :key="event.id">
+                <EventCard class="past" :event="event" @join:event="eventJoined" />
               </div>
             </div>
           </b-collapse>
@@ -54,7 +54,7 @@
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import EventCard from '@/components/event/EventCard';
 import moment from 'moment-timezone';
-import Event, {EventVisibility} from '@/utils/api/Event';
+import Event from '@/utils/api/Event';
 
 export default {
   components: {
@@ -67,11 +67,10 @@ export default {
     return {
       isLoading: true,
       events: [],
-      attendedEvents: []
     };
   },
 
-  methods: {
+  computed: {
     currentEvents() {
       const today = moment().toISOString(false);
       let filteredEvents = this.events.filter(event => event.end > today);
@@ -82,20 +81,19 @@ export default {
     pastEvents() {
       const today = moment().toISOString(false);
       return this.events.filter(event => event.end <= today);
-    },
+    }
+  },
 
-    visibilityToI18n(visibility) {
-      return {
-        [EventVisibility.PUBLIC]: 'event.visibility.public',
-        [EventVisibility.PRIVATE]: 'event.visibility.private',
-        [EventVisibility.SECRET]: 'event.visibility.secret'
-      }[visibility];
+  methods: {
+    async eventJoined(/* eid */) {
+      this.isLoading = true;
+      this.events = await Event.fetchAll({});
+      this.isLoading = false;
     }
   },
 
   async created() {
-    this.events = await Event.fetchAll();
-    this.attendedEvents = await Event.fetchAttendedEvents();
+    this.events = await Event.fetchAll({});
     this.isLoading = false;
   }
 };
