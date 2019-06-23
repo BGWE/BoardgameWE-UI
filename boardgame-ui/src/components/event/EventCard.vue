@@ -66,12 +66,12 @@ export default {
 
   methods: {
     async join() {
-      await Event.subscribeWithId(this.event.id);
+      await Event.joinWithId(this.event.id);
       this.$emit('join:event', this.event.id);
     },
     async requestAccess() {
-      throw new Error('todo');
-      // this.$emit('request:event', this.event.id);
+      await this.event.sendJoinRequest();
+      this.$emit('request:event', this.event.id);
     },
     visibilityToI18n(visibility) {
       return {
