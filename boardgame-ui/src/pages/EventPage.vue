@@ -13,7 +13,7 @@
 
     <div class="container">
       <div class="section">
-        <router-view :event="event" :isAttendee="isAttendee"/>
+        <router-view :event="event"/>
       </div>
     </div>
   </div>
@@ -50,12 +50,6 @@ export default {
     },
     currentUser() {
       return this.$store.state.currentUser;
-    },
-    isAttendee() { // is current user attendee
-      if(!this.event) {
-        return false;
-      }
-      return this.event.attendees.some(attendee => attendee.id_user === this.currentUser.id);
     }
   },
 

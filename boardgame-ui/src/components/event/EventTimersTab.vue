@@ -3,7 +3,7 @@
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <div class="columns" v-if="!loading">
       <div class="column is-full">
-        <p v-if="isAttendee" class="has-text-right limited-width">
+        <p v-if="event.current.can_write" class="has-text-right limited-width">
           <router-link :to="{name: 'add-event-timer'}" class="button is-primary"> {{$t('timers.add')}} </router-link>
         </p>
         <timer-list :timers="timers" @delete:timer="timerDeleted" />
@@ -22,10 +22,6 @@ export default {
   props: {
     event: {
       type: Event,
-      required: true
-    },
-    isAttendee: {
-      type: Boolean,
       required: true
     }
   },

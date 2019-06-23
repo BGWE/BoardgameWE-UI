@@ -3,7 +3,7 @@
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <div class="columns" v-if="!loading">
       <div class="column is-full">
-        <!-- <p v-if="isAttendeeOrCreator" class="has-text-right limited-width"> -->
+        <!-- <p v-if="event.current.can_write" class="has-text-right limited-width"> -->
           <!-- Disabled because page not yet implemented -->
           <!-- <router-link disabled :to="{name: 'add-attendees'}" class="button is-primary"> {{$t('event.attendees.invite')}} </router-link> -->
         <!-- </p> -->
@@ -67,9 +67,6 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
-    },
-    isAttendeeOrCreator() {
-      return this.isAttendee || this.event.id_creator === this.currentUser.id;
     }
   }
 };
