@@ -22,7 +22,7 @@
 
             <div v-if="currentEvents.length > 0" class="columns events is-multiline">
               <div class="column is-one-quarter" v-for="event in currentEvents" :key="event.id">
-                <EventCard :event="event" @join:event="eventJoined" />
+                <EventCard :event="event" @join:event="refresh" @request:event="refresh" />
               </div>
             </div>
 
@@ -39,7 +39,7 @@
             </div>
             <div class="columns events is-multiline">
               <div class="column is-one-quarter" v-for="event in pastEvents" :key="event.id">
-                <EventCard class="past" :event="event" @join:event="eventJoined" />
+                <EventCard class="past" :event="event" @join:event="refresh" @request:event="refresh" />
               </div>
             </div>
           </b-collapse>
@@ -74,7 +74,6 @@ export default {
     currentEvents() {
       const today = moment().toISOString(false);
       let filteredEvents = this.events.filter(event => event.end > today);
-      console.log(filteredEvents);
       return filteredEvents;
     },
 
@@ -85,7 +84,7 @@ export default {
   },
 
   methods: {
-    async eventJoined(/* eid */) {
+    async refresh() {
       this.isLoading = true;
       this.events = await Event.fetchAll({});
       this.isLoading = false;
@@ -93,8 +92,7 @@ export default {
   },
 
   async created() {
-    this.events = await Event.fetchAll({});
-    this.isLoading = false;
+    await this.refresh();
   }
 };
 </script>
