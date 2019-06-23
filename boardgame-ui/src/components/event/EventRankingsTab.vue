@@ -1,11 +1,10 @@
 <template>
-    <div class="tabwrapper">
+    <div>
       <div class="columns">
-
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-won')}}</p>
-            <RankingTable 
+            <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_COUNT])"></RankingTable>
@@ -15,7 +14,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-won-percentage')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_VICTORY_PROP], true)"></RankingTable>
@@ -25,7 +24,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-played')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_COUNT_GAMES])"></RankingTable>
@@ -37,7 +36,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.different-games')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_COUNT_UNIQUE_GAMES])"></RankingTable>
@@ -47,7 +46,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-lost')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_COUNT])"></RankingTable>
@@ -57,7 +56,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-lost-percentage')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_DEFEAT_PROP], true)"></RankingTable>
@@ -69,7 +68,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-last')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST])"></RankingTable>
@@ -79,7 +78,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.games-last-percentage')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_IS_LAST_PROP], true)"></RankingTable>
@@ -89,7 +88,7 @@
         <div class="column">
           <article class="tile is-child box">
             <p class="title">{{$t('event.rankings.gcb')}}</p>
-              <RankingTable 
+              <RankingTable
               :type="rankingTableType"
               rankingMethod='POINTS_HIGHER_BETTER'
               :data="formattedRanking(rankings[EVENT_RANKING_GCBGBG])"></RankingTable>

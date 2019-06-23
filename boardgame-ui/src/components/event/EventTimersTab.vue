@@ -1,5 +1,5 @@
 <template>
-  <div class="tabwrapper">
+  <div>
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <div class="columns" v-if="!loading">
       <div class="column is-full">

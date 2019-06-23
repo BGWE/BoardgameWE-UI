@@ -1,5 +1,5 @@
 <template>
-  <section class="tabwrapper">
+  <section>
     <div class="section" v-if="stats">
       <h2 class="subtitle"><i18n path="home.statistics" /></h2>
       <div class="columns">
