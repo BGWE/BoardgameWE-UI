@@ -52,6 +52,9 @@
                   <router-link :to="{name: 'user-wish-list', params: {id: currentUser.id}}" class="navbar-item">
                     {{$t('navbar.my-wish-list')}}
                   </router-link>
+                  <router-link :to="{name: 'user-friends', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-friends')}}
+                  </router-link>
                   <template v-if="isUserAdmin">
                     <hr class="navbar-divider">
                     <router-link :to="{name: 'user-validation'}" class="navbar-item">
