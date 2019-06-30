@@ -18,6 +18,11 @@ export default class User extends Model {
     this.password = null;
   }
 
+  async getCurrentUserFriends() {
+    let {data} = await axios.get('/user/current/friends');
+    return data;
+  }
+
   /**
    * @param {String} username
    * @param {String} password

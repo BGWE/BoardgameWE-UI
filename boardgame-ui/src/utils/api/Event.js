@@ -9,6 +9,19 @@ export const EventVisibility = Object.freeze({
   PUBLIC: 'PUBLIC'
 });
 
+export const JoinRequestStatus = Object.freeze({
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
+});
+
+export const InviteStatus = Object.freeze({
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
+});
+
+
 export default class Event extends Model {
   /** @inheritdoc */
   static get className() {
@@ -147,6 +160,11 @@ export default class Event extends Model {
   /**
    * Invites
    */
+  async fetchInvites() {
+    let {data} = await axios.get(`event/${this.id}/invites`);
+    return data;
+  }
+
   async sendInvite(id_invitee) {
     if(this.isNew()) {
       throw new Error('Cannot send invite for an event with no ID');
