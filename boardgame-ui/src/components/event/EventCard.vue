@@ -7,7 +7,8 @@
     </header>
     <div class="card-content">
       <div class="content">
-        <b-tag type="is-info"><i18n :path="visibilityToI18n(event.visibility)"/></b-tag> <br/>
+        <b-tag type="is-info">{{$t(visibilityToI18n(event.visibility))}}</b-tag> <br/>
+        <b-tag v-if="event.current.is_requester" type="is-info">{{$t('event.pending_join_request')}}</b-tag> <br/>
         {{event.description}}
       </div>
     </div>
