@@ -51,18 +51,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="({user}, idx) in players" :key="user ? `user${user.id}` : idx">
+        <tr v-for="({id}, idx) in players" :key="id">
           <td>
             <b-field
-              :type="{'is-danger': errors.has(`user-${idx}`)}"
-              :message="errors.first(`user-${idx}`)"
+              :type="{'is-danger': errors.has(`user-${id}`)}"
+              :message="errors.first(`user-${id}`)"
             >
               <user-autocomplete
                 size="is-small"
                 v-model="players[idx].user"
                 :users="users"
                 :excludedIds="selectedUsersIds"
-                :name="`user-${idx}`"
+                :name="`user-${id}`"
                 :data-vv-as="$t('add-edit-game.players.user')"
                 v-validate="'required'"
               />
@@ -121,7 +121,7 @@ export default {
       required: false,
       default: null
     },
-    users: { // list of selectable users 
+    users: { // list of selectable users
       type: Array,
       required: true
     }
@@ -131,6 +131,7 @@ export default {
     return {
       isLoading: false,
       players: [],
+      idPlayer: 1,
       timer: null,
       boardGames: null,
       searchString: '',
@@ -181,7 +182,7 @@ export default {
     },
 
     addPlayer() {
-      this.players.push({user: null, color: this.generateRandomColor()});
+      this.players.push({user: null, color: this.generateRandomColor(), id: this.idPlayer++});
     },
 
     generateRandomColor() {

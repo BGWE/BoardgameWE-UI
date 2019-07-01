@@ -5,8 +5,8 @@
     :size="size"
     field="fullname"
     icon="search"
-    @input="$emit('input', null)"
     @select="option => $emit('input', option)"
+    ref="autocomplete"
   >
     <template slot="empty">{{$t('global.no-result')}}</template>
   </b-autocomplete>
@@ -51,9 +51,10 @@ export default {
       return `${user.name} ${user.surname[0]}. (${user.username})`;
     }
   },
-  created() {
+  mounted() {
     if(this.value) {
-      this.searchString = this.fullName(this.value);
+      this.value.fullname = this.fullName(this.value);
+      this.$refs.autocomplete.setSelected(this.value);
     }
   },
 };
