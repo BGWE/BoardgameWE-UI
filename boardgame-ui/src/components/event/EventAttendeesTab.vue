@@ -1,10 +1,9 @@
 <template>
   <div class="tabwrapper">
-    <b-loading :is-full-page="false" :active="loading"></b-loading>
-    <div class="columns" v-if="!loading">
+    <div class="columns">
       <div class="column is-full">
-
-        <section class="section limited-width" v-if="attendees">
+        <b-loading :is-full-page="false" :active="loading"></b-loading>
+        <section class="section limited-width" v-if="attendees && !loading" >
           <b-collapse class="userList" :open="true" aria-id="eventAttendees">
             <div slot="trigger" slot-scope="props" role="button" aria-controls="eventAttendees">
               <h2 class="collapse-trigger-content subtitle">
@@ -84,7 +83,7 @@
                 </h2>
               </div>
 
-              <div v-if="invitees.length > 0" class="columns invitees is-multiline">
+              <div v-if="invitees.length > 0" class="columns invitees is-multiline" >
                 <b-table :data="invitees" striped>
                   <template slot-scope="props">
                     <b-table-column field="name" :label="$t('label.name')">
@@ -226,24 +225,39 @@ export default {
     async updateLists() {
       this.attendees = await this.event.fetchAttendees();
       if (this.event.current.can_write) { // only someone with write access can eventually update request statuses
+        this.friends = await this.$store.state.currentUser.getCurrentUserFriends();
         this.join_requests = await this.event.fetchJoinRequests();
-        this.invitees = await this.event.fetchInvites();
+        this.updateInvites();
       }
     },
     async inviteUser() {
-      if (!this.invitee) {
-        throw Error('didnt select any invitee');
-      }
+      // will only be called if user has write access
       this.loading = true;
-      await this.event.sendInvite(this.invitee.id);
-      await this.updateLists();
+      const invite = await this.event.sendInvite(this.invitee.id);
+      let notif = null;
+      if (invite.status === InviteStatus.PENDING) {
+        notif = {message: this.$t('event.invite_sent'), type: 'is-info'};
+        await this.updateInvites();
+      } 
+      else if (invite.status === InviteStatus.ACCEPTED) {
+        notif = {message: this.$t('event.invite_accepted'), type: 'is-success'};
+        await this.updateLists();
+      }
+      // reset field 
+      this.invitee = null;
+
       this.loading = false;
+      
+      // notify
+      this.$notification.open(notif);
+    },
+    async updateInvites() {
+      this.invitees = await this.event.fetchInvites();
     }
   },
 
   async created() {
     this.loading = true;
-    this.friends = await this.$store.state.currentUser.getCurrentUserFriends();
     await this.updateLists();
     this.loading = false;
   }
