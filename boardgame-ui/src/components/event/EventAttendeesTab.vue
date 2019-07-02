@@ -2,8 +2,8 @@
   <div class="tabwrapper">
     <div class="columns">
       <div class="column is-full">
-        <b-loading :is-full-page="false" :active="loading"></b-loading>
-        <section class="section limited-width" v-if="attendees && !loading" >
+        <b-loading :is-full-page="false" :active="loading" />
+        <section class="section limited-width" v-if="attendees" >
           <b-collapse class="userList" :open="true" aria-id="eventAttendees">
             <div slot="trigger" slot-scope="props" role="button" aria-controls="eventAttendees">
               <h2 class="collapse-trigger-content subtitle">
@@ -125,7 +125,7 @@
             </b-collapse>
           </section>
 
-          <section class="section limited-width" v-if="join_requests">
+          <section class="section limited-width" v-if="joinRequests">
             <b-collapse class="userList" :open="true" aria-id="joinRequestsId">
               <div slot="trigger" slot-scope="props" role="button" aria-controls="joinRequestsId">
                 <h2 class="collapse-trigger-content subtitle">
@@ -133,8 +133,8 @@
                 </h2>
               </div>
 
-              <div v-if="join_requests.length > 0" class="columns join_requests is-multiline">
-                <b-table :data="join_requests" striped>
+              <div v-if="joinRequests.length > 0" class="columns join_requests is-multiline">
+                <b-table :data="joinRequests" striped>
                   <template slot-scope="props">
                     <b-table-column field="name" :label="$t('label.name')">
                       {{ props.row.requester.name }}
@@ -197,12 +197,11 @@ export default {
     return {
       JoinRequestStatus,
       InviteStatus,
-      loading: false,
+      loading: true,
       friends: [],
       invitee: null, // for search
       invitees: [],
-      attendees: [],
-      join_requests: [],
+      joinRequests: []
     };
   },
 
@@ -210,7 +209,9 @@ export default {
     currentUser() {
       return this.$store.state.currentUser;
     },
-
+    attendees() {
+      return this.event.attendees;
+    },
     userIdsExcludedFromInvites() {
       return this.attendees.map(a => a.user.id)
         .concat(this.invitees.map(i => i.invitee.id));
@@ -220,15 +221,8 @@ export default {
   methods: {
     async handleJoinRequest(request, accept) {
       await this.event.handleJoinRequest(request.id_requester, accept);
-      await this.updateJoinRequests();
-    },
-    async updateLists() {
-      this.attendees = await this.event.fetchAttendees();
-      if (this.event.current.can_write) { // only someone with write access can eventually update request statuses
-        this.friends = await this.$store.state.currentUser.getCurrentUserFriends();
-        this.join_requests = await this.event.fetchJoinRequests();
-        this.updateInvites();
-      }
+      this.fetchJoinRequests();
+      this.updateAttendees();
     },
     async inviteUser() {
       // will only be called if user has write access
@@ -237,28 +231,40 @@ export default {
       let notif = null;
       if (invite.status === InviteStatus.PENDING) {
         notif = {message: this.$t('event.invite_sent'), type: 'is-info'};
-        await this.updateInvites();
-      } 
+      }
       else if (invite.status === InviteStatus.ACCEPTED) {
         notif = {message: this.$t('event.invite_accepted'), type: 'is-success'};
-        await this.updateLists();
+        this.updateAttendees();
       }
-      // reset field 
-      this.invitee = null;
+      await this.fetchInvites();
 
+      // reset field
+      this.invitee = null;
       this.loading = false;
-      
+
       // notify
       this.$notification.open(notif);
     },
-    async updateInvites() {
+    updateAttendees() {
+      this.$emit('update-attendees');
+    },
+    async fetchInvites() {
       this.invitees = await this.event.fetchInvites();
+    },
+    async fetchJoinRequests() {
+      this.joinRequests = await this.event.fetchJoinRequests();
+    },
+    async fetchFriends() {
+      this.friends = await this.currentUser.fetchFriends();
     }
   },
 
   async created() {
-    this.loading = true;
-    await this.updateLists();
+    await Promise.all([
+      this.fetchInvites(),
+      this.fetchJoinRequests(),
+      this.fetchFriends()
+    ]);
     this.loading = false;
   }
 };

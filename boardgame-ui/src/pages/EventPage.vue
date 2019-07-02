@@ -13,7 +13,7 @@
 
     <div class="container">
       <div class="section">
-        <router-view :event="event"/>
+        <router-view :event="event" @update-attendees="fetchAttendees()" />
       </div>
     </div>
   </div>
@@ -50,6 +50,12 @@ export default {
     },
     currentUser() {
       return this.$store.state.currentUser;
+    }
+  },
+
+  methods: {
+    fetchAttendees() {
+      this.event.fetchAttendees();
     }
   },
 

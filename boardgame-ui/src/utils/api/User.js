@@ -18,9 +18,13 @@ export default class User extends Model {
     this.password = null;
   }
 
-  async getCurrentUserFriends() {
-    let {data} = await axios.get('/user/current/friends');
-    return data;
+  /**
+   * Fetch user friends
+   * @returns {Array[User]} List of friends
+   */
+  async fetchFriends() {
+    let {data} = await axios.get(`/user/${this.id}/friends`);
+    return data.map(elem => new User(elem));
   }
 
   /**

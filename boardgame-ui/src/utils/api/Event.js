@@ -42,6 +42,7 @@ export default class Event extends Model {
     this.attendees_can_edit = false;
     this.user_can_join = false;
     this.invite_required = true;
+    this.attendees = [];
   }
 
   static async fetchAll({ongoing, registered, visibilities}) {
@@ -106,6 +107,7 @@ export default class Event extends Model {
 
   async fetchAttendees() {
     let {data} = await axios.get(`event/${this.id}/attendees`);
+    this.attendees = data;
     return data;
   }
 
