@@ -5,7 +5,7 @@
     :size="size"
     field="fullname"
     icon="search"
-    @select="option => $emit('input', option)"
+    @select="handleSelect"
     ref="autocomplete"
   >
     <template slot="empty">{{$t('global.no-result')}}</template>
@@ -25,7 +25,8 @@ export default {
   },
   data() {
     return {
-      searchString: ''
+      searchString: '',
+      internalValue: null
     };
   },
   computed: {
@@ -46,16 +47,33 @@ export default {
       });
     }
   },
+  watch: {
+    value(val) {
+      if(val != this.internalValue) {
+        this.setValue();
+      }
+    }
+  },
   methods: {
     fullName(user) {
       return `${user.name} ${user.surname[0]}. (${user.username})`;
+    },
+    handleSelect(option) {
+      this.internalValue = option;
+      this.$emit('input', option);
+    },
+    setValue() {
+      if(this.value) {
+        this.value.fullname = this.fullName(this.value);
+        this.$refs.autocomplete.setSelected(this.value);
+      }
+      else {
+        this.searchString = '';
+      }
     }
   },
   mounted() {
-    if(this.value) {
-      this.value.fullname = this.fullName(this.value);
-      this.$refs.autocomplete.setSelected(this.value);
-    }
+    this.setValue();
   },
 };
 </script>
