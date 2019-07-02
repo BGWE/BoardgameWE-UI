@@ -21,7 +21,9 @@
 
         <transition name="fade">
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-if="!isRunning">
-            Press <i class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i> to start
+            <i18n path="timer.press-play">
+              <i place="playButton" class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i>
+            </i18n>
           </div>
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-else>
             <span class="panel-icon">

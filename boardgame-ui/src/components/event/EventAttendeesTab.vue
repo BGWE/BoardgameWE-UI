@@ -47,7 +47,7 @@
               </b-table>
             </div>
 
-            <p v-else>No attendee.</p>
+            <p class="has-text-grey" v-else>{{$t('event.no-attendee')}}</p>
           </b-collapse>
         </section>
 
@@ -121,7 +121,7 @@
                 </b-table>
               </div>
 
-              <p v-else>No invites.</p>
+              <p class="has-text-grey" v-else>{{$t('event.no-invites')}}</p>
             </b-collapse>
           </section>
 
@@ -172,7 +172,7 @@
                 </b-table>
               </div>
 
-              <p v-else>No join requests.</p>
+              <p class="has-text-grey" v-else>{{$t('event.no-join-requests')}}</p>
             </b-collapse>
           </section>
         </div>
