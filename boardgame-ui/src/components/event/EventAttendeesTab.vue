@@ -260,11 +260,13 @@ export default {
   },
 
   async created() {
-    await Promise.all([
-      this.fetchInvites(),
-      this.fetchJoinRequests(),
-      this.fetchFriends()
-    ]);
+    if (this.event.current.can_write) { // only need to fetch data if user has rights to do so
+      await Promise.all([
+        this.fetchInvites(),
+        this.fetchJoinRequests(),
+        this.fetchFriends()
+      ]);
+    }
     this.loading = false;
   }
 };
