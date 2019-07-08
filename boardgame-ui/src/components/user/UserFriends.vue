@@ -25,27 +25,102 @@
           </b-table-column>
         </template>
       </b-table>
+      <p class="has-text-centered has-text-grey" v-if="friends.length === 0">
+        {{$t('profile.no-friends')}}
+      </p>
+
+      <template v-if="requests && requests.length">
+        <hr>
+
+        <h2 class="subtitle">{{$t('profile.pending-friend-requests')}}</h2>
+
+        <div class="columns is-multiline">
+          <div class="column is-narrow" v-for="request in requests" :key="request.id">
+            <div class="card">
+              <div class="card-content">
+                <div class="content">
+                  {{request.user_from.name}} {{request.user_from.surname}} ({{request.user_from.username}})
+                  <i18n path="profile.friend_request_received_on" tag="p" class="is-size-7 has-text-grey">
+                    <bgc-datetime place="date" :asdate="true" :datetime="request.createdAt" />
+                  </i18n>
+
+                </div>
+              </div>
+              <footer class="card-footer">
+                <a class="card-footer-item" @click="answerRequest(request.id_user_from, true)">
+                  {{$t('label.accept')}}
+                </a>
+                <a class="card-footer-item" @click="answerRequest(request.id_user_from, false)">
+                  {{$t('label.reject')}}
+                </a>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </template>
+
     </template>
   </div>
 </template>
 
 <script>
 import User from '@/utils/api/User';
+import BgcDatetime from '@/components/layout/BgcDatetime';
 
 export default {
   props: {
-    user: User
+    user: User,
+    isCurrentUserProfile: Boolean
+  },
+  components: {
+    BgcDatetime
   },
   data() {
     return {
       loading: true,
-      friends: null
+      friends: null,
+      requests: null
     };
   },
+  methods: {
+    async fetchData() {
+      await Promise.all([
+        this.fetchFriends(),
+        this.fetchRequests()
+      ]);
+    },
+    async fetchFriends() {
+      this.friends = await this.user.fetchFriends();
+    },
+    async fetchRequests() {
+      if(this.isCurrentUserProfile) {
+        this.requests = await User.fetchCurrentFriendshipRequests();
+      }
+    },
+    async answerRequest(idUser, accept) {
+      try {
+        await User.handleFriendshipRequest(idUser, accept);
+        this.fetchData();
+      }
+      catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('profile.toast.handle-friend-request-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
+    }
+  },
   async created() {
-    this.friends = await this.user.fetchFriends();
+    await this.fetchData();
     this.loading = false;
   }
 };
 </script>
 
+<style scoped>
+.card {
+  width: 20em;
+}
+</style>
