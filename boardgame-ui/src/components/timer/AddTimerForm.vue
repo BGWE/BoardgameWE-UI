@@ -203,21 +203,13 @@ export default {
 
     async createTimer() {
       let result = await this.validate();
-
       if (!result) {
         return;
       }
 
-      this.timer.player_timers = [];
-      for (let key in this.players) {
-        let player = this.players[key];
-        if (player.user.id != null) {
-          this.timer.player_timers.push({id_user: player.user.id, name: null, color: player.color});
-        }
-        else {
-          this.timer.player_timers.push({id_user: null, name: player.user.name, color: player.color});
-        }
-      }
+      this.timer.player_timers = this.players.map(({user, color}) => {
+        return typeof user === 'string' ? {name: user, color} : {id_user: user.id, color};
+      });
 
       try {
         await this.timer.save();
@@ -256,7 +248,7 @@ export default {
 
       for (let key in this.timer.player_timers) {
         let player = this.timer.player_timers[key];
-        this.players.push({user: player.user, color: player.color});
+        this.players.push({user: player.user || player.name, color: player.color});
       }
 
       if (this.timer.id_board_game != null) {
