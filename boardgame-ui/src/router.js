@@ -145,6 +145,11 @@ const routes = [
         name: 'user-wish-list',
         path: 'wishlist',
         component: require('./components/user/UserWishList.vue').default
+      },
+      {
+        name: 'user-achievements',
+        path: 'achievements',
+        component: require('./components/user/UserAchievements.vue').default
       }
     ]
   },

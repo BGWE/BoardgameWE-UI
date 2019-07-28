@@ -30,7 +30,8 @@ export default {
       return [
         {name: 'user-profile', text: this.$t('profile.tab.dashboard'), exact: true},
         {name: 'user-library', text: this.$t('profile.tab.library')},
-        {name: 'user-wish-list', text: this.$t('profile.tab.wish-list')}
+        {name: 'user-wish-list', text: this.$t('profile.tab.wish-list')},
+        {name: 'user-achievements', text: this.$t('profile.tab.achievements')}
       ];
     },
     idUser() {

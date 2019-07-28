@@ -88,4 +88,9 @@ export default class User extends Model {
     let {data} = await axios.post('user/reset_password', {token: token, id: id, password: password});
     return data;
   }
+
+  static async fetchAchievements() {
+    let {data} = await axios.get('/user/current/achievements');
+    return data;
+  }
 }
