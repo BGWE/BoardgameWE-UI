@@ -5,7 +5,7 @@
         <div class="column" v-for="achievement in this.userAchievements" :key="achievement.id">
             <h2> {{achievement.name}} </h2>
             <p> {{achievement.description}} </p>
-            <p> Obtained on {{achievement.createdAt}} </p>
+            <p> Obtained on {{formatedDateTime(achievement.createdAt)}} </p>
         </div>
     </div>
   </div>
@@ -13,6 +13,7 @@
 
 <script>
 import User from '@/utils/api/User';
+import * as Helper from '@/utils/helper';
 
 export default {
   props: {
@@ -28,6 +29,10 @@ export default {
       loading: true,
       userAchievements: null
     };
+  },
+
+  methods: {
+    formatedDateTime: (datetime) => Helper.formatDatetime(datetime),
   },
   
   async created() {
