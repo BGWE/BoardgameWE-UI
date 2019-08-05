@@ -2,11 +2,18 @@
   <div>
     <b-loading :is-full-page="false" :active="loading" />
     <div class="columns">
-        <div class="column" v-for="achievement in this.userAchievements" :key="achievement.id">
+      <div class="column" v-for="achievement in this.userAchievements" :key="achievement.id">
+        <div class="columns">
+          <div class="column is-narrow">
+            <img src="@/assets/achievements/placeholder.png">
+          </div>
+          <div class="column is-narrow">
             <h2> {{achievement.name}} </h2>
             <p> {{achievement.description}} </p>
             <p> Obtained on {{formatedDateTime(achievement.createdAt)}} </p>
+          </div>
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -42,4 +49,3 @@ export default {
   }
 };
 </script>
-
