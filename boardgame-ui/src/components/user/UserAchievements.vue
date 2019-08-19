@@ -1,18 +1,24 @@
 <template>
   <div>
     <b-loading :is-full-page="false" :active="loading" />
-    <div class="columns">
-      <div class="column" v-for="achievement in this.userAchievements" :key="achievement.id">
-        <div class="columns">
-          <div class="column is-narrow">
-            <img src="@/assets/achievements/placeholder.png">
+    <div v-for="achievement in this.userAchievements" :key="achievement.id">
+      <div class="achievement-container">
+        <article class="media">
+          <figure class="media-left">
+            <p class="image is-64x64">
+              <img src="@/assets/achievements/placeholder.png">
+            </p>
+          </figure>
+          <div class="media-content">
+            <div class="content">
+              <p>
+                <strong> {{$t(achievement.id_achievement + '.title')}} </strong> <small> @{{formatedDateTime(achievement.createdAt)}} </small>
+                <br>
+                {{$t(achievement.id_achievement + '.descr')}}
+              </p>
+            </div>
           </div>
-          <div class="column is-narrow">
-            <h2> {{achievement.name}} </h2>
-            <p> {{achievement.description}} </p>
-            <p> Obtained on {{formatedDateTime(achievement.createdAt)}} </p>
-          </div>
-        </div>
+        </article>
       </div>
     </div>
   </div>
@@ -49,3 +55,12 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.achievement-title {
+  color: #27475B;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+</style>
