@@ -2,6 +2,26 @@ import Model from './Model';
 import axios from 'axios';
 import Game from './Game';
 
+/** Enum providing the game ranking methods */
+export const EventVisibility = Object.freeze({
+  SECRET: 'SECRET',
+  PRIVATE: 'PRIVATE',
+  PUBLIC: 'PUBLIC'
+});
+
+export const JoinRequestStatus = Object.freeze({
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
+});
+
+export const InviteStatus = Object.freeze({
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
+});
+
+
 export default class Event extends Model {
   /** @inheritdoc */
   static get className() {
@@ -18,19 +38,26 @@ export default class Event extends Model {
     this.description = null;
     this.location = null;
     this.hide_rankings = false;
+    this.visibility = EventVisibility.SECRET;
+    this.attendees_can_edit = false;
+    this.user_can_join = false;
+    this.invite_required = true;
+    this.attendees = [];
   }
 
-  static async fetchAll(ongoing, registered) {
+  static async fetchAll({ongoing, registered, visibilities}) {
     let urlParams = {};
 
-    if ((ongoing === undefined && registered !== undefined) ||
-        (ongoing !== undefined && registered === undefined)) {
-      console.log('FetchAll events - Both ongoing and registered URL parameters should be provided to filter the events.');
+    if (ongoing !== undefined) {
+      urlParams['ongoing'] = ongoing;
     }
 
-    else if(ongoing !== undefined && registered !== undefined) {
-      urlParams['ongoing'] = ongoing;
-      urlParams['registered'] = registered.join(',');
+    if (registered !== undefined) {
+      urlParams['registered'] = registered;
+    }
+
+    if (visibilities !== undefined) {
+      urlParams['visibility'] = visibilities;
     }
 
     return super.fetchAll(urlParams);
@@ -78,50 +105,87 @@ export default class Event extends Model {
     return data;
   }
 
-  get attendeesUri() {
-    if(this.isNew()) {
-      throw new Error('Cannot construct attendees URI of an event with no ID.');
-    }
-    return `event/${this.id}/attendees`;
-  }
-
   async fetchAttendees() {
-    let {data} = await axios.get(this.attendeesUri);
+    let {data} = await axios.get(`event/${this.id}/attendees`);
+    this.attendees = data;
     return data;
   }
 
-  async addAttendees(attendeesIds) {
-    let {data} = await axios.post(this.attendeesUri, {users: attendeesIds});
-    return data;
-  }
-
-  async removeAttendees(attendeesIds) {
-    let {data} = await axios.delete(this.attendeesUri, {data: {users: attendeesIds}});
-    return data;
-  }
-
-  static get attendedEventsUri() {
-    return 'events';
-  }
-
-  static async fetchAttendedEvents() {
-    let {data} = await axios.get(Event.attendedEventsUri);
+  async removeAttendee(id_user) {
+    let {data} = await axios.delete(`event/${this.id}/attendee/${id_user}`);
     return data;
   }
 
   /**
    * Subscribe connected user to the event
    */
-  async subscribe() {
+  async join() {
     if(this.isNew()) {
-      throw new Error('Cannot subscribe to an event with no ID');
+      throw new Error('Cannot join an event with no ID');
     }
-    let {data} = await axios.post(`event/${this.id}/subscribe`);
+    let {data} = await axios.post(`event/${this.id}/join`);
     return data;
   }
 
-  static async subscribeWithId(id) {
-    const data = new this({id}).subscribe();
+  static async joinWithId(id) {
+    const data = new this({id}).join();
+    return data;
+  }
+
+  /**
+   * Join requests
+   */
+  async sendJoinRequest() {
+    if(this.isNew()) {
+      throw new Error('Cannot send request for an event with no ID');
+    }
+    let {data} = await axios.post(`event/${this.id}/join_request`);
+    return data;
+  }
+
+  async handleJoinRequest(id_requester, accept) {
+    if (this.isNew()) {
+      throw new Error('Cannot handle request for an event with no ID');
+    }
+    let {data} = await axios.put(`event/${this.id}/join_request`, { id_requester, accept });
+    return data;
+  }
+
+  async fetchJoinRequests() {
+    if (this.isNew()) {
+      throw new Error('Cannot handle request for an event with no ID');
+    }
+    let {data} = await axios.get(`event/${this.id}/join_requests`);
+    return data;
+  }
+
+  /**
+   * Invites
+   */
+  async fetchInvites() {
+    let {data} = await axios.get(`event/${this.id}/invites`);
+    return data;
+  }
+
+  async sendInvite(id_invitee) {
+    if(this.isNew()) {
+      throw new Error('Cannot send invite for an event with no ID');
+    }
+    let {data} = await axios.post(`event/${this.id}/invite`, { id_invitee });
+    return data;
+  }
+
+  // current user invite against this event
+  async handleInvite(accept) {
+    if(this.isNew()) {
+      throw new Error('Cannot handle invite for an event with no ID');
+    }
+    let {data} = await axios.put(`event/${this.id}/invite`, { accept });
+    return data;
+  }
+
+  static async getCurrentUserReceivedInvites() {
+    let {data} = await axios.put('user/current/invites');
     return data;
   }
 

@@ -11,6 +11,14 @@
             <b-input v-model.trim="event.name" name="name" v-validate="'required'"></b-input>
           </b-field>
 
+          <b-field horizontal :label="$t('event.edition.visibility')">
+            <b-select v-model="event.visibility">
+              <option v-for="{visibility, i18nPath} in eventVisibilityI18nPath" v-bind:key="i18nPath" :value="visibility">
+                <i18n :path="i18nPath"/>
+              </option>
+            </b-select>
+          </b-field>
+
           <b-field horizontal :label="$t('event.edition.location')"
                   :type="{'is-danger': errors.has('form-eventCreation.location')}"
                   :message="errors.first('form-eventCreation.location')">
@@ -41,6 +49,22 @@
           </b-field>
 
           <b-field horizontal>
+            <b-checkbox v-model="event.attendees_can_edit">
+              {{$t('event.edition.attendeesCanEdit')}}
+            </b-checkbox>
+          </b-field>
+          <b-field horizontal>
+            <b-checkbox v-model="event.invite_required" >
+              {{$t('event.edition.inviteRequired')}}
+            </b-checkbox>
+          </b-field>
+          <b-field horizontal>
+            <b-checkbox v-model="event.user_can_join" :disabled="event.invite_required || event.visibility === eventVisibility.SECRET">
+              {{$t('event.edition.userCanJoin')}}
+            </b-checkbox>
+          </b-field>
+
+          <b-field horizontal>
             <button type="submit" class="button is-primary">{{$t('event.edition.submit')}}</button>
           </b-field>
 
@@ -51,7 +75,7 @@
 </template>
 
 <script>
-import Event from '@/utils/api/Event.js';
+import Event, { EventVisibility } from '@/utils/api/Event.js';
 import * as helper from '@/utils/helper';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import DateTimePicker from '@/components/layout/DateTimePicker';
@@ -71,6 +95,29 @@ export default {
       startDate: null,
       endDate: null
     };
+  },
+
+  computed: {
+    eventVisibility() {
+      return EventVisibility;
+    },
+
+    eventVisibilityI18nPath() {
+      return [
+        {visibility: EventVisibility.SECRET, i18nPath: 'event.visibility.secret'},
+        {visibility: EventVisibility.PRIVATE, i18nPath: 'event.visibility.private'},
+        {visibility: EventVisibility.PUBLIC, i18nPath: 'event.visibility.public'}
+      ];
+    }
+  },
+
+  watch: {
+    'event.visibility': function(value, oldValue) {
+      if (value !== oldValue && value === EventVisibility.SECRET) {
+        this.event.invite_required = true;
+        this.event.user_can_join = false;
+      }
+    }
   },
 
   methods: {

@@ -7,6 +7,8 @@
     </header>
     <div class="card-content">
       <div class="content">
+        <b-tag type="is-info">{{$t(visibilityToI18n(event.visibility))}}</b-tag> <br/>
+        <b-tag v-if="event.current.is_requester" type="is-info">{{$t('event.pending_join_request')}}</b-tag> <br/>
         {{event.description}}
       </div>
     </div>
@@ -18,9 +20,9 @@
         {{event.location}}
       </span>
     </div>
-    <footer class="card-footer">
+    <footer class="card-footer" v-if="event.current.can_read || event.current.can_join || event.current.can_request || event.current.is_creator">
       <div class="buttons">
-        <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
+        <router-link v-if="event.current.can_read" :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
           <span class="icon is-small">
             <i class="far fa-eye"></i>
           </span>
@@ -28,15 +30,22 @@
           <span>{{$t('events.view')}}</span>
         </router-link>
 
-        <button class="button is-primary is-outlined" v-if="!isAttendedEvent" @click="joinEvent()">
+        <button class="button is-primary is-outlined" v-if="event.current.can_join" @click="join()">
           <span class="icon is-small">
             <i class="fas fa-sign-in-alt"></i>
           </span>
 
           <span>{{$t('events.join')}}</span>
         </button>
+        <button class="button is-primary is-outlined" v-else-if="event.current.can_request" @click="requestAccess()">
+          <span class="icon is-small">
+            <i class="far fa-paper-plane"></i>
+          </span>
 
-        <router-link v-if="isUserEventOwner" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
+          <span>{{$t('events.request')}}</span>
+        </button>
+
+        <router-link v-if="event.current.is_creator" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
           <span class="icon is-small">
             <i class="far fa-edit"></i>
           </span>
@@ -49,29 +58,28 @@
 </template>
 
 <script>
-import Event from '@/utils/api/Event';
+import Event, {EventVisibility} from '@/utils/api/Event';
 
 export default {
   props: {
-    event: Event,
-    attendedEvents: Array
-  },
-
-  computed: {
-    isAttendedEvent() {
-      return this.attendedEvents.find(e => e.id === this.event.id);
-    },
-
-    isUserEventOwner() {
-      return this.event.id_creator === this.$store.state.currentUser.id;
-    },
+    event: Event
   },
 
   methods: {
-    async joinEvent() {
-      await Event.subscribeWithId(this.event.id);
-      let attendedEvents = await Event.fetchAttendedEvents();
-      this.$emit('update:attendedEvents', attendedEvents);
+    async join() {
+      await Event.joinWithId(this.event.id);
+      this.$emit('join:event', this.event.id);
+    },
+    async requestAccess() {
+      await this.event.sendJoinRequest();
+      this.$emit('request:event', this.event.id);
+    },
+    visibilityToI18n(visibility) {
+      return {
+        [EventVisibility.PUBLIC]: 'event.visibility.public',
+        [EventVisibility.PRIVATE]: 'event.visibility.private',
+        [EventVisibility.SECRET]: 'event.visibility.secret'
+      }[visibility];
     }
   }
 };

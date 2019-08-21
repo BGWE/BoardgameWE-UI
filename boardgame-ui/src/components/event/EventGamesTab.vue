@@ -3,7 +3,7 @@
     <b-loading :is-full-page="false" :active="loading" />
     <div class="columns" v-if="!loading">
       <div class="column is-full">
-        <p v-if="isAttendee" class="has-text-right limited-width">
+        <p v-if="event.current.can_write" class="has-text-right limited-width">
           <router-link :to="{name: 'add-game-event'}" class="button is-primary">
             {{$t('button.add-game')}}
           </router-link>
@@ -49,7 +49,7 @@
               </div>
             </template>
 
-            <template v-if="isAttendee" v-slot:buttons>
+            <template v-if="event.current.can_write" v-slot:buttons>
               <router-link :to="{name: 'edit-game-event', params: {idGame: game.id}}" class="card-footer-item">
                 <span class="icon"><i class="far fa-edit"></i></span>
                 {{$t('event.games.edit')}}
@@ -94,8 +94,7 @@ import moment from 'moment-timezone';
 
 export default {
   props: {
-    event: Object,
-    isAttendee: Boolean
+    event: Object
   },
 
   components: {
