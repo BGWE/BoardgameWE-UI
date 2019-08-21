@@ -53,7 +53,7 @@ import * as Helper from '@/utils/helper';
 
 export default {
   props: {
-    user: User, // TODO: if null, achievements of current user
+    user: User, // if null, achievements of current user
     isCurrentUserProfile: Boolean
   },
   
@@ -70,7 +70,7 @@ export default {
   },
   
   async created() {
-    this.userAchievements = await User.fetchAchievements();
+    this.userAchievements = await User.fetchUserAchievements(this.user.id);
     this.total = await User.fetchTotalNumberAchievements();
     this.loading = false;
   }
