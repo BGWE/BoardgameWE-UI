@@ -93,4 +93,14 @@ export default class User extends Model {
     let {data} = await axios.get('/user/current/achievements');
     return data;
   }
+
+  static async easterEgg() {
+    let {data} = await axios.post('user/current/easteregg');
+    return data;
+  }
+
+  static async fetchTotalNumberAchievements() {
+    let {data} = await axios.get('/achievements/total');
+    return data;
+  }
 }

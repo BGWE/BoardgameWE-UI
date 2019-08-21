@@ -101,7 +101,7 @@ export default class Event extends Model {
   }
 
   static get attendedEventsUri() {
-    return 'events/current';
+    return 'events';
   }
 
   static async fetchAttendedEvents() {

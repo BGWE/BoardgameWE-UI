@@ -1,6 +1,7 @@
 <template>
   <div>
     <b-loading :is-full-page="false" :active="loading" />
+    
     <div v-for="achievement in this.userAchievements" :key="achievement.id">
       <div class="achievement-container">
         <article class="media">
@@ -21,6 +22,28 @@
         </article>
       </div>
     </div>
+
+    <div v-if="this.total > this.userAchievements.length" style="padding-top:15px">
+      <div class="achievement-container">
+        <article class="media">
+          <figure class="media-left">
+            <p class="image is-64x64">
+              <img src="@/assets/achievements/locked_achievement.png">
+            </p>
+          </figure>
+          <div class="media-content">
+            <div class="content">
+              <p>
+                <strong> {{$t('achievements.locked')}} </strong>
+                <br>
+                {{$t('achievements.continue')}}
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -40,7 +63,8 @@ export default {
   data() {
     return {
       loading: true,
-      userAchievements: null
+      userAchievements: null,
+      total: null
     };
   },
 
@@ -50,7 +74,7 @@ export default {
   
   async created() {
     this.userAchievements = await User.fetchAchievements();
-    console.log(this.userAchievements);
+    this.total = await User.fetchTotalNumberAchievements();
     this.loading = false;
   }
 };
