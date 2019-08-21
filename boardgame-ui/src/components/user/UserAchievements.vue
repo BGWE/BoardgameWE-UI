@@ -53,11 +53,8 @@ import * as Helper from '@/utils/helper';
 
 export default {
   props: {
-    user: User, // if null, achievements of current user
+    user: User, // TODO: if null, achievements of current user
     isCurrentUserProfile: Boolean
-  },
-
-  components: {
   },
   
   data() {
