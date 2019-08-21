@@ -150,6 +150,11 @@ const routes = [
         name: 'user-achievements',
         path: 'achievements',
         component: require('./components/user/UserAchievements.vue').default
+      },
+      {
+        name: 'user-friends',
+        path: 'friends',
+        component: require('./components/user/UserFriends.vue').default
       }
     ]
   },
