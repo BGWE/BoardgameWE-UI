@@ -59,6 +59,32 @@
         </div>
       </template>
 
+      <template v-if="ownRequests && ownRequests.length">
+        <hr>
+
+        <h2 class="subtitle">{{$t('profile.pending-own-friend-requests')}}</h2>
+
+        <div class="columns is-multiline">
+          <div class="column is-narrow" v-for="request in ownRequests" :key="request.id">
+            <div class="card">
+              <div class="card-content">
+                <div class="content">
+                  {{request.user_to.name}} {{request.user_to.surname}} ({{request.user_to.username}})
+                  <i18n path="profile.friend_request_sent_on" tag="p" class="is-size-7 has-text-grey">
+                    <bgc-datetime place="date" :asdate="true" :datetime="request.createdAt" />
+                  </i18n>
+                  <footer class="card-footer">
+                    <a class="card-footer-item" @click="deleteRequest(request.id_user_to)">
+                      {{$t('label.cancel')}}
+                    </a>
+                  </footer>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
     </template>
   </div>
 </template>
@@ -79,14 +105,16 @@ export default {
     return {
       loading: true,
       friends: null,
-      requests: null
+      requests: null,
+      ownRequests: null
     };
   },
   methods: {
     async fetchData() {
       await Promise.all([
         this.fetchFriends(),
-        this.fetchRequests()
+        this.fetchRequests(),
+        this.fetchOwnRequests()
       ]);
     },
     async fetchFriends() {
@@ -97,12 +125,32 @@ export default {
         this.requests = await User.fetchCurrentFriendshipRequests();
       }
     },
+    async fetchOwnRequests() {
+      if (this.isCurrentUserProfile) {
+        this.ownRequests = await User.fetchCurrentSentFriendshipRequests();
+        console.log(this.ownRequests);
+      }
+    },
     async answerRequest(idUser, accept) {
       try {
         await User.handleFriendshipRequest(idUser, accept);
         this.fetchData();
       }
       catch(error) {
+        console.log(error);
+        this.$toast.open({
+          message: this.$t('profile.toast.handle-friend-request-error'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
+    },
+    async deleteRequest(idUser) {
+      try {
+        await User.cancelFriendshipRequest(idUser);
+        this.fetchData();
+      }
+      catch (error) {
         console.log(error);
         this.$toast.open({
           message: this.$t('profile.toast.handle-friend-request-error'),

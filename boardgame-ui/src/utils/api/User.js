@@ -77,6 +77,11 @@ export default class User extends Model {
     return data;
   }
 
+  static async fetchCurrentSentFriendshipRequests() {
+    let {data} = await axios.get('/sent_friend_requests');
+    return data;
+  }
+
   /**
    * Handle a friendship request received by current user
    * @param {Number} idSender identifier of the user that sent the friendship request
