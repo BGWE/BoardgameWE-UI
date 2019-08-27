@@ -1,10 +1,10 @@
 <template>
   <div class="card">
-    <header class="card-header">
+    <header class="card-header border">
       <p class="card-header-title">
         {{event.name}}
       </p>
-      <p class="card-header-icon">
+      <p class="visibility">
         <b-tag type="is-info">{{$t(visibilityToI18n(event.visibility))}}</b-tag>
       </p>
     </header>
@@ -18,7 +18,9 @@
         <i class="fas fa-location-arrow"></i>
       </span>
       <span class="is-size-6 location-text">
-        {{event.location}}
+        <a :href="locationToMapsUrl">
+          {{event.location}}
+        </a>
       </span>
     </div>
     <footer class="card-footer" v-if="event.current.can_read || event.current.can_join || event.current.can_request || event.current.is_requester || event.current.is_creator">
@@ -86,6 +88,12 @@ export default {
         [EventVisibility.SECRET]: 'event.visibility.secret'
       }[visibility];
     }
+  },
+
+  computed: {
+    locationToMapsUrl() {
+      return 'https://www.google.com/maps/search/?api=1&query=' + this.event.location;
+    }
   }
 };
 </script>
@@ -103,6 +111,12 @@ export default {
   flex-grow: 1;
 }
 
+.visibility {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem
+}
+
 .buttons {
   margin: auto;
   padding-top: 0.75em;
@@ -118,4 +132,5 @@ export default {
   border-top: 1px solid $grey-lighter;
   font-style: italic;
 }
+
 </style>
