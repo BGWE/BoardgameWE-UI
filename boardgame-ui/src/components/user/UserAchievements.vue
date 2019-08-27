@@ -2,7 +2,8 @@
   <div>
     <b-loading :is-full-page="false" :active="loading" />
     <template v-if="!loading">
-      <div v-for="achievement in this.userAchievements" :key="achievement.id">
+      <h3>{{$t("achievements.achievements")}}</h3>
+      <div v-for="achievement in this.achievements" :key="achievement.id_achievement">
         <div class="achievement-container">
           <article class="media">
             <figure class="media-left">
@@ -13,9 +14,9 @@
             <div class="media-content">
               <div class="content">
                 <p>
-                  <strong> {{$t(achievement.id_achievement + '.title')}} </strong> <small> @{{formatedDateTime(achievement.createdAt)}} </small>
+                  <strong> {{achievement.title}} </strong> <small> @{{formatedDateTime(achievement.createdAt)}} </small>
                   <br>
-                  {{$t(achievement.id_achievement + '.descr')}}
+                  {{achievement.description}}
                 </p>
               </div>
             </div>
@@ -23,7 +24,29 @@
         </div>
       </div>
 
-      <div v-if="this.total > this.userAchievements.length" style="padding-top:15px">
+      <h3>{{$t("achievements.badges")}}</h3>
+      <div v-for="(badge_steps, badge_code) in this.badges" :key="badge_code">
+        <div class="achievement-container">
+          <article class="media">
+            <figure class="media-left">
+              <p class="image is-64x64">
+                <img src="@/assets/achievements/placeholder.png">
+              </p>
+            </figure>
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong> {{badge_steps[badge_steps.length - 1].title}} </strong> <small> @{{formatedDateTime(badge_steps[badge_steps.length - 1].createdAt)}} </small>
+                  <br>
+                  {{badge_steps[badge_steps.length - 1].description}}
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div v-if="go_on" style="padding-top:15px">
         <div class="achievement-container">
           <article class="media">
             <figure class="media-left">
@@ -61,8 +84,9 @@ export default {
   data() {
     return {
       loading: true,
-      userAchievements: null,
-      total: null
+      achievements: null,
+      badges: null,
+      go_on: true
     };
   },
 
@@ -71,8 +95,9 @@ export default {
   },
   
   async created() {
-    this.userAchievements = await User.fetchUserAchievements(this.user.id);
-    this.total = await User.fetchTotalNumberAchievements();
+    let all = await User.fetchUserAchievements(this.user.id);
+    this.achievements = all.achievements;
+    this.badges = all.badges;
     this.loading = false;
   }
 };
