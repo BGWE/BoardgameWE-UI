@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 
 export default class Model {
 
@@ -103,7 +104,12 @@ export default class Model {
    * @returns {Array<Model>} The list of all models
    */
   static async fetchAll(params={}) {
-    let {data} = await axios.get(this.collectionName, {params});
+    let {data} = await axios.get(this.collectionName, {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params);
+      }
+    });
     return data.map(elem => new this(elem));
   }
 

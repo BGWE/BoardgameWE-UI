@@ -6,7 +6,7 @@
         :boardGames="boardGames"
         :wishedBoardGames="wishedBoardGames"
         :addFromLibrary="true"
-        :canAdd="isAttendee"
+        :canAdd="event.current.can_write"
         @add="addBoardGame"
         @delete="deleteBoardGame"
       />
@@ -20,8 +20,7 @@ import Library from '@/utils/api/Library';
 
 export default {
   props: {
-    event: Object,
-    isAttendee: Boolean
+    event: Object
   },
   components: {BoardGameList},
   data() {
