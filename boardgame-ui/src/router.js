@@ -50,6 +50,12 @@ const routes = [
     beforeEnter: guestOnly
   },
   {
+    name: 'add-game',
+    path: '/games/add',
+    component: require('./pages/AddEditGamePage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'events',
     path: '/events',
     component: require('./pages/EventsPage.vue').default,
