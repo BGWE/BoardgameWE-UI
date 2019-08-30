@@ -32,6 +32,9 @@
         <user-activity :user="currentUser" />
       </section>
     </div>
+
+    <FAB/>
+  
   </div>
 
 </template>
@@ -41,6 +44,7 @@ import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import UserActivity from '@/components/user/UserActivity';
+import FAB from '@/components/FAB.vue';
 
 export default {
   name: 'UserHomePage',
@@ -55,7 +59,8 @@ export default {
   },
   components: {
     HeroTitlePageLayout,
-    UserActivity
+    UserActivity,
+    FAB
   },
   computed: {
     currentUser() {
