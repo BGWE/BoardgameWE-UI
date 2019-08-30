@@ -164,12 +164,12 @@ const routes = [
   //   component: require('./pages/TimerCreationPage.vue').default,
   //   beforeEnter: authenticatedOnly
   // },
-  // { // to be re-worked in version 3.1
-  //   name: 'timers',
-  //   path: '/timers',
-  //   component: require('./pages/TimersPage.vue').default,
-  //   beforeEnter: authenticatedOnly
-  // },
+  {
+    name: 'timers',
+    path: '/timers',
+    component: require('./pages/TimersPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
   {
     name: 'timer',
     path: '/timer/:timerid',
