@@ -1,12 +1,22 @@
 <template>
   <div class="wrapper">
-    <h1 class="title">
+    <h1 class="title" v-if="event">
         {{$t(idGame ? 'edit-game.title' : 'add-game.title')}}
     </h1>
+
     <b-loading :active="!game" :is-full-page="false" />
     <form v-if="game" @submit.prevent="save()">
+
       <b-field v-if="event" :label="$t('timer.add-edit.event')" >
         <b-input disabled :value="event.name" />
+      </b-field>
+
+      <b-field v-if="events" :label="$t('timer.add-edit.event')">
+         <event-autocomplete
+            v-model="selectedEvent"
+            :events="events"
+            :data-vv-as="$t('add-edit-game.players.user')"
+          />
       </b-field>
 
       <b-field
@@ -116,10 +126,12 @@ import Game, {GameRankingMethods} from '@/utils/api/Game';
 import Timer from '@/utils/api/Timer';
 import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
+import EventAutocomplete from '@/components/form/EventAutocomplete';
 
 export default {
   components: {
-    UserAutocomplete
+    UserAutocomplete,
+    EventAutocomplete
   },
   props: {
     users: { // list of selectable users
@@ -135,6 +147,11 @@ export default {
       required: false,
       default: null
     },
+    events: {
+      type: Array,
+      required: false,
+      default: null
+    }
   },
   data() {
     return {
@@ -143,7 +160,8 @@ export default {
       time: null,
       minTime: null,
       players: [],
-      idPlayer: 1
+      idPlayer: 1,
+      selectedEvent: null
     };
   },
   computed: {

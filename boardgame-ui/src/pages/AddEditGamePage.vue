@@ -1,9 +1,11 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('add-game.title')"/>
-    <add-edit-game-form v-if="users"
+    <add-edit-game-form v-if="!isLoading"
+      class="form"
       :users="users"
       :boardgames="boardgames"
+      :events="events"
     />
   </div>
 </template>
@@ -12,6 +14,7 @@
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import AddEditGameForm from '@/components/AddEditGameForm';
 import BoardGame from '@/utils/api/BoardGame';
+import Event from '@/utils/api/Event';
 
 export default {
   components: {
@@ -21,7 +24,9 @@ export default {
   data() {
     return {
       users: [],
-      boardgames: []
+      boardgames: [],
+      events: [],
+      isLoading: true
     };
   },
   computed: {
@@ -32,9 +37,14 @@ export default {
   async created() {
     this.users = await this.currentUser.fetchFriends();
     this.boardgames = await BoardGame.fetchAll();
+    this.events = await Event.fetchAll(true, [this.currentUser.id]);
+    this.isLoading = false;
   }
 };
 </script>
 
 <style scoped>
+.form {
+  margin-top: 20px;
+}
 </style>
