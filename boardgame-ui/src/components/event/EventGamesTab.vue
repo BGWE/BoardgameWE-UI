@@ -13,7 +13,7 @@
         </p>
         <PanelList>
           <PanelListElement
-            v-for="(game, index) in sortedGames"
+            v-for="(game, index) in reverseSortedGames"
             v-bind:key="index">
 
             <template v-slot:title>
@@ -123,8 +123,19 @@ export default {
       return this.games.slice().sort((a, b) => {
         const datetimeA = moment(a.createdAt).tz(moment.tz.guess());
         const datetimeB = moment(b.createdAt).tz(moment.tz.guess());
-        return datetimeA.isSameOrBefore(datetimeB);
+        console.log(datetimeA);
+        console.log(datetimeB);
+        
+        if (datetimeA.isSameOrBefore(datetimeB)) {
+          return -1;
+        }
+        else {
+          return 1;
+        }
       });
+    },
+    reverseSortedGames: function() {
+      return this.sortedGames.reverse();
     }
   },
 
