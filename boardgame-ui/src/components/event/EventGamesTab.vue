@@ -71,7 +71,6 @@
       </div>
     </div>
 
-
     <ConfirmDeleteModal
       :active="isConfirmDeleteModalActive"
       :onDelete="deleteGame"
@@ -116,31 +115,24 @@ export default {
 
   computed: {
     sortedGames: function() {
-      if(!this.games || this.games.length == 0) {
+      if (!this.games || this.games.length == 0) {
         return [];
       }
 
-      return this.games.slice().sort((a, b) => {
-        const datetimeA = moment(a.createdAt).tz(moment.tz.guess());
-        const datetimeB = moment(b.createdAt).tz(moment.tz.guess());
-        console.log(datetimeA);
-        console.log(datetimeB);
-        
-        if (datetimeA.isSameOrBefore(datetimeB)) {
-          return -1;
-        }
-        else {
-          return 1;
-        }
-      });
+      return this.games.slice().sort(this.sortByCreationDate);
     },
+
     reverseSortedGames: function() {
-      return this.sortedGames.reverse();
+      return this.sortedGames.slice().reverse();
     }
   },
 
   methods: {
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
+
+    sortByCreationDate: (g1, g2) => {
+      return moment(g1.createdAt).diff(moment(g2.createdAt));
+    },
 
     formattedRanking: function(game) {
       let players = game.players;
@@ -204,9 +196,6 @@ export default {
     async reload() {
       this.loading = true;
       this.games = await this.event.fetchGames();
-      this.games.sort((g1, g2) => {
-        return moment(g1.createdAt).diff(moment(g2.createdAt));
-      });
       this.loading = false;
     }
   },
@@ -240,5 +229,4 @@ export default {
   margin: auto;
   margin-bottom: 1em;
 }
-
 </style>
