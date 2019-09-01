@@ -150,9 +150,8 @@ export default {
           });
         }
         else {
-          // score, player
           data.push({
-            'position': i+1,
+            'position': player.rank,
             'player': name,
             'score': score,
           });
