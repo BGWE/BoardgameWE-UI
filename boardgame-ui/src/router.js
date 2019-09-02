@@ -145,6 +145,11 @@ const routes = [
         name: 'user-wish-list',
         path: 'wishlist',
         component: require('./components/user/UserWishList.vue').default
+      },
+      {
+        name: 'user-friends',
+        path: 'friends',
+        component: require('./components/user/UserFriends.vue').default
       }
     ]
   },

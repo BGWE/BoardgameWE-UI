@@ -19,15 +19,6 @@ export default class User extends Model {
   }
 
   /**
-   * Fetch user friends
-   * @returns {Array[User]} List of friends
-   */
-  async fetchFriends() {
-    let {data} = await axios.get(`/user/${this.id}/friends`);
-    return data.map(elem => new User(elem));
-  }
-
-  /**
    * @param {String} username
    * @param {String} password
    * @return {String} A JWT token if the authentication was performed successfully
@@ -66,6 +57,62 @@ export default class User extends Model {
     const id = userId || this.id;
     let {data} = await axios.get(`/user/${id}/activities`);
     return data;
+  }
+
+  /**
+   * Fetch user friends
+   * @returns {Array[User]} List of friends
+   */
+  async fetchFriends() {
+    let {data} = await axios.get(`/user/${this.id}/friends`);
+    return data.map(elem => new User(elem));
+  }
+
+  /**
+   * Fetch the friendship requests related to current user
+   * @returns {Array[]} List of friends requests
+   */
+  static async fetchCurrentFriendshipRequests() {
+    let {data} = await axios.get('/friend_requests');
+    return data;
+  }
+
+  static async fetchCurrentSentFriendshipRequests() {
+    let {data} = await axios.get('/sent_friend_requests');
+    return data;
+  }
+
+  /**
+   * Handle a friendship request received by current user
+   * @param {Number} idSender identifier of the user that sent the friendship request
+   * @param {Boolean} accept true for accepting request, false for rejecting it
+   */
+  static async handleFriendshipRequest(idSender, accept) {
+    await axios.put('/friend_request', {id_sender: idSender, accept});
+  }
+
+  /**
+   * Send a friendship request to another user
+   * @param {Number} idUser identifier of the user added as friend
+   */
+  static async sendFriendshipRequest(idUser) {
+    await axios.post('friend_request', {id_recipient: idUser});
+  }
+
+  /**
+   * Cancel a friendship request
+   * @param {Number} idUser identifier of the friend request recipient
+   */
+  static async cancelFriendshipRequest(idUser) {
+    await axios.delete('friend_request', {data: {id_recipient: idUser}});
+  }
+
+  /**
+   * Remove a user from friends
+   * @param {Number} idUser identifier of the user to remove from friends
+   */
+  static async removeFriend(idUser) {
+    await axios.delete(`friend/${idUser}`);
   }
 
   /**
