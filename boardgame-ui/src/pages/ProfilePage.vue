@@ -128,6 +128,7 @@ export default {
           {name: 'user-library', text: this.$t('profile.tab.library')},
           {name: 'user-wish-list', text: this.$t('profile.tab.wish-list')},
           {name: 'user-friends', text: this.$t('profile.tab.friends')},
+          {name: 'user-achievements', text: this.$t('profile.tab.achievements')}
         ];
       }
       else {
@@ -201,7 +202,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-
-</style>

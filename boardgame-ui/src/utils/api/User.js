@@ -144,4 +144,25 @@ export default class User extends Model {
     let {data} = await axios.post('user/reset_password', {token: token, id: id, password: password});
     return data;
   }
+
+  static async fetchAchievements() {
+    let {data} = await axios.get('/user/current/achievements');
+    return data;
+  }
+
+  static async fetchUserAchievements(userId) {
+    const id = userId || this.id;
+    let {data} = await axios.get(`/user/${id}/achievements`);
+    return data;
+  }
+
+  static async easterEgg() {
+    let {data} = await axios.post('user/current/easteregg');
+    return data;
+  }
+
+  static async fetchTotalNumberAchievements() {
+    let {data} = await axios.get('/achievements/total');
+    return data;
+  }
 }
