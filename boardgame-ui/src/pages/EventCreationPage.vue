@@ -135,7 +135,7 @@ export default {
       try {
         this.event.start = this.formatDateAsISO8601String(this.startDate);
         this.event.end = this.formatDateAsISO8601String(this.endDate);
-        await this.event.save();
+        await this.event.save({auto_join: true});
         this.$router.push({name: 'events'});
       }
       catch (e) {
