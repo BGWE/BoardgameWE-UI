@@ -31,9 +31,14 @@
               </template>
 
               <div v-if="!currentUser" class="navbar-item">
-                <router-link :to="{name: 'login'}" class="button is-primary">
-                  {{$t('navbar.log-in')}}
-                </router-link>
+                <div class="buttons">
+                  <router-link :to="{name: 'login'}" class="button is-primary">
+                    {{$t('navbar.log-in')}}
+                  </router-link>
+                  <router-link :to="{name: 'register'}" class="button is-secondary">
+                    {{$t('navbar.register')}}
+                  </router-link>
+                </div>
               </div>
               <div v-else class="navbar-item has-dropdown is-hoverable">
                 <span class="navbar-link-wrapper">

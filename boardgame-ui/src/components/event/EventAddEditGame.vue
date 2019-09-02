@@ -50,18 +50,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="({user, score}, idx) in players" :key="user ? `user${user.id}` : idx">
+          <tr v-for="({id}, idx) in players" :key="id">
             <td>
               <b-field
-                :type="{'is-danger': errors.has(`user-${idx}`)}"
-                :message="errors.first(`user-${idx}`)"
+                :type="{'is-danger': errors.has(`user-${id}`)}"
+                :message="errors.first(`user-${id}`)"
               >
                 <user-autocomplete
                   size="is-small"
                   v-model="players[idx].user"
                   :users="users"
                   :excludedIds="selectedUsersIds"
-                  :name="`user-${idx}`"
+                  :name="`user-${id}`"
                   :data-vv-as="$t('add-edit-game.players.user')"
                   v-validate="'required'"
                 />
@@ -70,13 +70,13 @@
             <td>
               <b-field
                 v-if="ranked"
-                :type="{'is-danger': errors.has(`score-${idx}`)}"
-                :message="errors.first(`score-${idx}`)"
+                :type="{'is-danger': errors.has(`score-${id}`)}"
+                :message="errors.first(`score-${id}`)"
               >
                 <b-input
                   v-model="players[idx].score"
                   size="is-small"
-                  :name="`score-${idx}`"
+                  :name="`score-${id}`"
                   :data-vv-as="$t('add-edit-game.players.score')"
                   v-validate="'required'"
                 />
@@ -125,6 +125,7 @@ export default {
       time: null,
       minTime: null,
       players: [],
+      idPlayer: 1,
       boardGamesLinks: null
     };
   },
@@ -183,7 +184,6 @@ export default {
       this.players.forEach(player => player.score = null); // reinitialize scores
     },
     time() {
-      console.log(this.time);
       if(this.time < this.minTime) {
         this.time = this.minTime;
       }
@@ -201,7 +201,7 @@ export default {
       this.game.id_board_game = option ? option.id : null;
     },
     addPlayer() {
-      this.players.push({user: null, score: null});
+      this.players.push({user: null, score: null, id: this.idPlayer++});
     },
     removePlayer(idx) {
       if(this.players.length === 1) {
@@ -268,7 +268,7 @@ export default {
 
       this.game.players.forEach(player => {
         let score = this.ranked ? player.score : Boolean(player.score);
-        this.players.push({user: player.user, score});
+        this.players.push({user: player.user, score, id: this.idPlayer++});
       });
 
       this.setTimeFromDuration(this.game.duration);
@@ -291,7 +291,7 @@ export default {
         }
 
         timer.player_timers.forEach(p => {
-          this.players.push({ user: p.user, name: p.name, score: null });
+          this.players.push({ user: p.user, name: p.name, score: null, id: this.idPlayer++ });
         });
       }
       else {

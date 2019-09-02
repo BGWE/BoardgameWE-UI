@@ -7,11 +7,11 @@
     </span>
   </span>
   <span v-else>
-    <span v-for="player in players.slice(0, maxDisplayed - 1)" :key="player.id">
+    <span v-for="player in players.slice(0, maxDisplayed - 2)" :key="player.id">
       <strong><player-display :player="player" /></strong>,&nbsp;
     </span>
-    <strong><player-display :player="players[maxDisplayed - 1]" /></strong>
-    {{$tc('global.and-count-others', nbPlayers - maxDisplayed)}}
+    <strong><player-display :player="players[maxDisplayed - 2]" /></strong>
+    {{$tc('global.and-count-others', nbPlayers - maxDisplayed + 1)}}
   </span>
 </template>
 
@@ -27,7 +27,7 @@ export default {
     PlayerDisplay
   },
   computed: {
-    maxDisplayed: () => 4,
+    maxDisplayed: () => 5,
     nbPlayers() {
       return this.players.length;
     }

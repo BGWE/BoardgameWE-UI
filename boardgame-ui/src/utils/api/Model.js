@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 
 export default class Model {
 
@@ -103,7 +104,12 @@ export default class Model {
    * @returns {Array<Model>} The list of all models
    */
   static async fetchAll(params={}) {
-    let {data} = await axios.get(this.collectionName, {params});
+    let {data} = await axios.get(this.collectionName, {
+      params,
+      paramsSerializer: params => {
+        return qs.stringify(params);
+      }
+    });
     return data.map(elem => new this(elem));
   }
 
@@ -112,10 +118,15 @@ export default class Model {
    *
    * @returns {this} The saved object, as returned by backend
    */
-  async save() {
+  async save(params={}) {
     let data;
     if(this.isNew()) {
-      ({data} = await axios.post(this.uri, this.getPublicProperties()));
+      ({data} = await axios.post(this.uri, this.getPublicProperties(), {
+        params,
+        paramsSerializer: params => {
+          return qs.stringify(params);
+        }
+      }));
     }
     else {
       ({data} = await axios.put(this.uri, this.getPublicProperties()));
