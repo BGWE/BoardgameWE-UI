@@ -316,7 +316,9 @@ profile.toast.cancel-friend-request-error,Failed to cancel the friendship reques
 profile.confirm-friend-deletion,Are you sure you want to remove this user from your friends?,
 profile.no-friends,No friends so far. Access the profile of a user you know and request friendship.,
 profile.pending-friend-requests,Pending requests,
+profile.pending-own-friend-requests,Your pending requests,
 profile.friend_request_received_on,Request received on {date},
+profile.friend_request_sent_on,Request sent on {date},
 achievements.locked,Hidden achievements,
 achievements.continue,Continue playing to unlock new achievements !,
 achievements.badges,Badges,Badges
