@@ -128,7 +128,6 @@ export default {
     async fetchOwnRequests() {
       if (this.isCurrentUserProfile) {
         this.ownRequests = await User.fetchCurrentSentFriendshipRequests();
-        console.log(this.ownRequests);
       }
     },
     async answerRequest(idUser, accept) {

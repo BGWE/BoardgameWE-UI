@@ -19,15 +19,6 @@ export default class User extends Model {
   }
 
   /**
-   * Fetch user friends
-   * @returns {Array[User]} List of friends
-   */
-  async fetchFriends() {
-    let {data} = await axios.get(`/user/${this.id}/friends`);
-    return data.map(elem => new User(elem));
-  }
-
-  /**
    * @param {String} username
    * @param {String} password
    * @return {String} A JWT token if the authentication was performed successfully
