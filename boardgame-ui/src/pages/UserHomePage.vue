@@ -66,7 +66,7 @@ export default {
     const id = this.currentUser.id;
     this.userStats = await User.fetchStats(id);
     this.userActivities = await User.fetchActivities(id);
-    let ongoingEvents = await Event.fetchAll({ongoing: true, registered: [id]});
+    let ongoingEvents = await Event.fetchAll({ongoing: true, registered: true});
     if (ongoingEvents.length > 0) {
       this.ongoingEvent = ongoingEvents[0];
     }
