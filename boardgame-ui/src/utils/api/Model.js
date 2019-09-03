@@ -118,10 +118,15 @@ export default class Model {
    *
    * @returns {this} The saved object, as returned by backend
    */
-  async save() {
+  async save(params={}) {
     let data;
     if(this.isNew()) {
-      ({data} = await axios.post(this.uri, this.getPublicProperties()));
+      ({data} = await axios.post(this.uri, this.getPublicProperties(), {
+        params,
+        paramsSerializer: params => {
+          return qs.stringify(params);
+        }
+      }));
     }
     else {
       ({data} = await axios.put(this.uri, this.getPublicProperties()));

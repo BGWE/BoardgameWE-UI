@@ -198,7 +198,6 @@ export default {
       let libraryGames = (await new Library().fetchGames()).map(item => item.board_game);
       this.libraryGames = this.processBoardGames(libraryGames);
       this.filterLibraryGames();
-      console.log(this.libraryGames);
     }
   }
 };
