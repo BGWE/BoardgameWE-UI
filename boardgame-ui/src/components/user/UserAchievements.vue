@@ -2,7 +2,31 @@
   <div>
     <b-loading :is-full-page="false" :active="loading" />
     <template v-if="!loading">
-      <h3>{{$t("achievements.achievements")}}</h3>
+      <h3 class="achievement-title">{{$t("achievements.badges")}}</h3>
+      <div v-for="(badge_steps, badge_code) in this.badges" :key="badge_code">
+        <div class="achievement-container">
+          <article class="media">
+            <figure class="media-left">
+              <p class="image is-64x64">
+                <img v-if="badge_steps.length === 1" src="@/assets/achievements/badge_0.png">
+                <img v-else-if="badge_steps.length === 2" src="@/assets/achievements/badge_2_alt_white.png">
+                <img v-else-if="badge_steps.length === 3" src="@/assets/achievements/badge_2.png">
+              </p>
+            </figure>
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong> {{badge_steps[badge_steps.length - 1].title}} </strong> <small> @{{formatedDateTime(badge_steps[badge_steps.length - 1].createdAt)}} </small>
+                  <br>
+                  {{badge_steps[badge_steps.length - 1].description}}
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <h3 class="achievement-title" style="padding-top:15px">{{$t("achievements.achievements")}}</h3>
       <div v-for="achievement in this.achievements" :key="achievement.id_achievement">
         <div class="achievement-container">
           <article class="media">
@@ -17,28 +41,6 @@
                   <strong> {{achievement.title}} </strong> <small> @{{formatedDateTime(achievement.createdAt)}} </small>
                   <br>
                   {{achievement.description}}
-                </p>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <h3>{{$t("achievements.badges")}}</h3>
-      <div v-for="(badge_steps, badge_code) in this.badges" :key="badge_code">
-        <div class="achievement-container">
-          <article class="media">
-            <figure class="media-left">
-              <p class="image is-64x64">
-                <img src="@/assets/achievements/placeholder.png">
-              </p>
-            </figure>
-            <div class="media-content">
-              <div class="content">
-                <p>
-                  <strong> {{badge_steps[badge_steps.length - 1].title}} </strong> <small> @{{formatedDateTime(badge_steps[badge_steps.length - 1].createdAt)}} </small>
-                  <br>
-                  {{badge_steps[badge_steps.length - 1].description}}
                 </p>
               </div>
             </div>
@@ -92,6 +94,11 @@ export default {
 
   methods: {
     formatedDateTime: (datetime) => Helper.formatDatetime(datetime),
+
+    badgeImagePath: (level) => {
+      const path = '@/assets/achievements/badge_' + level + '.png';
+      return path;
+    }
   },
   
   async created() {
@@ -109,5 +116,6 @@ export default {
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 1.25;
+  padding-bottom: 10pt;
 }
 </style>
