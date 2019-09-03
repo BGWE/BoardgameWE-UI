@@ -33,7 +33,13 @@
       </section>
     </div>
 
-    <FAB/>
+    <fab
+      position="bottom-right"
+      bg-color="#E66E50"
+      :actions="fabActions"
+      @create_timer="create_timer"
+      @add_game="add_game"
+    />
   
   </div>
 
@@ -44,7 +50,7 @@ import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import UserActivity from '@/components/user/UserActivity';
-import FAB from '@/components/FAB.vue';
+import fab from 'vue-fab';
 
 export default {
   name: 'UserHomePage',
@@ -54,17 +60,35 @@ export default {
       userActivities: null,
       ongoingEvent: null,
       isOngoingEventMsgActive: true,
-      isFetching: true
+      isFetching: true,
+      fabActions: [
+        {
+          name: 'add_game',
+          icon: 'playlist_add'
+        },
+        {
+          name: 'create_timer',
+          icon: 'add_alarm'
+        }
+      ]
     };
   },
   components: {
     HeroTitlePageLayout,
     UserActivity,
-    FAB
+    fab
   },
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
+    }
+  },
+  methods: {
+    add_game() {
+      this.$router.push({name: 'add-game'});
+    },
+    create_timer() {
+      this.$router.push({name: 'create-timer'});
     }
   },
   async created() {
