@@ -18,7 +18,7 @@
         <i class="fas fa-location-arrow"></i>
       </span>
       <span class="is-size-6 location-text">
-        <a :href="locationToMapsUrl">
+        <a :href="locationToMapsUrl" target="_blank">
           {{event.location}}
         </a>
       </span>
