@@ -9,7 +9,7 @@
             <figure class="media-left">
               <p class="image is-64x64">
                 <img v-if="badge_steps.length === 1" src="@/assets/achievements/badge_0.png">
-                <img v-else-if="badge_steps.length === 2" src="@/assets/achievements/badge_2_alt_white.png">
+                <img v-else-if="badge_steps.length === 2" src="@/assets/achievements/badge_1.png">
                 <img v-else-if="badge_steps.length === 3" src="@/assets/achievements/badge_2.png">
               </p>
             </figure>
@@ -94,11 +94,6 @@ export default {
 
   methods: {
     formatedDateTime: (datetime) => Helper.formatDatetime(datetime),
-
-    badgeImagePath: (level) => {
-      const path = '@/assets/achievements/badge_' + level + '.png';
-      return path;
-    }
   },
   
   async created() {
