@@ -11,12 +11,12 @@
             </router-link>
           </div>
         </div>
-        <timer-list
+        <timer-list v-if="timers"
           :timers="this.timers"
           @delete:timer="timerDeleted"
         />
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </template>
 
