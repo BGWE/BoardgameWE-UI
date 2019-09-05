@@ -16,6 +16,7 @@ env:
 
 before_deploy:
 - cd ..
+- pwd && ls -al
 
 deploy:
 - provider: s3
