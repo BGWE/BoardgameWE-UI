@@ -4,7 +4,7 @@
     <div class="columns" v-if="!loading">
       <div class="column is-full">
         <p v-if="event.current.can_write" class="has-text-right limited-width">
-          <router-link :to="{name: 'add-event-timer'}" class="button is-primary"> {{$t('timers.add')}} </router-link>
+          <router-link :to="{name: 'add-timer-event'}" class="button is-primary"> {{$t('timers.add')}} </router-link>
         </p>
         <timer-list :timers="timers" @delete:timer="timerDeleted" />
       </div>

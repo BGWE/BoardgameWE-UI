@@ -53,26 +53,57 @@
       <h2 class="subtitle"><i18n path="activity.title.recent-activities" /></h2>
       <activity-box v-for="index in activities.length" :key="index" :activity="activities[index-1]" />
     </div>
+
+    <fab
+      position="bottom-right"
+      bg-color="#E66E50"
+      :actions="fabActions"
+      @create_timer="create_timer"
+      @add_game="add_game"
+    />
+
   </section>
 </template>
 
 <script>
 import ActivityBox from '@/components/activities/ActivityBox';
 import BgcDuration from '@/components/utils/BgcDuration';
+import fab from 'vue-fab';
 
 export default {
   components: {
     ActivityBox,
-    BgcDuration
+    BgcDuration,
+    fab
   },
   props: ['event'],
   data() {
     return {
       loading: true,
       activities: [],
-      stats: null
+      stats: null,
+      fabActions: [
+        {
+          name: 'add_game',
+          icon: 'playlist_add'
+        },
+        {
+          name: 'create_timer',
+          icon: 'add_alarm'
+        }
+      ]
     };
   },
+
+  methods: {
+    add_game() {
+      this.$router.push({name: 'add-game-event'});
+    },
+    create_timer() {
+      this.$router.push({name: 'add-timer-event'});
+    }
+  },
+
   async created() {
     this.loading = true;
     this.activities = await this.event.fetchActivities();

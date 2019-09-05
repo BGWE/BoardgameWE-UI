@@ -19,14 +19,6 @@
       </div>
     </div>
 
-    <fab
-      position="bottom-right"
-      bg-color="#E66E50"
-      :actions="fabActions"
-      @create_timer="create_timer"
-      @add_game="add_game"
-    />
-
   </div>
 </template>
 
@@ -34,28 +26,16 @@
 import Event from '@/utils/api/Event';
 import BgcDatetime from '@/components/layout/BgcDatetime';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import fab from 'vue-fab';
 
 export default {
   components: {
     HeroTitlePageLayout,
-    BgcDatetime,
-    fab
+    BgcDatetime
   },
 
   data() {
     return {
-      event: null,
-      fabActions: [
-        {
-          name: 'add_game',
-          icon: 'playlist_add'
-        },
-        {
-          name: 'create_timer',
-          icon: 'add_alarm'
-        }
-      ]
+      event: null
     };
   },
 
@@ -79,12 +59,6 @@ export default {
   methods: {
     fetchAttendees() {
       this.event.fetchAttendees();
-    },
-    add_game() {
-      this.$router.push({name: 'add-game'});
-    },
-    create_timer() {
-      this.$router.push({name: 'create-timer'});
     }
   },
 

@@ -143,8 +143,6 @@ export default {
     color: $secondary;
     background-color: white;
     border-radius: 4px;
-
-    // padding: 10px;
   }
 
   .navbar-link.navbar-link-custom > .icon {

@@ -289,6 +289,8 @@ export default {
   min-height: 20vh;
   margin: auto;
   position: relative;
+  padding-left: 5pt;
+  padding-right: 5pt;
 }
 
 h2 {
