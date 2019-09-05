@@ -7,7 +7,7 @@
         <div class="columns">
           <div class="column has-text-right">
             <router-link tag="button" class="button is-primary" :to="{name: 'create-event'}">
-                {{$t("events.add")}}
+              {{$t("events.add")}}
             </router-link>
           </div>
         </div>

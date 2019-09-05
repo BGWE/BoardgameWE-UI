@@ -1,8 +1,9 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('timers.title')"/>
-    <div class="container">
-      <section class="section">
+    <section class="container">
+      <b-loading :is-full-page="false" :active="isLoading"/>
+      <div class="section">
         <div class="columns">
           <div class="column has-text-right">
             <router-link tag="button" class="button is-primary" :to="{name: 'create-timer'}">
@@ -32,12 +33,14 @@ export default {
 
   data() {
     return {
-      timers: null
+      timers: null,
+      isLoading: true
     };
   },
 
   async created() {
     this.timers = await Timer.getCurrentUserTimers();
+    this.isLoading = false;
   },
 
   methods: {
