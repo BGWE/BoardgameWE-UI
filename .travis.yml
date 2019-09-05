@@ -60,6 +60,6 @@ deploy:
   acl: public_read
   region: eu-west-1
   skip_cleanup: true
-  local_dir: boardgame-ui/dist
+  local_dir: BoardgameWE-UI/boardgame-ui/dist
   on:
     branch: develop
