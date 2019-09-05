@@ -18,6 +18,7 @@
         <router-view :event="event" @update-attendees="fetchAttendees()" />
       </div>
     </div>
+
   </div>
 </template>
 

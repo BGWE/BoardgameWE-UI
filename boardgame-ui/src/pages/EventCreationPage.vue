@@ -78,7 +78,7 @@
 import Event, { EventVisibility } from '@/utils/api/Event.js';
 import * as helper from '@/utils/helper';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import DateTimePicker from '@/components/layout/DateTimePicker';
+import DateTimePicker from '@/components/form/DateTimePicker';
 
 export default {
   name: 'EventEditionPage',
