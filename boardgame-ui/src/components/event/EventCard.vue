@@ -57,7 +57,7 @@
             <i class="far fa-edit"></i>
           </span>
 
-          <span>{{$t('events.edit')}}</span>
+          <span>{{$t('global.edit')}}</span>
         </router-link>
       </div>
     </footer>

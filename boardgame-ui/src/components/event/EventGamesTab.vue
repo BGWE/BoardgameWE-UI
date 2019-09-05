@@ -52,11 +52,11 @@
             <template v-if="event.current.can_write" v-slot:buttons>
               <router-link :to="{name: 'edit-game-event', params: {idGame: game.id}}" class="card-footer-item">
                 <span class="icon"><i class="far fa-edit"></i></span>
-                {{$t('event.games.edit')}}
+                {{$t('global.edit')}}
               </router-link>
               <a class="card-footer-item card-footer-item-danger" @click="confirmDeleteGame(game)">
                 <span class="icon"><i class="far fa-trash-alt"></i></span>
-                {{$t('event.games.delete')}}
+                {{$t('global.delete')}}
               </a>
             </template>
 
