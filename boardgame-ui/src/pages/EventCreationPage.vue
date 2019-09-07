@@ -59,7 +59,9 @@
             </b-checkbox>
           </b-field>
           <b-field horizontal>
-            <b-checkbox v-model="event.user_can_join" :disabled="event.invite_required || event.visibility === eventVisibility.SECRET">
+            <b-checkbox v-model="event.user_can_join" 
+            :disabled="event.invite_required || event.visibility === eventVisibility.SECRET"
+            >
               {{$t('event.edition.userCanJoin')}}
             </b-checkbox>
           </b-field>
@@ -117,6 +119,11 @@ export default {
         this.event.invite_required = true;
         this.event.user_can_join = false;
       }
+    },
+    'event.invite_required': function(value, oldValue) {
+      if (value !== oldValue && value === true) {
+        this.event.user_can_join = false;
+      }
     }
   },
 
@@ -169,6 +176,7 @@ export default {
       this.event = new Event();
       this.event.description = '';
       this.event.hide_rankings = false;
+      this.event.attendees_can_edit = true;
     }
   },
 };

@@ -64,11 +64,13 @@ export default {
       fabActions: [
         {
           name: 'add_game',
-          icon: 'playlist_add'
+          icon: 'playlist_add',
+          tooltip: 'Add game'
         },
         {
           name: 'create_timer',
-          icon: 'add_alarm'
+          icon: 'add_alarm',
+          tooltip: 'Create a timer'
         }
       ]
     };
