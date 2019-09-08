@@ -164,6 +164,12 @@ const routes = [
       }
     ]
   },
+  {
+    name: 'games',
+    path: '/games',
+    component: require('./pages/GamesPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
   // { // to be re-worked in version 3.1
   //   name: 'create-event-timer',
   //   path: '/event/:eventid/timer',

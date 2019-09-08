@@ -26,6 +26,10 @@
                 <router-link :to="{name: 'timers'}" class="navbar-item">
                   {{$t('navbar.timers')}}
                 </router-link>
+
+                <router-link :to="{name: 'games'}" class="navbar-item">
+                  {{$t('navbar.games')}}
+                </router-link>
                 
               </template>
 

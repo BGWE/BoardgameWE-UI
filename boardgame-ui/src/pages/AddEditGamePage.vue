@@ -12,7 +12,7 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import AddEditGameForm from '@/components/AddEditGameForm';
+import AddEditGameForm from '@/components/games/AddEditGameForm';
 import BoardGame from '@/utils/api/BoardGame';
 import Event from '@/utils/api/Event';
 

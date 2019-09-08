@@ -10,7 +10,7 @@
 
 <script>
 import Event from '@/utils/api/Event';
-import AddEditGameForm from '@/components/AddEditGameForm';
+import AddEditGameForm from '@/components/games/AddEditGameForm';
 
 export default {
   components: {
