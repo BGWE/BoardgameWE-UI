@@ -12,61 +12,10 @@
           {{$t('event.games.no-games')}}
         </p>
         <PanelList>
-          <PanelListElement
+          <GameCard
             v-for="(game, index) in reverseSortedGames"
-            v-bind:key="index">
-
-            <template v-slot:title>
-              <div class="games-headers">
-                <div class="is-size-6-mobile">{{game.board_game.name}}</div>
-                <div class="games-subtitle field is-grouped is-grouped-multiline">
-                  <div class="control">
-                    <div class="tags has-addons">
-                      <span class="tag is-primary"><i class="fas fa-user"></i></span>
-                      <span class="tag is-light">{{game.players.length}}</span>
-                    </div>
-                  </div>
-
-                  <div class="control" v-if="game.duration">
-                    <div class="tags has-addons">
-                      <span class="tag is-primary"><i class="fas fa-stopwatch"></i></span>
-                      <span class="tag is-light"><BgcDuration :duration="game.duration" /></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
-
-            <template v-slot:img>
-              <figure class="image is-64x64 is-rounded background" :style="{backgroundImage: `url('${game.board_game.thumbnail}')`}"></figure>
-            </template>
-
-            <template v-slot:content>
-              <div>
-                <RankingTable
-                :rankingMethod="game.ranking_method"
-                :data="formattedRanking(game)"></RankingTable>
-              </div>
-            </template>
-
-            <template v-if="event.current.can_write" v-slot:buttons>
-              <router-link :to="{name: 'edit-game-event', params: {idGame: game.id}}" class="card-footer-item">
-                <span class="icon"><i class="far fa-edit"></i></span>
-                {{$t('global.edit')}}
-              </router-link>
-              <a class="card-footer-item card-footer-item-danger" @click="confirmDeleteGame(game)">
-                <span class="icon"><i class="far fa-trash-alt"></i></span>
-                {{$t('global.delete')}}
-              </a>
-            </template>
-
-            <template v-slot:footer>
-              <span class="has-text-weight-light has-text-dark is-size-7 time-footer">
-                <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
-                </span>
-            </template>
-
-          </PanelListElement>
+            v-bind:key="index"
+            :game="game"/>
         </PanelList>
       </div>
     </div>
@@ -81,13 +30,10 @@
 
 <script>
 import PanelList from '@/components/layout/PanelList';
-import PanelListElement from '@/components/layout/PanelListElement';
-import RankingTable from '@/components/layout/RankingTable';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
-import BgcDuration from '@/components/utils/BgcDuration';
+import GameCard from '@/components/games/GameCard';
 
 import Game from '@/utils/api/Game';
-import * as Helper from '@/utils/helper';
 
 import moment from 'moment-timezone';
 
@@ -98,10 +44,8 @@ export default {
 
   components: {
     PanelList,
-    PanelListElement,
-    RankingTable,
     ConfirmDeleteModal,
-    BgcDuration
+    GameCard
   },
 
   data() {
@@ -128,36 +72,8 @@ export default {
   },
 
   methods: {
-    formatDatetime: (datetime) => Helper.formatDatetime(datetime),
-
     sortByCreationDate: (g1, g2) => {
       return moment(g1.createdAt).diff(moment(g2.createdAt));
-    },
-
-    formattedRanking: function(game) {
-      let players = game.players;
-      let data = [];
-
-      for (let i = 0; i < players.length; i++) {
-        const player = players[i];
-        const name = player.user ? `${player.user.name} ${player.user.surname}` : `${player.name}`;
-        const score = player.score;
-
-        if (game.ranking_method === 'WIN_LOSE') {
-          data.push({
-            'player': name,
-            'score': score,
-          });
-        }
-        else {
-          data.push({
-            'position': player.rank,
-            'player': name,
-            'score': score,
-          });
-        }
-      }
-      return data;
     },
 
     confirmDeleteGame: function(game) {
@@ -207,22 +123,6 @@ export default {
 </script>
 
 <style scoped>
-.card-footer-item-danger {
-  color: hsl(348, 100%, 61%);
-}
-
-.time-footer {
-  margin-left: 10px;
-}
-
-.games-title {
-  font-size: 1.1em;
-}
-
-.games-subtitle {
-  margin-top: 0.2em;
-}
-
 .limited-width {
   max-width: 500px;
   margin: auto;

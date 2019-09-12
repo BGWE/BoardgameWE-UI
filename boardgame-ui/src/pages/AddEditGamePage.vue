@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeroTitlePageLayout :title="$t('add-game.title')"/>
+    <HeroTitlePageLayout :title="$t('games.title')"/>
     <add-edit-game-form v-if="!isLoading"
       class="form"
       :users="users"

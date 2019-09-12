@@ -1,11 +1,8 @@
 <template>
-  <div>
+  <PanelListElement>
     <template v-slot:title>
       <div class="games-headers">
-        <div class="is-size-6-mobile">
-          {{game.board_game.name}}
-        </div>
-
+        <div class="is-size-6-mobile">{{game.board_game.name}}</div>
         <div class="games-subtitle field is-grouped is-grouped-multiline">
           <div class="control">
             <div class="tags has-addons">
@@ -31,13 +28,13 @@
     <template v-slot:content>
       <div>
         <RankingTable
-          :rankingMethod="game.ranking_method"
-          :data="formattedRanking(game)"></RankingTable>
-        </div>
+        :rankingMethod="game.ranking_method"
+        :data="formattedRanking(game)"></RankingTable>
+      </div>
     </template>
 
-    <template v-if="event.current.can_write" v-slot:buttons>
-      <router-link :to="{name: 'edit-game-event', params: {idGame: game.id}}" class="card-footer-item">
+    <template v-slot:buttons>
+      <router-link :to="{name: 'edit-game', params: {idGame: game.id}}" class="card-footer-item">
         <span class="icon"><i class="far fa-edit"></i></span>
         {{$t('global.edit')}}
       </router-link>
@@ -49,20 +46,20 @@
 
     <template v-slot:footer>
       <span class="has-text-weight-light has-text-dark is-size-7 time-footer">
-      <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
-      </span>
+        <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
+        </span>
     </template>
-  </div>
+
+  </PanelListElement>
 </template>
 
 <script>
 import RankingTable from '@/components/layout/RankingTable';
 import BgcDuration from '@/components/utils/BgcDuration';
+import PanelListElement from '@/components/layout/PanelListElement';
 
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
-
-import moment from 'moment-timezone';
 
 export default {
   props: {
@@ -71,7 +68,8 @@ export default {
 
   components: {
     RankingTable,
-    BgcDuration
+    BgcDuration,
+    PanelListElement
   },
 
   methods: {
