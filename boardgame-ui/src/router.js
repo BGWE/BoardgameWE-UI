@@ -56,6 +56,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'edit-game',
+    path: '/games/edit/:idGame',
+    component: require('./pages/AddEditGamePage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'events',
     path: '/events',
     component: require('./pages/EventsPage.vue').default,
@@ -87,12 +93,12 @@ const routes = [
       {
         name: 'add-game-event',
         path: 'games/add',
-        component: require('./components/event/EventAddEditGame').default
+        component: require('./components/event/EventAddEditGame.vue').default
       },
       {
         name: 'edit-game-event',
         path: 'games/edit/:idGame',
-        component: require('./components/event/EventAddEditGame').default
+        component: require('./components/event/EventAddEditGame.vue').default
       },
       {
         name: 'event-games',

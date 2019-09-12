@@ -13,7 +13,8 @@
 
       <b-field v-if="events" :label="$t('timer.add-edit.event')">
          <event-autocomplete
-            v-model="selectedEvent"
+            v-model="eventSearchString"
+            @select="selectEvent"
             :events="events"
             :data-vv-as="$t('add-edit-game.players.user')"
           />
@@ -157,11 +158,11 @@ export default {
     return {
       game: null,
       searchString: '',
+      eventSearchString: '',
       time: null,
       minTime: null,
       players: [],
-      idPlayer: 1,
-      selectedEvent: null
+      idPlayer: 1
     };
   },
   computed: {
@@ -215,6 +216,9 @@ export default {
     },
     selectBoardGame(option) {
       this.game.id_board_game = option ? option.id : null;
+    },
+    selectEvent(option) {
+      this.game.id_event = option ? option.id : null;
     },
     addPlayer() {
       this.players.push({user: null, score: null, id: this.idPlayer++});
@@ -279,6 +283,7 @@ export default {
       this.game = await Game.fetch(this.idGame);
 
       this.searchString = this.game.board_game.name;
+      this.eventSearchString = this.events.find(event => event.id == this.game.id_event).name;
 
       this.game.players.forEach(player => {
         let score = this.ranked ? player.score : Boolean(player.score);
@@ -292,6 +297,7 @@ export default {
       
       if (this.event) {
         gameData.id_event = this.event.id;
+        this.eventSearchString = this.event.name;
       }
       
       if (this.idTimer) {
