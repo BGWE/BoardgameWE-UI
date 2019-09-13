@@ -1,7 +1,15 @@
 <template>
   <div>
     <b-loading :is-full-page="false" :active="loading" />
+
     <template v-if="!loading">
+      <b-message v-if="friends.length === 0 && isCurrentUserProfile" type="is-info" has-icon icon-size="is-small">
+        {{ $t('profile.friends.explanation')}}
+      </b-message>
+
+      <p class="has-text-centered has-text-grey" v-if="friends.length === 0">
+        {{$t('profile.no-friends')}}
+      </p>
       <b-table :data="friends" striped>
         <template #default="{row: user}">
           <b-table-column :label="$t('label.name')">
@@ -25,10 +33,7 @@
           </b-table-column>
         </template>
       </b-table>
-      <p class="has-text-centered has-text-grey" v-if="friends.length === 0">
-        {{$t('profile.no-friends')}}
-      </p>
-
+      
       <template v-if="requests && requests.length">
         <hr>
 

@@ -1,5 +1,7 @@
 <template>
   <div>
+    <b-loading :is-full-page="false" :active="loading"></b-loading>
+    
     <div v-if="stats">
       <b-collapse class="eventList" :open="false" aria-id="statistics">
         <div slot="trigger" slot-scope="props" role="button" aria-controls="statistics">
