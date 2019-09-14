@@ -2,6 +2,10 @@
   <div>
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <template v-if="!loading">
+      <b-message v-if="boardGames.length === 0" type="is-info" has-icon icon-size="is-small">
+        {{ $t('event.boardgames.info-message')}}
+      </b-message>
+
       <board-game-list
         :boardGames="boardGames"
         :wishedBoardGames="wishedBoardGames"

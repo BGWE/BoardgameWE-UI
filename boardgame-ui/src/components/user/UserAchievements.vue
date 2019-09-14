@@ -2,7 +2,12 @@
   <div>
     <b-loading :is-full-page="false" :active="loading" />
     <template v-if="!loading">
-      <h3 class="achievement-title">{{$t("achievements.badges")}}</h3>
+
+      <b-message v-if="achievements.length === 0 && badges.length === 0 && isCurrentUserProfile" type="is-info" has-icon icon-size="is-small">
+        {{$t('achievements.explanation')}}
+      </b-message>
+
+      <h3 class="achievement-title">{{$t("achievements.achievements")}}</h3>
       <div v-for="(badge_steps, badge_code) in this.badges" :key="badge_code">
         <div class="achievement-container">
           <article class="media">
@@ -26,7 +31,6 @@
         </div>
       </div>
 
-      <h3 class="achievement-title" style="padding-top:15px">{{$t("achievements.achievements")}}</h3>
       <div v-for="achievement in this.achievements" :key="achievement.id_achievement">
         <div class="achievement-container">
           <article class="media">

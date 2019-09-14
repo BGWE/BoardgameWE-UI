@@ -1,6 +1,11 @@
 <template>
   <div>
     <b-loading :is-full-page="false" :active="loading" />
+
+    <b-message v-if="boardGames.length === 0 && isCurrentUserProfile" type="is-info" has-icon icon-size="is-small">
+      {{$t('profile.library.explanation')}}
+    </b-message>
+
     <board-game-list
       v-if="!loading"
       :boardGames="boardGames"

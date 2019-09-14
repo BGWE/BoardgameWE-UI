@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
-    <b-loading :active="isLoading"/>
+    <b-loading :is-full-page="false" :active="isLoading"/>
+    
     <form @submit.prevent="createTimer()" v-if="timer">
       <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
 

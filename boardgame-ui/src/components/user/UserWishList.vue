@@ -2,7 +2,7 @@
   <div>
     <b-loading :is-full-page="false" :active="loading" />
     <template v-if="!loading">
-      <b-message type="is-info" has-icon icon-size="is-small">
+      <b-message v-if="boardGames.length === 0" type="is-info" has-icon icon-size="is-small">
         {{ $t('wish-list.explanation.' + (isCurrentUserProfile ? 'current-user' : 'other-user'), {user: user.name}) }}
       </b-message>
       <board-game-list

@@ -1,22 +1,27 @@
 <template>
   <div>
     <b-loading :is-full-page="false" :active="loading" />
-    <div class="columns" v-if="!loading">
-      <div class="column is-full">
-        <p v-if="event.current.can_write" class="has-text-right limited-width">
-          <router-link :to="{name: 'add-game-event'}" class="button is-primary">
-            {{$t('button.add-game')}}
-          </router-link>
-        </p>
-        
-        <p class="has-text-centered has-text-grey" v-if="games.length === 0">
-          {{$t('event.games.no-games')}}
-        </p>
-        
-        <GamesList v-if="games" :games="reverseSortedGames"/>
+    <template v-if="!loading">
+      <b-message v-if="games.length === 0" type="is-info" has-icon icon-size="is-small">
+        {{$t('event.games.info-message')}}
+      </b-message>
+      <div class="columns">
+        <div class="column is-full">
+          <p v-if="event.current.can_write" class="has-text-right limited-width">
+            <router-link :to="{name: 'add-game-event'}" class="button is-primary">
+              {{$t('button.add-game')}}
+            </router-link>
+          </p>
 
+          <p class="has-text-centered has-text-grey" v-if="games.length === 0">
+            {{$t('event.games.no-games')}}
+          </p>
+
+          <GamesList v-if="games" :games="reverseSortedGames"/>
+
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
