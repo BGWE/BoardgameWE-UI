@@ -2,18 +2,19 @@
   <div>
     <b-loading :is-full-page="false" :active="loading" />
 
-    <b-message v-if="boardGames.length === 0 && isCurrentUserProfile" type="is-info" has-icon icon-size="is-small">
-      {{$t('profile.library.explanation')}}
-    </b-message>
+    <template v-if="!loading">
+      <b-message v-if="boardGames.length === 0 && isCurrentUserProfile" type="is-info" has-icon icon-size="is-small">
+        {{$t('profile.library.explanation')}}
+      </b-message>
 
-    <board-game-list
-      v-if="!loading"
-      :boardGames="boardGames"
-      :allBelongToUser="isCurrentUserProfile"
-      :canAdd="isCurrentUserProfile"
-      @add="addBoardGame"
-      @delete="deleteBoardGame"
-    />
+      <board-game-list
+        :boardGames="boardGames"
+        :allBelongToUser="isCurrentUserProfile"
+        :canAdd="isCurrentUserProfile"
+        @add="addBoardGame"
+        @delete="deleteBoardGame"
+      />
+    </template>
   </div>
 </template>
 
