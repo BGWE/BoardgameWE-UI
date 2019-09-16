@@ -4,7 +4,7 @@
     <add-timer-form v-if="users"
       class="form"
       :users="users"
-      @timerCreated="goBackToTimers"
+      @created:timer="goBackToTimers"
       @close="goBackToTimers"
     />
   </div>
