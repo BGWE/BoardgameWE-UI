@@ -3,22 +3,24 @@
     <HeroTitlePageLayout :title="$t('games.title')"/>
     <section class="container">
       <b-loading :is-full-page="false" :active="isLoading"/>
-      <div class="section">
-        <div class="columns">
-          <div class="column has-text-right">
-            <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
-              {{$t("games.add")}}
-            </router-link>
+      <template v-if="!isLoading">
+        <div class="section">
+          <div class="columns">
+            <div class="column has-text-right">
+              <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
+                {{$t("games.add")}}
+              </router-link>
+            </div>
           </div>
+
+          <p class="has-text-centered has-text-grey" v-if="games.length === 0">
+            {{$t('event.games.no-games')}}
+          </p>
+
+          <GamesList v-if="games" :games="games"/>
+          
         </div>
-
-        <p class="has-text-centered has-text-grey" v-if="games.length === 0">
-          {{$t('event.games.no-games')}}
-        </p>
-
-        <GamesList v-if="games" :games="games"/>
-        
-      </div>
+      </template>
     </section>
   </div>
 </template>
@@ -60,6 +62,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>
