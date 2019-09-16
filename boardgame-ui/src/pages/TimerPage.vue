@@ -69,7 +69,7 @@
         </transition>
 
         <transition name="fade">
-          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null && timer.id_event !== null">
             <span class="panel-icon">
               <i class="fas fa-external-link-alt"></i>
             </span>
