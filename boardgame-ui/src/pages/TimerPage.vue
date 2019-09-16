@@ -198,7 +198,7 @@ export default {
     timer_delete() {
       this.timerDeletedModalActive = true;
     },
-    change_player_turn_order(timer) {
+    timer_change_player_turn_order(timer) {
       this.isLoading = false;
       this.setTimer(timer);
     },
@@ -216,7 +216,7 @@ export default {
         }
 
         this.isLoading = true;
-        this.$socket.emit('change_player_turn_order', val);
+        this.$socket.emit('timer_change_player_turn_order', val);
       }
     },
   },
