@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <b-loading :is-full-page="false" :active="isLoading"/>
+    <b-loading :is-full-page="false" :active="loading"/>
     
     <form @submit.prevent="createTimer()" v-if="timer">
       <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
@@ -130,7 +130,7 @@ export default {
 
   data() {
     return {
-      isLoading: false,
+      loading: false,
       players: [],
       idPlayer: 1,
       timer: null,
@@ -245,7 +245,7 @@ export default {
   },
 
   async created() {
-    this.isLoading = true;
+    this.loading = true;
     this.boardGames = await BoardGame.fetchAll();
 
     if (this.$route.params.id) {
@@ -278,7 +278,7 @@ export default {
       this.timer.id_event = this.event.id;
     }
 
-    this.isLoading = false;
+    this.loading = false;
 
   },
 };

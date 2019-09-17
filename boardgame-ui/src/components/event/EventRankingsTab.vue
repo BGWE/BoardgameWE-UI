@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-loading :is-full-page="false" :active="isLoading"/>
-    <template v-if="!isLoading">
+    <b-loading :is-full-page="false" :active="loading"/>
+    <template v-if="!loading">
       <b-message v-if="areRankingsEmpty()" type="is-info" has-icon icon-size="is-small">
         {{$t('event.rankings.info-message')}}
       </b-message>
@@ -119,7 +119,7 @@ export default {
   data() {
     return {
       rankings: [],
-      isLoading: true
+      loading: true
     };
   },
 
@@ -176,7 +176,7 @@ export default {
   async created() {
     if (!this.event.hide_rankings) {
       this.rankings = await this.event.fetchRankings();
-      this.isLoading = false;
+      this.loading = false;
     }
   },
 

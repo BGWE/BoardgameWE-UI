@@ -55,8 +55,11 @@
             </div>
           </div>
         </div>
+
       </b-collapse>
     </div>
+    
+    <hr class="simple-hr">
 
     <div v-if="activities">
       <h2 class="subtitle"><i18n path="activity.title.recent-activities" /></h2>
@@ -128,4 +131,5 @@ export default {
 .title {
   margin-bottom: 0.25rem;
 }
+
 </style>
