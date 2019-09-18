@@ -12,11 +12,10 @@
           </div>
         </div>
 
-        <section class="section">
           <b-collapse class="eventList" :open="true" aria-id="activeEventsId">
             <div slot="trigger" slot-scope="props" role="button" aria-controls="activeEventsId">
               <h2 class="collapse-trigger-content subtitle">
-                {{$t("events.active")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i></span>
+                {{$t("events.active")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
               </h2>
             </div>
 
@@ -28,13 +27,13 @@
 
             <p v-else>Sorry, there is currently no active event but if you are feeling lonely you can always <router-link :to="{name: 'create-event'}">create a new one</router-link> :)</p>
           </b-collapse>
-        </section>
+        
+        <hr>
 
-        <section class="section">
           <b-collapse class="eventList" v-if="pastEvents.length > 0" :open="false" aria-id="pastEventsId">
             <div slot="trigger" slot-scope="props" role="button" aria-controls="pastEventsId">
               <h2 class="collapse-trigger-content subtitle">
-                {{$t("events.past")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i></span>
+                {{$t("events.past")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
               </h2>
             </div>
             <div class="columns events is-multiline">
@@ -43,7 +42,6 @@
               </div>
             </div>
           </b-collapse>
-        </section>
 
       </div>
     </section>
