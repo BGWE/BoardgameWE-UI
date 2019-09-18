@@ -37,7 +37,7 @@
         </div>
       </b-collapse>
 
-      <hr class="simple-hr">
+      <hr>
 
       <h2 class="subtitle">
         {{$t('activity.title.recent-activities')}}

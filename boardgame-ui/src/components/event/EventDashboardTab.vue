@@ -59,7 +59,7 @@
       </b-collapse>
     </div>
     
-    <hr class="simple-hr">
+    <hr>
 
     <div v-if="activities">
       <h2 class="subtitle"><i18n path="activity.title.recent-activities" /></h2>

@@ -9,14 +9,14 @@
             </router-link>
 
             <a role="button" class="navbar-burger burger" :class="{'is-active': openedMenu}" @click="openedMenu=!openedMenu"
-              aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+              aria-label="menu" aria-expanded="false" data-target="main navigation">
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
             </a>
           </div>
 
-          <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': openedMenu}">
+          <div id="main navigation" class="navbar-menu" :class="{'is-active': openedMenu}">
             <div class="navbar-end">
               <template v-if="currentUser">
                 <router-link :to="{name: 'events'}" class="navbar-item">
@@ -128,6 +128,10 @@ export default {
   img {
     max-height: 2.5em !important;
   }
+}
+
+.burger {
+  color: $white;
 }
 
 .navbar-brand > .navbar-item.router-link-exact-active.is-active {
