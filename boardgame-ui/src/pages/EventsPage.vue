@@ -25,7 +25,11 @@
               </div>
             </div>
 
-            <p v-else>Sorry, there is currently no active event but if you are feeling lonely you can always <router-link :to="{name: 'create-event'}">create a new one</router-link> :)</p>
+            <p v-else>
+              <i18n path="events.none.text">
+                <router-link place="link" :to="{name: 'create-event'}"> {{ $t("events.none.link") }} </router-link>
+              </i18n>
+            </p>
           </b-collapse>
         
         <hr>
