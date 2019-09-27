@@ -6,16 +6,19 @@
         </h1>
       <h2 class="subtitle">
         {{event.location}} -
-        from <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.start" />
-        to <bgc-datetime class="hero-datetime" :asdate="true" :datetime="event.end" />
+        <i18n path="event.period-from-to">
+          <bgc-datetime place="fromDate" class="hero-datetime" :asdate="true" :datetime="event.start" />
+          <bgc-datetime place="toDate" class="hero-datetime" :asdate="true" :datetime="event.end" />
+        </i18n>
       </h2>
     </hero-title-page-layout>
 
     <div class="container">
       <div class="section">
-        <router-view :event="event" :isAttendee="isAttendee"/>
+        <router-view :event="event" @update-attendees="fetchAttendees()" />
       </div>
     </div>
+
   </div>
 </template>
 
@@ -50,12 +53,12 @@ export default {
     },
     currentUser() {
       return this.$store.state.currentUser;
-    },
-    isAttendee() { // is current user attendee
-      if(!this.event) {
-        return false;
-      }
-      return this.event.attendees.some(attendee => attendee.id_user === this.currentUser.id);
+    }
+  },
+
+  methods: {
+    fetchAttendees() {
+      this.event.fetchAttendees();
     }
   },
 

@@ -1,8 +1,11 @@
 <template>
   <div class="card">
-    <header class="card-header">
+    <header class="card-header border">
       <p class="card-header-title">
         {{event.name}}
+      </p>
+      <p class="visibility">
+        <b-tag type="is-info">{{$t(visibilityToI18n(event.visibility))}}</b-tag>
       </p>
     </header>
     <div class="card-content">
@@ -15,12 +18,14 @@
         <i class="fas fa-location-arrow"></i>
       </span>
       <span class="is-size-6 location-text">
-        {{event.location}}
+        <a :href="locationToMapsUrl" target="_blank">
+          {{event.location}}
+        </a>
       </span>
     </div>
-    <footer class="card-footer">
+    <footer class="card-footer" v-if="event.current.can_read || event.current.can_join || event.current.can_request || event.current.is_requester || event.current.is_creator">
       <div class="buttons">
-        <router-link :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
+        <router-link v-if="event.current.can_read" :to="{name: 'event', params: {eventid: event.id}}" class="button is-primary">
           <span class="icon is-small">
             <i class="far fa-eye"></i>
           </span>
@@ -28,20 +33,31 @@
           <span>{{$t('events.view')}}</span>
         </router-link>
 
-        <button class="button is-primary is-outlined" v-if="!isAttendedEvent" @click="joinEvent()">
+        <button class="button is-primary is-outlined" v-if="event.current.can_join" @click="join()">
           <span class="icon is-small">
             <i class="fas fa-sign-in-alt"></i>
           </span>
 
           <span>{{$t('events.join')}}</span>
         </button>
+        <button class="button is-primary is-outlined" v-else-if="event.current.can_request" @click="requestAccess()">
+          <span class="icon is-small">
+            <i class="far fa-paper-plane"></i>
+          </span>
 
-        <router-link v-if="isUserEventOwner" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
+          <span>{{$t('events.request')}}</span>
+        </button>
+
+        <b-tag type="is-info" style="margin-bottom:0.5rem;height:2.25rem" v-else-if="event.current.is_requester">
+          {{$t('event.pending_join_request')}}
+        </b-tag>
+
+        <router-link v-if="event.current.is_creator" :to="{name: 'edit-event', params: {eventid: event.id}}" class="button is-info is-outlined">
           <span class="icon is-small">
             <i class="far fa-edit"></i>
           </span>
 
-          <span>{{$t('events.edit')}}</span>
+          <span>{{$t('global.edit')}}</span>
         </router-link>
       </div>
     </footer>
@@ -49,29 +65,34 @@
 </template>
 
 <script>
-import Event from '@/utils/api/Event';
+import Event, {EventVisibility} from '@/utils/api/Event';
 
 export default {
   props: {
-    event: Event,
-    attendedEvents: Array
-  },
-
-  computed: {
-    isAttendedEvent() {
-      return this.attendedEvents.find(e => e.id === this.event.id);
-    },
-
-    isUserEventOwner() {
-      return this.event.id_creator === this.$store.state.currentUser.id;
-    },
+    event: Event
   },
 
   methods: {
-    async joinEvent() {
-      await Event.subscribeWithId(this.event.id);
-      let attendedEvents = await Event.fetchAttendedEvents();
-      this.$emit('update:attendedEvents', attendedEvents);
+    async join() {
+      await Event.joinWithId(this.event.id);
+      this.$emit('join:event', this.event.id);
+    },
+    async requestAccess() {
+      await this.event.sendJoinRequest();
+      this.$emit('request:event', this.event.id);
+    },
+    visibilityToI18n(visibility) {
+      return {
+        [EventVisibility.PUBLIC]: 'event.visibility.public',
+        [EventVisibility.PRIVATE]: 'event.visibility.private',
+        [EventVisibility.SECRET]: 'event.visibility.secret'
+      }[visibility];
+    }
+  },
+
+  computed: {
+    locationToMapsUrl() {
+      return 'https://www.google.com/maps/search/?api=1&query=' + this.event.location;
     }
   }
 };
@@ -90,6 +111,12 @@ export default {
   flex-grow: 1;
 }
 
+.visibility {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem
+}
+
 .buttons {
   margin: auto;
   padding-top: 0.75em;
@@ -103,8 +130,7 @@ export default {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
   border-top: 1px solid $grey-lighter;
-
   font-style: italic;
 }
-.location-text {}
+
 </style>

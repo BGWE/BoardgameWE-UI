@@ -42,7 +42,7 @@
         </i18n>
 
         <br />
-        <bgc-datetime :datetime="activity.datetime" class="activity-datetime" />
+        <bgc-datetime :datetime="activity.datetime" class="datetime-minor" />
       </div>
     </article>
   </div>
@@ -104,10 +104,5 @@ export default {
 .activity-container {
     margin-top: 5px;
     margin-bottom: 5px;
-}
-
-.activity-datetime {
-    color: #000000;
-    font-size: 0.8em;
 }
 </style>

@@ -61,7 +61,7 @@ export default class Timer extends Model {
       total_elapsed = elapsed;
     }
     else {
-      total_elapsed = moment.duration(this.timer.initial_duration).subtract(elapsed);
+      total_elapsed = moment.duration(this.initial_duration).subtract(elapsed);
       if (total_elapsed.milliseconds() < 0) {
         total_elapsed = moment.duration(0);
       }

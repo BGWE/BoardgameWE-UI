@@ -6,25 +6,20 @@
       <router-view v-if="initialized"></router-view>
     </div>
 
-    <footer class="footer footer-bottom">
-      <div class="content has-text-centered">
-        <p>
-          <strong> Board Game Comp</strong> <img src="@/assets/componion.png" :alt="$t('app.appName')" style="height:1.1em; position:relative;top:0.2em"> <strong>nion</strong> by BGWE. Powered by <a href="https://bulma.io">Bulma</a>, <a href="https://vuejs.org">Vue.js</a>.
-        </p>
-
-      </div>
-    </footer>
+    <layout-footer></layout-footer>
 
   </div>
 </template>
 
 <script>
 import LayoutNavbar from './components/layout/LayoutNavbar';
+import LayoutFooter from './components/layout/LayoutFooter';
 
 export default {
   name: 'app',
   components: {
-    LayoutNavbar
+    LayoutNavbar,
+    LayoutFooter
   },
   computed: {
     initialized() {
@@ -45,13 +40,6 @@ export default {
 
 .app-content {
   padding-bottom: 144px;
-}
-
-.footer-bottom {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 1.5em;
 }
 
 .has-background-gold {

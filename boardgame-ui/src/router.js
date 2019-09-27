@@ -50,6 +50,12 @@ const routes = [
     beforeEnter: guestOnly
   },
   {
+    name: 'add-game',
+    path: '/games/add',
+    component: require('./pages/AddEditGamePage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'events',
     path: '/events',
     component: require('./pages/EventsPage.vue').default,
@@ -109,7 +115,7 @@ const routes = [
         component: require('./components/event/EventTimersTab.vue').default,
       },
       {
-        name: 'add-event-timer',
+        name: 'add-timer-event',
         path: 'timers/add',
         component: require('./components/event/EventAddTimer').default
       },
@@ -145,6 +151,16 @@ const routes = [
         name: 'user-wish-list',
         path: 'wishlist',
         component: require('./components/user/UserWishList.vue').default
+      },
+      {
+        name: 'user-achievements',
+        path: 'achievements',
+        component: require('./components/user/UserAchievements.vue').default
+      },
+      {
+        name: 'user-friends',
+        path: 'friends',
+        component: require('./components/user/UserFriends.vue').default
       }
     ]
   },
@@ -154,12 +170,12 @@ const routes = [
   //   component: require('./pages/TimerCreationPage.vue').default,
   //   beforeEnter: authenticatedOnly
   // },
-  // { // to be re-worked in version 3.1
-  //   name: 'timers',
-  //   path: '/timers',
-  //   component: require('./pages/TimersPage.vue').default,
-  //   beforeEnter: authenticatedOnly
-  // },
+  {
+    name: 'timers',
+    path: '/timers',
+    component: require('./pages/TimersPage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
   {
     name: 'timer',
     path: '/timer/:timerid',

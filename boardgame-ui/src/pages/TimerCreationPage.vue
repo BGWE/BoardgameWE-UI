@@ -1,10 +1,10 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('timer.add-edit.title')"/>
-    <add-timer-form
+    <add-timer-form v-if="users"
       class="form"
       :users="users"
-      @timerCreated="goBackToTimers"
+      @created:timer="goBackToTimers"
       @close="goBackToTimers"
     />
   </div>
@@ -22,12 +22,12 @@ export default {
 
   data() {
     return {
-      users: []
+      users: null
     };
   },
 
   async created() {
-    this.users = []; // async User.fetchAll(); // this request is not yet implemented
+    this.users = await this.$store.state.currentUser.fetchFriends();
   },
 
   methods: {

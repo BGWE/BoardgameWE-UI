@@ -2,11 +2,15 @@
   <div>
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     <template v-if="!loading">
+      <b-message v-if="boardGames.length === 0" type="is-info" has-icon icon-size="is-small">
+        {{ $t('event.boardgames.info-message')}}
+      </b-message>
+
       <board-game-list
         :boardGames="boardGames"
         :wishedBoardGames="wishedBoardGames"
         :addFromLibrary="true"
-        :canAdd="isAttendee"
+        :canAdd="event.current.can_write"
         @add="addBoardGame"
         @delete="deleteBoardGame"
       />
@@ -20,8 +24,7 @@ import Library from '@/utils/api/Library';
 
 export default {
   props: {
-    event: Object,
-    isAttendee: Boolean
+    event: Object
   },
   components: {BoardGameList},
   data() {

@@ -32,6 +32,15 @@
         <user-activity :user="currentUser" />
       </section>
     </div>
+
+    <fab
+      position="bottom-right"
+      bg-color="#E66E50"
+      :actions="fabActions"
+      @create_timer="create_timer"
+      @add_game="add_game"
+    />
+  
   </div>
 
 </template>
@@ -41,6 +50,7 @@ import Event from '@/utils/api/Event';
 import User from '@/utils/api/User';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import UserActivity from '@/components/user/UserActivity';
+import fab from 'vue-fab';
 
 export default {
   name: 'UserHomePage',
@@ -50,23 +60,44 @@ export default {
       userActivities: null,
       ongoingEvent: null,
       isOngoingEventMsgActive: true,
-      isFetching: true
+      isFetching: true,
+      fabActions: [
+        {
+          name: 'add_game',
+          icon: 'playlist_add',
+          tooltip: 'Add game'
+        },
+        {
+          name: 'create_timer',
+          icon: 'add_alarm',
+          tooltip: 'Create a timer'
+        }
+      ]
     };
   },
   components: {
     HeroTitlePageLayout,
-    UserActivity
+    UserActivity,
+    fab
   },
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
     }
   },
+  methods: {
+    add_game() {
+      this.$router.push({name: 'add-game'});
+    },
+    create_timer() {
+      this.$router.push({name: 'create-timer'});
+    }
+  },
   async created() {
     const id = this.currentUser.id;
     this.userStats = await User.fetchStats(id);
     this.userActivities = await User.fetchActivities(id);
-    let ongoingEvents = await Event.fetchAll(true, [id]);
+    let ongoingEvents = await Event.fetchAll({ongoing: true, registered: true});
     if (ongoingEvents.length > 0) {
       this.ongoingEvent = ongoingEvents[0];
     }

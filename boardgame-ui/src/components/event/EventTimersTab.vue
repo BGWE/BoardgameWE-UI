@@ -1,14 +1,24 @@
 <template>
   <div>
     <b-loading :is-full-page="false" :active="loading"></b-loading>
-    <div class="columns" v-if="!loading">
-      <div class="column is-full">
-        <p v-if="isAttendee" class="has-text-right limited-width">
-          <router-link :to="{name: 'add-event-timer'}" class="button is-primary"> {{$t('timers.add')}} </router-link>
-        </p>
-        <timer-list :timers="timers" @delete:timer="timerDeleted" />
+    <template v-if="!loading">
+      <b-message  type="is-info" has-icon icon-size="is-small" v-if="timers.length === 0 && event.current.can_write">
+        {{$t('event.timers.info-message')}}
+      </b-message>
+      <b-message  type="is-info" has-icon icon-size="is-small" v-if="timers.length === 0 && !event.current.can_write">
+        {{$t('event.timers.info-message-nowrite')}}
+      </b-message>
+      
+      <div class="columns">
+        <div class="column is-full">
+          <p v-if="event.current.can_write" class="has-text-right limited-width">
+            <router-link :to="{name: 'add-timer-event'}" class="button is-primary"> {{$t('timers.add')}} </router-link>
+          </p>
+          
+          <timer-list :timers="timers" @delete:timer="timerDeleted"/>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -22,10 +32,6 @@ export default {
   props: {
     event: {
       type: Event,
-      required: true
-    },
-    isAttendee: {
-      type: Boolean,
       required: true
     }
   },
