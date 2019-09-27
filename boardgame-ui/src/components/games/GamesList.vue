@@ -1,7 +1,7 @@
 <template>
   <div>
     <PanelList>
-      <PanelListElement v-for="(game, id) in games" v-bind:key="id">
+      <PanelListElement v-for="(game, id) in reverseSortedGames" v-bind:key="id">
         <template v-slot:title>
           <div class="games-headers">
             <div class="is-size-6-mobile">{{game.board_game.name}}</div>
@@ -71,6 +71,7 @@ import PanelListElement from '@/components/layout/PanelListElement';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
+import moment from 'moment-timezone';
 
 export default {
   props: {
@@ -92,7 +93,25 @@ export default {
     };
   },
 
+  computed: {
+    sortedGames: function() {
+      if (!this.games || this.games.length == 0) {
+        return [];
+      }
+
+      return this.games.slice().sort(this.sortByCreationDate);
+    },
+
+    reverseSortedGames: function() {
+      return this.sortedGames.slice().reverse();
+    }
+  },
+
   methods: {
+    sortByCreationDate: (g1, g2) => {
+      return moment(g1.createdAt).diff(moment(g2.createdAt));
+    },
+
     formatDatetime: (datetime) => Helper.formatDatetime(datetime),
 
     formattedRanking: function(game) {

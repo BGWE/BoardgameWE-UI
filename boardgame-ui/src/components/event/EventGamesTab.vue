@@ -17,7 +17,7 @@
             {{$t('event.games.no-games')}}
           </p>
 
-          <GamesList v-if="games" :games="reverseSortedGames"/>
+          <GamesList v-if="games" :games="games"/>
 
         </div>
       </div>
@@ -27,7 +27,6 @@
 
 <script>
 import GamesList from '@/components/games/GamesList';
-import moment from 'moment-timezone';
 
 export default {
   props: {
@@ -45,25 +44,7 @@ export default {
     };
   },
 
-  computed: {
-    sortedGames: function() {
-      if (!this.games || this.games.length == 0) {
-        return [];
-      }
-
-      return this.games.slice().sort(this.sortByCreationDate);
-    },
-
-    reverseSortedGames: function() {
-      return this.sortedGames.slice().reverse();
-    }
-  },
-
   methods: {
-    sortByCreationDate: (g1, g2) => {
-      return moment(g1.createdAt).diff(moment(g2.createdAt));
-    },
-
     async reload() {
       this.loading = true;
       this.games = await this.event.fetchGames();
