@@ -31,9 +31,6 @@ export default {
     idGame() {
       return this.$route.params.idGame;
     },
-    idTimer() {
-      return this.$route.query.idTimer;
-    },
     boardGames() {
       if(!this.boardGamesLinks) {
         return [];
