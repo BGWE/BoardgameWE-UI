@@ -6,7 +6,7 @@
       <b-collapse class="eventList" :open="false" aria-id="statistics">
         <div slot="trigger" slot-scope="props" role="button" aria-controls="statistics">
           <h2 class="collapse-trigger-content subtitle">
-            {{$t("home.statistics")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></i></span>
+            {{$t("home.statistics")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
           </h2>
         </div>
 
@@ -55,8 +55,11 @@
             </div>
           </div>
         </div>
+
       </b-collapse>
     </div>
+    
+    <hr>
 
     <div v-if="activities">
       <h2 class="subtitle"><i18n path="activity.title.recent-activities" /></h2>
@@ -128,4 +131,5 @@ export default {
 .title {
   margin-bottom: 0.25rem;
 }
+
 </style>
