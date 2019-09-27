@@ -1,11 +1,11 @@
 <template>
   <b-autocomplete
     v-model="searchString"
-    :data="events"
+    :data="filteredEvents"
     :size="size"
     field="name"
     icon="search"
-    @select="handleSelect"
+    @select="option => $emit('input', option)"
     ref="autocomplete"
   >
     <template slot="empty">
@@ -17,39 +17,27 @@
 <script>
 export default {
   props: {
-    value: Object,
+    value: [Object, String],
     size: String,
     events: Array
   },
   data() {
     return {
-      searchString: '',
-      internalValue: null
+      searchString: ''
     };
   },
-  watch: {
-    value(val) {
-      if (val != this.internalValue) {
-        this.setValue();
-      }
-    }
-  },
-  methods: {
-    handleSelect(option) {
-      this.internalValue = option;
-      this.$emit('input', option);
-    },
-    setValue() {
-      if(this.value) {
-        this.$refs.autocomplete.setSelected(this.value);
-      }
-      else {
-        this.searchString = '';
-      }
+  computed: {
+    filteredEvents() {
+      let str = this.searchString.toLowerCase();
+      return this.events.filter(event => {
+        return (!str || event.name.toLowerCase().indexOf(str) >= 0);
+      });
     }
   },
   mounted() {
-    this.setValue();
+    if (this.value) {
+      this.$refs.autocomplete.setSelected(this.value);
+    }
   },
 };
 </script>
