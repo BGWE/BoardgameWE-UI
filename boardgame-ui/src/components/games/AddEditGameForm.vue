@@ -267,7 +267,7 @@ export default {
           type: 'is-success',
           position: 'is-bottom'
         });
-        this.$router.push({name: 'event-games'});
+        this.$router.go(-1);
       }
       catch(error) {
         console.log(error);
