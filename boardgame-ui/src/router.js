@@ -167,14 +167,13 @@ const routes = [
         name: 'user-friends',
         path: 'friends',
         component: require('./components/user/UserFriends.vue').default
+      },
+      {
+        name: 'user-games',
+        path: 'games',
+        component: require('./components/user/UserGames.vue').default
       }
     ]
-  },
-  {
-    name: 'games',
-    path: '/games',
-    component: require('./pages/GamesPage.vue').default,
-    beforeEnter: authenticatedOnly
   },
   // { // to be re-worked in version 3.1
   //   name: 'create-event-timer',

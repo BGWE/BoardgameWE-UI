@@ -26,11 +26,6 @@
                 <router-link :to="{name: 'timers'}" class="navbar-item">
                   {{$t('navbar.timers')}}
                 </router-link>
-
-                <router-link :to="{name: 'games'}" class="navbar-item">
-                  {{$t('navbar.games')}}
-                </router-link>
-                
               </template>
 
               <div v-if="!currentUser" class="navbar-item">
@@ -59,6 +54,9 @@
                   </router-link>
                   <router-link :to="{name: 'user-wish-list', params: {id: currentUser.id}}" class="navbar-item">
                     {{$t('navbar.my-wish-list')}}
+                  </router-link>
+                  <router-link :to="{name: 'user-games', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-games')}}
                   </router-link>
                   <router-link :to="{name: 'user-friends', params: {id: currentUser.id}}" class="navbar-item">
                     {{$t('navbar.my-friends')}}

@@ -1,39 +1,32 @@
 <template>
   <div>
-    <HeroTitlePageLayout :title="$t('games.title')"/>
-    <section class="container">
-      <b-loading :is-full-page="false" :active="loading"/>
-      <template v-if="!loading">
-        <div class="section">
-          <div class="columns">
-            <div class="column has-text-right">
-              <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
-                {{$t("games.add")}}
-              </router-link>
-            </div>
-          </div>
-
-          <p class="has-text-centered has-text-grey" v-if="games.length === 0">
-            {{$t('event.games.no-games')}}
-          </p>
-
-          <GamesList v-if="games" :games="reverseSortedGames"/>
-          
+    <b-loading :is-full-page="false" :active="loading"/>
+    <template v-if="!loading">
+      <div class="columns">
+        <div class="column has-text-right">
+          <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
+            {{$t("games.add")}}
+          </router-link>
         </div>
-      </template>
-    </section>
+      </div>
+
+      <p class="has-text-centered has-text-grey" v-if="games.length === 0">
+        {{$t('event.games.no-games')}}
+      </p>
+
+      <GamesList v-if="games" :games="reverseSortedGames"/>
+      
+    </template>
   </div>
 </template>
 
 <script>
-import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import User from '@/utils/api/User';
 import GamesList from '@/components/games/GamesList';
 import moment from 'moment-timezone';
 
 export default {
   components: {
-    HeroTitlePageLayout,
     GamesList
   },
 
