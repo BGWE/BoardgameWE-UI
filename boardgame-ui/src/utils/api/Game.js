@@ -30,7 +30,12 @@ export default class Game extends Model {
   /** @inheritdoc */
   get uri() {
     if(this.isNew()) {
-      return `/event/${this.id_event}/${this.className}`;
+      if (this.id_event != null) {
+        return `/event/${this.id_event}/${this.className}`;
+      }
+      else {
+        return `${this.className}`;
+      }
     }
     else {
       return `${this.className}/${this.id}`;
@@ -74,8 +79,13 @@ export default class Game extends Model {
     if(this.isNew()) {
       return super.save();
     }
-    else {
+    else if (this.id_event != null) {
       let {data} = await axios.put(`/event/${this.id_event}/${this.className}/${this.id}`, this.getPublicProperties());
+      this.populate(data);
+      return this;
+    }
+    else {
+      let {data} = await axios.put(`/game/${this.id}`, this.getPublicProperties());
       this.populate(data);
       return this;
     }

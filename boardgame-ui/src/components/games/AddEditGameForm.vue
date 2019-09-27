@@ -11,12 +11,11 @@
         <b-input disabled :value="event.name" />
       </b-field>
 
-      <b-field v-if="events" :label="$t('timer.add-edit.event')">
+      <b-field v-else-if="events" :label="$t('timer.add-edit.event')">
          <event-autocomplete
             v-model="eventSearchString"
-            @select="selectEvent"
             :events="events"
-            :data-vv-as="$t('add-edit-game.players.user')"
+            :data-vv-as="$t('add-edit-game.event.label')"
           />
       </b-field>
 
@@ -214,11 +213,11 @@ export default {
       time.setMinutes(duration % 60);
       this.time = time;
     },
+    getDurationFromTime(time) {
+      return time.getHours() * 60 + time.getMinutes();
+    },
     selectBoardGame(option) {
       this.game.id_board_game = option ? option.id : null;
-    },
-    selectEvent(option) {
-      this.game.id_event = option ? option.id : null;
     },
     addPlayer() {
       this.players.push({user: null, score: null, id: this.idPlayer++});
@@ -250,8 +249,12 @@ export default {
         });
         return;
       }
+      
+      if (this.eventSearchString != '') {
+        this.game.id_event = this.eventSearchString.id;
+      }
 
-      this.game.duration = this.time.getHours()*60 + this.time.getMinutes();
+      this.game.duration = this.getDurationFromTime(this.time);
       this.game.players = this.players.map(({user, score}) => {
         score = Number(score);
         return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
@@ -304,11 +307,11 @@ export default {
       }
       
       if (this.idTimer) {
-        const timer = await Timer.fetch(this.idTimer);
+        gameData.id_timer = this.idTimer;
 
+        const timer = await Timer.fetch(this.idTimer);
         this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
 
-        gameData.id_timer = this.idTimer;
         if (timer.board_game) {
           gameData.id_board_game = timer.id_board_game;
           this.searchString = timer.board_game.name;

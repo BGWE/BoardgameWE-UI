@@ -48,8 +48,8 @@
 
         <template v-slot:footer>
           <span class="has-text-weight-light has-text-dark is-size-7 time-footer">
-            <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
-            </span>
+            <span v-if="game.id_event != null">Eventid : {{game.id_event}} </span> <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
+          </span>
         </template>
 
       </PanelListElement>

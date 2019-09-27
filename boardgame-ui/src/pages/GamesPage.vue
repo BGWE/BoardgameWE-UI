@@ -2,8 +2,8 @@
   <div>
     <HeroTitlePageLayout :title="$t('games.title')"/>
     <section class="container">
-      <b-loading :is-full-page="false" :active="isLoading"/>
-      <template v-if="!isLoading">
+      <b-loading :is-full-page="false" :active="loading"/>
+      <template v-if="!loading">
         <div class="section">
           <div class="columns">
             <div class="column has-text-right">
@@ -17,7 +17,7 @@
             {{$t('event.games.no-games')}}
           </p>
 
-          <GamesList v-if="games" :games="games"/>
+          <GamesList v-if="games" :games="reverseSortedGames"/>
           
         </div>
       </template>
@@ -40,13 +40,25 @@ export default {
   data() {
     return {
       games: null,
-      isLoading: true
+      loading: true
     };
   },
 
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
+    },
+
+    sortedGames: function() {
+      if (!this.games || this.games.length == 0) {
+        return [];
+      }
+
+      return this.games.slice().sort(this.sortByCreationDate);
+    },
+
+    reverseSortedGames: function() {
+      return this.sortedGames.slice().reverse();
     }
   },
 
@@ -58,7 +70,7 @@ export default {
 
   async created() {
     this.games = await User.fetchGames(this.currentUser.id);
-    this.isLoading = false;
+    this.loading = false;
   },
 };
 </script>
