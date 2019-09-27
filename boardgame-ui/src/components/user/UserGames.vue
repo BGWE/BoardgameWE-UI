@@ -25,6 +25,10 @@ import User from '@/utils/api/User';
 import GamesList from '@/components/games/GamesList';
 
 export default {
+  props: {
+    user: User
+  },
+
   components: {
     GamesList
   },
@@ -36,14 +40,9 @@ export default {
     };
   },
 
-  computed: {
-    currentUser() {
-      return this.$store.state.currentUser;
-    }
-  },
-
   async created() {
-    this.games = await User.fetchGames(this.currentUser.id);
+    console.log(this.user);
+    this.games = await this.user.fetchGames();
     this.loading = false;
   },
 };
