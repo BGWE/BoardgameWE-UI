@@ -67,33 +67,4 @@ export default {
   margin: auto;
   position: relative;
 }
-
-h2 {
-  margin-bottom: 0.5em !important;
-  text-align: center;
-}
-
-/deep/ .timepicker .dropdown-content {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-
-  select {
-    font-weight: normal !important;
-  }
-}
-
-/deep/ label {
-  font-weight: normal;
-  text-transform: uppercase;
-  font-size: 0.7em;
-}
-
-th:nth-child(2), td:nth-child(2) {
-  text-align: center;
-
-  /deep/ .control {
-    max-width: 10em;
-    margin: auto;
-  }
-}
 </style>

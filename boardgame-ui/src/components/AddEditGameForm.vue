@@ -248,7 +248,10 @@ export default {
       }
 
       this.game.duration = this.time.getHours()*60 + this.time.getMinutes();
-      this.game.players = this.players.map(({user, score}) => ({id_user: user.id, score: Number(score)}));
+      this.game.players = this.players.map(({user, score}) => {
+        score = Number(score);
+        return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
+      });
 
       try {
         await this.game.save();
@@ -282,7 +285,7 @@ export default {
 
       this.game.players.forEach(player => {
         let score = this.ranked ? player.score : Boolean(player.score);
-        this.players.push({user: player.user, score, id: this.idPlayer++});
+        this.players.push({user: player.user || player.name, score, id: this.idPlayer++});
       });
 
       this.setTimeFromDuration(this.game.duration);
@@ -305,8 +308,8 @@ export default {
           this.searchString = timer.board_game.name;
         }
 
-        timer.player_timers.forEach(p => {
-          this.players.push({ user: p.user, name: p.name, score: null, id: this.idPlayer++ });
+        timer.player_timers.forEach(player => {
+          this.players.push({ user: player.user || player.name, score: null, id: this.idPlayer++ });
         });
       }
       else {
