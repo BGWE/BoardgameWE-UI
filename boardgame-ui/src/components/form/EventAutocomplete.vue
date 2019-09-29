@@ -1,7 +1,7 @@
 <template>
   <b-autocomplete
     v-model="searchString"
-    :data="filteredEvents"
+    :data="filteredData"
     :size="size"
     field="name"
     icon="search"
@@ -17,9 +17,9 @@
 <script>
 export default {
   props: {
-    value: [Object, String],
+    value: Object,
     size: String,
-    events: Array
+    inputData: Array
   },
   data() {
     return {
@@ -27,10 +27,10 @@ export default {
     };
   },
   computed: {
-    filteredEvents() {
+    filteredData() {
       let str = this.searchString.toLowerCase();
-      return this.events.filter(event => {
-        return (!str || event.name.toLowerCase().indexOf(str) >= 0);
+      return this.inputData.filter(data => {
+        return (!str || data.name.toLowerCase().indexOf(str) >= 0);
       });
     }
   },

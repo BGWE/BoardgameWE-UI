@@ -13,7 +13,7 @@
 
       <b-field v-else-if="events" :label="$t('timer.add-edit.event')">
          <event-autocomplete
-            v-model="eventSearchString"
+            v-model="selectedEvent"
             :events="events"
             :data-vv-as="$t('add-edit-game.event.label')"
           />
@@ -157,13 +157,14 @@ export default {
     return {
       game: null,
       searchString: '',
-      eventSearchString: '',
+      selectedEvent: null,
       time: null,
       minTime: null,
       players: [],
       idPlayer: 1
     };
   },
+
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
@@ -192,6 +193,7 @@ export default {
       return this.players.map(({user}) => user ? user.id : 0);
     }
   },
+
   watch: {
     'game.ranking_method'(_, old) {
       if(!old) {
@@ -205,6 +207,7 @@ export default {
       }
     }
   },
+
   methods: {
     setTimeFromDuration(duration) { // arg duration to be provided in minutes
       duration = Math.round(duration / 15) * 15; // get multiple of 15 minutes
@@ -233,6 +236,7 @@ export default {
       }
       this.players.splice(idx, 1);
     },
+
     async save() {
       let result = await this.$validator.validateAll();
 
@@ -250,8 +254,8 @@ export default {
         return;
       }
       
-      if (this.eventSearchString != '') {
-        this.game.id_event = this.eventSearchString.id;
+      if (this.selectedEvent != null) {
+        this.game.id_event = this.selectedEvent.id;
       }
 
       this.game.duration = this.getDurationFromTime(this.time);
@@ -279,6 +283,7 @@ export default {
       }
     }
   },
+
   async created() {
     let minTime = new Date();
     minTime.setHours(0);
@@ -289,8 +294,15 @@ export default {
       this.game = await Game.fetch(this.idGame);
 
       this.searchString = this.game.board_game.name;
-      this.eventSearchString = this.events.find(event => event.id == this.game.id_event).name;
-
+      if (this.game.id_event) {
+        if (this.events) {
+          this.selectedEvent = this.events.find(event => event.id == this.game.id_event);
+        }
+        else {
+          this.selectedEvent = this.event;
+        }
+      }
+      
       this.game.players.forEach(player => {
         let score = this.ranked ? player.score : Boolean(player.score);
         this.players.push({user: player.user || player.name, score, id: this.idPlayer++});
@@ -303,7 +315,7 @@ export default {
       
       if (this.event) {
         gameData.id_event = this.event.id;
-        this.eventSearchString = this.event.name;
+        this.selectedEvent = this.event;
       }
       
       if (this.idTimer) {
