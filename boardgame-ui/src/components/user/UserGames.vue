@@ -2,7 +2,7 @@
   <div>
     <b-loading :is-full-page="false" :active="loading"/>
     <template v-if="!loading">
-      <div class="columns">
+      <div v-if="isCurrentUserProfile" class="columns">
         <div class="column has-text-right">
           <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
             {{$t("games.add")}}
@@ -14,7 +14,7 @@
         {{$t('event.games.no-games')}}
       </p>
 
-      <GamesList v-if="games" :games="games"/>
+      <GamesList v-if="games" :games="games" @gameDeleted="reload()"/>
 
     </template>
   </div>
@@ -26,7 +26,8 @@ import GamesList from '@/components/games/GamesList';
 
 export default {
   props: {
-    user: User
+    user: User,
+    isCurrentUserProfile: Boolean
   },
 
   components: {
@@ -40,10 +41,16 @@ export default {
     };
   },
 
+  methods: {
+    async reload() {
+      this.loading = true;
+      this.games = await this.user.fetchGames();
+      this.loading = false; 
+    }
+  },
+
   async created() {
-    console.log(this.user);
-    this.games = await this.user.fetchGames();
-    this.loading = false;
+    this.reload();
   },
 };
 </script>

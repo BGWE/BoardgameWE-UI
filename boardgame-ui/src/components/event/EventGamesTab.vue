@@ -17,7 +17,7 @@
             {{$t('event.games.no-games')}}
           </p>
 
-          <GamesList v-if="games" :games="games"/>
+          <GamesList v-if="games" :games="games" @gameDeleted="reload"/>
 
         </div>
       </div>

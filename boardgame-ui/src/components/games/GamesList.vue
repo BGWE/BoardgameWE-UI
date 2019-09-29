@@ -169,9 +169,8 @@ export default {
       }
 
       this.onCancelConfirmDeleteModal();
-      this.reload();
+      this.$emit('gameDeleted');
     }
-
   },
 };
 </script>
