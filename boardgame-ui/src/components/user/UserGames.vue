@@ -14,7 +14,11 @@
         {{$t('event.games.no-games')}}
       </p>
 
-      <GamesList v-if="games" :games="games" @gameDeleted="reload()"/>
+      <GamesList v-if="games"
+        :games="games"
+        :isCurrentUserProfile="isCurrentUserProfile"
+        @gameDeleted="reload()"
+      />
 
     </template>
   </div>

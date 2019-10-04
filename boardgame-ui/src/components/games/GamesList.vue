@@ -35,7 +35,7 @@
           </div>
         </template>
 
-        <template v-slot:buttons>
+        <template v-slot:buttons v-if="isCurrentUserProfile">
           <router-link :to="{name: 'edit-game', params: {idGame: game.id}}" class="card-footer-item">
             <span class="icon"><i class="far fa-edit"></i></span>
             {{$t('global.edit')}}
@@ -75,7 +75,8 @@ import moment from 'moment-timezone';
 
 export default {
   props: {
-    games: Array
+    games: Array,
+    isCurrentUserProfile: Boolean
   },
 
   components: {

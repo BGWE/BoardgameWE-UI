@@ -95,8 +95,7 @@ export default {
   data() {
     return {
       user: null,
-      confirmModal: false,
-
+      confirmModal: false
     };
   },
 
