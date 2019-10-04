@@ -14,7 +14,7 @@
       <b-field v-else-if="events" :label="$t('timer.add-edit.event')">
          <event-autocomplete
             v-model="selectedEvent"
-            :events="events"
+            :inputData="events"
             :data-vv-as="$t('add-edit-game.event.label')"
           />
       </b-field>
