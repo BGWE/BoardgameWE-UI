@@ -28,7 +28,7 @@
         </b-message>
       </section>
 
-      <section class="section" v-if=userStats>
+      <section class="section" v-if="userStats">
         <user-activity :user="currentUser" />
       </section>
     </div>
