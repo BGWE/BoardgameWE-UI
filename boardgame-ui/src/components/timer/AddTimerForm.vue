@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
-    <b-loading :active="isLoading"/>
+    <b-loading :is-full-page="false" :active="loading"/>
+    
     <form @submit.prevent="createTimer()" v-if="timer">
       <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
 
@@ -51,18 +52,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="({user}, idx) in players" :key="user ? `user${user.id}` : idx">
+        <tr v-for="({id}, idx) in players" :key="id">
           <td>
             <b-field
-              :type="{'is-danger': errors.has(`user-${idx}`)}"
-              :message="errors.first(`user-${idx}`)"
+              :type="{'is-danger': errors.has(`user-${id}`)}"
+              :message="errors.first(`user-${id}`)"
             >
               <user-autocomplete
                 size="is-small"
                 v-model="players[idx].user"
                 :users="users"
                 :excludedIds="selectedUsersIds"
-                :name="`user-${idx}`"
+                :name="`user-${id}`"
                 :data-vv-as="$t('add-edit-game.players.user')"
                 v-validate="'required'"
               />
@@ -121,7 +122,7 @@ export default {
       required: false,
       default: null
     },
-    users: { // list of selectable users 
+    users: { // list of selectable users
       type: Array,
       required: true
     }
@@ -129,8 +130,9 @@ export default {
 
   data() {
     return {
-      isLoading: false,
+      loading: false,
       players: [],
+      idPlayer: 1,
       timer: null,
       boardGames: null,
       searchString: '',
@@ -181,7 +183,7 @@ export default {
     },
 
     addPlayer() {
-      this.players.push({user: null, color: this.generateRandomColor()});
+      this.players.push({user: null, color: this.generateRandomColor(), id: this.idPlayer++});
     },
 
     generateRandomColor() {
@@ -202,21 +204,13 @@ export default {
 
     async createTimer() {
       let result = await this.validate();
-
       if (!result) {
         return;
       }
 
-      this.timer.player_timers = [];
-      for (let key in this.players) {
-        let player = this.players[key];
-        if (player.user.id != null) {
-          this.timer.player_timers.push({id_user: player.user.id, name: null, color: player.color});
-        }
-        else {
-          this.timer.player_timers.push({id_user: null, name: player.user.name, color: player.color});
-        }
-      }
+      this.timer.player_timers = this.players.map(({user, color}) => {
+        return typeof user === 'string' ? {name: user, color} : {id_user: user.id, color};
+      });
 
       try {
         await this.timer.save();
@@ -243,7 +237,7 @@ export default {
   },
 
   async created() {
-    this.isLoading = true;
+    this.loading = true;
     this.boardGames = await BoardGame.fetchAll();
 
     if (this.$route.params.id) {
@@ -255,7 +249,7 @@ export default {
 
       for (let key in this.timer.player_timers) {
         let player = this.timer.player_timers[key];
-        this.players.push({user: player.user, color: player.color});
+        this.players.push({user: player.user || player.name, color: player.color});
       }
 
       if (this.timer.id_board_game != null) {
@@ -276,7 +270,7 @@ export default {
       this.timer.id_event = this.event.id;
     }
 
-    this.isLoading = false;
+    this.loading = false;
 
   },
 };
@@ -288,6 +282,8 @@ export default {
   min-height: 20vh;
   margin: auto;
   position: relative;
+  padding-left: 5pt;
+  padding-right: 5pt;
 }
 
 h2 {

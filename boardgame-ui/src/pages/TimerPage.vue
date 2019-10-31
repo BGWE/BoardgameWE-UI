@@ -21,7 +21,9 @@
 
         <transition name="fade">
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-if="!isRunning">
-            Press <i class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i> to start
+            <i18n path="timer.press-play">
+              <i place="playButton" class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i>
+            </i18n>
           </div>
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-else>
             <span class="panel-icon">
@@ -67,7 +69,7 @@
         </transition>
 
         <transition name="fade">
-          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null && timer.id_event !== null">
             <span class="panel-icon">
               <i class="fas fa-external-link-alt"></i>
             </span>
@@ -196,7 +198,7 @@ export default {
     timer_delete() {
       this.timerDeletedModalActive = true;
     },
-    change_player_turn_order(timer) {
+    timer_change_player_turn_order(timer) {
       this.isLoading = false;
       this.setTimer(timer);
     },
@@ -214,7 +216,7 @@ export default {
         }
 
         this.isLoading = true;
-        this.$socket.emit('change_player_turn_order', val);
+        this.$socket.emit('timer_change_player_turn_order', val);
       }
     },
   },

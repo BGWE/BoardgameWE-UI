@@ -24,7 +24,7 @@
                     <div class="level-left">
                       <p class="is-size-7"><i18n v-bind:path="timerTypeI18nPathMap[timer.timer_type]"/> | {{timer.id}}</p>
                     </div>
-                    
+
                     <div class="level-left">
                       <!-- To be re-worked in 3.1, edit is not possible right now
                       <router-link

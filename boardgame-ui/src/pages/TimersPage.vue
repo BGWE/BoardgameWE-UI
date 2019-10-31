@@ -1,21 +1,29 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('timers.title')"/>
-    <div class="container">
-      <section class="section">
-        <div class="columns">
-          <div class="column has-text-right">
-            <router-link tag="button" class="button is-primary" :to="{name: 'create-timer'}">
-              {{$t("timers.add")}}
-            </router-link>
+    <section class="container">
+      <b-loading :is-full-page="false" :active="isLoading"/>
+      <template v-if="!isLoading">
+        <div class="section">
+          <b-message v-if="timers.length === 0" type="is-info" has-icon icon-size="is-small">
+            {{ $t('event.timers.info-message')}}
+          </b-message>
+      
+          <div class="columns">
+            <div class="column has-text-right">
+              <router-link tag="button" class="button is-primary" :to="{name: 'create-timer'}">
+                {{$t("timers.add")}}
+              </router-link>
+            </div>
           </div>
+          
+          <timer-list
+            :timers="this.timers"
+            @delete:timer="timerDeleted"
+          />
         </div>
-        <timer-list
-          :timers="this.timers"
-          @delete:timer="timerDeleted"
-        />
-      </section>
-    </div>
+      </template>
+    </section>
   </div>
 </template>
 
@@ -32,12 +40,14 @@ export default {
 
   data() {
     return {
-      timers: null
+      timers: null,
+      isLoading: true
     };
   },
 
   async created() {
     this.timers = await Timer.getCurrentUserTimers();
+    this.isLoading = false;
   },
 
   methods: {

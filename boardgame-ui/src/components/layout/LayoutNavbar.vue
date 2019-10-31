@@ -9,56 +9,68 @@
             </router-link>
 
             <a role="button" class="navbar-burger burger" :class="{'is-active': openedMenu}" @click="openedMenu=!openedMenu"
-              aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+              aria-label="menu" aria-expanded="false" data-target="main navigation">
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
             </a>
           </div>
 
-          <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active': openedMenu}">
+          <div id="main navigation" class="navbar-menu" :class="{'is-active': openedMenu}">
             <div class="navbar-end">
               <template v-if="currentUser">
                 <router-link :to="{name: 'events'}" class="navbar-item">
                   {{$t('navbar.events')}}
                 </router-link>
 
-                <router-link :to="{name: 'library'}" class="navbar-item">
-                  {{$t('navbar.my-library')}}
-                </router-link>
-
-                <router-link :to="{name: 'wishlist'}" class="navbar-item">
-                  {{$t('navbar.my-wish-list')}}
-                </router-link>
-
-                <!--  to be re-worked in version 3.1
                 <router-link :to="{name: 'timers'}" class="navbar-item">
                   {{$t('navbar.timers')}}
                 </router-link>
-                -->
+                
               </template>
 
               <div v-if="!currentUser" class="navbar-item">
-                <router-link :to="{name: 'login'}" class="button is-primary">
-                  {{$t('navbar.log-in')}}
-                </router-link>
+                <div class="buttons">
+                  <router-link :to="{name: 'login'}" class="button is-primary">
+                    {{$t('navbar.log-in')}}
+                  </router-link>
+                  <router-link :to="{name: 'register'}" class="button is-secondary">
+                    {{$t('navbar.register')}}
+                  </router-link>
+                </div>
               </div>
               <div v-else class="navbar-item has-dropdown is-hoverable">
                 <span class="navbar-link-wrapper">
-                  <a class="navbar-link navbar-link-custom">
+                  <router-link exact :to="{name: 'user-profile', params: {id: currentUser.id}}" class="navbar-link navbar-link-custom">
                     <span class="icon">
                       <i class="fas fa-user-circle"></i>
                     </span>
                     {{currentUser.name}} {{currentUser.surname[0]}}.
-                  </a>
+                  </router-link>
                 </span>
 
                 <div class="navbar-dropdown is-boxed">
+                  <router-link :to="{name: 'user-library', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-library')}}
+                  </router-link>
+                  <router-link :to="{name: 'user-wish-list', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-wish-list')}}
+                  </router-link>
+                  <router-link :to="{name: 'user-friends', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-friends')}}
+                  </router-link>
+                  <router-link :to="{name: 'user-achievements', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-achievements')}}
+                  </router-link>
+                  <template v-if="isUserAdmin">
+                    <hr class="navbar-divider">
+                    <router-link :to="{name: 'user-validation'}" class="navbar-item">
+                      {{$t('navbar.uservalidation')}}
+                    </router-link>
+                  </template>
+                  <hr class="navbar-divider">
                   <router-link :to="{name: 'preferences'}" class="navbar-item">
                     {{$t('navbar.preferences')}}
-                  </router-link>
-                  <router-link v-if="isUserAdmin" :to="{name: 'user-validation'}" class="navbar-item">
-                    {{$t('navbar.uservalidation')}}
                   </router-link>
                   <a @click="logout()" class="navbar-item">
                     {{$t('navbar.log-out')}}
@@ -118,6 +130,10 @@ export default {
   }
 }
 
+.burger {
+  color: $white;
+}
+
 .navbar-brand > .navbar-item.router-link-exact-active.is-active {
   background-color: transparent;
 }
@@ -131,8 +147,6 @@ export default {
     color: $secondary;
     background-color: white;
     border-radius: 4px;
-
-    // padding: 10px;
   }
 
   .navbar-link.navbar-link-custom > .icon {

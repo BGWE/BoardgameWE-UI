@@ -20,6 +20,10 @@ $dimensions: 16 24 32 48 64 80 96 128;
   }
 }
 
+figure {
+  text-align: center;
+}
+
 figure.background {
   background-position: center center;
   background-repeat: no-repeat;
@@ -28,4 +32,9 @@ figure.background {
 
 figure.is-rounded {
   border-radius: 50%;
+}
+
+.datetime-minor {
+  color: #000000;
+  font-size: 0.8em;
 }

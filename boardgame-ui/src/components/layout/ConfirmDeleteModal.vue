@@ -5,10 +5,10 @@
         <div class="content">{{this.content}}</div>
       </div>
       <footer class="card-footer">
-        <a href="#" class="card-footer-item" @click="onCancel">{{$t('label.cancel')}}</a>
-        <a href="#" class="card-footer-item card-footer-item-danger" @click="this.onDelete">
+        <a class="card-footer-item" @click="onCancel">{{$t('label.cancel')}}</a>
+        <a class="card-footer-item card-footer-item-danger" @click="this.onDelete">
           <span class="icon"><i class="far fa-trash-alt"></i></span>
-          <span>{{$t('label.delete')}}</span>
+          <span>{{confirmLabel || $t('label.delete')}}</span>
         </a>
       </footer>
     </div>
@@ -17,7 +17,13 @@
 
 <script>
 export default {
-  props: ['onCancel', 'onDelete', 'active', 'content'],
+  props: {
+    'onCancel': Function,
+    'onDelete': Function,
+    'active': Boolean,
+    'content': String,
+    'confirmLabel': String
+  },
 };
 </script>
 
