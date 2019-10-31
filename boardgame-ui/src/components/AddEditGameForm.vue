@@ -37,6 +37,7 @@
           <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
         </b-autocomplete>
       </b-field>
+
       <div class="columns">
         <div class="column">
           <b-field :label="$t('add-edit-game.ranking-method.label')">
@@ -54,6 +55,19 @@
         </div>
       </div>
 
+
+      <b-field
+        :label="$t('add-edit-game.expansions.label')">
+        <multi-select
+          v-model="selectedExpansions"
+          :options="expansions"
+          :custom-label="name"
+          :placeholder="$t('add-edit-game.expansions.empty')"
+          label="name"
+          track-by="id"
+          searchable>
+        </multi-select>
+      </b-field>
       <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
       <table class="table is-fullwidth">
@@ -127,11 +141,13 @@ import Timer from '@/utils/api/Timer';
 import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import EventAutocomplete from '@/components/form/EventAutocomplete';
+import MultiSelect from 'vue-multiselect';
 
 export default {
   components: {
     UserAutocomplete,
-    EventAutocomplete
+    EventAutocomplete,
+    MultiSelect
   },
   props: {
     users: { // list of selectable users
@@ -161,7 +177,9 @@ export default {
       minTime: null,
       players: [],
       idPlayer: 1,
-      selectedEvent: null
+      selectedEvent: null,
+      expansions: [],
+      selectedExpansions: []
     };
   },
   computed: {
