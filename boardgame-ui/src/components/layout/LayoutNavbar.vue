@@ -138,6 +138,10 @@ export default {
   background-color: transparent;
 }
 
+.navbar-dropdown > .navbar-item {
+  color: $secondary;
+}
+
 @include desktop {
   .navbar-link-wrapper {
     padding: 0.75em;
