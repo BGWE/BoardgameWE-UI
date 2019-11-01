@@ -40,14 +40,3 @@ deploy:
   on:
     branch: develop
 
-- provider: s3
-  access_key_id: AKIA3VNF2BITTQFHZ5HJ
-  secret_access_key:
-    secure: G7YsApintyp3BrfrFC5TiSH5lt/1Q6D46H4Itldn+lNMc2Y0g8k5FzNLvq1QDe3KCYbAE4I1qguzYbVhLupoIvjHEAmVpEDatdB0e8P8Hp9qp5Tp8f41MCbC/Dd6IxO4jMN/MUXe3a7flQnP8Z/hztHXZXo83vGP8Xd41CbaWVnnO/FwvIapHV4tr2F2LHlWrpc+/5M4dhzG0YB2JlD1eDibw1O2ez2NbWvQLqS2sWtdslTc3zDULm0rmSBS2jGB7Dq5Ls0FujyIVsBdD4V4ol9on/IRH/smo1LGhC0kBfrd5RMWoNnhV6ctP26cDR+jo6Jv8V7ZbSHt7yhZm9ndv3IRYZiTmta4LjdXSypOlvwtNBFs11ZXEjj/ldaQpKus2LjM+iK219tCSfjImxSgHWoUthaxVeC8lgStUeJv/s4PQuucTpq7ngdQXla0eRqdlzVAQqA+SSldDfk//ZekNsLtAkPR5tqxNnppVesF5nTsvZyfduAjWsBk1nTPGJCBJe/bkCQzuuGiNJLwKOhdhgCPVsRoe42vvZqPolM4Mue5ov3GYzr01enc+BPYtWDxVhL/zwl3pnE/XH6oZ2IdVE/n5NmFa3XZOKaQwVSHtzwUSuAuIULPwTVrGMcuha9ipXb9zuiyKD9kEx8gXoxuepmTShnUBGyaDRUAoq1Pd44=
-  bucket: www-stg.boardgamecomponion.com
-  acl: public_read
-  region: eu-west-1
-  skip_cleanup: true
-  local_dir: BoardgameWE-UI/boardgame-ui/dist
-  on:
-    branch: develop
