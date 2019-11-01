@@ -211,8 +211,10 @@ export default {
       this.openAddToWishListToast(true);
     },
     async refreshExpansions() {
-      await BoardGame.updateExpansions(this.boardGame.id);
-      this.expansionsRefreshed = true;
+      if (!this.expansionsRefreshed) {
+        await BoardGame.updateExpansions(this.boardGame.id);
+        this.expansionsRefreshed = true;
+      }
     },
     isBoardGameInWishList() {
       return this.boardGamesInWishList.some(bg => bg.board_game.id == this.idBoardGame);
