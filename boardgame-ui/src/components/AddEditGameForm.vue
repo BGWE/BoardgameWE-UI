@@ -55,19 +55,19 @@
         </div>
       </div>
 
-
-      <b-field
-        :label="$t('add-edit-game.expansions.label')">
+      <b-field :label="$t('add-edit-game.expansions.label')">
         <multi-select
           v-model="selectedExpansions"
-          :options="expansions"
-          :custom-label="name"
+          :options="expansionsList"
           :placeholder="$t('add-edit-game.expansions.empty')"
           label="name"
           track-by="id"
-          searchable>
+          :searchable="true"
+          :multiple="true"
+          :close-on-select="false">
         </multi-select>
       </b-field>
+
       <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
       <table class="table is-fullwidth">
@@ -137,6 +137,7 @@
 
 <script>
 import Game, {GameRankingMethods} from '@/utils/api/Game';
+import BoardGame from '@/utils/api/BoardGame';
 import Timer from '@/utils/api/Timer';
 import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
@@ -178,7 +179,7 @@ export default {
       players: [],
       idPlayer: 1,
       selectedEvent: null,
-      expansions: [],
+      expansions: {},
       selectedExpansions: []
     };
   },
@@ -208,6 +209,12 @@ export default {
     },
     selectedUsersIds() {
       return this.players.map(({user}) => user ? user.id : 0);
+    },
+    expansionsList() {
+      return Object.keys(this.expansions).map(key => this.expansions[key]);
+    },
+    selectedExpansionsIds() {
+      return this.selectedExpansions.map(exp => exp.id);
     }
   },
   watch: {
@@ -231,8 +238,11 @@ export default {
       time.setMinutes(duration % 60);
       this.time = time;
     },
-    selectBoardGame(option) {
+    async selectBoardGame(option) {
       this.game.id_board_game = option ? option.id : null;
+      if (this.game.id_board_game) {
+        await this.setExpansions(this.game.id_board_game);
+      }
     },
     addPlayer() {
       this.players.push({user: null, score: null, id: this.idPlayer++});
@@ -270,6 +280,7 @@ export default {
         score = Number(score);
         return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
       });
+      this.game.expansions = this.selectedExpansions.map(exp => exp.id);
 
       try {
         await this.game.save();
@@ -288,6 +299,15 @@ export default {
           position: 'is-bottom'
         });
       }
+    },
+    async setExpansions(id) {
+      this.expansions = (await BoardGame.fetchExpansions(id)).expansions;
+      this.selectedExpansions = [];
+    },
+    async refreshExpansions() {
+      if (this.game.id_board_game) {
+        this.expansions = (await BoardGame.updateExpansions(this.game.id_board_game)).expansions;
+      }
     }
   },
   async created() {
@@ -301,6 +321,13 @@ export default {
 
       this.searchString = this.game.board_game.name;
 
+      await this.setExpansions(this.game.board_game.id);
+
+      this.game.expansions.forEach(played_expansion => {
+        console.log(played_expansion);
+        this.selectedExpansions.push(this.expansions[played_expansion.id]);
+      });
+
       this.game.players.forEach(player => {
         let score = this.ranked ? player.score : Boolean(player.score);
         this.players.push({user: player.user || player.name, score, id: this.idPlayer++});
@@ -310,11 +337,11 @@ export default {
     }
     else {
       let gameData = { ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER };
-      
+
       if (this.event) {
         gameData.id_event = this.event.id;
       }
-      
+
       if (this.idTimer) {
         const timer = await Timer.fetch(this.idTimer);
 
