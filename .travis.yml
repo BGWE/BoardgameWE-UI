@@ -16,7 +16,7 @@ env:
 
 before_deploy:
 - cd ..
-- pwd && ls -al
+- pwd && ls -al . && ls -al boardgame-ui
 
 deploy:
 - provider: s3
@@ -39,7 +39,7 @@ deploy:
   acl: public_read
   region: eu-west-1
   skip_cleanup: true
-  local_dir: BoardgameWE-UI/boardgame-ui/dist
+  local_dir: boardgame-ui/dist
   on:
     branch: develop
 
