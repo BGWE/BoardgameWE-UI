@@ -41,4 +41,30 @@ export default class BoardGame extends Model {
     let {data} = await axios.get(`board_game/search?q=${str}`);
     return data;
   }
+
+  /**
+   * Fetch expansions of a given board game
+   *
+   * @param {Number} id Board game identifier
+   *
+   * @returns {expansions: Array<BoardGame>, expansion_tree: Object} The expansions and tree structure
+   */
+  static async fetchExpansions(id) {
+    let {data} = await axios.get(`board_game/${id}/expansions`);
+    this.expansions = data;
+    return data;
+  }
+
+  /**
+   * Triggers an update of the expansions for the given board game 
+   *
+   * @param {Number} id Board game identifier
+   *
+   * @returns {expansions: Array<BoardGame>, expansion_tree: Object} The expansions and tree structure
+   */
+  static async updateExpansions(id) {
+    let {data} = await axios.put(`board_game/${id}/expansions`);
+    this.expansions = data;
+    return data;
+  }
 }

@@ -36,6 +36,10 @@
                   <a class="button is-fullwidth" :href="bggUrl">
                     {{$t('boardgame.view-in-bgg')}}
                   </a>
+
+                  <a class="button is-fullwidth" :disabled="expansionsRefreshed" @click="refreshExpansions">
+                    {{$t('boardgame.refresh-expansions')}}
+                  </a>
                 </div>
 
                 
@@ -121,7 +125,8 @@ export default {
       error: false,
       videoUrl: '',
       wishList: new WishList(),
-      boardGamesInWishList: []
+      boardGamesInWishList: [],
+      expansionsRefreshed: false
     };
   },
   computed: {
@@ -205,6 +210,12 @@ export default {
       }
       this.openAddToWishListToast(true);
     },
+    async refreshExpansions() {
+      if (!this.expansionsRefreshed) {
+        await BoardGame.updateExpansions(this.boardGame.id);
+        this.expansionsRefreshed = true;
+      }
+    },
     isBoardGameInWishList() {
       return this.boardGamesInWishList.some(bg => bg.board_game.id == this.idBoardGame);
     }
@@ -213,7 +224,6 @@ export default {
     // fetch board game
     try {
       this.boardGame = await BoardGame.fetch(this.idBoardGame);
-      console.log(this.boardGame);
     }
     catch(error) {
       console.log(error);
