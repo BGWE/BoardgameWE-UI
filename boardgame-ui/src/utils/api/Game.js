@@ -25,6 +25,7 @@ export default class Game extends Model {
 
     this.board_game = null;
     this.players = []; // for creation, {Array<{user: Number, score: Number}>}
+    this.expansions = [];
   }
 
   /** @inheritdoc */
@@ -65,19 +66,5 @@ export default class Game extends Model {
     });
 
     return processedCollection;
-  }
-
-  /**
-   * @override (uri not consistent for delete, fetch and update => need to override default behaviour)
-   */
-  async save() {
-    if(this.isNew()) {
-      return super.save();
-    }
-    else {
-      let {data} = await axios.put(`/event/${this.id_event}/${this.className}/${this.id}`, this.getPublicProperties());
-      this.populate(data);
-      return this;
-    }
   }
 }
