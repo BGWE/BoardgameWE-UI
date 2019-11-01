@@ -202,10 +202,10 @@ export default {
       return this.boardgames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
     },
     allowedRankingMethods() {
-      return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER];
+      return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER, GameRankingMethods.POINTS_LOWER_BETTER];
     },
     ranked() {
-      return this.game.ranking_method === GameRankingMethods.POINTS_HIGHER_BETTER;
+      return this.game.ranking_method !== GameRankingMethods.WIN_LOSE;
     },
     selectedUsersIds() {
       return this.players.map(({user}) => user ? user.id : 0);
