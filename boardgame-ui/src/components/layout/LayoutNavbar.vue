@@ -143,6 +143,10 @@ export default {
     padding: 0.75em;
   }
 
+  .hero.is-dark-secondary a:not(.button):not(.dropdown-item):not(.tag):not(.pagination-link.is-current), .hero.is-dark-secondary strong {
+    color: $secondary;
+  }
+
   .hero.is-dark-secondary .navbar-item.has-dropdown .navbar-link-wrapper > .navbar-link.navbar-link-custom {
     color: $secondary;
     background-color: white;
