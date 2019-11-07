@@ -101,6 +101,9 @@ export default {
         return;
       }
 
+      this.user.password = null;
+      this.user.old_password = null;
+
       try {
         await this.user.save();
         this.$store.commit('setCurrentUser', this.user.clone());
@@ -123,7 +126,7 @@ export default {
       }
 
       this.user.password = this.newPassword;
-      this.user.oldPassword = this.password;
+      this.user.old_password = this.password;
       try {
         await this.user.save();
         this.$store.commit('setCurrentUser', this.user);
