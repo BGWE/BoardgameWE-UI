@@ -37,6 +37,7 @@
           <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
         </b-autocomplete>
       </b-field>
+
       <div class="columns">
         <div class="column">
           <b-field :label="$t('add-edit-game.ranking-method.label')">
@@ -53,6 +54,19 @@
           </b-field>
         </div>
       </div>
+
+      <b-field :label="$t('add-edit-game.expansions.label')">
+        <multi-select
+          v-model="selectedExpansions"
+          :options="expansionsList"
+          :placeholder="$t('add-edit-game.expansions.empty')"
+          label="name"
+          track-by="id"
+          :searchable="true"
+          :multiple="true"
+          :close-on-select="false">
+        </multi-select>
+      </b-field>
 
       <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
@@ -123,15 +137,18 @@
 
 <script>
 import Game, {GameRankingMethods} from '@/utils/api/Game';
+import BoardGame from '@/utils/api/BoardGame';
 import Timer from '@/utils/api/Timer';
 import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import EventAutocomplete from '@/components/form/EventAutocomplete';
+import MultiSelect from 'vue-multiselect';
 
 export default {
   components: {
     UserAutocomplete,
-    EventAutocomplete
+    EventAutocomplete,
+    MultiSelect
   },
   props: {
     users: { // list of selectable users
@@ -161,7 +178,10 @@ export default {
       time: null,
       minTime: null,
       players: [],
-      idPlayer: 1
+      idPlayer: 1,
+      selectedEvent: null,
+      expansions: {},
+      selectedExpansions: []
     };
   },
 
@@ -184,13 +204,19 @@ export default {
       return this.boardgames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
     },
     allowedRankingMethods() {
-      return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER];
+      return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER, GameRankingMethods.POINTS_LOWER_BETTER];
     },
     ranked() {
-      return this.game.ranking_method === GameRankingMethods.POINTS_HIGHER_BETTER;
+      return this.game.ranking_method !== GameRankingMethods.WIN_LOSE;
     },
     selectedUsersIds() {
       return this.players.map(({user}) => user ? user.id : 0);
+    },
+    expansionsList() {
+      return Object.keys(this.expansions).map(key => this.expansions[key]);
+    },
+    selectedExpansionsIds() {
+      return this.selectedExpansions.map(exp => exp.id);
     }
   },
 
@@ -219,8 +245,11 @@ export default {
     getDurationFromTime(time) {
       return time.getHours() * 60 + time.getMinutes();
     },
-    selectBoardGame(option) {
+    async selectBoardGame(option) {
       this.game.id_board_game = option ? option.id : null;
+      if (this.game.id_board_game) {
+        await this.setExpansions(this.game.id_board_game);
+      }
     },
     addPlayer() {
       this.players.push({user: null, score: null, id: this.idPlayer++});
@@ -263,6 +292,7 @@ export default {
         score = Number(score);
         return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
       });
+      this.game.expansions = this.selectedExpansions.map(exp => exp.id);
 
       try {
         await this.game.save();
@@ -280,6 +310,15 @@ export default {
           type: 'is-danger',
           position: 'is-bottom'
         });
+      }
+    },
+    async setExpansions(id) {
+      this.expansions = (await BoardGame.fetchExpansions(id)).expansions;
+      this.selectedExpansions = [];
+    },
+    async refreshExpansions() {
+      if (this.game.id_board_game) {
+        this.expansions = (await BoardGame.updateExpansions(this.game.id_board_game)).expansions;
       }
     }
   },
@@ -302,7 +341,14 @@ export default {
           this.selectedEvent = this.event;
         }
       }
-      
+
+      await this.setExpansions(this.game.board_game.id);
+
+      this.game.expansions.forEach(played_expansion => {
+        console.log(played_expansion);
+        this.selectedExpansions.push(this.expansions[played_expansion.id]);
+      });
+
       this.game.players.forEach(player => {
         let score = this.ranked ? player.score : Boolean(player.score);
         this.players.push({user: player.user || player.name, score, id: this.idPlayer++});
@@ -312,12 +358,12 @@ export default {
     }
     else {
       let gameData = { ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER };
-      
+
       if (this.event) {
         gameData.id_event = this.event.id;
         this.selectedEvent = this.event;
       }
-      
+
       if (this.idTimer) {
         gameData.id_timer = this.idTimer;
 
