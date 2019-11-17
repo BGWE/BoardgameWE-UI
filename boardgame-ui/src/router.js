@@ -172,20 +172,13 @@ const routes = [
         name: 'user-games',
         path: 'games',
         component: require('./components/user/UserGames.vue').default
+      },
+      {
+        name: 'user-timers',
+        path: 'timers',
+        component: require('./components/user/UserTimers.vue').default
       }
     ]
-  },
-  // { // to be re-worked in version 3.1
-  //   name: 'create-event-timer',
-  //   path: '/event/:eventid/timer',
-  //   component: require('./pages/TimerCreationPage.vue').default,
-  //   beforeEnter: authenticatedOnly
-  // },
-  {
-    name: 'timers',
-    path: '/timers',
-    component: require('./pages/TimersPage.vue').default,
-    beforeEnter: authenticatedOnly
   },
   {
     name: 'timer',
@@ -199,12 +192,6 @@ const routes = [
     component: require('./pages/TimerCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
-  // { // to be re-worked in version 3.1
-  //   name: 'edit-timer',
-  //   path: '/timer/:id/edit',
-  //   component: require('./pages/TimerCreationPage.vue').default,
-  //   beforeEnter: authenticatedOnly
-  // },
   {
     name: 'preferences',
     path: '/preferences',

@@ -35,7 +35,7 @@
                       </span>
                     </router-link>
                     -->
-                    <a class="level-right" @click.prevent.stop="triggerConfirmDeleteModal(timer.id)">
+                    <a v-if="$store.state.currentUser.id == timer.id_creator" class="level-right" @click.prevent.stop="triggerConfirmDeleteModal(timer.id)">
                       <span class="icon is-small has-text-danger">
                         <i class="far fa-trash-alt"></i>
                       </span>

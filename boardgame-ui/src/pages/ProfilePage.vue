@@ -127,6 +127,7 @@ export default {
           {name: 'user-library', text: this.$t('profile.tab.library')},
           {name: 'user-wish-list', text: this.$t('profile.tab.wish-list')},
           {name: 'user-games', text: this.$t('profile.tab.games')},
+          {name: 'user-timers', text: this.$t('profile.tab.timers')},
           {name: 'user-friends', text: this.$t('profile.tab.friends')},
           {name: 'user-achievements', text: this.$t('profile.tab.achievements')}
         ];

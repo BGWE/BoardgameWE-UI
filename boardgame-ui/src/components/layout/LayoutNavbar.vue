@@ -22,10 +22,6 @@
                 <router-link :to="{name: 'events'}" class="navbar-item">
                   {{$t('navbar.events')}}
                 </router-link>
-
-                <router-link :to="{name: 'timers'}" class="navbar-item">
-                  {{$t('navbar.timers')}}
-                </router-link>
               </template>
 
               <div v-if="!currentUser" class="navbar-item">

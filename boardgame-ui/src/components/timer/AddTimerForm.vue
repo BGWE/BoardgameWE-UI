@@ -92,7 +92,7 @@
       </table>
 
       <div class="buttons is-right">
-        <button class="button" type="button" @click="$emit('close')">{{$t('button.cancel')}}</button>
+        <button class="button" type="button" @click="$router.go(-1)">{{$t('button.cancel')}}</button>
         <button class="button is-primary">{{$t('button.save')}}</button>
       </div>
     </form>
@@ -214,7 +214,7 @@ export default {
 
       try {
         await this.timer.save();
-        this.$emit('created:timer', this.timer);
+        this.$router.go(-1);
       }
       catch (e) {
         console.log(e);
