@@ -179,7 +179,6 @@ export default {
       minTime: null,
       players: [],
       idPlayer: 1,
-      selectedEvent: null,
       expansions: {},
       selectedExpansions: []
     };
