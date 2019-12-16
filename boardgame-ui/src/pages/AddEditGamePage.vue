@@ -1,7 +1,7 @@
 <template>
   <div>
-    <HeroTitlePageLayout :title="$t('add-game.title')"/>
-    <add-edit-game-form v-if="!isLoading"
+    <HeroTitlePageLayout :title="$t('games.title')"/>
+    <add-edit-game-form v-if="!loading"
       class="form"
       :users="users"
       :boardgames="boardgames"
@@ -12,7 +12,7 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import AddEditGameForm from '@/components/AddEditGameForm';
+import AddEditGameForm from '@/components/games/AddEditGameForm';
 import BoardGame from '@/utils/api/BoardGame';
 import Event from '@/utils/api/Event';
 
@@ -26,7 +26,7 @@ export default {
       users: [],
       boardgames: [],
       events: [],
-      isLoading: true
+      loading: true
     };
   },
   computed: {
@@ -38,7 +38,7 @@ export default {
     this.users = await this.currentUser.fetchFriends();
     this.boardgames = await BoardGame.fetchAll();
     this.events = await Event.fetchAll(true, [this.currentUser.id]);
-    this.isLoading = false;
+    this.loading = false;
   }
 };
 </script>

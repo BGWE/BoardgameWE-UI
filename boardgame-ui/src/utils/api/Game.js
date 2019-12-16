@@ -28,10 +28,13 @@ export default class Game extends Model {
     this.expansions = [];
   }
 
-  /** @inheritdoc */
   get uri() {
-    if(this.isNew()) {
+    if (this.id_event && this.isNew()) {
       return `/event/${this.id_event}/${this.className}`;
+    }
+
+    if(this.isNew()) {
+      return `${this.className}`;
     }
     else {
       return `${this.className}/${this.id}`;

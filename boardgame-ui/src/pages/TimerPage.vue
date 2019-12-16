@@ -69,15 +69,18 @@
         </transition>
 
         <transition name="fade">
-          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null && timer.id_event !== null">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
             <span class="panel-icon">
               <i class="fas fa-external-link-alt"></i>
             </span>
-            <router-link v-if="timer.game" :to="{name: 'event-games', params: {eventid: timer.event.id}}">
+            <router-link v-if="timer.game && timer.id_event !== null" :to="{name: 'event-games', params: {eventid: timer.event.id}}">
               <i18n path="timer.game_already_associated" />
             </router-link>
-            <router-link v-else :to="{name: 'add-game-event', params: {eventid: timer.event.id}, query: {idTimer: timer.id}}">
-              <i18n path="timer.create_game_from" />
+            <router-link v-else-if="timer.id_event !== null" :to="{name: 'add-game-event', params: {eventid: timer.event.id}, query: {idTimer: timer.id}}">
+              {{$t("timer.create_game_from")}}
+            </router-link>
+            <router-link v-else :to="{name: 'add-game', query: {idTimer: timer.id}}">
+              {{$t("timer.create_game_from")}}
             </router-link>
           </div>
         </transition>
@@ -115,16 +118,16 @@
 
           <transition-group type="transition" name="flip-list">
 
-          <player-timer
-            class="card"
-            v-for="(player_timer, key) in players"
-            :key="player_timer.id"
-            :player_timer="player_timer"
-            :timer="timer"
-            :is_selected="key === timer.current_player"
-            :is_running="isRunning"
-            @update_display_time="update_display_time"
-            v-bind:class="{'timer-button-first' : key === timer.current_player}" />
+            <player-timer
+              class="card"
+              v-for="(player_timer, key) in players"
+              :key="player_timer.id"
+              :player_timer="player_timer"
+              :timer="timer"
+              :is_selected="key === timer.current_player"
+              :is_running="isRunning"
+              @update_display_time="update_display_time"
+              v-bind:class="{'timer-button-first' : key === timer.current_player}" />
 
           </transition-group>
 

@@ -56,6 +56,12 @@ const routes = [
     beforeEnter: authenticatedOnly
   },
   {
+    name: 'edit-game',
+    path: '/games/edit/:idGame',
+    component: require('./pages/AddEditGamePage.vue').default,
+    beforeEnter: authenticatedOnly
+  },
+  {
     name: 'events',
     path: '/events',
     component: require('./pages/EventsPage.vue').default,
@@ -87,12 +93,12 @@ const routes = [
       {
         name: 'add-game-event',
         path: 'games/add',
-        component: require('./components/event/EventAddEditGame').default
+        component: require('./components/event/EventAddEditGame.vue').default
       },
       {
         name: 'edit-game-event',
         path: 'games/edit/:idGame',
-        component: require('./components/event/EventAddEditGame').default
+        component: require('./components/event/EventAddEditGame.vue').default
       },
       {
         name: 'event-games',
@@ -161,20 +167,18 @@ const routes = [
         name: 'user-friends',
         path: 'friends',
         component: require('./components/user/UserFriends.vue').default
+      },
+      {
+        name: 'user-games',
+        path: 'games',
+        component: require('./components/user/UserGames.vue').default
+      },
+      {
+        name: 'user-timers',
+        path: 'timers',
+        component: require('./components/user/UserTimers.vue').default
       }
     ]
-  },
-  // { // to be re-worked in version 3.1
-  //   name: 'create-event-timer',
-  //   path: '/event/:eventid/timer',
-  //   component: require('./pages/TimerCreationPage.vue').default,
-  //   beforeEnter: authenticatedOnly
-  // },
-  {
-    name: 'timers',
-    path: '/timers',
-    component: require('./pages/TimersPage.vue').default,
-    beforeEnter: authenticatedOnly
   },
   {
     name: 'timer',
@@ -188,12 +192,6 @@ const routes = [
     component: require('./pages/TimerCreationPage.vue').default,
     beforeEnter: authenticatedOnly
   },
-  // { // to be re-worked in version 3.1
-  //   name: 'edit-timer',
-  //   path: '/timer/:id/edit',
-  //   component: require('./pages/TimerCreationPage.vue').default,
-  //   beforeEnter: authenticatedOnly
-  // },
   {
     name: 'preferences',
     path: '/preferences',

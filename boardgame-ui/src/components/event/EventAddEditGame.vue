@@ -10,7 +10,7 @@
 
 <script>
 import Event from '@/utils/api/Event';
-import AddEditGameForm from '@/components/AddEditGameForm';
+import AddEditGameForm from '@/components/games/AddEditGameForm';
 
 export default {
   components: {
@@ -30,9 +30,6 @@ export default {
     },
     idGame() {
       return this.$route.params.idGame;
-    },
-    idTimer() {
-      return this.$route.query.idTimer;
     },
     boardGames() {
       if(!this.boardGamesLinks) {

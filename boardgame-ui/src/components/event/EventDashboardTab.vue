@@ -3,14 +3,14 @@
     <b-loading :is-full-page="false" :active="loading"></b-loading>
     
     <div v-if="stats">
-      <b-collapse class="eventList" :open="false" aria-id="statistics">
+      <b-collapse :open="false" aria-id="statistics">
         <div slot="trigger" slot-scope="props" role="button" aria-controls="statistics">
           <h2 class="collapse-trigger-content subtitle">
             {{$t("home.statistics")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
           </h2>
         </div>
 
-        <div class="columns">
+        <div class="columns stats">
           <div class="column has-text-centered">
             <p class="heading"><i18n path="event.stats.distinct_played" /></p>
             <p class="title">{{stats.board_games_played}}</p>
@@ -130,6 +130,10 @@ export default {
 <style scoped>
 .title {
   margin-bottom: 0.25rem;
+}
+
+.stats {
+  padding-top: 10pt;
 }
 
 </style>
