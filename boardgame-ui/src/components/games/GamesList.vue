@@ -47,9 +47,14 @@
         </template>
 
         <template v-slot:footer>
-          <span class="has-text-weight-light has-text-dark is-size-7 time-footer">
-            <span v-if="game.id_event != null">Eventid : {{game.id_event}} </span> <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
-          </span>
+          <div class="has-text-weight-light has-text-dark is-size-7 time-footer">
+            <span>
+              <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
+            </span>
+            <span class="footer-right" v-if="game.id_event != null">
+              <event-link :event="{id: game.id_event}"></event-link>
+            </span> 
+          </div>
         </template>
 
       </PanelListElement>
@@ -69,6 +74,7 @@ import BgcDuration from '@/components/utils/BgcDuration';
 import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import EventLink from '@/components/event/EventLink';
 import Game from '@/utils/api/Game';
 import * as Helper from '@/utils/helper';
 import moment from 'moment-timezone';
@@ -84,7 +90,8 @@ export default {
     BgcDuration,
     PanelList,
     PanelListElement,
-    ConfirmDeleteModal
+    ConfirmDeleteModal,
+    EventLink
   },
 
   data() {
@@ -197,5 +204,10 @@ export default {
   max-width: 500px;
   margin: auto;
   margin-bottom: 1em;
+}
+
+.footer-right {
+  position: absolute;
+  right: 9px;
 }
 </style>
