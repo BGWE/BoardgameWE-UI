@@ -59,7 +59,6 @@ const actions = {
   },
 
   async fetchUser({commit}) {
-    console.log('fetchhUser');
     let user = null;
 
     try {
