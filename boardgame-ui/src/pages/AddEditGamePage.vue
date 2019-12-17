@@ -1,11 +1,13 @@
 <template>
   <div>
     <HeroTitlePageLayout :title="$t('games.title')"/>
-    <add-edit-game-form v-if="!loading"
+    <b-loading :is-full-page="false" :active.sync="loading"></b-loading>
+    <add-edit-game-form
       class="form"
       :users="users"
       :boardgames="boardgames"
       :events="events"
+      @eventChange="onEventChange"
     />
   </div>
 </template>
@@ -29,6 +31,24 @@ export default {
       loading: true
     };
   },
+  methods: {
+    async onEventChange(event) {
+      this.loading = true;
+      await this.fetchBoardGames(event);
+      console.log(this.boardgames);
+      this.loading = false;
+    },
+    async fetchBoardGames(event) {
+      let bgs = [];
+      if (event) {
+        bgs = await event.fetchProvidedBoardGames();
+      } 
+      else {
+        bgs = await BoardGame.fetchAll();
+      }
+      this.boardgames = bgs;
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
@@ -36,7 +56,7 @@ export default {
   },
   async created() {
     this.users = await this.currentUser.fetchFriends();
-    this.boardgames = await BoardGame.fetchAll();
+    this.fetchBoardGames();
     this.events = await Event.fetchAll(true, [this.currentUser.id]);
     this.loading = false;
   }

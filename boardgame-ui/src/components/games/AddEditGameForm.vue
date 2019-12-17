@@ -12,11 +12,11 @@
       </b-field>
 
       <b-field v-else-if="events" :label="$t('timer.add-edit.event')">
-         <event-autocomplete
-            v-model="selectedEvent"
-            :inputData="events"
-            :data-vv-as="$t('add-edit-game.event.label')"
-          />
+        <event-autocomplete
+          v-model="selectedEvent"
+          :inputData="events"
+          :data-vv-as="$t('add-edit-game.event.label')"
+        />
       </b-field>
 
       <b-field
@@ -230,6 +230,10 @@ export default {
       if(this.time < this.minTime) {
         this.time = this.minTime;
       }
+    },
+    selectedEvent(newVal, oldVal) {
+      this.$emit('eventChange', newVal);
+      this.searchString = '';
     }
   },
 
