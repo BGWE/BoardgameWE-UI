@@ -34,6 +34,16 @@
           :data-vv-as="$t('add-edit-game.board-game.label')"
           v-validate="'required'"
         >
+          <template slot-scope="props">
+            <div class="media">
+              <div class="media-left">
+                <img :src="props.option.thumbnail" width="50">
+              </div>
+              <div class="media-content">
+                {{props.option.name}}
+              </div>
+            </div>
+          </template>
           <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
         </b-autocomplete>
       </b-field>
@@ -231,7 +241,7 @@ export default {
         this.time = this.minTime;
       }
     },
-    selectedEvent(newVal, oldVal) {
+    selectedEvent(newVal) {
       this.$emit('eventChange', newVal);
       this.searchString = '';
     }
