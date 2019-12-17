@@ -81,7 +81,7 @@ export default {
         if (valid) {
           try {
             await User.resetPassword(this.token, this.userId, this.password);
-            this.$toast.open({
+            this.$buefy.toast.open({
               message: this.$t('auth.reset-password.success'),
               type: 'is-success',
               position: 'is-bottom'
@@ -92,7 +92,7 @@ export default {
           catch (e) {
             console.log(e);
 
-            this.$toast.open({
+            this.$buefy.toast.open({
               message: this.$t('auth.reset-password.failure'),
               type: 'is-danger',
               position: 'is-bottom'

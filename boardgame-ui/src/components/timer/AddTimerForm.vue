@@ -192,7 +192,7 @@ export default {
 
     removePlayer(idx) {
       if(this.players.length === 1) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.must-have-at-least-one-player'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -225,7 +225,7 @@ export default {
       let result = await this.$validator.validateAll();
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
           type: 'is-danger',
           position: 'is-bottom'

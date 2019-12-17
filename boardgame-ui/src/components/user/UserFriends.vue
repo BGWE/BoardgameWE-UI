@@ -146,7 +146,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('profile.toast.handle-friend-request-error'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -160,7 +160,7 @@ export default {
       }
       catch (error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('profile.toast.handle-friend-request-error'),
           type: 'is-danger',
           position: 'is-bottom'

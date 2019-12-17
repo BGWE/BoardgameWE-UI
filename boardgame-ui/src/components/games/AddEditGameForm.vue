@@ -269,7 +269,7 @@ export default {
     },
     removePlayer(idx) {
       if(this.players.length === 1) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.must-have-at-least-one-player'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -288,7 +288,7 @@ export default {
       }
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -309,7 +309,7 @@ export default {
 
       try {
         await this.game.save();
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.save-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -318,7 +318,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.save-error'),
           type: 'is-danger',
           position: 'is-bottom'

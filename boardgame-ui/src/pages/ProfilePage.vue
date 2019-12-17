@@ -190,7 +190,7 @@ export default {
       }
     },
     showError(label) {
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: this.$t(label),
         type: 'is-danger',
         position: 'is-bottom'

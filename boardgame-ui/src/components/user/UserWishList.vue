@@ -46,7 +46,7 @@ export default {
     async addBoardGame({bggId}) {
       try {
         this.wishListBoardGames = await this.wishList.addBoardGameFromBgg(bggId);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('wish-list.toast.add-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -54,7 +54,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('wish-list.toast.add-error'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -64,7 +64,7 @@ export default {
     async deleteBoardGame(id) {
       try {
         this.wishListBoardGames = await this.wishList.removeBoardGames([id]);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('wish-list.toast.delete-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -72,7 +72,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('wish-list.toast.delete-error'),
           type: 'is-danger',
           position: 'is-bottom'
