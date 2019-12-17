@@ -133,7 +133,7 @@ export default {
       this.isConfirmDeleteModalActive = false;
     },
     error(err) {
-      this.$notification.open({
+      this.$buefy.notification.open({
         message: err.message,
         type: 'is-error'
       });
@@ -177,7 +177,7 @@ export default {
     },
 
     deleteTimer() {
-      this.$socket.emit('timer_delete', this.timerIdToDelete);
+      this.$socket.client.emit('timer_delete', this.timerIdToDelete);
     },
 
     capitalizeFirstLetter(str) {

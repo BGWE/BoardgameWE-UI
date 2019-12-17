@@ -221,7 +221,7 @@ export default {
         }
 
         this.isLoading = true;
-        this.$socket.emit('timer_change_player_turn_order', val);
+        this.$socket.client.emit('timer_change_player_turn_order', val);
       }
     },
   },
@@ -240,29 +240,29 @@ export default {
       this.isRunning = this.players.some((p => p.start !== null));
 
       if (this.timer.player_timers.some(p => p.id_user === this.currentUser.id && p.start !== null)) {
-        this.$notification.open({
+        this.$buefy.notification.open({
           message: this.$t('timer.your_turn'),
           type: 'is-success'
         });
       }
     },
     start() {
-      this.$socket.emit('timer_start');
+      this.$socket.client.emit('timer_start');
     },
     stop() {
-      this.$socket.emit('timer_stop');
+      this.$socket.client.emit('timer_stop');
     },
     next() {
-      this.$socket.emit('timer_next');
+      this.$socket.client.emit('timer_next');
     },
     prev() {
-      this.$socket.emit('timer_prev');
+      this.$socket.client.emit('timer_prev');
     },
     follow() {
-      this.$socket.emit('timer_follow', this.timer.id);
+      this.$socket.client.emit('timer_follow', this.timer.id);
     },
     unfollow() {
-      this.$socket.emit('timer_unfollow');
+      this.$socket.client.emit('timer_unfollow');
     },
     returnToTimersList() {
       this.timerDeletedModalActive = false;

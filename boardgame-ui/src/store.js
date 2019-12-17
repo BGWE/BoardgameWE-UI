@@ -22,7 +22,7 @@ const mutations = {
 
   SOCKET_CONNECT() {
     let token = window.localStorage.accessToken;
-    this._vm.$socket.emit('authenticate', {token});
+    this._vm.$socket.client.emit('authenticate', {token});
   },
 
   SOCKET_AUTHENTICATED(state) {
@@ -76,7 +76,7 @@ const actions = {
     commit('setCurrentUser', user);
 
     if(user) {
-      this._vm.$socket.open();
+      this._vm.$socket.client.open();
     }
   },
 
