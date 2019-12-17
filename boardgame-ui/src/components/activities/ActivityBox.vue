@@ -4,41 +4,64 @@
       <ActivityBoxLeftMedia :activity="activity" :thumbnail="thumbnail"/>
       <div class="media-content">
         <i18n v-if="activity.type === Types.EVENT_ADD_GAME" path="activity.event.add_game">
-          <strong place="gameName"><board-game-link :boardGame="activity.board_game" /></strong>
-          <strong place="userName"><user-link :user="activity.user" /></strong>
+          <template v-slot:gameName>
+            <strong><board-game-link :boardGame="activity.board_game" /></strong>
+          </template>
+          <template v-slot:userName>
+            <strong><user-link :user="activity.user" /></strong>
+          </template>
         </i18n>
 
         <i18n v-else-if="activity.type === Types.EVENT_PLAY_GAME" path="activity.event.play_game">
-          <player-list place="playerNames" :players="activity.game.players" />
-          <strong place="gameName"><board-game-link :boardGame="activity.game.board_game" /></strong>
+          <template v-slot:playerNames>
+            <player-list :players="activity.game.players" />
+          </template>
+          <template v-slot:gameName>
+            <strong><board-game-link :boardGame="activity.game.board_game" /></strong>
+          </template>
         </i18n>
 
         <i18n v-else-if="activity.type === Types.EVENT_USER_JOIN" path="activity.event.user_join">
-          <strong place="userName"><user-link :user="activity.user" /></strong>
+          <template v-slot:userName>
+            <strong><user-link :user="activity.user" /></strong>
+          </template>
         </i18n>
 
         <i18n
           v-else-if="activity.type === Types.USER_JOIN_EVENT"
           :path="isCurrentUser ? 'activity.current_user.join_event' : 'activity.user.join_event'"
         >
-          <span place="userName">{{targetUser.name}}</span>
-          <strong place="eventName"><router-link :to="{name: 'event', params: {eventid: activity.event.id}}">{{activity.event.name}}</router-link></strong>
+          <template v-slot:userName>
+            <span>{{targetUser.name}}</span>
+          </template>
+
+          <template v-slot:eventName>
+            <strong><router-link :to="{name: 'event', params: {eventid: activity.event.id}}">{{activity.event.name}}</router-link></strong>
+          </template>
         </i18n>
 
         <i18n
           v-else-if="activity.type === Types.USER_LIBRARY_ADD"
           :path="isCurrentUser ? 'activity.current_user.library_add' : 'activity.user.library_add'"
         >
-          <span place="userName">{{targetUser.name}}</span>
-          <strong place="gameName"><board-game-link :boardGame="activity.board_game" /></strong>
+          <template v-slot:userName>
+            <span>{{targetUser.name}}</span>
+          </template>
+          <template v-slot:gameName>
+            <strong><board-game-link :boardGame="activity.board_game" /></strong>
+          </template>
         </i18n>
 
         <i18n
           v-else-if="activity.type === Types.USER_PLAY_GAME"
           :path="isCurrentUser ? 'activity.current_user.play_game' : 'activity.user.play_game'"
         >
-          <span place="userName">{{targetUser.name}}</span>
-          <strong place="gameName"><board-game-link :boardGame="activity.board_game" /></strong>
+          <template v-slot:userName>
+            <span>{{targetUser.name}}</span>
+          </template>
+          <template v-slot:gameName>
+            <strong><board-game-link :boardGame="activity.board_game" /></strong>
+          </template>
         </i18n>
 
         <br />

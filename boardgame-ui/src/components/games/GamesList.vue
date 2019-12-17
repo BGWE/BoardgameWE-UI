@@ -161,7 +161,7 @@ export default {
     async deleteGame() {
       try {
         await Game.delete(this.gameToDelete.id);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('event.games.delete-game-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -169,7 +169,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('event.games.delete-game-error'),
           type: 'is-danger',
           position: 'is-bottom'

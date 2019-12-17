@@ -105,7 +105,7 @@ export default {
 
       try {
         await this.user.save();
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('register.toast.success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -122,7 +122,7 @@ export default {
       let result = await this.$validator.validateAll();
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
           type: 'is-danger',
           position: 'is-bottom'

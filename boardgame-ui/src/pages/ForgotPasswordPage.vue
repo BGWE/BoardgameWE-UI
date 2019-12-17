@@ -53,7 +53,7 @@ export default {
       }
       catch (error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('login.toast.forgot-password.failure'),
           type: 'is-danger',
           position: 'is-bottom',
@@ -61,7 +61,7 @@ export default {
         return;
       }
 
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: this.$t('login.toast.forgot-password.success'),
         type: 'is-success',
         position: 'is-bottom',
