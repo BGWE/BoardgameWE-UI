@@ -27,7 +27,9 @@
 
             <p v-else>
               <i18n path="events.none.text">
-                <router-link place="link" :to="{name: 'create-event'}"> {{ $t("events.none.link") }} </router-link>
+                <template v-slot:link>
+                  <router-link :to="{name: 'create-event'}"> {{ $t("events.none.link") }} </router-link>
+                </template>
               </i18n>
             </p>
           </b-collapse>

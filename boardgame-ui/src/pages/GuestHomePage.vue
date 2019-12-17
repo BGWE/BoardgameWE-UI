@@ -16,7 +16,9 @@
         <h2><i18n path="home.description.title"/></h2>
         <p>
           <i18n path="home.app_description">
-            <i18n place="appName" path="app.appName"></i18n>
+            <template v-slot:appName>
+              <i18n path="app.appName"></i18n>
+            </template>
           </i18n>
         </p>
       </section>

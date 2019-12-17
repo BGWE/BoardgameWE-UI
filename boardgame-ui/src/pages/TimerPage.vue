@@ -22,7 +22,9 @@
         <transition name="fade">
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-if="!isRunning">
             <i18n path="timer.press-play">
-              <i place="playButton" class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i>
+              <template v-slot:playButton>
+                <i class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i>
+              </template>
             </i18n>
           </div>
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-else>

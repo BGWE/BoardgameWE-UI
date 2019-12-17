@@ -46,7 +46,9 @@
                 <div class="content">
                   {{request.user_from.name}} {{request.user_from.surname}} ({{request.user_from.username}})
                   <i18n path="profile.friend_request_received_on" tag="p" class="is-size-7 has-text-grey">
-                    <bgc-datetime place="date" :asdate="true" :datetime="request.createdAt" />
+                    <template v-slot:date>
+                      <bgc-datetime :asdate="true" :datetime="request.createdAt" />
+                    </template>
                   </i18n>
 
                 </div>
@@ -76,7 +78,9 @@
                 <div class="content">
                   {{request.user_to.name}} {{request.user_to.surname}} ({{request.user_to.username}})
                   <i18n path="profile.friend_request_sent_on" tag="p" class="is-size-7 has-text-grey">
-                    <bgc-datetime place="date" :asdate="true" :datetime="request.createdAt" />
+                    <template v-slot:date>
+                      <bgc-datetime :asdate="true" :datetime="request.createdAt" />
+                    </template>
                   </i18n>
                   <footer class="card-footer">
                     <a class="card-footer-item" @click="deleteRequest(request.id_user_to)">
