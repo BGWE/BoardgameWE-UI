@@ -240,10 +240,6 @@ export default {
       if(this.time < this.minTime) {
         this.time = this.minTime;
       }
-    },
-    selectedEvent(newVal) {
-      this.$emit('eventChange', newVal);
-      this.searchString = '';
     }
   },
 
@@ -295,7 +291,7 @@ export default {
         });
         return;
       }
-      
+
       if (this.selectedEvent != null) {
         this.game.id_event = this.selectedEvent.id;
       }
@@ -346,9 +342,10 @@ export default {
       this.game = await Game.fetch(this.idGame);
 
       this.searchString = this.game.board_game.name;
+
       if (this.game.id_event) {
         if (this.events) {
-          this.selectedEvent = this.events.find(event => event.id == this.game.id_event);
+          this.selectedEvent = await this.events.find(event => event.id == this.game.id_event);
         }
         else {
           this.selectedEvent = this.event;
@@ -400,6 +397,10 @@ export default {
       this.game = new Game(gameData);
     }
 
+    this.$watch('selectedEvent', function (newVal) {
+      this.$emit('eventChange', newVal);
+      this.searchString = '';
+    }, { deep:true } );
   }
 };
 </script>

@@ -2,7 +2,7 @@
   <div>
     <HeroTitlePageLayout :title="$t('games.title')"/>
     <b-loading :is-full-page="false" :active.sync="loading"></b-loading>
-    <add-edit-game-form
+    <add-edit-game-form v-if="events"
       class="form"
       :users="users"
       :boardgames="boardgames"
@@ -25,9 +25,9 @@ export default {
   },
   data() {
     return {
-      users: [],
-      boardgames: [],
-      events: [],
+      users: null,
+      boardgames: null,
+      events: null,
       loading: true
     };
   },
@@ -42,7 +42,7 @@ export default {
       let bgs = [];
       if (event) {
         bgs = await event.fetchProvidedBoardGames();
-      } 
+      }
       else {
         bgs = await BoardGame.fetchAll();
       }
