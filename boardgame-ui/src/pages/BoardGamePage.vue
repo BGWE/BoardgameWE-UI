@@ -183,7 +183,7 @@ export default {
     },
     openAddToWishListToast: function(succesful){
       if (succesful) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('wish-list.toast.add-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -192,7 +192,7 @@ export default {
         this.loadBoardGamesInWishList();
       }
       else {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('wish-list.toast.add-error'),
           type: 'is-danger',
           position: 'is-bottom'

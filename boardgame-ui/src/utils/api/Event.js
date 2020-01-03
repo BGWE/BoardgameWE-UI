@@ -90,6 +90,24 @@ export default class Event extends Model {
     return data;
   }
 
+  async fetchProvidedBoardGames() {
+    let boardGamesLinks = await this.fetchBoardGames();
+    if(!boardGamesLinks) {
+      return [];
+    }
+
+    let processedIds = new Set([]);
+    let boardGames = [];
+    for (let link of boardGamesLinks) {
+      let id = link.id_board_game;
+      if (!processedIds.has(id)) {
+        boardGames.push(link.provided_board_game);
+        processedIds.add(id);
+      }
+    }
+    return boardGames;
+  }
+
   async addBoardGames(gamesIds) {
     let {data} = await axios.post(this.boardGamesUri, {board_games: gamesIds});
     return data;

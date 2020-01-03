@@ -37,6 +37,16 @@
           name="boardGame"
           :data-vv-as="$t('add-edit-game.board-game.label')"
         >
+          <template slot-scope="props">
+            <div class="media">
+              <div class="media-left">
+                <img :src="props.option.thumbnail" width="50">
+              </div>
+              <div class="media-content">
+                {{props.option.name}}
+              </div>
+            </div>
+          </template>
           <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
         </b-autocomplete>
       </b-field>
@@ -92,7 +102,7 @@
       </table>
 
       <div class="buttons is-right">
-        <button class="button" type="button" @click="$emit('close')">{{$t('button.cancel')}}</button>
+        <button class="button" type="button" @click="$router.go(-1)">{{$t('button.cancel')}}</button>
         <button class="button is-primary">{{$t('button.save')}}</button>
       </div>
     </form>
@@ -192,7 +202,7 @@ export default {
 
     removePlayer(idx) {
       if(this.players.length === 1) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.must-have-at-least-one-player'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -214,7 +224,7 @@ export default {
 
       try {
         await this.timer.save();
-        this.$emit('created:timer', this.timer);
+        this.$router.go(-1);
       }
       catch (e) {
         console.log(e);
@@ -225,7 +235,7 @@ export default {
       let result = await this.$validator.validateAll();
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
           type: 'is-danger',
           position: 'is-bottom'

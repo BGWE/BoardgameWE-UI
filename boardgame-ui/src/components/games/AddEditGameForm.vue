@@ -11,12 +11,12 @@
         <b-input disabled :value="event.name" />
       </b-field>
 
-      <b-field v-if="events" :label="$t('timer.add-edit.event')">
-         <event-autocomplete
-            v-model="selectedEvent"
-            :events="events"
-            :data-vv-as="$t('add-edit-game.players.user')"
-          />
+      <b-field v-else-if="events" :label="$t('timer.add-edit.event')">
+        <event-autocomplete
+          v-model="selectedEvent"
+          :inputData="events"
+          :data-vv-as="$t('add-edit-game.event.label')"
+        />
       </b-field>
 
       <b-field
@@ -34,6 +34,16 @@
           :data-vv-as="$t('add-edit-game.board-game.label')"
           v-validate="'required'"
         >
+          <template slot-scope="props">
+            <div class="media">
+              <div class="media-left">
+                <img :src="props.option.thumbnail" width="50">
+              </div>
+              <div class="media-content">
+                {{props.option.name}}
+              </div>
+            </div>
+          </template>
           <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
         </b-autocomplete>
       </b-field>
@@ -174,15 +184,16 @@ export default {
     return {
       game: null,
       searchString: '',
+      selectedEvent: null,
       time: null,
       minTime: null,
       players: [],
       idPlayer: 1,
-      selectedEvent: null,
       expansions: {},
       selectedExpansions: []
     };
   },
+
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
@@ -217,6 +228,7 @@ export default {
       return this.selectedExpansions.map(exp => exp.id);
     }
   },
+
   watch: {
     'game.ranking_method'(_, old) {
       if(!old) {
@@ -228,8 +240,13 @@ export default {
       if(this.time < this.minTime) {
         this.time = this.minTime;
       }
+    },
+    selectedEvent(newVal) {
+      this.$emit('eventChange', newVal);
+      this.searchString = '';
     }
   },
+
   methods: {
     setTimeFromDuration(duration) { // arg duration to be provided in minutes
       duration = Math.round(duration / 15) * 15; // get multiple of 15 minutes
@@ -237,6 +254,9 @@ export default {
       time.setHours(Math.floor(duration / 60));
       time.setMinutes(duration % 60);
       this.time = time;
+    },
+    getDurationFromTime(time) {
+      return time.getHours() * 60 + time.getMinutes();
     },
     async selectBoardGame(option) {
       this.game.id_board_game = option ? option.id : null;
@@ -249,7 +269,7 @@ export default {
     },
     removePlayer(idx) {
       if(this.players.length === 1) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.must-have-at-least-one-player'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -258,6 +278,7 @@ export default {
       }
       this.players.splice(idx, 1);
     },
+
     async save() {
       let result = await this.$validator.validateAll();
 
@@ -267,15 +288,19 @@ export default {
       }
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
           type: 'is-danger',
           position: 'is-bottom'
         });
         return;
       }
+      
+      if (this.selectedEvent != null) {
+        this.game.id_event = this.selectedEvent.id;
+      }
 
-      this.game.duration = this.time.getHours()*60 + this.time.getMinutes();
+      this.game.duration = this.getDurationFromTime(this.time);
       this.game.players = this.players.map(({user, score}) => {
         score = Number(score);
         return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
@@ -284,16 +309,16 @@ export default {
 
       try {
         await this.game.save();
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.save-success'),
           type: 'is-success',
           position: 'is-bottom'
         });
-        this.$router.push({name: 'event-games'});
+        this.$router.go(-1);
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.save-error'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -310,6 +335,7 @@ export default {
       }
     }
   },
+
   async created() {
     let minTime = new Date();
     minTime.setHours(0);
@@ -320,6 +346,14 @@ export default {
       this.game = await Game.fetch(this.idGame);
 
       this.searchString = this.game.board_game.name;
+      if (this.game.id_event) {
+        if (this.events) {
+          this.selectedEvent = this.events.find(event => event.id == this.game.id_event);
+        }
+        else {
+          this.selectedEvent = this.event;
+        }
+      }
 
       await this.setExpansions(this.game.board_game.id);
 
@@ -340,14 +374,15 @@ export default {
 
       if (this.event) {
         gameData.id_event = this.event.id;
+        this.selectedEvent = this.event;
       }
 
       if (this.idTimer) {
-        const timer = await Timer.fetch(this.idTimer);
+        gameData.id_timer = this.idTimer;
 
+        const timer = await Timer.fetch(this.idTimer);
         this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
 
-        gameData.id_timer = this.idTimer;
         if (timer.board_game) {
           gameData.id_board_game = timer.id_board_game;
           this.searchString = timer.board_game.name;

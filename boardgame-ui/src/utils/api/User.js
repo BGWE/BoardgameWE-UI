@@ -38,6 +38,15 @@ export default class User extends Model {
   }
 
   /**
+   * Fetch the games of the current user
+   * @return {Object} Response from backend
+   */
+  async fetchGames() {
+    let {data} = await axios.get(`/user/${this.id}/games`);
+    return data;
+  }
+
+  /**
    * Fetch user statistics
    * @param userId (Optional) Identifier of the user (default: user identifier)
    * @returns {Object} Response from backend

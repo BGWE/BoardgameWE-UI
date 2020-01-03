@@ -47,7 +47,7 @@ export default {
     async addBoardGame({bggId}) {
       try {
         this.libraryBoardGames = await this.library.addGameFromBgg(bggId);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('library.toast.add-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -55,7 +55,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('library.toast.add-error'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -65,7 +65,7 @@ export default {
     async deleteBoardGame(id) {
       try {
         this.libraryBoardGames = await this.library.removeGames([id]);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('library.toast.delete-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -73,7 +73,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('library.toast.delete-error'),
           type: 'is-danger',
           position: 'is-bottom'
