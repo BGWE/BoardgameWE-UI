@@ -28,14 +28,6 @@ export default {
     };
   },
 
-  watch: {
-    value(val) {
-      if (val != this.internalValue) {
-        this.setValue();
-      }
-    }
-  },
-
   computed: {
     filteredData() {
       let str = this.searchString.toLowerCase();

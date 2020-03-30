@@ -28,6 +28,7 @@ export default class Game extends Model {
     this.expansions = [];
   }
 
+  // TODO: remove override once backend handles id_event in POST /game route
   get uri() {
     if (this.id_event && this.isNew()) {
       return `/event/${this.id_event}/${this.className}`;

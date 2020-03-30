@@ -1,13 +1,12 @@
 <template>
   <div>
-    <HeroTitlePageLayout :title="$t('games.title')"/>
-    <b-loading :is-full-page="false" :active.sync="loading"></b-loading>
-    <add-edit-game-form v-if="events"
+    <hero-title-page-layout :title="$t('games.title')" />
+    <b-loading :is-full-page="false" :active="loading" />
+    <add-edit-game-form v-if="!loading"
       class="form"
       :users="users"
       :boardgames="boardgames"
       :events="events"
-      @eventChange="onEventChange"
     />
   </div>
 </template>
@@ -31,33 +30,24 @@ export default {
       loading: true
     };
   },
-  methods: {
-    async onEventChange(event) {
-      this.loading = true;
-      await this.fetchBoardGames(event);
-      console.log(this.boardgames);
-      this.loading = false;
-    },
-    async fetchBoardGames(event) {
-      let bgs = [];
-      if (event) {
-        bgs = await event.fetchProvidedBoardGames();
-      }
-      else {
-        bgs = await BoardGame.fetchAll();
-      }
-      this.boardgames = bgs;
-    }
-  },
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
     }
   },
+  methods: {
+    async fetchUsers() {
+      this.users = await this.currentUser.fetchFriends();
+    },
+    async fetchBoardGames() {
+      this.boardgames = await BoardGame.fetchAll();
+    },
+    async fetchEvents() {
+      this.events = await Event.fetchAll(true, [this.currentUser.id]);
+    }
+  },
   async created() {
-    this.users = await this.currentUser.fetchFriends();
-    this.fetchBoardGames();
-    this.events = await Event.fetchAll(true, [this.currentUser.id]);
+    await Promise.all([this.fetchUsers(), this.fetchBoardGames(), this.fetchEvents()]);
     this.loading = false;
   }
 };

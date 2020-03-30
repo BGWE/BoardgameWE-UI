@@ -190,7 +190,8 @@ export default {
       players: [],
       idPlayer: 1,
       expansions: {},
-      selectedExpansions: []
+      selectedExpansions: [],
+      availableBoardGames: []
     };
   },
 
@@ -205,12 +206,12 @@ export default {
       return this.$route.query.idTimer;
     },
     filteredBoardGames() {
-      if (!this.searchString) {
-        return this.boardgames;
+      if(!this.searchString) {
+        return this.availableBoardGames;
       }
 
       let str = this.searchString.toLowerCase();
-      return this.boardgames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
+      return this.availableBoardGames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
     },
     allowedRankingMethods() {
       return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER, GameRankingMethods.POINTS_LOWER_BETTER];
@@ -223,9 +224,6 @@ export default {
     },
     expansionsList() {
       return Object.keys(this.expansions).map(key => this.expansions[key]);
-    },
-    selectedExpansionsIds() {
-      return this.selectedExpansions.map(exp => exp.id);
     }
   },
 
@@ -239,6 +237,19 @@ export default {
     time() {
       if(this.time < this.minTime) {
         this.time = this.minTime;
+      }
+    },
+    async selectedEvent(event) {
+      if(event != null) {
+        this.availableBoardGames = await event.fetchProvidedBoardGames();
+      }
+      else {
+        this.availableBoardGames = this.boardgames;
+      }
+      // if selected board game no longer part of available board games, reset
+      if(!this.availableBoardGames.map(bg => bg.id).includes(this.game.id_board_game)) {
+        this.searchString = '';
+        await this.selectBoardGame(null);
       }
     }
   },
@@ -255,10 +266,9 @@ export default {
       return time.getHours() * 60 + time.getMinutes();
     },
     async selectBoardGame(option) {
-      this.game.id_board_game = option ? option.id : null;
-      if (this.game.id_board_game) {
-        await this.setExpansions(this.game.id_board_game);
-      }
+      let idBoardGame = option ? option.id : null;
+      this.game.id_board_game = idBoardGame;
+      await this.setExpansions(this.game.id_board_game);
     },
     addPlayer() {
       this.players.push({user: null, score: null, id: this.idPlayer++});
@@ -313,7 +323,6 @@ export default {
         this.$router.go(-1);
       }
       catch(error) {
-        console.log(error);
         this.$buefy.toast.open({
           message: this.$t('add-edit-game.save-error'),
           type: 'is-danger',
@@ -322,17 +331,19 @@ export default {
       }
     },
     async setExpansions(id) {
-      this.expansions = (await BoardGame.fetchExpansions(id)).expansions;
-      this.selectedExpansions = [];
-    },
-    async refreshExpansions() {
-      if (this.game.id_board_game) {
-        this.expansions = (await BoardGame.updateExpansions(this.game.id_board_game)).expansions;
+      if(id != null) {
+        this.expansions = (await BoardGame.fetchExpansions(id)).expansions;
       }
+      else {
+        this.expansions = [];
+      }
+      this.selectedExpansions = [];
     }
   },
 
   async created() {
+    this.availableBoardGames = this.boardgames;
+
     let minTime = new Date();
     minTime.setHours(0);
     minTime.setMinutes(15);
@@ -344,8 +355,8 @@ export default {
       this.searchString = this.game.board_game.name;
 
       if (this.game.id_event) {
-        if (this.events) {
-          this.selectedEvent = await this.events.find(event => event.id == this.game.id_event);
+        if(this.events) {
+          this.selectedEvent = this.events.find(event => event.id == this.game.id_event);
         }
         else {
           this.selectedEvent = this.event;
@@ -353,9 +364,7 @@ export default {
       }
 
       await this.setExpansions(this.game.board_game.id);
-
       this.game.expansions.forEach(played_expansion => {
-        console.log(played_expansion);
         this.selectedExpansions.push(this.expansions[played_expansion.id]);
       });
 
@@ -367,7 +376,7 @@ export default {
       this.setTimeFromDuration(this.game.duration);
     }
     else {
-      let gameData = { ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER };
+      let gameData = {ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER};
 
       if (this.event) {
         gameData.id_event = this.event.id;
@@ -380,7 +389,7 @@ export default {
         const timer = await Timer.fetch(this.idTimer);
         this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
 
-        if (timer.board_game) {
+        if(timer.board_game) {
           gameData.id_board_game = timer.id_board_game;
           this.searchString = timer.board_game.name;
         }
@@ -396,11 +405,6 @@ export default {
 
       this.game = new Game(gameData);
     }
-
-    this.$watch('selectedEvent', function (newVal) {
-      this.$emit('eventChange', newVal);
-      this.searchString = '';
-    }, { deep:true } );
   }
 };
 </script>
