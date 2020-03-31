@@ -73,7 +73,7 @@ export default {
           });
         }
         else {
-          this.$toast.open({
+          this.$buefy.toast.open({
             message: this.$t('event-board-games.toast.add-success'),
             type: 'is-success',
             position: 'is-bottom'
@@ -82,7 +82,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('event-board-games.toast.add-error'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -93,7 +93,7 @@ export default {
     async addBoardGameToLibrary(bggId) {
       try {
         await new Library().addGameFromBgg(bggId);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('event-board-games.toast.add-library-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -101,7 +101,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('event-board-games.toast.add-library-error'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -113,7 +113,7 @@ export default {
       try {
         await this.event.removeBoardGames([id]);
         this.boardGamesLinks = await this.event.fetchBoardGames();
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('event-board-games.toast.delete-success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -121,7 +121,7 @@ export default {
       }
       catch(error) {
         console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('event-board-games.toast.delete-error'),
           type: 'is-danger',
           position: 'is-bottom'

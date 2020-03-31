@@ -25,6 +25,7 @@ export default class Game extends Model {
 
     this.board_game = null;
     this.players = []; // for creation, {Array<{user: Number, score: Number}>}
+    this.expansions = [];
   }
 
   static async fetchAllInEvent(idEvent) {

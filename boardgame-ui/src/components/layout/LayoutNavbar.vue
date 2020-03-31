@@ -22,11 +22,6 @@
                 <router-link :to="{name: 'events'}" class="navbar-item">
                   {{$t('navbar.events')}}
                 </router-link>
-
-                <router-link :to="{name: 'timers'}" class="navbar-item">
-                  {{$t('navbar.timers')}}
-                </router-link>
-                
               </template>
 
               <div v-if="!currentUser" class="navbar-item">
@@ -56,11 +51,14 @@
                   <router-link :to="{name: 'user-wish-list', params: {id: currentUser.id}}" class="navbar-item">
                     {{$t('navbar.my-wish-list')}}
                   </router-link>
+                  <router-link :to="{name: 'user-games', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-games')}}
+                  </router-link>
+                  <router-link :to="{name: 'user-timers', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-timers')}}
+                  </router-link>
                   <router-link :to="{name: 'user-friends', params: {id: currentUser.id}}" class="navbar-item">
                     {{$t('navbar.my-friends')}}
-                  </router-link>
-                  <router-link :to="{name: 'user-achievements', params: {id: currentUser.id}}" class="navbar-item">
-                    {{$t('navbar.my-achievements')}}
                   </router-link>
                   <template v-if="isUserAdmin">
                     <hr class="navbar-divider">
@@ -138,9 +136,17 @@ export default {
   background-color: transparent;
 }
 
+.navbar-dropdown > .navbar-item {
+  color: $secondary;
+}
+
 @include desktop {
   .navbar-link-wrapper {
     padding: 0.75em;
+  }
+
+  .hero.is-dark-secondary a:not(.button):not(.dropdown-item):not(.tag):not(.pagination-link.is-current), .hero.is-dark-secondary strong {
+    color: $secondary;
   }
 
   .hero.is-dark-secondary .navbar-item.has-dropdown .navbar-link-wrapper > .navbar-link.navbar-link-custom {

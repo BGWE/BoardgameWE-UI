@@ -16,7 +16,7 @@
           <div class="container">
             <ul>
               <router-link v-for="tab in tabs" :key="tab.name" :to="{name: tab.name}" :exact="tab.exact" tag="li">
-                <a class="navbar-item">{{tab.text}}</a>
+                <a class="navbar-item ios-compatible">{{tab.text}}</a>
               </router-link>
             </ul>
           </div>
@@ -35,3 +35,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@/assets/colors.scss";
+@import "~bulma/sass/utilities/mixins.sass";
+
+.hero.is-secondary .is-active a:not(.button):not(.dropdown-item):not(.tag):not(.pagination-link.is-current).navbar-item.ios-compatible {
+  color: $secondary;
+}
+</style>

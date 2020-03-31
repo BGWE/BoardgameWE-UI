@@ -107,7 +107,7 @@ export default {
       let result = await this.$validator.validateAll();
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
           type: 'is-danger',
           position: 'is-bottom'

@@ -2,7 +2,7 @@
   <div>
     <b-loading :is-full-page="false" :active="loading" />
     <template v-if="!loading">
-      <b-collapse class="eventList" :open="false" aria-id="statistics">
+      <b-collapse :open="false" aria-id="statistics">
         <div slot="trigger" slot-scope="props" role="button" aria-controls="statistics">
           <h2 class="collapse-trigger-content subtitle">
             {{$t("home.statistics")}}<span class="icon is-medium"><i :class="props.open ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i></span>
@@ -89,7 +89,11 @@ export default {
 </script>
 
 <style scoped>
-.stats .title {
+.title {
   margin-bottom: 0.25rem;
+}
+
+.stats  {
+  padding-top: 10pt;
 }
 </style>

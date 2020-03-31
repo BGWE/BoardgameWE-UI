@@ -1,7 +1,8 @@
 <template>
   <div>
-    <HeroTitlePageLayout :title="$t('add-game.title')"/>
-    <add-edit-game-form v-if="!isLoading"
+    <hero-title-page-layout :title="$t('games.title')" />
+    <b-loading :is-full-page="false" :active="loading" />
+    <add-edit-game-form v-if="!loading"
       class="form"
       :users="users"
       :boardgames="boardgames"
@@ -12,7 +13,7 @@
 
 <script>
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
-import AddEditGameForm from '@/components/AddEditGameForm';
+import AddEditGameForm from '@/components/games/AddEditGameForm';
 import BoardGame from '@/utils/api/BoardGame';
 import Event from '@/utils/api/Event';
 
@@ -23,10 +24,10 @@ export default {
   },
   data() {
     return {
-      users: [],
-      boardgames: [],
-      events: [],
-      isLoading: true
+      users: null,
+      boardgames: null,
+      events: null,
+      loading: true
     };
   },
   computed: {
@@ -34,11 +35,20 @@ export default {
       return this.$store.state.currentUser;
     }
   },
+  methods: {
+    async fetchUsers() {
+      this.users = await this.currentUser.fetchFriends();
+    },
+    async fetchBoardGames() {
+      this.boardgames = await BoardGame.fetchAll();
+    },
+    async fetchEvents() {
+      this.events = await Event.fetchAll(true, [this.currentUser.id]);
+    }
+  },
   async created() {
-    this.users = await this.currentUser.fetchFriends();
-    this.boardgames = await BoardGame.fetchAll();
-    this.events = await Event.fetchAll(true, [this.currentUser.id]);
-    this.isLoading = false;
+    await Promise.all([this.fetchUsers(), this.fetchBoardGames(), this.fetchEvents()]);
+    this.loading = false;
   }
 };
 </script>

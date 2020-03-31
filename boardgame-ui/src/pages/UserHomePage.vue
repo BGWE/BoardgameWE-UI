@@ -7,7 +7,9 @@
       </h1>
       <h2 class="subtitle">
         <i18n path="home.welcome">
-          <i18n place="where" path="app.appName"></i18n>
+          <template v-slot:where>
+            <i18n path="app.appName"></i18n>
+          </template>
         </i18n>
       </h2>
     </hero-title-page-layout>
@@ -22,13 +24,14 @@
           <!-- <p></p> <span class="icon"><i class="fa fa-arrow-right"></i></span> -->
           <!-- This event is currently ongoing. Click <router-link :to="{name: 'event', params: {eventid: ongoingEvent.id}}">here</router-link> to view. -->
           <i18n path="home.ongoing-event">
-            <!-- <i18n place="here">rr</i18n> -->
-            <router-link :to="{name: 'event', params: {eventid: ongoingEvent.id}}" place="here"><i18n path="home.here"></i18n></router-link>
+            <template v-slot:here>
+              <router-link :to="{name: 'event', params: {eventid: ongoingEvent.id}}"><i18n path="home.here"></i18n></router-link>
+            </template>
           </i18n>
         </b-message>
       </section>
 
-      <section class="section" v-if=userStats>
+      <section class="section" v-if="userStats">
         <user-activity :user="currentUser" />
       </section>
     </div>

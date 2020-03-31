@@ -154,7 +154,7 @@ export default {
       let result = await this.$validator.validateAll(scope);
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: 'Form is not valid! Please check the fields.',
           type: 'is-danger',
           position: 'is-bottom'

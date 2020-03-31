@@ -22,7 +22,9 @@
         <transition name="fade">
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-if="!isRunning">
             <i18n path="timer.press-play">
-              <i place="playButton" class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i>
+              <template v-slot:playButton>
+                <i class="fas fa-play" style="margin-left:0.35em;margin-right:0.35em;"></i>
+              </template>
             </i18n>
           </div>
           <div class="panel-block is-size-7 info-panel-block hhas-text-grey-lighter" v-else>
@@ -69,15 +71,18 @@
         </transition>
 
         <transition name="fade">
-          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null && timer.id_event !== null">
+          <div class="panel-block is-size-7" v-if="isPanelExpanded && timer.timer_type !== null">
             <span class="panel-icon">
               <i class="fas fa-external-link-alt"></i>
             </span>
-            <router-link v-if="timer.game" :to="{name: 'event-games', params: {eventid: timer.event.id}}">
+            <router-link v-if="timer.game && timer.id_event !== null" :to="{name: 'event-games', params: {eventid: timer.event.id}}">
               <i18n path="timer.game_already_associated" />
             </router-link>
-            <router-link v-else :to="{name: 'add-game-event', params: {eventid: timer.event.id}, query: {idTimer: timer.id}}">
-              <i18n path="timer.create_game_from" />
+            <router-link v-else-if="timer.id_event !== null" :to="{name: 'add-game-event', params: {eventid: timer.event.id}, query: {idTimer: timer.id}}">
+              {{$t("timer.create_game_from")}}
+            </router-link>
+            <router-link v-else :to="{name: 'add-game', query: {idTimer: timer.id}}">
+              {{$t("timer.create_game_from")}}
             </router-link>
           </div>
         </transition>
@@ -115,16 +120,16 @@
 
           <transition-group type="transition" name="flip-list">
 
-          <player-timer
-            class="card"
-            v-for="(player_timer, key) in players"
-            :key="player_timer.id"
-            :player_timer="player_timer"
-            :timer="timer"
-            :is_selected="key === timer.current_player"
-            :is_running="isRunning"
-            @update_display_time="update_display_time"
-            v-bind:class="{'timer-button-first' : key === timer.current_player}" />
+            <player-timer
+              class="card"
+              v-for="(player_timer, key) in players"
+              :key="player_timer.id"
+              :player_timer="player_timer"
+              :timer="timer"
+              :is_selected="key === timer.current_player"
+              :is_running="isRunning"
+              @update_display_time="update_display_time"
+              v-bind:class="{'timer-button-first' : key === timer.current_player}" />
 
           </transition-group>
 
@@ -216,7 +221,7 @@ export default {
         }
 
         this.isLoading = true;
-        this.$socket.emit('timer_change_player_turn_order', val);
+        this.$socket.client.emit('timer_change_player_turn_order', val);
       }
     },
   },
@@ -235,29 +240,29 @@ export default {
       this.isRunning = this.players.some((p => p.start !== null));
 
       if (this.timer.player_timers.some(p => p.id_user === this.currentUser.id && p.start !== null)) {
-        this.$notification.open({
+        this.$buefy.notification.open({
           message: this.$t('timer.your_turn'),
           type: 'is-success'
         });
       }
     },
     start() {
-      this.$socket.emit('timer_start');
+      this.$socket.client.emit('timer_start');
     },
     stop() {
-      this.$socket.emit('timer_stop');
+      this.$socket.client.emit('timer_stop');
     },
     next() {
-      this.$socket.emit('timer_next');
+      this.$socket.client.emit('timer_next');
     },
     prev() {
-      this.$socket.emit('timer_prev');
+      this.$socket.client.emit('timer_prev');
     },
     follow() {
-      this.$socket.emit('timer_follow', this.timer.id);
+      this.$socket.client.emit('timer_follow', this.timer.id);
     },
     unfollow() {
-      this.$socket.emit('timer_unfollow');
+      this.$socket.client.emit('timer_unfollow');
     },
     returnToTimersList() {
       this.timerDeletedModalActive = false;

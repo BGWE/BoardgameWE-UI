@@ -21,7 +21,7 @@ export default {
   methods: {
     postAchievement() {
       if (this.currentUser) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: 'You found me!',
           type: 'is-success'
         });

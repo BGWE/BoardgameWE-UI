@@ -11,12 +11,12 @@
         <b-input disabled :value="event.name" />
       </b-field>
 
-      <b-field v-if="events" :label="$t('timer.add-edit.event')">
-         <event-autocomplete
-            v-model="selectedEvent"
-            :events="events"
-            :data-vv-as="$t('add-edit-game.players.user')"
-          />
+      <b-field v-else-if="events" :label="$t('timer.add-edit.event')">
+        <event-autocomplete
+          v-model="selectedEvent"
+          :inputData="events"
+          :data-vv-as="$t('add-edit-game.event.label')"
+        />
       </b-field>
 
       <b-field
@@ -34,9 +34,20 @@
           :data-vv-as="$t('add-edit-game.board-game.label')"
           v-validate="'required'"
         >
+          <template slot-scope="props">
+            <div class="media">
+              <div class="media-left">
+                <img :src="props.option.thumbnail" width="50">
+              </div>
+              <div class="media-content">
+                {{props.option.name}}
+              </div>
+            </div>
+          </template>
           <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
         </b-autocomplete>
       </b-field>
+
       <div class="columns">
         <div class="column">
           <b-field :label="$t('add-edit-game.ranking-method.label')">
@@ -53,6 +64,19 @@
           </b-field>
         </div>
       </div>
+
+      <b-field :label="$t('add-edit-game.expansions.label')">
+        <multi-select
+          v-model="selectedExpansions"
+          :options="expansionsList"
+          :placeholder="$t('add-edit-game.expansions.empty')"
+          label="name"
+          track-by="id"
+          :searchable="true"
+          :multiple="true"
+          :close-on-select="false">
+        </multi-select>
+      </b-field>
 
       <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
@@ -123,15 +147,18 @@
 
 <script>
 import Game, {GameRankingMethods} from '@/utils/api/Game';
+import BoardGame from '@/utils/api/BoardGame';
 import Timer from '@/utils/api/Timer';
 import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import EventAutocomplete from '@/components/form/EventAutocomplete';
+import MultiSelect from 'vue-multiselect';
 
 export default {
   components: {
     UserAutocomplete,
-    EventAutocomplete
+    EventAutocomplete,
+    MultiSelect
   },
   props: {
     users: { // list of selectable users
@@ -157,13 +184,17 @@ export default {
     return {
       game: null,
       searchString: '',
+      selectedEvent: null,
       time: null,
       minTime: null,
       players: [],
       idPlayer: 1,
-      selectedEvent: null
+      expansions: {},
+      selectedExpansions: [],
+      availableBoardGames: []
     };
   },
+
   computed: {
     currentUser() {
       return this.$store.state.currentUser;
@@ -175,23 +206,27 @@ export default {
       return this.$route.query.idTimer;
     },
     filteredBoardGames() {
-      if (!this.searchString) {
-        return this.boardgames;
+      if(!this.searchString) {
+        return this.availableBoardGames;
       }
 
       let str = this.searchString.toLowerCase();
-      return this.boardgames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
+      return this.availableBoardGames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
     },
     allowedRankingMethods() {
-      return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER];
+      return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER, GameRankingMethods.POINTS_LOWER_BETTER];
     },
     ranked() {
-      return this.game.ranking_method === GameRankingMethods.POINTS_HIGHER_BETTER;
+      return this.game.ranking_method !== GameRankingMethods.WIN_LOSE;
     },
     selectedUsersIds() {
       return this.players.map(({user}) => user ? user.id : 0);
+    },
+    expansionsList() {
+      return Object.keys(this.expansions).map(key => this.expansions[key]);
     }
   },
+
   watch: {
     'game.ranking_method'(_, old) {
       if(!old) {
@@ -203,8 +238,22 @@ export default {
       if(this.time < this.minTime) {
         this.time = this.minTime;
       }
+    },
+    async selectedEvent(event) {
+      if(event != null) {
+        this.availableBoardGames = await event.fetchProvidedBoardGames();
+      }
+      else {
+        this.availableBoardGames = this.boardgames;
+      }
+      // if selected board game no longer part of available board games, reset
+      if(!this.availableBoardGames.map(bg => bg.id).includes(this.game.id_board_game)) {
+        this.searchString = '';
+        await this.selectBoardGame(null);
+      }
     }
   },
+
   methods: {
     setTimeFromDuration(duration) { // arg duration to be provided in minutes
       duration = Math.round(duration / 15) * 15; // get multiple of 15 minutes
@@ -213,15 +262,20 @@ export default {
       time.setMinutes(duration % 60);
       this.time = time;
     },
-    selectBoardGame(option) {
-      this.game.id_board_game = option ? option.id : null;
+    getDurationFromTime(time) {
+      return time.getHours() * 60 + time.getMinutes();
+    },
+    async selectBoardGame(option) {
+      let idBoardGame = option ? option.id : null;
+      this.game.id_board_game = idBoardGame;
+      await this.setExpansions(this.game.id_board_game);
     },
     addPlayer() {
       this.players.push({user: null, score: null, id: this.idPlayer++});
     },
     removePlayer(idx) {
       if(this.players.length === 1) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.must-have-at-least-one-player'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -230,6 +284,7 @@ export default {
       }
       this.players.splice(idx, 1);
     },
+
     async save() {
       let result = await this.$validator.validateAll();
 
@@ -239,7 +294,7 @@ export default {
       }
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
           type: 'is-danger',
           position: 'is-bottom'
@@ -247,29 +302,48 @@ export default {
         return;
       }
 
-      this.game.duration = this.time.getHours()*60 + this.time.getMinutes();
-      this.game.players = this.players.map(({user, score}) => ({id_user: user.id, score: Number(score)}));
+      if (this.selectedEvent != null) {
+        this.game.id_event = this.selectedEvent.id;
+      }
+
+      this.game.duration = this.getDurationFromTime(this.time);
+      this.game.players = this.players.map(({user, score}) => {
+        score = Number(score);
+        return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
+      });
+      this.game.expansions = this.selectedExpansions.map(exp => exp.id);
 
       try {
         await this.game.save();
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.save-success'),
           type: 'is-success',
           position: 'is-bottom'
         });
-        this.$router.push({name: 'event-games'});
+        this.$router.go(-1);
       }
       catch(error) {
-        console.log(error);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('add-edit-game.save-error'),
           type: 'is-danger',
           position: 'is-bottom'
         });
       }
+    },
+    async setExpansions(id) {
+      if(id != null) {
+        this.expansions = (await BoardGame.fetchExpansions(id)).expansions;
+      }
+      else {
+        this.expansions = [];
+      }
+      this.selectedExpansions = [];
     }
   },
+
   async created() {
+    this.availableBoardGames = this.boardgames;
+
     let minTime = new Date();
     minTime.setHours(0);
     minTime.setMinutes(15);
@@ -280,33 +354,48 @@ export default {
 
       this.searchString = this.game.board_game.name;
 
+      if (this.game.id_event) {
+        if(this.events) {
+          this.selectedEvent = this.events.find(event => event.id == this.game.id_event);
+        }
+        else {
+          this.selectedEvent = this.event;
+        }
+      }
+
+      await this.setExpansions(this.game.board_game.id);
+      this.game.expansions.forEach(played_expansion => {
+        this.selectedExpansions.push(this.expansions[played_expansion.id]);
+      });
+
       this.game.players.forEach(player => {
         let score = this.ranked ? player.score : Boolean(player.score);
-        this.players.push({user: player.user, score, id: this.idPlayer++});
+        this.players.push({user: player.user || player.name, score, id: this.idPlayer++});
       });
 
       this.setTimeFromDuration(this.game.duration);
     }
     else {
-      let gameData = { ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER };
-      
+      let gameData = {ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER};
+
       if (this.event) {
         gameData.id_event = this.event.id;
+        this.selectedEvent = this.event;
       }
-      
-      if (this.idTimer) {
-        const timer = await Timer.fetch(this.idTimer);
 
+      if (this.idTimer) {
+        gameData.id_timer = this.idTimer;
+
+        const timer = await Timer.fetch(this.idTimer);
         this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
 
-        gameData.id_timer = this.idTimer;
-        if (timer.board_game) {
+        if(timer.board_game) {
           gameData.id_board_game = timer.id_board_game;
           this.searchString = timer.board_game.name;
         }
 
-        timer.player_timers.forEach(p => {
-          this.players.push({ user: p.user, name: p.name, score: null, id: this.idPlayer++ });
+        timer.player_timers.forEach(player => {
+          this.players.push({ user: player.user || player.name, score: null, id: this.idPlayer++ });
         });
       }
       else {
@@ -316,7 +405,6 @@ export default {
 
       this.game = new Game(gameData);
     }
-
   }
 };
 </script>

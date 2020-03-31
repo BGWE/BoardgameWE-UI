@@ -95,8 +95,7 @@ export default {
   data() {
     return {
       user: null,
-      confirmModal: false,
-
+      confirmModal: false
     };
   },
 
@@ -127,6 +126,8 @@ export default {
           {name: 'user-profile', text: this.$t('profile.tab.dashboard'), exact: true},
           {name: 'user-library', text: this.$t('profile.tab.library')},
           {name: 'user-wish-list', text: this.$t('profile.tab.wish-list')},
+          {name: 'user-games', text: this.$t('profile.tab.games')},
+          {name: 'user-timers', text: this.$t('profile.tab.timers')},
           {name: 'user-friends', text: this.$t('profile.tab.friends')},
           {name: 'user-achievements', text: this.$t('profile.tab.achievements')}
         ];
@@ -189,7 +190,7 @@ export default {
       }
     },
     showError(label) {
-      this.$toast.open({
+      this.$buefy.toast.open({
         message: this.$t(label),
         type: 'is-danger',
         position: 'is-bottom'

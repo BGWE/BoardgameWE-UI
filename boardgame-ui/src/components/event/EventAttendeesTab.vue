@@ -243,7 +243,7 @@ export default {
       this.loading = false;
 
       // notify
-      this.$notification.open(notif);
+      this.$buefy.notification.open(notif);
     },
     updateAttendees() {
       this.$emit('update-attendees');

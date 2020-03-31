@@ -101,10 +101,13 @@ export default {
         return;
       }
 
+      this.user.password = null;
+      this.user.old_password = null;
+
       try {
         await this.user.save();
         this.$store.commit('setCurrentUser', this.user.clone());
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('toast.profile.update.success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -123,11 +126,11 @@ export default {
       }
 
       this.user.password = this.newPassword;
-      this.user.oldPassword = this.password;
+      this.user.old_password = this.password;
       try {
         await this.user.save();
         this.$store.commit('setCurrentUser', this.user);
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('toast.password.update.success'),
           type: 'is-success',
           position: 'is-bottom'
@@ -142,7 +145,7 @@ export default {
       let result = await this.$validator.validateAll(scope);
 
       if (!result) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: 'Form is not valid! Please check the fields.',
           type: 'is-danger',
           position: 'is-bottom'

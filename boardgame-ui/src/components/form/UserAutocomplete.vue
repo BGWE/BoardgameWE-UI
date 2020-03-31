@@ -5,28 +5,36 @@
     :size="size"
     field="fullname"
     icon="search"
-    @select="handleSelect"
+    @select="option => $emit('input', option)"
     ref="autocomplete"
   >
     <template slot="empty">{{$t('global.no-result')}}</template>
+    <template slot="footer" v-if="allowNew">
+      <a @click="selectUnregisteredUser">
+        <span>{{$t('user-autocomplete.unregistered-user', {name: searchString})}}</span>
+      </a>
+    </template>
   </b-autocomplete>
 </template>
 
 <script>
 export default {
   props: {
-    value: Object,
+    value: [Object, String],
     size: String,
     users: Array,
     excludedIds: {
       type: Array,
       default: () => []
+    },
+    allowNew: { // allow to specify name of unregister user
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      searchString: '',
-      internalValue: null
+      searchString: ''
     };
   },
   computed: {
@@ -47,33 +55,21 @@ export default {
       });
     }
   },
-  watch: {
-    value(val) {
-      if(val != this.internalValue) {
-        this.setValue();
-      }
-    }
-  },
   methods: {
     fullName(user) {
       return `${user.name} ${user.surname[0]}. (${user.username})`;
     },
-    handleSelect(option) {
-      this.internalValue = option;
-      this.$emit('input', option);
-    },
-    setValue() {
-      if(this.value) {
-        this.value.fullname = this.fullName(this.value);
-        this.$refs.autocomplete.setSelected(this.value);
-      }
-      else {
-        this.searchString = '';
-      }
+    selectUnregisteredUser() {
+      this.$refs.autocomplete.setSelected(this.searchString);
     }
   },
   mounted() {
-    this.setValue();
+    if(this.value) {
+      if(typeof this.value !== 'string') {
+        this.value.fullname = this.fullName(this.value);
+      }
+      this.$refs.autocomplete.setSelected(this.value);
+    }
   },
 };
 </script>
