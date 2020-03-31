@@ -27,16 +27,6 @@ export default class Game extends Model {
     this.players = []; // for creation, {Array<{user: Number, score: Number}>}
   }
 
-  /** @inheritdoc */
-  get uri() {
-    if(this.isNew()) {
-      return `/event/${this.id_event}/${this.className}`;
-    }
-    else {
-      return `${this.className}/${this.id}`;
-    }
-  }
-
   static async fetchAllInEvent(idEvent) {
     if(idEvent == null) {
       throw new Error('Cannot fetch games of an event with no ID.');
@@ -65,19 +55,5 @@ export default class Game extends Model {
     });
 
     return processedCollection;
-  }
-
-  /**
-   * @override (uri not consistent for delete, fetch and update => need to override default behaviour)
-   */
-  async save() {
-    if(this.isNew()) {
-      return super.save();
-    }
-    else {
-      let {data} = await axios.put(`/event/${this.id_event}/${this.className}/${this.id}`, this.getPublicProperties());
-      this.populate(data);
-      return this;
-    }
   }
 }
