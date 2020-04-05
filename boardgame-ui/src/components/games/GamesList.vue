@@ -35,7 +35,7 @@
           </div>
         </template>
 
-        <template v-slot:buttons v-if="isCurrentUserProfile">
+        <template v-slot:buttons v-if="canEdit">
           <router-link :to="{name: 'edit-game', params: {idGame: game.id}}" class="card-footer-item">
             <span class="icon"><i class="far fa-edit"></i></span>
             {{$t('global.edit')}}
@@ -53,7 +53,7 @@
             </span>
             <span class="footer-right" v-if="game.id_event != null">
               <event-link :event="{id: game.id_event}"></event-link>
-            </span> 
+            </span>
           </div>
         </template>
 
@@ -82,7 +82,7 @@ import moment from 'moment-timezone';
 export default {
   props: {
     games: Array,
-    isCurrentUserProfile: Boolean
+    canEdit: Boolean
   },
 
   components: {

@@ -85,9 +85,9 @@
         {{$t('event.games.no-games')}}
       </p>
 
-      <GamesList v-if="games"
+      <games-list v-if="games"
         :games="filteredGames"
-        :isCurrentUserProfile="isCurrentUserProfile"
+        :canEdit="isCurrentUserProfile"
         @gameDeleted="reload()"
       />
 
@@ -138,7 +138,6 @@ export default {
 
       return this.games.filter(game => {
         let date = Helper.ISO8601ToDate(game.createdAt);
-        console.log(date.getMonth());
         return ( !nbPlayers || game.players.length === nbPlayers ) &&
         ( isNaN(day) || date.getDate() === day ) &&
         ( isNaN(month) || date.getMonth() === month ) &&
