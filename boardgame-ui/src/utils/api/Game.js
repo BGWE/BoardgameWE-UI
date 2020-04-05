@@ -20,6 +20,7 @@ export default class Game extends Model {
 
     this.id_event = null;
     this.id_board_game = null;
+    this.started_at = null;
     this.duration = null;
     this.ranking_method = null;
 
@@ -56,5 +57,12 @@ export default class Game extends Model {
     });
 
     return processedCollection;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  async save() {
+    return super.save({}, ['id_event']);
   }
 }

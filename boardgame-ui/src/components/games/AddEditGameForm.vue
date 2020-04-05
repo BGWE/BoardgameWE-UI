@@ -4,16 +4,22 @@
         {{$t(idGame ? 'edit-game.title' : 'add-game.title')}}
     </h1>
 
-    <b-loading :active="!game" :is-full-page="false" />
-    <form v-if="game" @submit.prevent="save()">
+    <b-loading :active="loading" :is-full-page="false" />
+    <form v-if="!loading" @submit.prevent="save()">
 
       <b-field v-if="event" :label="$t('timer.add-edit.event')" >
         <b-input disabled :value="event.name" />
       </b-field>
 
-      <b-field v-else-if="events" :label="$t('timer.add-edit.event')">
+      <b-field
+        v-else-if="events"
+        :label="$t('timer.add-edit.event')"
+        :type="{'is-danger': errors.has('event')}"
+        :message="errors.first('event')"
+      >
         <event-autocomplete
           v-model="selectedEvent"
+          name="event"
           :inputData="events"
           :data-vv-as="$t('add-edit-game.event.label')"
         />
@@ -48,6 +54,27 @@
         </b-autocomplete>
       </b-field>
 
+      <b-field :label="$t('add-edit-game.expansions.label')">
+        <multi-select
+          v-model="selectedExpansions"
+          :options="expansionsList"
+          :placeholder="$t('add-edit-game.expansions.empty')"
+          label="name"
+          track-by="id"
+          :searchable="true"
+          :multiple="true"
+          :close-on-select="false">
+        </multi-select>
+      </b-field>
+
+      <b-field
+        :label="$t('add-edit-game.start-date.label')"
+        :type="{'is-danger': errors.has('startDate')}"
+        :message="errors.first('startDate')"
+      >
+        <date-time-picker v-model="startDate" name="startDate" v-validate="'required'" />
+      </b-field>
+
       <div class="columns">
         <div class="column">
           <b-field :label="$t('add-edit-game.ranking-method.label')">
@@ -64,19 +91,6 @@
           </b-field>
         </div>
       </div>
-
-      <b-field :label="$t('add-edit-game.expansions.label')">
-        <multi-select
-          v-model="selectedExpansions"
-          :options="expansionsList"
-          :placeholder="$t('add-edit-game.expansions.empty')"
-          label="name"
-          track-by="id"
-          :searchable="true"
-          :multiple="true"
-          :close-on-select="false">
-        </multi-select>
-      </b-field>
 
       <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
@@ -152,13 +166,16 @@ import Timer from '@/utils/api/Timer';
 import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import EventAutocomplete from '@/components/form/EventAutocomplete';
+import DateTimePicker from '@/components/form/DateTimePicker';
 import MultiSelect from 'vue-multiselect';
+import {dateToISO8601, ISO8601ToDate} from '@/utils/helper';
 
 export default {
   components: {
     UserAutocomplete,
     EventAutocomplete,
-    MultiSelect
+    MultiSelect,
+    DateTimePicker
   },
   props: {
     users: { // list of selectable users
@@ -182,6 +199,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       game: null,
       searchString: '',
       selectedEvent: null,
@@ -191,7 +209,8 @@ export default {
       idPlayer: 1,
       expansions: {},
       selectedExpansions: [],
-      availableBoardGames: []
+      availableBoardGames: [],
+      startDate: null
     };
   },
 
@@ -293,6 +312,11 @@ export default {
         result = false;
       }
 
+      if (this.game.id_event && this.selectedEvent && this.selectedEvent.id != this.game.id_event ) {
+        this.$validator.errors.add({field: 'event', msg: this.$t('add-edit-game.validation-error.modified-event')});
+        result = false;
+      }
+
       if (!result) {
         this.$buefy.toast.open({
           message: this.$t('global.invalid-form'),
@@ -305,6 +329,9 @@ export default {
       if (this.selectedEvent != null) {
         this.game.id_event = this.selectedEvent.id;
       }
+      else {
+        this.game.id_event = null;
+      }
 
       this.game.duration = this.getDurationFromTime(this.time);
       this.game.players = this.players.map(({user, score}) => {
@@ -312,6 +339,8 @@ export default {
         return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
       });
       this.game.expansions = this.selectedExpansions.map(exp => exp.id);
+
+      this.game.started_at = dateToISO8601(this.startDate);
 
       try {
         await this.game.save();
@@ -374,23 +403,24 @@ export default {
       });
 
       this.setTimeFromDuration(this.game.duration);
+      this.startDate = ISO8601ToDate(this.game.started_at);
     }
     else {
-      let gameData = {ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER};
+      this.game = new Game({ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER});
 
       if (this.event) {
-        gameData.id_event = this.event.id;
+        this.game.id_event = this.event.id;
         this.selectedEvent = this.event;
       }
 
       if (this.idTimer) {
-        gameData.id_timer = this.idTimer;
+        this.game.id_timer = this.idTimer;
 
         const timer = await Timer.fetch(this.idTimer);
         this.setTimeFromDuration(timer.getTotalElapsed() / 1000 / 60);
 
         if(timer.board_game) {
-          gameData.id_board_game = timer.id_board_game;
+          this.game.id_board_game = timer.id_board_game;
           this.searchString = timer.board_game.name;
         }
 
@@ -402,9 +432,9 @@ export default {
         this.setTimeFromDuration(30); // default duration: 30 minutes
         this.players.push({user: this.currentUser, score: null});
       }
-
-      this.game = new Game(gameData);
     }
+
+    this.loading = false;
   }
 };
 </script>
