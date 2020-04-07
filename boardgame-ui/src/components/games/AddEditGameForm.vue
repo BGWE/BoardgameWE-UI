@@ -67,14 +67,6 @@
         </multi-select>
       </b-field>
 
-      <b-field
-        :label="$t('add-edit-game.start-date.label')"
-        :type="{'is-danger': errors.has('startDate')}"
-        :message="errors.first('startDate')"
-      >
-        <date-time-picker v-model="startDate" name="startDate" v-validate="'required'" />
-      </b-field>
-
       <div class="columns">
         <div class="column">
           <b-field :label="$t('add-edit-game.ranking-method.label')">
@@ -91,6 +83,24 @@
           </b-field>
         </div>
       </div>
+
+      <b-field
+        :type="{'is-danger': errors.has('startDate')}"
+        :message="errors.first('startDate')"
+      >
+        <template #label>
+          {{$t('add-edit-game.start-date.label')}}
+          <b-tooltip type="is-secondary" :label="$t('add-edit-game.start-date.tooltip')">
+            <b-icon size="is-small" icon="info-circle" class="has-text-secondary" />
+          </b-tooltip>
+        </template>
+        <p class="start-date-field">
+          <date-time-picker v-model="startDate" name="startDate" :disabled="inferredStartDate" v-validate="'required'"/>
+          <button v-if="inferredStartDate" type="button" class="button" @click="inferredStartDate = false">
+            <b-icon icon="edit" size="is-small" />
+          </button>
+        </p>
+      </b-field>
 
       <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
@@ -169,6 +179,7 @@ import EventAutocomplete from '@/components/form/EventAutocomplete';
 import DateTimePicker from '@/components/form/DateTimePicker';
 import MultiSelect from 'vue-multiselect';
 import {dateToISO8601, ISO8601ToDate} from '@/utils/helper';
+import moment from 'moment';
 
 export default {
   components: {
@@ -210,7 +221,8 @@ export default {
       expansions: {},
       selectedExpansions: [],
       availableBoardGames: [],
-      startDate: null
+      startDate: null,
+      inferredStartDate: true
     };
   },
 
@@ -256,6 +268,9 @@ export default {
     time() {
       if(this.time < this.minTime) {
         this.time = this.minTime;
+      }
+      if(this.time != null && this.inferredStartDate) {
+        this.startDate = moment().subtract(this.getDurationFromTime(this.time), 'minutes').toDate();
       }
     },
     async selectedEvent(event) {
@@ -404,6 +419,7 @@ export default {
 
       this.setTimeFromDuration(this.game.duration);
       this.startDate = ISO8601ToDate(this.game.started_at);
+      this.inferredStartDate = false;
     }
     else {
       this.game = new Game({ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER});
@@ -449,6 +465,10 @@ export default {
   padding-right: 5pt;
 }
 
+.columns {
+  margin-bottom: 0;
+}
+
 h2 {
   margin-bottom: 0.5em !important;
   text-align: center;
@@ -467,6 +487,16 @@ h2 {
   font-weight: normal;
   text-transform: uppercase;
   font-size: 0.7em;
+
+  /deep/ .b-tooltip {
+    font-size: 0.9rem;
+    text-transform: initial;
+  }
+
+  /deep/ .icon {
+    font-size: 0.8rem;
+    margin-left: 0.25em;
+  }
 }
 
 th:nth-child(2), td:nth-child(2) {
@@ -475,6 +505,20 @@ th:nth-child(2), td:nth-child(2) {
   /deep/ .control {
     max-width: 10em;
     margin: auto;
+  }
+}
+
+.start-date-field {
+  display: flex;
+  align-items: center;
+
+  /deep/ .field {
+    margin-bottom: 0;
+  }
+
+  .button {
+    margin-left: 0.75em;
+    font-size: 0.75em;
   }
 }
 </style>
