@@ -65,7 +65,7 @@ export default {
         this.boardGamesLinks = await this.event.addBoardGameFromBgg(bggId);
 
         if(!inLibrary) {
-          this.$snackbar.open({
+          this.$buefy.snackbar.open({
             message: this.$t('event-board-games.snackbar.game-not-in-library'),
             position: 'is-bottom',
             actionText: this.$t('event-board-games.snackbar.add-game-to-library'),
@@ -136,6 +136,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-</style>
