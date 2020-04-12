@@ -49,7 +49,7 @@
         <template v-slot:footer>
           <div class="has-text-weight-light has-text-dark is-size-7 time-footer">
             <span>
-              <time :datetime="game.createdAt">{{formatDatetime(game.createdAt)}}</time>
+              <time :datetime="game.started_at">{{game.started_at | moment('LLL')}}</time>
             </span>
             <span class="footer-right" v-if="game.id_event != null">
               <event-link :event="{id: game.id_event}"></event-link>
@@ -76,7 +76,6 @@ import PanelListElement from '@/components/layout/PanelListElement';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
 import EventLink from '@/components/event/EventLink';
 import Game from '@/utils/api/Game';
-import * as Helper from '@/utils/helper';
 import moment from 'moment-timezone';
 
 export default {
@@ -107,7 +106,7 @@ export default {
         return [];
       }
 
-      return this.games.slice().sort(this.sortByCreationDate);
+      return this.games.slice().sort(this.sortByStartDate);
     },
 
     reverseSortedGames: function() {
@@ -116,11 +115,9 @@ export default {
   },
 
   methods: {
-    sortByCreationDate: (g1, g2) => {
-      return moment(g1.createdAt).diff(moment(g2.createdAt));
+    sortByStartDate: (g1, g2) => {
+      return moment(g1.started_at).diff(moment(g2.started_at));
     },
-
-    formatDatetime: (datetime) => Helper.formatDatetime(datetime),
 
     formattedRanking: function(game) {
       let players = game.players;
@@ -183,13 +180,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .card-footer-item-danger {
   color: hsl(348, 100%, 61%);
-}
-
-.time-footer {
-  margin-left: 10px;
 }
 
 .games-title {
@@ -206,8 +199,10 @@ export default {
   margin-bottom: 1em;
 }
 
-.footer-right {
-  position: absolute;
-  right: 9px;
+.time-footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
 }
 </style>
