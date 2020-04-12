@@ -85,20 +85,26 @@
       </div>
 
       <b-field
+        :label="$t('add-edit-game.start-date.label')"
         :type="{'is-danger': errors.has('startDate')}"
         :message="errors.first('startDate')"
       >
-        <template #label>
-          {{$t('add-edit-game.start-date.label')}}
-          <b-tooltip type="is-secondary" :label="$t('add-edit-game.start-date.tooltip')">
-            <b-icon size="is-small" icon="info-circle" class="has-text-secondary" />
-          </b-tooltip>
-        </template>
         <p class="start-date-field">
-          <date-time-picker v-model="startDate" name="startDate" :disabled="inferredStartDate" v-validate="'required'"/>
-          <button v-if="inferredStartDate" type="button" class="button" @click="inferredStartDate = false">
-            <b-icon icon="edit" size="is-small" />
-          </button>
+          <date-time-picker
+            v-model="startDate"
+            name="startDate"
+            :type="{'is-danger': errors.has('startDate')}"
+            v-validate="'required'"
+            :data-vv-as="$t('add-edit-game.start-date.label')"
+          />
+          <span class="hint" v-if="suggestedStartDate">
+            <b-icon icon="magic" />
+            <i18n path="add-edit-game.start-date.hint">
+              <template #suggestedStartDate>
+                <a @click="startDate = suggestedStartDate">{{suggestedStartDate | moment('H:mm')}}</a>
+              </template>
+            </i18n>
+          </span>
         </p>
       </b-field>
 
@@ -210,6 +216,7 @@ export default {
   },
   data() {
     return {
+      now: moment(),
       loading: true,
       game: null,
       searchString: '',
@@ -221,8 +228,7 @@ export default {
       expansions: {},
       selectedExpansions: [],
       availableBoardGames: [],
-      startDate: null,
-      inferredStartDate: true
+      startDate: null
     };
   },
 
@@ -255,6 +261,15 @@ export default {
     },
     expansionsList() {
       return Object.keys(this.expansions).map(key => this.expansions[key]);
+    },
+    suggestedStartDate() {
+      if(this.idGame || this.startDate) {
+        return null;  // do not suggest start game if editing an existing game or if user selected a date
+      }
+      if(this.time != null) {
+        return moment(this.now).subtract(this.getDurationFromTime(this.time), 'minutes').toDate();
+      }
+      return null;
     }
   },
 
@@ -268,9 +283,6 @@ export default {
     time() {
       if(this.time < this.minTime) {
         this.time = this.minTime;
-      }
-      if(this.time != null && this.inferredStartDate) {
-        this.startDate = moment().subtract(this.getDurationFromTime(this.time), 'minutes').toDate();
       }
     },
     async selectedEvent(event) {
@@ -418,8 +430,9 @@ export default {
       });
 
       this.setTimeFromDuration(this.game.duration);
-      this.startDate = ISO8601ToDate(this.game.started_at);
-      this.inferredStartDate = false;
+      if(this.game.started_at) {
+        this.startDate = ISO8601ToDate(this.game.started_at);
+      }
     }
     else {
       this.game = new Game({ranking_method: GameRankingMethods.POINTS_HIGHER_BETTER});
@@ -463,6 +476,7 @@ export default {
   position: relative;
   padding-left: 5pt;
   padding-right: 5pt;
+  margin-bottom: 1em;
 }
 
 .columns {
@@ -509,16 +523,27 @@ th:nth-child(2), td:nth-child(2) {
 }
 
 .start-date-field {
-  display: flex;
-  align-items: center;
 
   /deep/ .field {
-    margin-bottom: 0;
+    margin-bottom: 0.25em;
   }
 
   .button {
     margin-left: 0.75em;
     font-size: 0.75em;
+  }
+}
+
+.hint {
+  font-size: 0.8em;
+  color: grey;
+
+  /deep/ .icon {
+    font-size: 0.8em;
+  }
+
+  a {
+    font-weight: 450;
   }
 }
 </style>
