@@ -3,9 +3,12 @@
 
 $dimensions: 16 24 32 48 64 80 96 128;
 
+@import "./multiselect.scss";
+
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
+
 @import "~@fortawesome/fontawesome-free/css/all.min.css";
 
 .section {
