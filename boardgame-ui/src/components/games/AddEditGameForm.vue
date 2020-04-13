@@ -158,10 +158,20 @@
             </td>
           </tr>
           <tr>
-            <td colspan="3" class="has-text-centered">
-              <button class="button is-small" type="button" @click="addPlayer()">
-                {{$t('button.add-player')}}
-              </button>
+            <td colspan="3">
+              <p v-if="suggestedPlayers && suggestedPlayers.length" class="hint">
+                <b-icon icon="magic" />{{$t('add-edit-game.players.hint')}}
+                <span v-for="(user, idx) in suggestedPlayers" :key="user.id">
+                  <a @click="addPlayer(user)">
+                    {{user.name}}
+                    {{user.surname.slice(0, 1)}}.</a><template v-if="idx < suggestedPlayers.length - 1">,</template>
+                </span>
+              </p>
+              <p class="has-text-centered">
+                <button class="button is-small" type="button" @click="addPlayer()">
+                  {{$t('button.add-player')}}
+                </button>
+              </p>
             </td>
           </tr>
         </tbody>
@@ -228,7 +238,8 @@ export default {
       expansions: {},
       selectedExpansions: [],
       availableBoardGames: [],
-      startDate: null
+      startDate: null,
+      suggestedPlayers: null
     };
   },
 
@@ -316,8 +327,11 @@ export default {
       this.game.id_board_game = idBoardGame;
       await this.setExpansions(this.game.id_board_game);
     },
-    addPlayer() {
-      this.players.push({user: null, score: null, id: this.idPlayer++});
+    addPlayer(user = null) {
+      if(user) {
+        this.suggestedPlayers = this.suggestedPlayers.filter(u => u != user);
+      }
+      this.players.push({user, score: null, id: this.idPlayer++});
     },
     removePlayer(idx) {
       if(this.players.length === 1) {
@@ -461,6 +475,11 @@ export default {
         this.setTimeFromDuration(30); // default duration: 30 minutes
         this.players.push({user: this.currentUser, score: null});
       }
+
+      // TODO: change once backend suggestions available
+      let friends = await this.currentUser.fetchFriends();
+      this.suggestedPlayers = friends.slice(0, 3);
+      // ---
     }
 
     this.loading = false;
