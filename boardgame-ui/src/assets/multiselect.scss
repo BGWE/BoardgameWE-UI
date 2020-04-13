@@ -47,19 +47,19 @@ $invert: findColorInvert($primary);
 
 .multiselect__tag {
   background: $color !important;
-  color: $invert;
+  color: $invert !important;
   font-size: 0.9rem;
   padding-left: 12px;
   padding-right: 30px;
-
-  &:after {
-    color: $invert;
-  }
 }
 
 .multiselect__tag-icon {
   background: #456980;
   border-radius: 0px;
+
+  &:after {
+    color: $invert !important;
+  }
 
   &:hover {
     background: $primary;
