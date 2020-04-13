@@ -101,7 +101,18 @@
             <b-icon icon="magic" />
             <i18n path="add-edit-game.start-date.hint">
               <template #suggestedStartDate>
-                <a @click="startDate = suggestedStartDate">{{suggestedStartDate | moment('H:mm')}}</a>
+                <a @click="startDate = suggestedStartDate">
+                  <i18n
+                    :path="`add-edit-game.start-date.hint-${
+                      now.isSame(suggestedStartDate, 'day') ? 'today' :
+                      yesterday.isSame(suggestedStartDate, 'day') ? 'yesterday' :
+                      'before-yesterday'
+                    }`"
+                  >
+                    <template #time>{{suggestedStartDate | moment('H:mm')}}</template>
+                    <template #date>{{suggestedStartDate | moment('LL')}}</template>
+                  </i18n>
+                </a>
               </template>
             </i18n>
           </span>
@@ -227,6 +238,7 @@ export default {
   data() {
     return {
       now: moment(),
+      yesterday: moment().subtract(1, 'day'),
       loading: true,
       game: null,
       searchString: '',
