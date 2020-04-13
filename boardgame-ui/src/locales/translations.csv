@@ -335,6 +335,7 @@ achievements.badges,Badges,Badges
 achievements.achievements,Achievements,Succès
 achievements.explanation,This page shall list all the deeds worthy of praise that you shall accomplish :),
 user-autocomplete.unregistered-user,Unregistered user {name},
+game-page.title,Game of {boardGame},
 game-page.board-game.more-info-button,More information,
 game-page.rankings.table.position,#,
 game-page.rankings.table.win,Win,

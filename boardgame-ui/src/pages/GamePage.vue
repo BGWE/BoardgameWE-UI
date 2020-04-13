@@ -5,6 +5,7 @@
       <b-message type="is-danger">{{$t('error.unexpected')}}</b-message>
     </div>
     <template v-else-if="!loading">
+      <hero-title-page-layout :title="$t('game-page.title', {boardGame: boardGame.name})" />
       <div class="container">
         <div class="section">
           <div class="columns">
@@ -113,6 +114,7 @@
 </template>
 
 <script>
+import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import BgcDuration from '@/components/utils/BgcDuration';
 import UserLink from '@/components/user/UserLink';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
@@ -123,6 +125,7 @@ const MAX_LENGTH_DESC = 200;
 
 export default {
   components: {
+    HeroTitlePageLayout,
     BgcDuration,
     UserLink,
     ConfirmDeleteModal
