@@ -119,6 +119,10 @@
         </p>
       </b-field>
 
+      <b-field :label="$t('add-edit-game.comment.label')">
+        <b-input :placeholder="$t('add-edit-game.comment.placeholder')" v-model="game.comment" />
+      </b-field>
+
       <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
 
       <table class="table is-fullwidth">

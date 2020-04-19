@@ -23,6 +23,7 @@ export default class Game extends Model {
     this.started_at = null;
     this.duration = null;
     this.ranking_method = null;
+    this.comment = null;
 
     this.board_game = null;
     this.players = []; // for creation, {Array<{user: Number, score: Number}>}
