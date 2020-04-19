@@ -11,28 +11,36 @@
           <div class="columns">
             <div class="column">
               <div class="box">
-                <div class="level is-mobile">
-                  <div class="level-item is-narrow is-hidden-mobile">
-                    <div class="tags has-addons">
-                      <span class="tag is-primary"><i class="fas fa-user"></i></span>
-                      <span class="tag is-light">{{game.players.length}}</span>
-                    </div>
-                  </div>
-                  <div class="level-item is-narrow" v-if="game.duration">
-                    <div class="tags has-addons">
-                      <span class="tag is-primary"><i class="fas fa-stopwatch"></i></span>
-                      <span class="tag is-light"><bgc-duration :duration="game.duration" /></span>
-                    </div>
-                  </div>
-                  <div class="level-item is-narrow">
-                    <div class="tags has-addons">
-                      <span class="tag is-primary"><i class="fas fa-calendar"></i></span>
-                      <span class="tag is-light">{{game.createdAt | moment('D/M/YY HH:mm')}}</span>
-                    </div>
-                  </div>
+                <div class="panel-block is-size-7">
+                  <span class="panel-icon">
+                    <i class="fas fa-dice"></i>
+                  </span>
+                  <board-game-link :boardGame="boardGame" />
                 </div>
-
-                <hr/>
+                <div class="panel-block is-size-7" v-if="event">
+                  <span class="panel-icon">
+                    <i class="fas fa-calendar-week"></i>
+                  </span>
+                  <event-link :event="event" />
+                </div>
+                <div class="panel-block is-size-7">
+                  <span class="panel-icon">
+                    <i class="fas fa-calendar-day"></i>
+                  </span>
+                  {{game.started_at | moment('lll')}}
+                </div>
+                <div class="panel-block is-size-7">
+                  <span class="panel-icon">
+                    <i class="fas fa-stopwatch"></i>
+                  </span>
+                  <bgc-duration :duration="game.duration" />
+                </div>
+                <div class="panel-block is-size-7" v-if="game.comment">
+                  <span class="panel-icon">
+                    <i class="fas fa-comment"></i>
+                  </span>
+                  {{game.comment}}
+                </div>
 
                 <b-table
                   :data="players"
@@ -118,8 +126,11 @@ import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import BgcDuration from '@/components/utils/BgcDuration';
 import UserLink from '@/components/user/UserLink';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import BoardGameLink from '@/components/board_games/BoardGameLink';
+import EventLink from '@/components/event/EventLink';
 import Game from '@/utils/api/Game';
 import Timer from '@/utils/api/Timer';
+import Event from '@/utils/api/Event';
 
 const MAX_LENGTH_DESC = 200;
 
@@ -128,12 +139,15 @@ export default {
     HeroTitlePageLayout,
     BgcDuration,
     UserLink,
-    ConfirmDeleteModal
+    ConfirmDeleteModal,
+    BoardGameLink,
+    EventLink
   },
   data() {
     return {
       game: null,
       timer: null,
+      event: null,
       loading: true,
       error: false,
       isDeleteModalActive: false
@@ -204,19 +218,27 @@ export default {
     async loadGame() {
       this.loading = true;
       this.error = false;
+      this.timer = null;
+      this.event = null;
       try {
         this.game = await Game.fetch(this.idGame);
+
         if(this.game.id_timer) {
           try {
             this.timer = await Timer.fetch(this.game.id_timer);
           }
           catch(error) {
             console.log(error);
-            this.timer = null;
           }
         }
-        else {
-          this.timer = null;
+
+        if(this.game.id_event) {
+          try {
+            this.event = await Event.fetch(this.game.id_event);
+          }
+          catch(error) {
+            console.log(error);
+          }
         }
       }
       catch(error) {
@@ -275,7 +297,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h2 {
   margin-bottom: 0.5em;
 }
@@ -299,5 +321,21 @@ hr {
 
 .unknown-time {
   font-weight: normal;
+}
+
+.panel-block {
+  margin: 0 -1.25rem;
+  border-left: 0;
+  border-right: 0;
+  padding: 0.6em 1.5rem;
+
+  &:first-of-type {
+    border-top: 0;
+    margin-top: -1rem;
+  }
+}
+
+/deep/ .b-table {
+  margin-top: 1em;
 }
 </style>
