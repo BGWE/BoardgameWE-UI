@@ -1,5 +1,7 @@
 <template>
-  <router-link :to="{name: 'game', params: {id: game.id}}">{{game.board_game.name}}</router-link>
+  <router-link :to="{name: 'game', params: {id: game.id}}">
+    <slot>{{game.board_game.name}}</slot>
+  </router-link>
 </template>
 
 <script>

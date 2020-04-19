@@ -4,7 +4,7 @@
       <PanelListElement v-for="(game, id) in reverseSortedGames" v-bind:key="id">
         <template v-slot:title>
           <div class="games-headers">
-            <div class="is-size-6-mobile">{{game.board_game.name}}</div>
+            <div class="is-size-6-mobile"><game-link :game="game" /></div>
             <div class="games-subtitle field is-grouped is-grouped-multiline">
               <div class="control">
                 <div class="tags has-addons">
@@ -74,6 +74,7 @@ import BgcDuration from '@/components/utils/BgcDuration';
 import PanelList from '@/components/layout/PanelList';
 import PanelListElement from '@/components/layout/PanelListElement';
 import ConfirmDeleteModal from '@/components/layout/ConfirmDeleteModal';
+import GameLink from '@/components/games/GameLink';
 import EventLink from '@/components/event/EventLink';
 import Game from '@/utils/api/Game';
 import moment from 'moment-timezone';
@@ -90,7 +91,8 @@ export default {
     PanelList,
     PanelListElement,
     ConfirmDeleteModal,
-    EventLink
+    EventLink,
+    GameLink
   },
 
   data() {
