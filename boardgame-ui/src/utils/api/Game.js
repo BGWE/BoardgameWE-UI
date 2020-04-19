@@ -5,7 +5,8 @@ import axios from 'axios';
 export const GameRankingMethods = Object.freeze({
   WIN_LOSE: 'WIN_LOSE',
   POINTS_LOWER_BETTER: 'POINTS_LOWER_BETTER',
-  POINTS_HIGHER_BETTER: 'POINTS_HIGHER_BETTER'
+  POINTS_HIGHER_BETTER: 'POINTS_HIGHER_BETTER',
+  RANKING_NO_POINT: 'RANKING_NO_POINT'
 });
 
 export default class Game extends Model {
@@ -28,6 +29,14 @@ export default class Game extends Model {
     this.board_game = null;
     this.players = []; // for creation, {Array<{user: Number, score: Number}>}
     this.expansions = [];
+  }
+
+  get isRanked() {
+    return this.ranking_method !== 'WIN_LOSE';
+  }
+
+  get hasScores() {
+    return this.ranking_method === GameRankingMethods.RANKING_NO_POINT;
   }
 
   static async fetchAllInEvent(idEvent) {

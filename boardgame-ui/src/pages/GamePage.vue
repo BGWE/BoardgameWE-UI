@@ -47,7 +47,7 @@
                   :row-class="rowClass"
                 >
                   <template #default="{row: player}">
-                    <b-table-column :visible="ranked" :label="$t('game-page.rankings.table.position')">
+                    <b-table-column :visible="game.isRanked" :label="$t('game-page.rankings.table.position')">
                       <span class="tag" :class="rankClass(player.rank)">{{ player.rank }}</span>
                     </b-table-column>
 
@@ -56,11 +56,11 @@
                       <span v-else>{{player.name}}</span>
                     </b-table-column>
 
-                    <b-table-column :visible="ranked" :label="$t('game-page.rankings.table.score')">
+                    <b-table-column :visible="game.hasScores" :label="$t('game-page.rankings.table.score')">
                       {{ player.score }}
                     </b-table-column>
 
-                    <b-table-column :visible="!ranked" :label="$t('game-page.rankings.table.win')">
+                    <b-table-column :visible="!game.isRanked" :label="$t('game-page.rankings.table.win')">
                       <div v-if="player.score == 1" class="tag has-background-gold has-text-white is-26x26">
                         <i class="fas fa-trophy"></i>
                       </div>
@@ -173,9 +173,6 @@ export default {
       }
       return desc.substring(0, MAX_LENGTH_DESC) + '...';
     },
-    ranked() {
-      return this.game.ranking_method !== 'WIN_LOSE';
-    },
     players() {
       let players = this.game.players;
       if(this.timer) {
@@ -249,7 +246,7 @@ export default {
       this.loading = false;
     },
     rowClass(row) {
-      if((this.ranked && row.rank <= 3) || (!this.ranked && row.score == 1)) {
+      if((this.game.isRanked && row.rank <= 3) || (!this.game.isRanked && row.score == 1)) {
         return 'has-text-weight-semibold has-background-light';
       }
     },

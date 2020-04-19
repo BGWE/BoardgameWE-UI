@@ -129,8 +129,9 @@
         <thead>
           <tr>
             <th>{{$t('add-edit-game.players.user')}}</th>
-            <th v-if="ranked">{{$t('add-edit-game.players.score')}}</th>
-            <th v-else>{{$t('add-edit-game.players.winner')}}</th>
+            <th v-if="!game.isRanked">{{$t('add-edit-game.players.winner')}}</th>
+            <th v-else-if="game.hasScores">{{$t('add-edit-game.players.rank')}}</th>
+            <th v-else>{{$t('add-edit-game.players.score')}}</th>
             <th class="has-text-white">.</th>
           </tr>
         </thead>
@@ -154,7 +155,7 @@
             </td>
             <td>
               <b-field
-                v-if="ranked"
+                v-if="game.isRanked"
                 :type="{'is-danger': errors.has(`score-${id}`)}"
                 :message="errors.first(`score-${id}`)"
               >
@@ -162,8 +163,8 @@
                   v-model="players[idx].score"
                   size="is-small"
                   :name="`score-${id}`"
-                  :data-vv-as="$t('add-edit-game.players.score')"
-                  v-validate="'required'"
+                  :data-vv-as="game.hasScores ? $t('add-edit-game.players.rank') : $t('add-edit-game.players.score')"
+                  v-validate="scored ? `between:1,${players.length}|integer|required` : 'required'"
                 />
               </b-field>
               <b-checkbox v-else v-model="players[idx].score" size="is-small" />
@@ -278,10 +279,7 @@ export default {
       return this.availableBoardGames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
     },
     allowedRankingMethods() {
-      return [GameRankingMethods.WIN_LOSE, GameRankingMethods.POINTS_HIGHER_BETTER, GameRankingMethods.POINTS_LOWER_BETTER];
-    },
-    ranked() {
-      return this.game.ranking_method !== GameRankingMethods.WIN_LOSE;
+      return Object.keys(GameRankingMethods).map(key => GameRankingMethods[key]);
     },
     selectedUsersIds() {
       return this.players.map(({user}) => user ? user.id : 0);
@@ -455,7 +453,7 @@ export default {
       });
 
       this.game.players.forEach(player => {
-        let score = this.ranked ? player.score : Boolean(player.score);
+        let score = this.game.isRanked ? player.score : Boolean(player.score);
         this.players.push({user: player.user || player.name, score, id: this.idPlayer++});
       });
 
