@@ -60,7 +60,10 @@
             <span>{{targetUser.name}}</span>
           </template>
           <template #gameName>
-            <strong><board-game-link :boardGame="activity.board_game" /></strong>
+            <strong><game-link :game="activity.game" /></strong>
+          </template>
+          <template #otherPlayersNames>
+            <player-list :players="otherPlayers" />
           </template>
         </i18n>
 
@@ -104,9 +107,9 @@ export default {
     thumbnail() {
       switch (this.activity.type) {
         case ActivityTypes.EVENT_PLAY_GAME:
+        case ActivityTypes.USER_PLAY_GAME:
           return this.activity.game.board_game.thumbnail;
         case ActivityTypes.EVENT_ADD_GAME:
-        case ActivityTypes.USER_PLAY_GAME:
         case ActivityTypes.USER_LIBRARY_ADD:
           return this.activity.board_game.thumbnail;
         case ActivityTypes.EVENT_USER_JOIN:
@@ -120,6 +123,9 @@ export default {
     },
     isCurrentUser() {
       return this.targetUser.id === this.currentUser.id;
+    },
+    otherPlayers() {
+      return this.activity.game.players.filter(p => p.id_user !== this.currentUser.id);
     }
   }
 };
