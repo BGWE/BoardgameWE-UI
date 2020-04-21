@@ -164,7 +164,7 @@
                   size="is-small"
                   :name="`score-${id}`"
                   :data-vv-as="game.hasScores ? $t('add-edit-game.players.rank') : $t('add-edit-game.players.score')"
-                  v-validate="scored ? `between:1,${players.length}|integer|required` : 'required'"
+                  v-validate="game.hasScores ? `between:1,${players.length}|integer|required` : 'required'"
                 />
               </b-field>
               <b-checkbox v-else v-model="players[idx].score" size="is-small" />
@@ -488,12 +488,8 @@ export default {
       else {
         this.setTimeFromDuration(30); // default duration: 30 minutes
         this.players.push({user: this.currentUser, score: null});
+        this.suggestedPlayers = await Game.fetchSuggestedPlayers(this.event ? {id_event: this.event.id} : {});
       }
-
-      // TODO: change once backend suggestions available
-      let friends = await this.currentUser.fetchFriends();
-      this.suggestedPlayers = friends.slice(0, 3);
-      // ---
     }
 
     this.loading = false;

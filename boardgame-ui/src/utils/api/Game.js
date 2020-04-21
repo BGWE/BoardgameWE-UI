@@ -69,6 +69,11 @@ export default class Game extends Model {
     return processedCollection;
   }
 
+  static async fetchSuggestedPlayers(params={}) {
+    let {data} = await axios.get('suggest/game_players', {params});
+    return data;
+  }
+
   /**
    * @inheritdoc
    */
