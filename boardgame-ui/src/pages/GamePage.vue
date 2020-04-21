@@ -52,7 +52,7 @@
                     </b-table-column>
 
                     <b-table-column :label="$t('game-page.rankings.table.player')">
-                      <user-link v-if="player.user" :user="player.user" />
+                      <user-link v-if="player.user" :user="player.user" surname />
                       <span v-else>{{player.name}}</span>
                     </b-table-column>
 
