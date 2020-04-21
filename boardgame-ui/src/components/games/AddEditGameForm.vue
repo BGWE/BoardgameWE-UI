@@ -130,7 +130,7 @@
           <tr>
             <th>{{$t('add-edit-game.players.user')}}</th>
             <th v-if="!game.isRanked">{{$t('add-edit-game.players.winner')}}</th>
-            <th v-else-if="game.hasScores">{{$t('add-edit-game.players.rank')}}</th>
+            <th v-else-if="!game.hasScores">{{$t('add-edit-game.players.rank')}}</th>
             <th v-else>{{$t('add-edit-game.players.score')}}</th>
             <th class="has-text-white">.</th>
           </tr>
@@ -163,8 +163,8 @@
                   v-model="players[idx].score"
                   size="is-small"
                   :name="`score-${id}`"
-                  :data-vv-as="game.hasScores ? $t('add-edit-game.players.rank') : $t('add-edit-game.players.score')"
-                  v-validate="game.hasScores ? `between:1,${players.length}|integer|required` : 'required'"
+                  :data-vv-as="game.hasScores ? $t('add-edit-game.players.score') : $t('add-edit-game.players.rank')"
+                  v-validate="game.hasScores ? 'required' : `between:1,${players.length}|integer|required`"
                 />
               </b-field>
               <b-checkbox v-else v-model="players[idx].score" size="is-small" />

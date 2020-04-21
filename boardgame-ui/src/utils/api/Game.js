@@ -36,7 +36,7 @@ export default class Game extends Model {
   }
 
   get hasScores() {
-    return this.ranking_method === GameRankingMethods.RANKING_NO_POINT;
+    return this.isRanked && this.ranking_method !== GameRankingMethods.RANKING_NO_POINT;
   }
 
   static async fetchAllInEvent(idEvent) {
