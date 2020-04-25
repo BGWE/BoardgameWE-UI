@@ -54,7 +54,7 @@
 
         <i18n
           v-else-if="activity.type === Types.USER_PLAY_GAME"
-          :path="isCurrentUser ? 'activity.current_user.play_game' : 'activity.user.play_game'"
+          :path="userGameTranslation"
         >
           <template #userName>
             <span>{{targetUser.name}}</span>
@@ -125,7 +125,16 @@ export default {
       return this.targetUser.id === this.currentUser.id;
     },
     otherPlayers() {
-      return this.activity.game.players.filter(p => p.id_user !== this.currentUser.id);
+      return this.activity.game.players.filter(p => p.id_user !== this.targetUser.id);
+    },
+    userGameTranslation() {
+      let soloGame = this.otherPlayers.length == 0;
+      if(this.isCurrentUser) {
+        return soloGame ? 'activity.current_user.play_solo_game' : 'activity.current_user.play_game';
+      }
+      else {
+        return soloGame ? 'activity.user.play_solo_game' : 'activity.user.play_game';
+      }
     }
   }
 };
