@@ -256,7 +256,8 @@ export default {
       selectedExpansions: [],
       availableBoardGames: [],
       startDate: null,
-      suggestedPlayers: null
+      suggestedPlayers: null,
+      suggestionExclusions: []
     };
   },
 
@@ -342,10 +343,18 @@ export default {
       await this.setExpansions(this.game.id_board_game);
     },
     addPlayer(user = null) {
-      if(user) {
-        this.suggestedPlayers = this.suggestedPlayers.filter(u => u != user);
-      }
       this.players.push({user, score: null, id: this.idPlayer++});
+      if(user) {
+        this.suggestionExclusions.push(user.id);
+        this.fetchSuggestedPlayers();
+      }
+    },
+    async fetchSuggestedPlayers() {
+      let params = {excluded_players: this.suggestionExclusions};
+      if(this.event) {
+        params.id_event = this.event.id;
+      }
+      this.suggestedPlayers = await Game.fetchSuggestedPlayers(params);
     },
     removePlayer(idx) {
       if(this.players.length === 1) {
@@ -488,7 +497,7 @@ export default {
       else {
         this.setTimeFromDuration(30); // default duration: 30 minutes
         this.players.push({user: this.currentUser, score: null});
-        this.suggestedPlayers = await Game.fetchSuggestedPlayers(this.event ? {id_event: this.event.id} : {});
+        await this.fetchSuggestedPlayers();
       }
     }
 
