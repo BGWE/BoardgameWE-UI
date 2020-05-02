@@ -2,12 +2,10 @@
   <div>
     <b-loading :is-full-page="false" :active="loading"/>
     <template v-if="!loading">
-      <div v-if="isCurrentUserProfile" class="columns">
-        <div class="column has-text-right">
-          <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
-            {{$t("games.add")}}
-          </router-link>
-        </div>
+      <div v-if="isCurrentUserProfile" class="limited-width has-text-right">
+        <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
+          {{$t("games.add")}}
+        </router-link>
       </div>
 
       <p class="has-text-centered has-text-grey" v-if="games.length === 0">
@@ -58,3 +56,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.limited-width {
+  max-width: 500px;
+  margin: auto;
+  margin-bottom: 1em;
+}
+</style>
