@@ -149,6 +149,7 @@
                   :excludedIds="selectedUsersIds"
                   :name="`user-${id}`"
                   :data-vv-as="$t('add-edit-game.players.user')"
+                  @input="playerUpdate"
                   v-validate="'required'"
                 />
               </b-field>
@@ -257,7 +258,7 @@ export default {
       availableBoardGames: [],
       startDate: null,
       suggestedPlayers: null,
-      suggestionExclusions: []
+      suggestionExclusions: new Set([])
     };
   },
 
@@ -337,24 +338,34 @@ export default {
     getDurationFromTime(time) {
       return time.getHours() * 60 + time.getMinutes();
     },
+
     async selectBoardGame(option) {
       let idBoardGame = option ? option.id : null;
       this.game.id_board_game = idBoardGame;
       await this.setExpansions(this.game.id_board_game);
     },
-    addPlayer(user = null) {
-      this.players.push({user, score: null, id: this.idPlayer++});
-      if(user) {
-        this.suggestionExclusions.push(user.id);
-        this.fetchSuggestedPlayers();
-      }
-    },
+
     async fetchSuggestedPlayers() {
-      let params = {excluded_players: this.suggestionExclusions};
+      if(this.idGame) {
+        return; // do not suggest players when editing a game
+      }
+
+      let params = {excluded_players: Array.from(this.suggestionExclusions)};
       if(this.event) {
         params.id_event = this.event.id;
       }
       this.suggestedPlayers = await Game.fetchSuggestedPlayers(params);
+    },
+
+    addPlayer(user = null) {
+      this.players.push({user, score: null, id: this.idPlayer++});
+    },
+    playerUpdate(user) {
+      if(user.id && !this.suggestionExclusions.has(user.id)) {
+        // add exclusion, fetch new suggestions
+        this.suggestionExclusions.add(user.id);
+        this.fetchSuggestedPlayers();
+      }
     },
     removePlayer(idx) {
       if(this.players.length === 1) {
@@ -497,7 +508,6 @@ export default {
       else {
         this.setTimeFromDuration(30); // default duration: 30 minutes
         this.players.push({user: this.currentUser, score: null});
-        await this.fetchSuggestedPlayers();
       }
     }
 
