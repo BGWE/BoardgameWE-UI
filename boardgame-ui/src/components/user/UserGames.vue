@@ -1,25 +1,11 @@
 <template>
-  <div>
-    <b-loading :is-full-page="false" :active="loading"/>
-    <template v-if="!loading">
-      <div v-if="isCurrentUserProfile" class="limited-width has-text-right">
-        <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
-          {{$t("games.add")}}
-        </router-link>
-      </div>
-
-      <p class="has-text-centered has-text-grey" v-if="games.length === 0">
-        {{$t('event.games.no-games')}}
-      </p>
-
-      <games-list v-if="games"
-        :games="games"
-        :canEdit="isCurrentUserProfile"
-        @gameDeleted="reload()"
-      />
-
+  <games-list :user="user" :canEdit="isCurrentUserProfile">
+    <template #addButton v-if="isCurrentUserProfile">
+      <router-link tag="button" class="button is-primary" :to="{name: 'add-game'}">
+        {{$t("button.add-game")}}
+      </router-link>
     </template>
-  </div>
+  </games-list>
 </template>
 
 <script>
@@ -31,36 +17,8 @@ export default {
     user: User,
     isCurrentUserProfile: Boolean
   },
-
   components: {
     GamesList
-  },
-
-  data() {
-    return {
-      games: null,
-      loading: true
-    };
-  },
-
-  methods: {
-    async reload() {
-      this.loading = true;
-      this.games = await this.user.fetchGames();
-      this.loading = false;
-    }
-  },
-
-  async created() {
-    this.reload();
-  },
+  }
 };
 </script>
-
-<style scoped>
-.limited-width {
-  max-width: 500px;
-  margin: auto;
-  margin-bottom: 1em;
-}
-</style>
