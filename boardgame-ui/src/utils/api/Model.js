@@ -56,13 +56,16 @@ export default class Model {
   /**
    * Return an object containing only the public properties of the current object
    *
+   * @param {Array<string>} forcedProperties The properties to include in the constructed properties object, even
+   *  if they are  null
+   *
    * @returns {Object} Object with public properties only
    */
-  getPublicProperties() {
+  getPublicProperties(forcedProperties=[]) {
     let props = {};
     for(let key in this) {
       let value = this[key];
-      if(!key.startsWith('_') && value != null) {
+      if(!key.startsWith('_') && (forcedProperties.includes(key) || value != null)) {
         props[key] = value;
       }
     }
@@ -116,12 +119,16 @@ export default class Model {
   /**
    * Save the object (if it is new, it is added; otherwise, it is updated)
    *
+   * @param {Object} params
+   * @param {Array<string>} forcedProperties The properties to include in the constructed properties object, even
+   *  if they are  null
+   *
    * @returns {this} The saved object, as returned by backend
    */
-  async save(params={}) {
+  async save(params={}, forcedProperties=[]) {
     let data;
     if(this.isNew()) {
-      ({data} = await axios.post(this.uri, this.getPublicProperties(), {
+      ({data} = await axios.post(this.uri, this.getPublicProperties(forcedProperties), {
         params,
         paramsSerializer: params => {
           return qs.stringify(params);
@@ -129,7 +136,7 @@ export default class Model {
       }));
     }
     else {
-      ({data} = await axios.put(this.uri, this.getPublicProperties()));
+      ({data} = await axios.put(this.uri, this.getPublicProperties(forcedProperties)));
     }
     this.populate(data);
     return this;

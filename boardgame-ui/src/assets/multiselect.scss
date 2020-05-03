@@ -1,0 +1,71 @@
+@import "./colors.scss";
+@import '~vue-multiselect/dist/vue-multiselect.min.css';
+@import "~bulma/sass/utilities/_all";
+
+
+$color: #59849f;
+$invert: findColorInvert($primary);
+
+.multiselect--active, .multiselect__content-wrapper {
+  z-index: 100 !important;
+}
+
+.multiselect__option--selected {
+  font-weight: 600 !important;
+}
+
+.multiselect__option {
+  padding: 0px 10px !important;
+  font-size: 0.9rem !important;
+  min-height: 35px !important;
+  line-height: 35px;
+}
+
+.multiselect__element ::after {
+  line-height: 35px;
+  background: none !important;
+  font-weight: normal;
+}
+
+.multiselect__placeholder, .multiselect__single {
+  padding-left: 5px;
+  position: relative;
+  padding-top: 0 !important;
+}
+
+.multiselect__placeholder, .multiselect__tags-wrap, .multiselect__single {
+  margin-bottom: 8px;
+  line-height: 20px;
+  vertical-align: top;
+  font-size: 1rem;
+}
+
+.multiselect__option:hover, .multiselect__option--highlight {
+  background: $color !important;
+  color: $invert;
+}
+
+.multiselect__tag {
+  background: $color !important;
+  color: $invert !important;
+  font-size: 0.9rem;
+  padding-left: 12px;
+  padding-right: 30px;
+}
+
+.multiselect__tag-icon {
+  background: #456980;
+  border-radius: 0px;
+
+  &:after {
+    color: $invert !important;
+  }
+
+  &:hover {
+    background: $primary;
+  }
+}
+
+.multiselect__input {
+  font-size: 1rem !important;
+}

@@ -28,6 +28,10 @@
 
 <script>
 
+const RANKING_TABLE_TYPE_GROUPED = 'RANKING_TABLE_TYPE_GROUPED';
+const RANKING_TABLE_TYPE_RANKED = 'RANKING_TABLE_TYPE_RANKED';
+const RANKING_TABLE_TYPE_NO_SCORE = 'RANKING_TABLE_TYPE_NO_SCORE';
+
 export default {
   props: {
     data: {
@@ -46,25 +50,20 @@ export default {
   },
 
   methods: {
-    rankingTableTypeFromRankingMethod: function(rankingMethod) {
+    rankingTableTypeFromRankingMethod(rankingMethod) {
       switch (rankingMethod) {
         case 'WIN_LOSE':
-          return this.RANKING_TABLE_TYPE_GROUPED;
-
-        case 'POINTS_HIGHER_BETTER':
-          return this.RANKING_TABLE_TYPE_RANKED;
-
-        case 'POINTS_LOWER_BETTER':
-          return this.RANKING_TABLE_TYPE_RANKED;
-
+          return RANKING_TABLE_TYPE_GROUPED;
+        case 'RANKING_NO_POINT':
+          return RANKING_TABLE_TYPE_NO_SCORE;
         default:
-          return this.RANKING_TABLE_TYPE_RANKED;
+          return RANKING_TABLE_TYPE_RANKED;
       }
     },
 
-    columns: function(rankingType) {
-      if (rankingType === this.RANKING_TABLE_TYPE_RANKED) {
-        return [
+    columns(rankingType) {
+      if (rankingType !== RANKING_TABLE_TYPE_GROUPED) {
+        let columns = [
           {
             field: 'position',
             label: this.$t('event.rankings.table.position'),
@@ -90,12 +89,16 @@ export default {
           {
             field: 'player',
             label: this.$t('event.rankings.table.player')
-          },
-          {
+          }
+        ];
+
+        if(rankingType === RANKING_TABLE_TYPE_RANKED) {
+          columns.push({
             field: 'score',
             label: this.$t('event.rankings.table.score')
-          },
-        ];
+          });
+        }
+        return columns;
       }
       else {
         return [
@@ -117,8 +120,8 @@ export default {
       }
     },
 
-    onRowClass: function(row) {
-      if (this.rankingTableTypeFromRankingMethod(this.rankingMethod) === this.RANKING_TABLE_TYPE_RANKED) {
+    onRowClass(row) {
+      if (this.rankingTableTypeFromRankingMethod(this.rankingMethod) !== RANKING_TABLE_TYPE_GROUPED) {
         if (row.position === 1 || row.position === 2 || row.position === 3) {
           return 'has-text-weight-semibold has-background-light';
         }
@@ -134,19 +137,12 @@ export default {
 
 
   computed: {
-    RANKING_TABLE_TYPE_GROUPED() {
-      return 'RANKING_TABLE_TYPE_GROUPED';
-    },
-    RANKING_TABLE_TYPE_RANKED() {
-      return 'RANKING_TABLE_TYPE_RANKED';
-    },
     perPage: () => 5,
 
     loading() {
       if(!this.data) {
         return true;
       }
-
       return false;
     },
 
@@ -154,12 +150,8 @@ export default {
       if(!this.data) {
         return false;
       }
-
       return this.data.length > this.perPage;
     }
   },
 };
 </script>
-
-<style scoped>
-</style>

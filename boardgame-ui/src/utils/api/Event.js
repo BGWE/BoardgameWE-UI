@@ -63,8 +63,8 @@ export default class Event extends Model {
     return super.fetchAll(urlParams);
   }
 
-  async fetchGames() {
-    return Game.fetchAllInEvent(this.id);
+  async fetchGames(params={}) {
+    return Game.fetchAllInEvent(this.id, params);
   }
 
   async fetchLatestGames() {

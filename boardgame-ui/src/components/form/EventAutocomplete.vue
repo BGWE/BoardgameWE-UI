@@ -21,11 +21,13 @@ export default {
     size: String,
     inputData: Array
   },
+
   data() {
     return {
       searchString: ''
     };
   },
+
   computed: {
     filteredData() {
       let str = this.searchString.toLowerCase();
@@ -34,10 +36,20 @@ export default {
       });
     }
   },
-  mounted() {
-    if (this.value) {
-      this.$refs.autocomplete.setSelected(this.value);
+
+  methods : {
+    setValue() {
+      if(this.value) {
+        this.$refs.autocomplete.setSelected(this.value);
+      }
+      else {
+        this.searchString = '';
+      }
     }
+  },
+
+  mounted() {
+    this.setValue();
   },
 };
 </script>

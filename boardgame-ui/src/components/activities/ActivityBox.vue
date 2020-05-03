@@ -4,25 +4,25 @@
       <ActivityBoxLeftMedia :activity="activity" :thumbnail="thumbnail"/>
       <div class="media-content">
         <i18n v-if="activity.type === Types.EVENT_ADD_GAME" path="activity.event.add_game">
-          <template v-slot:gameName>
+          <template #gameName>
             <strong><board-game-link :boardGame="activity.board_game" /></strong>
           </template>
-          <template v-slot:userName>
+          <template #userName>
             <strong><user-link :user="activity.user" /></strong>
           </template>
         </i18n>
 
         <i18n v-else-if="activity.type === Types.EVENT_PLAY_GAME" path="activity.event.play_game">
-          <template v-slot:playerNames>
+          <template #playerNames>
             <player-list :players="activity.game.players" />
           </template>
-          <template v-slot:gameName>
-            <strong><board-game-link :boardGame="activity.game.board_game" /></strong>
+          <template #gameName>
+            <strong><game-link :game="activity.game" /></strong>
           </template>
         </i18n>
 
         <i18n v-else-if="activity.type === Types.EVENT_USER_JOIN" path="activity.event.user_join">
-          <template v-slot:userName>
+          <template #userName>
             <strong><user-link :user="activity.user" /></strong>
           </template>
         </i18n>
@@ -31,11 +31,11 @@
           v-else-if="activity.type === Types.USER_JOIN_EVENT"
           :path="isCurrentUser ? 'activity.current_user.join_event' : 'activity.user.join_event'"
         >
-          <template v-slot:userName>
+          <template #userName>
             <span>{{targetUser.name}}</span>
           </template>
 
-          <template v-slot:eventName>
+          <template #eventName>
             <strong><router-link :to="{name: 'event', params: {eventid: activity.event.id}}">{{activity.event.name}}</router-link></strong>
           </template>
         </i18n>
@@ -44,23 +44,26 @@
           v-else-if="activity.type === Types.USER_LIBRARY_ADD"
           :path="isCurrentUser ? 'activity.current_user.library_add' : 'activity.user.library_add'"
         >
-          <template v-slot:userName>
+          <template #userName>
             <span>{{targetUser.name}}</span>
           </template>
-          <template v-slot:gameName>
+          <template #gameName>
             <strong><board-game-link :boardGame="activity.board_game" /></strong>
           </template>
         </i18n>
 
         <i18n
           v-else-if="activity.type === Types.USER_PLAY_GAME"
-          :path="isCurrentUser ? 'activity.current_user.play_game' : 'activity.user.play_game'"
+          :path="userGameTranslation"
         >
-          <template v-slot:userName>
+          <template #userName>
             <span>{{targetUser.name}}</span>
           </template>
-          <template v-slot:gameName>
-            <strong><board-game-link :boardGame="activity.board_game" /></strong>
+          <template #gameName>
+            <strong><game-link :game="activity.game" /></strong>
+          </template>
+          <template #otherPlayersNames>
+            <player-list :players="otherPlayers" />
           </template>
         </i18n>
 
@@ -76,6 +79,7 @@ import BgcDatetime from '@/components/layout/BgcDatetime';
 import ActivityBoxLeftMedia from '@/components/activities/ActivityBoxLeftMedia';
 import PlayerList from '@/components/activities/PlayerList';
 import BoardGameLink from '@/components/board_games/BoardGameLink';
+import GameLink from '@/components/games/GameLink';
 import UserLink from '@/components/user/UserLink';
 import { ActivityTypes } from '@/utils/api/Activity';
 
@@ -93,7 +97,8 @@ export default {
     BgcDatetime,
     PlayerList,
     BoardGameLink,
-    UserLink
+    UserLink,
+    GameLink
   },
   data() {
     return { Types: ActivityTypes };
@@ -102,9 +107,9 @@ export default {
     thumbnail() {
       switch (this.activity.type) {
         case ActivityTypes.EVENT_PLAY_GAME:
+        case ActivityTypes.USER_PLAY_GAME:
           return this.activity.game.board_game.thumbnail;
         case ActivityTypes.EVENT_ADD_GAME:
-        case ActivityTypes.USER_PLAY_GAME:
         case ActivityTypes.USER_LIBRARY_ADD:
           return this.activity.board_game.thumbnail;
         case ActivityTypes.EVENT_USER_JOIN:
@@ -118,6 +123,18 @@ export default {
     },
     isCurrentUser() {
       return this.targetUser.id === this.currentUser.id;
+    },
+    otherPlayers() {
+      return this.activity.game.players.filter(p => p.id_user !== this.targetUser.id);
+    },
+    userGameTranslation() {
+      let soloGame = this.otherPlayers.length == 0;
+      if(this.isCurrentUser) {
+        return soloGame ? 'activity.current_user.play_solo_game' : 'activity.current_user.play_game';
+      }
+      else {
+        return soloGame ? 'activity.user.play_solo_game' : 'activity.user.play_game';
+      }
     }
   }
 };

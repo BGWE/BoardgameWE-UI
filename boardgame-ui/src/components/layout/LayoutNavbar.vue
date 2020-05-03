@@ -54,6 +54,9 @@
                   <router-link :to="{name: 'user-games', params: {id: currentUser.id}}" class="navbar-item">
                     {{$t('navbar.my-games')}}
                   </router-link>
+                  <router-link :to="{name: 'user-timers', params: {id: currentUser.id}}" class="navbar-item">
+                    {{$t('navbar.my-timers')}}
+                  </router-link>
                   <router-link :to="{name: 'user-friends', params: {id: currentUser.id}}" class="navbar-item">
                     {{$t('navbar.my-friends')}}
                   </router-link>
