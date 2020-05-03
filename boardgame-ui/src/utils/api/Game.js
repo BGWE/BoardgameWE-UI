@@ -39,11 +39,11 @@ export default class Game extends Model {
     return this.isRanked && this.ranking_method !== GameRankingMethods.RANKING_NO_POINT;
   }
 
-  static async fetchAllInEvent(idEvent) {
+  static async fetchAllInEvent(idEvent, params={}) {
     if(idEvent == null) {
       throw new Error('Cannot fetch games of an event with no ID.');
     }
-    let {data} = await axios.get(`event/${idEvent}/games`);
+    let {data} = await axios.get(`event/${idEvent}/games`, {params});
 
     let processedCollection = [];
     data.forEach(elem => {

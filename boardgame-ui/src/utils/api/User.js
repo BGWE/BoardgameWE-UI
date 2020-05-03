@@ -1,4 +1,5 @@
 import Model from './Model';
+import Game from './Game';
 import axios from 'axios';
 
 export default class User extends Model {
@@ -39,11 +40,19 @@ export default class User extends Model {
 
   /**
    * Fetch the games of the current user
-   * @return {Object} Response from backend
+   * @param params (Optional) Query parameters of the request
+   * @return {Array<Game>} List of games of user
    */
-  async fetchGames() {
-    let {data} = await axios.get(`/user/${this.id}/games`);
-    return data;
+  async fetchGames(params={}) {
+    let {data} = await axios.get(`/user/${this.id}/games`, {params});
+
+    let processedCollection = [];
+    data.forEach(elem => {
+      let model = new Game(elem);
+      processedCollection.push(model);
+    });
+
+    return processedCollection;
   }
 
   /**
