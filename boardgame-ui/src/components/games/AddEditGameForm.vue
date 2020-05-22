@@ -5,200 +5,203 @@
     </h1>
 
     <b-loading :active="loading" :is-full-page="false" />
-    <form v-if="!loading" @submit.prevent="save()">
+    <ValidationObserver ref="form">
+      <form v-if="!loading" @submit.prevent="save">
 
-      <b-field v-if="event" :label="$t('timer.add-edit.event')" >
-        <b-input disabled :value="event.name" />
-      </b-field>
+        <b-field v-if="event" :label="$t('timer.add-edit.event')" >
+          <b-input disabled :value="event.name" />
+        </b-field>
 
-      <b-field
-        v-else-if="events"
-        :label="$t('timer.add-edit.event')"
-        :type="{'is-danger': errors.has('event')}"
-        :message="errors.first('event')"
-      >
-        <event-autocomplete
-          v-model="selectedEvent"
-          name="event"
-          :inputData="events"
-          :data-vv-as="$t('add-edit-game.event.label')"
-        />
-      </b-field>
-
-      <b-field
-        :label="$t('add-edit-game.board-game.label')"
-        :type="{'is-danger': errors.has('boardGame')}"
-        :message="errors.first('boardGame')"
-      >
-        <b-autocomplete
-          v-model="searchString"
-          :data="filteredBoardGames"
-          field="name"
-          icon="search"
-          @select="selectBoardGame"
-          name="boardGame"
-          :data-vv-as="$t('add-edit-game.board-game.label')"
-          v-validate="'required'"
+        <b-field
+          v-else-if="events"
+          :label="$t('timer.add-edit.event')"
         >
-          <template slot-scope="props">
-            <div class="media">
-              <div class="media-left">
-                <img :src="props.option.thumbnail" width="50">
-              </div>
-              <div class="media-content">
-                {{props.option.name}}
-              </div>
-            </div>
-          </template>
-          <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
-        </b-autocomplete>
-      </b-field>
-
-      <b-field :label="$t('add-edit-game.expansions.label')">
-        <multi-select
-          v-model="selectedExpansions"
-          :options="expansionsList"
-          :placeholder="$t('add-edit-game.expansions.empty')"
-          label="name"
-          track-by="id"
-          :searchable="true"
-          :multiple="true"
-          :close-on-select="false">
-        </multi-select>
-      </b-field>
-
-      <div class="columns">
-        <div class="column">
-          <b-field :label="$t('add-edit-game.ranking-method.label')">
-            <b-select v-model="game.ranking_method" expanded>
-              <option v-for="method in allowedRankingMethods" :value="method" :key="method">
-                {{$t('global.ranking-method.' + method)}}
-              </option>
-            </b-select>
-          </b-field>
-        </div>
-        <div class="column is-narrow">
-          <b-field :label="$t('add-edit-game.game-duration.label')">
-            <b-timepicker v-model="time" size="is-small" :min-time="minTime" :increment-minutes="15" inline />
-          </b-field>
-        </div>
-      </div>
-
-      <b-field
-        :label="$t('add-edit-game.start-date.label')"
-        :type="{'is-danger': errors.has('startDate')}"
-        :message="errors.first('startDate')"
-      >
-        <p class="start-date-field">
-          <date-time-picker
-            v-model="startDate"
-            name="startDate"
-            :type="{'is-danger': errors.has('startDate')}"
-            v-validate="'required'"
-            :data-vv-as="$t('add-edit-game.start-date.label')"
+          <event-autocomplete
+            v-model="selectedEvent"
+            name="event"
+            :inputData="events"
+            :data-vv-as="$t('add-edit-game.event.label')"
           />
-          <span class="hint" v-if="suggestedStartDate">
-            <b-icon icon="magic" />
-            <i18n path="add-edit-game.start-date.hint">
-              <template #suggestedStartDate>
-                <a @click="startDate = suggestedStartDate">
-                  <i18n
-                    :path="`add-edit-game.start-date.hint-${
-                      now.isSame(suggestedStartDate, 'day') ? 'today' :
-                      yesterday.isSame(suggestedStartDate, 'day') ? 'yesterday' :
-                      'before-yesterday'
-                    }`"
-                  >
-                    <template #time>{{suggestedStartDate | moment('H:mm')}}</template>
-                    <template #date>{{suggestedStartDate | moment('LL')}}</template>
-                  </i18n>
-                </a>
+        </b-field>
+
+        <ValidationProvider rules="required" v-slot="{ errors }">
+          <b-field
+            :label="$t('add-edit-game.board-game.label')"
+            :type="{'is-danger': errors[0]}"
+            :message="errors"
+          >
+            <b-autocomplete
+              v-model="searchString"
+              :data="filteredBoardGames"
+              field="name"
+              icon="search"
+              @select="selectBoardGame"
+              name="boardGame"
+              :data-vv-as="$t('add-edit-game.board-game.label')"
+            >
+              <template slot-scope="props">
+                <div class="media">
+                  <div class="media-left">
+                    <img :src="props.option.thumbnail" width="50">
+                  </div>
+                  <div class="media-content">
+                    {{props.option.name}}
+                  </div>
+                </div>
               </template>
-            </i18n>
-          </span>
-        </p>
-      </b-field>
+              <template slot="empty">{{$t('add-edit-game.board-game.no-result')}}</template>
+            </b-autocomplete>
+          </b-field>
+        </ValidationProvider>
 
-      <b-field :label="$t('add-edit-game.comment.label')">
-        <b-input :placeholder="$t('add-edit-game.comment.placeholder')" v-model="game.comment" />
-      </b-field>
+        <b-field :label="$t('add-edit-game.expansions.label')">
+          <multi-select
+            v-model="selectedExpansions"
+            :options="expansionsList"
+            :placeholder="$t('add-edit-game.expansions.empty')"
+            label="name"
+            track-by="id"
+            :searchable="true"
+            :multiple="true"
+            :close-on-select="false">
+          </multi-select>
+        </b-field>
 
-      <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
+        <div class="columns">
+          <div class="column">
+            <b-field :label="$t('add-edit-game.ranking-method.label')">
+              <b-select v-model="game.ranking_method" expanded>
+                <option v-for="method in allowedRankingMethods" :value="method" :key="method">
+                  {{$t('global.ranking-method.' + method)}}
+                </option>
+              </b-select>
+            </b-field>
+          </div>
+          <div class="column is-narrow">
+            <b-field :label="$t('add-edit-game.game-duration.label')">
+              <b-timepicker v-model="time" size="is-small" :min-time="minTime" :increment-minutes="15" inline />
+            </b-field>
+          </div>
+        </div>
 
-      <table class="table is-fullwidth">
-        <thead>
-          <tr>
-            <th>{{$t('add-edit-game.players.user')}}</th>
-            <th v-if="!game.isRanked">{{$t('add-edit-game.players.winner')}}</th>
-            <th v-else-if="!game.hasScores">{{$t('add-edit-game.players.rank')}}</th>
-            <th v-else>{{$t('add-edit-game.players.score')}}</th>
-            <th class="has-text-white">.</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="({id}, idx) in players" :key="id">
-            <td>
-              <b-field
-                :type="{'is-danger': errors.has(`user-${id}`)}"
-                :message="errors.first(`user-${id}`)"
-              >
-                <user-autocomplete
-                  size="is-small"
-                  v-model="players[idx].user"
-                  :users="users"
-                  :excludedIds="selectedUsersIds"
-                  :name="`user-${id}`"
-                  :data-vv-as="$t('add-edit-game.players.user')"
-                  @input="playerUpdate"
-                  v-validate="'required'"
+        <ValidationProvider rules="required" v-slot="{ errors }">
+          <b-field
+            :label="$t('add-edit-game.start-date.label')"
+            :type="{'is-danger': errors[0]}"
+            :message="errors"
+          >
+            <p class="start-date-field">
+                <date-time-picker
+                  v-model="startDate"
+                  name="startDate"
+                  :data-vv-as="$t('add-edit-game.start-date.label')"
                 />
-              </b-field>
-            </td>
-            <td>
-              <b-field
-                v-if="game.isRanked"
-                :type="{'is-danger': errors.has(`score-${id}`)}"
-                :message="errors.first(`score-${id}`)"
-              >
-                <b-input
-                  v-model="players[idx].score"
-                  size="is-small"
-                  :name="`score-${id}`"
-                  :data-vv-as="game.hasScores ? $t('add-edit-game.players.score') : $t('add-edit-game.players.rank')"
-                  v-validate="game.hasScores ? 'required' : `between:1,${players.length}|integer|required`"
-                />
-              </b-field>
-              <b-checkbox v-else v-model="players[idx].score" size="is-small" />
-            </td>
-            <td>
-              <button type="button" class="delete" @click="removePlayer(idx)"></button>
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3">
-              <p v-if="suggestedPlayers && suggestedPlayers.length" class="hint">
-                <b-icon icon="magic" />{{$t('add-edit-game.players.hint')}}
-                <span v-for="(user, idx) in suggestedPlayers" :key="user.id">
-                  <a @click="addPlayer(user)">
-                    {{user.name}}
-                    {{user.surname.slice(0, 1)}}.</a><template v-if="idx < suggestedPlayers.length - 1">,</template>
-                </span>
-              </p>
-              <p class="has-text-centered">
-                <button class="button is-small" type="button" @click="addPlayer()">
-                  {{$t('button.add-player')}}
-                </button>
-              </p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <span class="hint" v-if="suggestedStartDate">
+                <b-icon icon="magic" />
+                <i18n path="add-edit-game.start-date.hint">
+                  <template #suggestedStartDate>
+                    <a @click="startDate = suggestedStartDate">
+                      <i18n
+                        :path="`add-edit-game.start-date.hint-${
+                          now.isSame(suggestedStartDate, 'day') ? 'today' :
+                          yesterday.isSame(suggestedStartDate, 'day') ? 'yesterday' :
+                          'before-yesterday'
+                        }`"
+                      >
+                        <template #time>{{suggestedStartDate | moment('H:mm')}}</template>
+                        <template #date>{{suggestedStartDate | moment('LL')}}</template>
+                      </i18n>
+                    </a>
+                  </template>
+                </i18n>
+              </span>
+            </p>
+          </b-field>
+        </ValidationProvider>
 
-      <div class="buttons is-right">
-        <button class="button" type="button" @click="$router.go(-1)">{{$t('button.cancel')}}</button>
-        <button class="button is-primary">{{$t('button.save')}}</button>
-      </div>
-    </form>
+        <b-field :label="$t('add-edit-game.comment.label')">
+          <b-input :placeholder="$t('add-edit-game.comment.placeholder')" v-model="game.comment" />
+        </b-field>
+
+        <h2 class="subtitle">{{$t('add-edit-game.players.title')}}</h2>
+
+        <table class="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>{{$t('add-edit-game.players.user')}}</th>
+              <th v-if="!game.isRanked">{{$t('add-edit-game.players.winner')}}</th>
+              <th v-else-if="!game.hasScores">{{$t('add-edit-game.players.rank')}}</th>
+              <th v-else>{{$t('add-edit-game.players.score')}}</th>
+              <th class="has-text-white">.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="({id}, idx) in players" :key="id">
+              <td>
+                <ValidationProvider rules="required" v-slot="{ errors }">
+                  <b-field
+                    :type="{'is-danger': errors[0]}"
+                    :message="errors"
+                  >
+                    <user-autocomplete
+                      size="is-small"
+                      v-model="players[idx].user"
+                      :users="users"
+                      :excludedIds="selectedUsersIds"
+                      :name="`user-${id}`"
+                      :data-vv-as="$t('add-edit-game.players.user')"
+                      @input="playerUpdate"
+                    />
+                  </b-field>
+                </ValidationProvider>
+              </td>
+              <td>
+                <ValidationProvider :rules="scoreValidationRule" v-slot="{ errors }">
+                  <b-field
+                    v-if="game.isRanked"
+                    :type="{'is-danger': errors[0]}"
+                    :message="errors"
+                  >
+                    <b-input
+                      v-model="players[idx].score"
+                      size="is-small"
+                      :name="`score-${id}`"
+                      :data-vv-as="game.hasScores ? $t('add-edit-game.players.score') : $t('add-edit-game.players.rank')"
+                    />
+                  </b-field>
+                  <b-checkbox v-else v-model="players[idx].score" size="is-small" />
+                </ValidationProvider>
+              </td>
+              <td>
+                <button type="button" class="delete" @click="removePlayer(idx)"></button>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3">
+                <p v-if="suggestedPlayers && suggestedPlayers.length" class="hint">
+                  <b-icon icon="magic" />{{$t('add-edit-game.players.hint')}}
+                  <span v-for="(user, idx) in suggestedPlayers" :key="user.id">
+                    <a @click="addPlayer(user)">
+                      {{user.name}}
+                      {{user.surname.slice(0, 1)}}.</a><template v-if="idx < suggestedPlayers.length - 1">,</template>
+                  </span>
+                </p>
+                <p class="has-text-centered">
+                  <button class="button is-small" type="button" @click="addPlayer()">
+                    {{$t('button.add-player')}}
+                  </button>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="buttons is-right">
+          <button class="button" type="button" @click="$router.go(-1)">{{$t('button.cancel')}}</button>
+          <button class="button is-primary">{{$t('button.save')}}</button>
+        </div>
+      </form>
+    </ValidationObserver>
   </div>
 </template>
 
@@ -210,6 +213,7 @@ import Event from '@/utils/api/Event';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
 import EventAutocomplete from '@/components/form/EventAutocomplete';
 import DateTimePicker from '@/components/form/DateTimePicker';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import MultiSelect from 'vue-multiselect';
 import {dateToISO8601, ISO8601ToDate} from '@/utils/helper';
 import moment from 'moment';
@@ -219,7 +223,9 @@ export default {
     UserAutocomplete,
     EventAutocomplete,
     MultiSelect,
-    DateTimePicker
+    DateTimePicker,
+    ValidationObserver,
+    ValidationProvider
   },
   props: {
     users: { // list of selectable users
@@ -297,6 +303,9 @@ export default {
         return moment(this.now).subtract(this.getDurationFromTime(this.time), 'minutes').toDate();
       }
       return null;
+    },
+    scoreValidationRule() {
+      return this.game.hasScores ? 'required' : `between:1,${this.players.length}|integer|required`;
     }
   },
 
@@ -380,60 +389,62 @@ export default {
     },
 
     async save() {
-      let result = await this.$validator.validateAll();
+      await this.$refs.form.validate().then(async result => {
+        if (!this.game.id_board_game) {
+          //this.$refs.form.errors.add({field: 'boardGame', msg: this.$t('add-edit-game.validation-error.board-game')});
+          result = false;
+        }
+        console.log(this.$refs.form.errors);
 
-      if (!this.game.id_board_game) {
-        this.$validator.errors.add({field: 'boardGame', msg: this.$t('add-edit-game.validation-error.board-game')});
-        result = false;
-      }
+        if (this.game.id_event && this.selectedEvent && this.selectedEvent.id != this.game.id_event ) {
+          //this.$refs.form.errors.add({field: 'event', msg: this.$t('add-edit-game.validation-error.modified-event')});
+          result = false;
+        }
 
-      if (this.game.id_event && this.selectedEvent && this.selectedEvent.id != this.game.id_event ) {
-        this.$validator.errors.add({field: 'event', msg: this.$t('add-edit-game.validation-error.modified-event')});
-        result = false;
-      }
+        if (!result) {
+          this.$buefy.toast.open({
+            message: this.$t('global.invalid-form'),
+            type: 'is-danger',
+            position: 'is-bottom'
+          });
+          return;
+        }
 
-      if (!result) {
-        this.$buefy.toast.open({
-          message: this.$t('global.invalid-form'),
-          type: 'is-danger',
-          position: 'is-bottom'
+        if (this.selectedEvent != null) {
+          this.game.id_event = this.selectedEvent.id;
+        }
+        else {
+          this.game.id_event = null;
+        }
+
+        this.game.duration = this.getDurationFromTime(this.time);
+        this.game.players = this.players.map(({user, score}) => {
+          score = Number(score);
+          return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
         });
-        return;
-      }
+        this.game.expansions = this.selectedExpansions.map(exp => exp.id);
 
-      if (this.selectedEvent != null) {
-        this.game.id_event = this.selectedEvent.id;
-      }
-      else {
-        this.game.id_event = null;
-      }
+        this.game.started_at = dateToISO8601(this.startDate);
 
-      this.game.duration = this.getDurationFromTime(this.time);
-      this.game.players = this.players.map(({user, score}) => {
-        score = Number(score);
-        return typeof user === 'string' ? {name: user, score} : {id_user: user.id, score};
+        try {
+          await this.game.save();
+          this.$buefy.toast.open({
+            message: this.$t('add-edit-game.save-success'),
+            type: 'is-success',
+            position: 'is-bottom'
+          });
+          this.$router.go(-1);
+        }
+        catch(error) {
+          this.$buefy.toast.open({
+            message: this.$t('add-edit-game.save-error'),
+            type: 'is-danger',
+            position: 'is-bottom'
+          });
+        }
       });
-      this.game.expansions = this.selectedExpansions.map(exp => exp.id);
-
-      this.game.started_at = dateToISO8601(this.startDate);
-
-      try {
-        await this.game.save();
-        this.$buefy.toast.open({
-          message: this.$t('add-edit-game.save-success'),
-          type: 'is-success',
-          position: 'is-bottom'
-        });
-        this.$router.go(-1);
-      }
-      catch(error) {
-        this.$buefy.toast.open({
-          message: this.$t('add-edit-game.save-error'),
-          type: 'is-danger',
-          position: 'is-bottom'
-        });
-      }
     },
+
     async setExpansions(id) {
       if(id != null) {
         this.expansions = (await BoardGame.fetchExpansions(id)).expansions;

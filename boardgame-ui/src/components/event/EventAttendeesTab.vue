@@ -53,26 +53,28 @@
 
         <div v-if="event.current.can_write">
           <section class="section limited-width">
-            <form @submit.prevent="inviteUser()">
-                <b-field
-                  :label="$t('event.invite_someone')"
-                  :type="{'is-danger': errors.has('invitee')}"
-                  :message="errors.first('invitee')"
-                >
-                  <user-autocomplete
-                    size="is-small"
-                    v-model="invitee"
-                    :users="friends"
-                    :excludedIds="userIdsExcludedFromInvites"
-                    :name="'invitee'"
-                    :data-vv-as="$t('add-edit-game.players.user')"
-                    v-validate="'required'"
-                  />
-                </b-field>
+            <ValidationObserver v-slot="{ handleSubmit }">
+              <form @submit.prevent="handleSubmit(inviteUser)">
+                <ValidationProvider rules="required" v-slot="{ errors }">
+                  <b-field
+                    :label="$t('event.invite_someone')"
+                    :type="{'is-danger': errors[0]}"
+                    :message="errors"
+                  >
+                    <user-autocomplete
+                      size="is-small"
+                      v-model="invitee"
+                      :users="friends"
+                      :excludedIds="userIdsExcludedFromInvites"
+                      :data-vv-as="$t('add-edit-game.players.user')"
+                    />
+                  </b-field>
+                </ValidationProvider>
                 <div class="buttons is-right">
                   <button class="button is-primary">{{$t('events.invite')}}</button>
                 </div>
-            </form>
+              </form>
+            </ValidationObserver>
           </section>
 
           <section class="section limited-width" v-if="invitees">
@@ -186,9 +188,16 @@
 import Event, {JoinRequestStatus, InviteStatus} from '@/utils/api/Event';
 import BgcDatetime from '@/components/layout/BgcDatetime';
 import UserAutocomplete from '@/components/form/UserAutocomplete';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 
 export default {
-  components: {BgcDatetime, UserAutocomplete},
+  components: {
+    BgcDatetime,
+    ValidationObserver,
+    ValidationProvider,
+    UserAutocomplete
+  },
+
   props: {
     event: Event
   },

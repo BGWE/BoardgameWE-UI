@@ -6,62 +6,66 @@
         <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
         <p v-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
 
-        <form @submit.prevent="register">
-          <b-field  :label="$t('label.username')"
-                    :type="{'is-danger': errors.has('username')}"
-                    :message="errors.first('username')">
-            <b-input v-model="user.username" v-validate="'required'" name="username"/>
-          </b-field>
+        <ValidationObserver v-slot="{ handleSubmit }">
+          <form @submit.prevent="handleSubmit(register)">
+             <InputWithValidation
+              rules="required"
+              mode="eager"
+              :label="$t('label.username')"
+              v-model="user.username"
+            />
 
-          <b-field  password-reveal
-                    :label="$t('label.password')"
-                    :type="{'is-danger': errors.has('password')}"
-                    :message="errors.first('password')">
-            <b-input v-model="user.password"
-                     password-reveal type="password"
-                     v-validate="{ required: true, min: 8}"
-                     name="password" ref="password"/>
-          </b-field>
+            <InputWithValidation
+              rules="required|min:8"
+              mode="eager"
+              name="Password"
+              type="password"
+              :label="$t('label.password')"
+              v-model="user.password"
+            />
 
-          <b-field  :label="$t('label.confirmPassword')"
-                    :type="{'is-danger': errors.has('confirm-password')}"
-                    :message="errors.first('confirm-password')">
-            <b-input v-model="confirmPassword"
-                     password-reveal type="password"
-                     v-validate="'required|confirmed:password'"
-                     name="password"
-                     :disabled="!user.password"/>
-          </b-field>
-          <p> {{$t('label.passwordHint')}} </p>
+            <InputWithValidation
+              rules="required|confirmed:@Password"
+              mode="eager"
+              type="password"
+              :label="$t('label.confirmPassword')"
+              v-model="confirmPassword"
+              :disabled="!user.password"
+            />
 
-          <b-field :label="$t('label.name')"
-                   :type="{'is-danger': errors.has('name')}"
-                   :message="errors.first('name')">
-            <b-input v-model.trim="user.name" v-validate="'required'" name="name"/>
-          </b-field>
+            <p> {{$t('label.passwordHint')}} </p>
 
-          <b-field :label="$t('label.surname')"
-                   :type="{'is-danger': errors.has('surname')}"
-                   :message="errors.first('surname')">
-            <b-input v-model.trim="user.surname" v-validate="'required'" name="surname"/>
-          </b-field>
+            <InputWithValidation
+              rules="required"
+              mode="eager"
+              :label="$t('label.name')"
+              v-model="user.name"
+            />
 
-          <b-field :label="$t('label.email')"
-                   :type="{'is-danger': errors.has('email')}"
-                   :message="errors.first('email')">
-            <b-input v-model.trim="user.email" type="email" v-validate="'required|email'" name="email"/>
-          </b-field>
+            <InputWithValidation
+              rules="required"
+              mode="eager"
+              :label="$t('label.surname')"
+              v-model="user.surname"
+            />
 
-          <div class="buttons">
-            <button class="button is-primary is-fullwidth">
-              {{ $t('button.register') }}
-            </button>
-            <router-link class="button is-light is-fullwidth" :to="{name: 'login'}">
-              {{ $t('button.toggleLogin') }}
-            </router-link>
-          </div>
-        </form>
+            <InputWithValidation
+              rules="required|email"
+              mode="eager"
+              :label="$t('label.email')"
+              v-model="user.email"
+            />
 
+            <div class="buttons">
+              <button class="button is-primary is-fullwidth">
+                {{ $t('button.register') }}
+              </button>
+              <router-link class="button is-light is-fullwidth" :to="{name: 'login'}">
+                {{ $t('button.toggleLogin') }}
+              </router-link>
+            </div>
+          </form>
+        </ValidationObserver>
 
       </div>
     </section>
@@ -70,9 +74,16 @@
 
 <script>
 import User from '../utils/api/User';
+import { ValidationObserver } from 'vee-validate';
+import InputWithValidation from '@/components/form/InputWithValidation';
 
 export default {
   name: 'LoginPage',
+
+  components: {
+    ValidationObserver,
+    InputWithValidation
+  },
 
   data() {
     return {
@@ -97,12 +108,6 @@ export default {
 
   methods: {
     async register() {
-      let result = await this.validate();
-
-      if (!result) {
-        return;
-      }
-
       try {
         await this.user.save();
         this.$buefy.toast.open({
@@ -117,20 +122,6 @@ export default {
         this.error = true;
       }
     },
-
-    async validate() {
-      let result = await this.$validator.validateAll();
-
-      if (!result) {
-        this.$buefy.toast.open({
-          message: this.$t('global.invalid-form'),
-          type: 'is-danger',
-          position: 'is-bottom'
-        });
-      }
-
-      return result;
-    }
   },
 
   created() {

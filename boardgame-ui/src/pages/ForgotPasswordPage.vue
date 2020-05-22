@@ -4,20 +4,21 @@
     <section class="section">
       <div class="box">
         <h1 class="title">{{$t('login.link.forgot-password')}}</h1>
-        <form @submit.prevent="validateBeforeSubmit">
-          <b-field
-                  :label="$t('label.email')"
-                  :type="{'is-danger': errors.has('email')}"
-                  :message="errors.first('email')">
-            <b-input v-model.trim="email" type="email" v-validate="'required|email'" name="email"></b-input>
-          </b-field>
+        <ValidationObserver v-slot="{ handleSubmit }" >
+          <form @submit.prevent="handleSubmit(submitForgotPassword)">
+             <InputWithValidation
+              rules="required|email"
+              :label="$t('label.email')"
+              v-model.trim="email"
+            />
 
-          <p class="control">
-            <button class="button is-primary is-fullwidth">
-              {{$t('label.submit')}}
-            </button>
-          </p>
-        </form>
+            <p class="control">
+              <button class="button is-primary is-fullwidth">
+                {{$t('label.submit')}}
+              </button>
+            </p>
+          </form>
+        </ValidationObserver>
       </div>
     </section>
   </div>
@@ -25,8 +26,14 @@
 
 <script>
 import User from '@/utils/api/User';
+import { ValidationObserver } from 'vee-validate';
+import InputWithValidation from '@/components/form/InputWithValidation';
 
 export default {
+  components: {
+    ValidationObserver,
+    InputWithValidation
+  },
 
   data() {
     return {
@@ -37,19 +44,10 @@ export default {
   },
 
   methods: {
-    validateBeforeSubmit() {
+    async submitForgotPassword() {
       this.isLoading = true;
-      this.$validator.validateAll().then(async (valid) => {
-        if (valid) {
-          await this.submitForgotPassword(this.email);
-        }
-        this.isLoading = false;
-      });
-    },
-
-    async submitForgotPassword(email) {
       try {
-        await User.forgotPassword(email);
+        await User.forgotPassword(this.email);
       }
       catch (error) {
         console.log(error);
@@ -58,6 +56,7 @@ export default {
           type: 'is-danger',
           position: 'is-bottom',
         });
+        this.isLoading = false;
         return;
       }
 
@@ -69,6 +68,7 @@ export default {
       });
 
       this.$router.push({name: 'login'});
+      this.isLoading = false;
     }
   },
 };
