@@ -7,8 +7,8 @@
         <p v-if="error" class="error">{{error}}</p>
         <p v-else-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
 
-        <ValidationObserver v-slot="{ handleSubmit }">
-          <form @submit.prevent="handleSubmit(login)">
+        <ValidationObserver ref="form">
+          <form @submit.prevent="login">
             <InputWithValidation
               rules="required"
               :label="$t('label.username')"
@@ -81,6 +81,19 @@ export default {
   methods: {
     async login() {
       this.isLoading = true;
+      this.error = null;
+
+      let result = await this.$refs.form.validate();
+
+      if (!result) {
+        this.$buefy.toast.open({
+          message: this.$t('global.invalid-form'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+        this.isLoading = false;
+        return;
+      }
 
       try {
         await this.$store.dispatch('login', this.credentials);

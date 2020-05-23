@@ -4,8 +4,8 @@
     <div class="container">
       <b-loading :is-full-page="false" :active="!event" />
       <section v-if="event" class="section">
-        <ValidationObserver v-slot="{ handleSubmit }">
-          <form @submit.prevent="handleSubmit(createEvent)">
+        <ValidationObserver ref="form">
+          <form @submit.prevent="createEvent">
             <InputWithValidation
               horizontal
               :label="$t('event.edition.name')"
@@ -29,34 +29,27 @@
             />
 
             <b-field horizontal :label="$t('event.edition.description')">
-              <b-input 
+              <b-input
                 v-model.trim="event.description"
                 maxlength="200"
                 type="textarea"
               />
             </b-field>
             
-            <ValidationProvider rules="required" name="startDate" v-slot="{ errors }">
-              <b-field 
-                horizontal      
-                :label="$t('event.edition.startDateTime')"
-                :message="errors"
-                :type="{ 'is-danger': errors[0] }"
-              >
-                <DateTimePicker v-model="startDate"></DateTimePicker>
-              </b-field>
-            </ValidationProvider>
+            <DateTimePicker
+              horizontal
+              rules="required"
+              vid="startDate"
+              :label="$t('event.edition.startDateTime')"
+              v-model="startDate"
+            />
 
-            <ValidationProvider rules="required|date_after:@startDate" :name="$t('event.edition.endDateTime')" v-slot="{ errors }" >
-              <b-field 
-                horizontal
-                :label="$t('event.edition.endDateTime')"
-                :message="errors"
-                :type="{ 'is-danger': errors[0] }"
-              >
-                <DateTimePicker v-model="endDate"></DateTimePicker>
-              </b-field>
-            </ValidationProvider>
+            <DateTimePicker
+              horizontal
+              rules="required|date_after:@startDate"
+              :label="$t('event.edition.endDateTime')"
+              v-model="endDate"
+            />
 
             <b-field horizontal>
               <b-checkbox v-model="event.hide_rankings">
@@ -77,8 +70,9 @@
             </b-field>
 
             <b-field horizontal>
-              <b-checkbox v-model="event.user_can_join" 
-              :disabled="event.invite_required || event.visibility === eventVisibility.SECRET"
+              <b-checkbox 
+                v-model="event.user_can_join" 
+                :disabled="event.invite_required || event.visibility === eventVisibility.SECRET"
               >
                 {{$t('event.edition.userCanJoin')}}
               </b-checkbox>
@@ -100,8 +94,8 @@ import Event, { EventVisibility } from '@/utils/api/Event.js';
 import * as helper from '@/utils/helper';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import DateTimePicker from '@/components/form/DateTimePicker';
-import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import InputWithValidation from '@/components/form/InputWithValidation';
+import { ValidationObserver } from 'vee-validate';
 
 export default {
   name: 'EventEditionPage',
@@ -110,7 +104,6 @@ export default {
     HeroTitlePageLayout,
     DateTimePicker,
     ValidationObserver,
-    ValidationProvider,
     InputWithValidation
   },
 
@@ -157,6 +150,16 @@ export default {
     formatISO8601StringAsDate : (iso8601) => helper.ISO8601ToDate(iso8601),
 
     async createEvent() {
+      let result = await this.$refs.form.validate();
+
+      if (!result) {
+        this.$buefy.toast.open({
+          message: 'Form is not valid! Please check the fields.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+        return;
+      }
 
       try {
         this.event.start = this.formatDateAsISO8601String(this.startDate);

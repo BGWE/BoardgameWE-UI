@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
     <b-loading :is-full-page="false" :active="loading"/>
-    <ValidationObserver v-slot="{ handleSubmit }">
-      <form @submit.prevent="handleSubmit(createTimer)" v-if="timer">
+    <ValidationObserver ref="form">
+      <form @submit.prevent="createTimer" v-if="timer">
         <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
 
         <b-field v-if="event" :label="$t('timer.add-edit.event')" >
@@ -35,7 +35,6 @@
             icon="search"
             @select="selectBoardGame"
             name="boardGame"
-            :data-vv-as="$t('add-edit-game.board-game.label')"
           >
             <template slot-scope="props">
               <div class="media">
@@ -64,7 +63,11 @@
           <tbody>
           <tr v-for="({id}, idx) in players" :key="id">
             <td>
-              <ValidationProvider rules="required" v-slot="{ errors }">
+              <ValidationProvider
+                rules="required"
+                v-slot="{ errors }"
+                :name="$t('add-edit-game.players.user')"
+              >
                 <b-field
                   :type="{'is-danger': errors[0]}"
                   :message="errors"
@@ -75,7 +78,6 @@
                     :users="users"
                     :excludedIds="selectedUsersIds"
                     :name="`user-${id}`"
-                    :data-vv-as="$t('add-edit-game.players.user')"
                   />
                 </b-field>
               </ValidationProvider>
@@ -218,6 +220,16 @@ export default {
     },
 
     async createTimer() {
+      let result = await this.$refs.form.validate();
+      if (!result) {
+        this.$buefy.toast.open({
+          message: this.$t('global.invalid-form'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+        return;
+      }
+
       this.timer.player_timers = this.players.map(({user, color}) => {
         return typeof user === 'string' ? {name: user, color} : {id_user: user.id, color};
       });
@@ -230,20 +242,6 @@ export default {
         console.log(e);
       }
     },
-
-    async validate() {
-      let result = await this.$validator.validateAll();
-
-      if (!result) {
-        this.$buefy.toast.open({
-          message: this.$t('global.invalid-form'),
-          type: 'is-danger',
-          position: 'is-bottom'
-        });
-      }
-
-      return result;
-    }
   },
 
   async created() {

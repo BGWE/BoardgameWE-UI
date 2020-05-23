@@ -6,8 +6,8 @@
         <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
         <p v-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
 
-        <ValidationObserver v-slot="{ handleSubmit }">
-          <form @submit.prevent="handleSubmit(register)">
+        <ValidationObserver ref="form">
+          <form @submit.prevent="register">
              <InputWithValidation
               rules="required"
               mode="eager"
@@ -18,16 +18,17 @@
             <InputWithValidation
               rules="required|min:8"
               mode="eager"
-              name="Password"
+              vid="password"
               type="password"
               :label="$t('label.password')"
               v-model="user.password"
             />
 
             <InputWithValidation
-              rules="required|confirmed:@Password"
+              rules="required|confirmed:password"
               mode="eager"
               type="password"
+              password-reveal
               :label="$t('label.confirmPassword')"
               v-model="confirmPassword"
               :disabled="!user.password"
@@ -108,6 +109,18 @@ export default {
 
   methods: {
     async register() {
+
+      let result = await this.$refs.form.validate();
+
+      if (!result) {
+        this.$buefy.toast.open({
+          message: this.$t('global.invalid-form'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+        return;
+      }
+
       try {
         await this.user.save();
         this.$buefy.toast.open({

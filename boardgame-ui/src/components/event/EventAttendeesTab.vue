@@ -55,7 +55,11 @@
           <section class="section limited-width">
             <ValidationObserver v-slot="{ handleSubmit }">
               <form @submit.prevent="handleSubmit(inviteUser)">
-                <ValidationProvider rules="required" v-slot="{ errors }">
+                <ValidationProvider
+                  rules="required"
+                  v-slot="{ errors }"
+                  :name="$t('add-edit-game.players.user')"
+                >
                   <b-field
                     :label="$t('event.invite_someone')"
                     :type="{'is-danger': errors[0]}"
@@ -66,7 +70,6 @@
                       v-model="invitee"
                       :users="friends"
                       :excludedIds="userIdsExcludedFromInvites"
-                      :data-vv-as="$t('add-edit-game.players.user')"
                     />
                   </b-field>
                 </ValidationProvider>

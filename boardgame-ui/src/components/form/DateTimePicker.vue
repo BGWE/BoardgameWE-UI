@@ -1,28 +1,59 @@
 <template>
-  <b-field :type="type">
-    <b-datepicker
-      v-model="date"
-      placeholder="Click to select..."
-      icon="calendar-day"
-      :min-date="minDate"
-      :disabled="disabled"
-    />
+  <ValidationProvider
+    :vid="vid"
+    :name="$attrs.name || $attrs.label"
+    :rules="rules"
+    :mode="mode"
+    v-slot="{ errors }"
+  >
+    <b-field
+      :type="{ 'is-danger': errors[0] }"
+      :message="errors"
+      v-bind="$attrs"
+    >
+      <b-datepicker
+        v-bind="$attrs"
+        v-model="date"
+        placeholder="Click to select..."
+        icon="calendar-day"
+        :min-date="minDate"
+        :disabled="disabled"
+      />
 
-    <b-timepicker
-      v-model="time"
-      placeholder="Click to select..."
-      icon="clock"
-      :disabled="disabled"
-      :enable-seconds="false"
-    />
-  </b-field>
+      <b-timepicker
+        v-bind="$attrs"
+        v-model="time"
+        placeholder="Click to select..."
+        icon="clock"
+        :disabled="disabled"
+        :enable-seconds="false"
+      />
+    </b-field>
+  </ValidationProvider>
 </template>
 
 <script>
+import { ValidationProvider } from 'vee-validate';
+
 export default {
+  components: {
+    ValidationProvider
+  },
+
   name:'DateTimePicker',
 
   props: {
+    vid: {
+      type: String
+    },
+    rules: {
+      type: [Object, String],
+      default: ''
+    },
+    mode : {
+      type: String,
+      default: 'passive'
+    },
     value: Date,
     name: String,
     minDate: Date,
