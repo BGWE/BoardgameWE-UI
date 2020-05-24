@@ -134,7 +134,7 @@ export default {
     },
 
     async updatePassword() {
-      let result = this.validate(this.$refs.password_form);
+      let result = await this.validate(this.$refs.password_form);
 
       if (!result) {
         return;
