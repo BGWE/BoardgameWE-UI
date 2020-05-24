@@ -5,7 +5,7 @@
     </h1>
 
     <b-loading :active="loading" :is-full-page="false" />
-    <ValidationObserver ref="form">
+    <validation-observer ref="form">
       <form v-if="!loading" @submit.prevent="save">
 
         <b-field v-if="event" :label="$t('timer.add-edit.event')" >
@@ -80,7 +80,7 @@
           </div>
         </div>
 
-        <ValidationProvider
+        <validation-provider
           rules="required"
           v-slot="{ errors }"
           :name="$t('add-edit-game.start-date.label')"
@@ -116,7 +116,7 @@
               </span>
             </p>
           </b-field>
-        </ValidationProvider>
+        </validation-provider>
 
         <b-field :label="$t('add-edit-game.comment.label')">
           <b-input :placeholder="$t('add-edit-game.comment.placeholder')" v-model="game.comment" />
@@ -137,15 +137,25 @@
           <tbody>
             <tr v-for="({id}, idx) in players" :key="id">
               <td>
-                <UserWithValidation
+                <validation-provider
                   rules="required"
                   :name="$t('add-edit-game.players.user')"
-                  size="is-small"
-                  v-model="players[idx].user"
-                  :users="users"
-                  :excludedIds="selectedUsersIds"
-                  @input="playerUpdate"
-                />
+                  v-slot="{ errors }"
+                >
+                  <b-field
+                    :type="{'is-danger' : errors[0]}"
+                    :message="errors"
+                  >
+                    <user-autocomplete
+                      size="is-small"
+                      v-model="players[idx].user"
+                      :users="users"
+                      :name="`user-${id}`"
+                      :excludedIds="selectedUsersIds"
+                      @input="playerUpdate"
+                    />
+                  </b-field>
+                </validation-provider>
               </td>
               <td>
                 <InputWithValidation v-if="game.isRanked"
@@ -188,7 +198,7 @@
           <button class="button is-primary">{{$t('button.save')}}</button>
         </div>
       </form>
-    </ValidationObserver>
+    </validation-observer>
   </div>
 </template>
 
@@ -197,10 +207,10 @@ import Game, {GameRankingMethods} from '@/utils/api/Game';
 import BoardGame from '@/utils/api/BoardGame';
 import Timer from '@/utils/api/Timer';
 import Event from '@/utils/api/Event';
+import UserAutocomplete from '@/components/form/UserAutocomplete';
 import EventAutocomplete from '@/components/form/EventAutocomplete';
 import DateTimePicker from '@/components/form/DateTimePicker';
 import { ValidationObserver, ValidationProvider } from 'vee-validate';
-import UserWithValidation from '@/components/form/UserWithValidation';
 import InputWithValidation from '@/components/form/InputWithValidation';
 import MultiSelect from 'vue-multiselect';
 import {dateToISO8601, ISO8601ToDate} from '@/utils/helper';
@@ -208,11 +218,11 @@ import moment from 'moment';
 
 export default {
   components: {
+    UserAutocomplete,
     EventAutocomplete,
     MultiSelect,
     DateTimePicker,
     ValidationObserver,
-    UserWithValidation,
     InputWithValidation,
     ValidationProvider
   },

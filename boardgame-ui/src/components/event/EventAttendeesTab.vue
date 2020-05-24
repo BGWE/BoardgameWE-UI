@@ -53,9 +53,9 @@
 
         <div v-if="event.current.can_write">
           <section class="section limited-width">
-            <ValidationObserver v-slot="{ handleSubmit }">
+            <validation-observer v-slot="{ handleSubmit }">
               <form @submit.prevent="handleSubmit(inviteUser)">
-                <ValidationProvider
+                <validation-provider
                   rules="required"
                   v-slot="{ errors }"
                   :name="$t('add-edit-game.players.user')"
@@ -72,12 +72,12 @@
                       :excludedIds="userIdsExcludedFromInvites"
                     />
                   </b-field>
-                </ValidationProvider>
+                </validation-provider>
                 <div class="buttons is-right">
                   <button class="button is-primary">{{$t('events.invite')}}</button>
                 </div>
               </form>
-            </ValidationObserver>
+            </validation-observer>
           </section>
 
           <section class="section limited-width" v-if="invitees">

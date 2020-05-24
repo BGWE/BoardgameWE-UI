@@ -6,7 +6,7 @@
         <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
         <p v-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
 
-        <ValidationObserver ref="form">
+        <validation-observer ref="form">
           <form @submit.prevent="register">
              <InputWithValidation
               rules="required"
@@ -66,7 +66,7 @@
               </router-link>
             </div>
           </form>
-        </ValidationObserver>
+        </validation-observer>
 
       </div>
     </section>

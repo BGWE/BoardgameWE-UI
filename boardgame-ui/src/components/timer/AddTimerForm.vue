@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <b-loading :is-full-page="false" :active="loading"/>
-    <ValidationObserver ref="form">
+    <validation-observer ref="form">
       <form @submit.prevent="createTimer" v-if="timer">
         <h1 class="title">{{$t('timer.add-edit.timer.title')}}</h1>
 
@@ -63,7 +63,7 @@
           <tbody>
           <tr v-for="({id}, idx) in players" :key="id">
             <td>
-              <ValidationProvider
+              <validation-provider
                 rules="required"
                 v-slot="{ errors }"
                 :name="$t('add-edit-game.players.user')"
@@ -80,7 +80,7 @@
                     :name="`user-${id}`"
                   />
                 </b-field>
-              </ValidationProvider>
+              </validation-provider>
             </td>
             <td>
               <verte
@@ -109,7 +109,7 @@
           <button class="button is-primary">{{$t('button.save')}}</button>
         </div>
       </form>
-    </ValidationObserver>
+    </validation-observer>
   </div>
 </template>
 

@@ -5,7 +5,7 @@
         <h1 class="title">{{$t('auth.reset-password.title')}}</h1>
         <p v-if="error" class="error">{{$t('error.invalid-credentials')}}</p>
 
-        <ValidationObserver v-slot="{ handleSubmit }" >
+        <validation-observer v-slot="{ handleSubmit }" >
           <form @submit.prevent="handleSubmit(submitPasswordReset)">
 
             <InputWithValidation
@@ -32,7 +32,7 @@
               </button>
             </p>
           </form>
-        </ValidationObserver>
+        </validation-observer>
 
       </div>
     </section>

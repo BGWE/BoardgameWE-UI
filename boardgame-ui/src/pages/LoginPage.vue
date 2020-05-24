@@ -7,7 +7,7 @@
         <p v-if="error" class="error">{{error}}</p>
         <p v-else-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
 
-        <ValidationObserver ref="form">
+        <validation-observer ref="form">
           <form @submit.prevent="login">
             <InputWithValidation
               rules="required"
@@ -32,7 +32,7 @@
               </router-link>
             </div>
           </form>
-        </ValidationObserver>
+        </validation-observer>
 
         <div class="has-top-padding has-text-link">
           <router-link :to="{name: 'forgot-password'}">

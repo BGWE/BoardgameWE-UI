@@ -4,7 +4,7 @@
     <section class="section">
       <div class="box">
         <h1 class="title">{{$t('login.link.forgot-password')}}</h1>
-        <ValidationObserver v-slot="{ handleSubmit }" >
+        <validation-observer v-slot="{ handleSubmit }" >
           <form @submit.prevent="handleSubmit(submitForgotPassword)">
              <InputWithValidation
               rules="required|email"
@@ -18,7 +18,7 @@
               </button>
             </p>
           </form>
-        </ValidationObserver>
+        </validation-observer>
       </div>
     </section>
   </div>

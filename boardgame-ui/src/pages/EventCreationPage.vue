@@ -4,7 +4,7 @@
     <div class="container">
       <b-loading :is-full-page="false" :active="!event" />
       <section v-if="event" class="section">
-        <ValidationObserver ref="form">
+        <validation-observer ref="form">
           <form @submit.prevent="createEvent">
             <InputWithValidation
               horizontal
@@ -36,20 +36,40 @@
               />
             </b-field>
             
-            <DateTimePicker
-              horizontal
-              rules="required"
+            <validation-provider
               vid="startDate"
-              :label="$t('event.edition.startDateTime')"
-              v-model="startDate"
-            />
+              rules="required"
+              :name="$t('event.edition.startDateTime')"
+              v-slot="{ errors }"
+            >
+              <b-field
+                horizontal
+                :label="$t('event.edition.startDateTime')"
+                :message="errors"
+                :type="{ 'is-danger': errors[0] }"
+              >
+                <date-time-picker
+                  v-model="startDate"
+                />
+              </b-field>
+            </validation-provider>
 
-            <DateTimePicker
-              horizontal
+            <validation-provider
               rules="required|date_after:@startDate"
-              :label="$t('event.edition.endDateTime')"
-              v-model="endDate"
-            />
+              :name="$t('event.edition.endDateTime')"
+              v-slot="{ errors }"
+            >
+              <b-field
+                horizontal
+                :label="$t('event.edition.endDateTime')"
+                :message="errors"
+                :type="{ 'is-danger': errors[0] }"
+              >
+                <date-time-picker
+                  v-model="endDate" 
+                />
+              </b-field>
+            </validation-provider>
 
             <b-field horizontal>
               <b-checkbox v-model="event.hide_rankings">
@@ -70,7 +90,7 @@
             </b-field>
 
             <b-field horizontal>
-              <b-checkbox 
+              <b-checkbox
                 v-model="event.user_can_join" 
                 :disabled="event.invite_required || event.visibility === eventVisibility.SECRET"
               >
@@ -83,7 +103,7 @@
             </b-field>
 
           </form>
-        </ValidationObserver>
+        </validation-observer>
       </section>
     </div>
   </div>
@@ -95,7 +115,7 @@ import * as helper from '@/utils/helper';
 import HeroTitlePageLayout from '@/components/layout/HeroTitlePageLayout';
 import DateTimePicker from '@/components/form/DateTimePicker';
 import InputWithValidation from '@/components/form/InputWithValidation';
-import { ValidationObserver } from 'vee-validate';
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 
 export default {
   name: 'EventEditionPage',
@@ -104,6 +124,7 @@ export default {
     HeroTitlePageLayout,
     DateTimePicker,
     ValidationObserver,
+    ValidationProvider,
     InputWithValidation
   },
 

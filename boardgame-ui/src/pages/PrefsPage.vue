@@ -5,8 +5,8 @@
       <section v-if="currentUser" class="section">
         <h2 class="title">{{$t('preferences.sections.account')}}</h2>
 
-        <ValidationObserver v-slot="{ handleSubmit }">
-          <form @submit.prevent="handleSubmit(updatePersonalInfo)" class="settings">
+        <validation-observer ref="form">
+          <form @submit.prevent="updatePersonalInfo" class="settings">
             <InputWithValidation
               rules="required"
               :label="$t('label.username')"
@@ -38,11 +38,11 @@
               {{$t('label.updateProfile')}}
             </button>
           </form>
-        </ValidationObserver>
+        </validation-observer>
 
         <h2 class="title">{{$t('preferences.sections.password')}}</h2>
-        <ValidationObserver v-slot="{ handleSubmit }">
-          <form @submit.prevent="handleSubmit(updatePassword)" class="settings">
+        <validation-observer ref="password_form">
+          <form @submit.prevent="updatePassword" class="settings">
              <InputWithValidation
               rules="required"
               type="password"
@@ -52,7 +52,7 @@
 
             <InputWithValidation
               rules="required|min:8"
-              name="Password"
+              vid="password"
               type="password"
               password-reveal
               :label="$t('label.newPassword')"
@@ -61,7 +61,7 @@
 
             <InputWithValidation
               password-reveal
-              rules="required|password:@password"
+              rules="required|confirmed:password"
               type="password"
               mode="eager"
               :label="$t('label.confirmNewPassword')"
@@ -74,7 +74,7 @@
               {{$t('label.updatePassword')}}
             </button>
           </form>
-        </ValidationObserver>
+        </validation-observer>
 
       </section>
     </div>
@@ -110,6 +110,12 @@ export default {
 
   methods: {
     async updatePersonalInfo() {
+      let result = this.validate(this.$refs.form);
+
+      if (!result) {
+        return;
+      }
+
       this.user.password = null;
       this.user.old_password = null;
 
@@ -128,6 +134,12 @@ export default {
     },
 
     async updatePassword() {
+      let result = this.validate(this.$refs.password_form);
+
+      if (!result) {
+        return;
+      }
+
       this.user.password = this.newPassword;
       this.user.old_password = this.password;
 
@@ -144,6 +156,19 @@ export default {
         console.log(e);
       }
     },
+
+    async validate(validationObserver) {
+      console.log(validationObserver);
+      let result = await validationObserver.validate();
+      if (!result) {
+        this.$buefy.toast.open({
+          message: 'Form is not valid! Please check the fields.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
+      }
+      return result;
+    }
   },
 
   created() {
