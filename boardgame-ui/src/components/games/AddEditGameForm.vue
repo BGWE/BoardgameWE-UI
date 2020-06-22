@@ -32,13 +32,16 @@
       >
         <b-autocomplete
           v-model="searchString"
-          :data="filteredBoardGames"
+          :data="shownBoardGames"
           field="name"
           icon="search"
           @select="selectBoardGame"
           name="boardGame"
           :data-vv-as="$t('add-edit-game.board-game.label')"
           v-validate="'required'"
+          :check-infinite-scroll="true"
+          @typing="getData"
+          @infinite-scroll="getMoreAsyncData"
         >
           <template slot-scope="props">
             <div class="media">
@@ -258,7 +261,9 @@ export default {
       availableBoardGames: [],
       startDate: null,
       suggestedPlayers: null,
-      suggestionExclusions: new Set([])
+      suggestionExclusions: new Set([]),
+      filteredBoardGames: [],
+      shownBoardGames: [],
     };
   },
 
@@ -271,14 +276,6 @@ export default {
     },
     idTimer() {
       return this.$route.query.idTimer;
-    },
-    filteredBoardGames() {
-      if(!this.searchString) {
-        return this.availableBoardGames;
-      }
-
-      let str = this.searchString.toLowerCase();
-      return this.availableBoardGames.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
     },
     allowedRankingMethods() {
       return Object.keys(GameRankingMethods).map(key => GameRankingMethods[key]);
@@ -442,6 +439,25 @@ export default {
         this.expansions = [];
       }
       this.selectedExpansions = [];
+    },
+    filterBoardGames(boardGamesList, searchString) {
+      if(!boardGamesList) {
+        return [];
+      }
+
+      if(!searchString) {
+        return boardGamesList;
+      }
+
+      let str = searchString.toLowerCase();
+      return boardGamesList.filter(bg => bg.name.toLowerCase().indexOf(str) >= 0);
+    },
+    getData(name) {
+      this.filteredBoardGames = this.filterBoardGames(this.availableBoardGames, name);
+      this.shownBoardGames = this.filteredBoardGames.slice(0, 4);
+    },
+    getMoreAsyncData() {
+      this.shownBoardGames = this.filteredBoardGames.slice(0, this.filteredBoardGames.length + 4);
     }
   },
 
