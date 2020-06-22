@@ -41,7 +41,7 @@
           v-validate="'required'"
           :check-infinite-scroll="true"
           @typing="getData"
-          @infinite-scroll="getMoreAsyncData"
+          @infinite-scroll="getMoreData"
         >
           <template slot-scope="props">
             <div class="media">
@@ -456,8 +456,8 @@ export default {
       this.filteredBoardGames = this.filterBoardGames(this.availableBoardGames, name);
       this.shownBoardGames = this.filteredBoardGames.slice(0, 4);
     },
-    getMoreAsyncData() {
-      this.shownBoardGames = this.filteredBoardGames.slice(0, this.filteredBoardGames.length + 4);
+    getMoreData() {
+      this.shownBoardGames = this.filteredBoardGames.slice(0, this.shownBoardGames.length + 4);
     }
   },
 
