@@ -243,7 +243,7 @@ export default {
   },
   data() {
     return {
-      now: moment(),
+      now: moment().startOf('minute'),
       yesterday: moment().subtract(1, 'day'),
       loading: true,
       game: null,
