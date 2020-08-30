@@ -13,6 +13,7 @@
       placeholder="Click to select..."
       icon="clock"
       :disabled="disabled"
+      :enable-seconds="false"
     />
   </b-field>
 </template>
