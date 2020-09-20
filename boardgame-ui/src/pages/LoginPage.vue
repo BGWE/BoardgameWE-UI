@@ -7,29 +7,32 @@
         <p v-if="error" class="error">{{error}}</p>
         <p v-else-if="hasNext" class="error">{{$t('error.must-be-authenticated')}}</p>
 
-        <form @submit.prevent="login">
-          <b-field  :label="$t('label.username')"
-                    :type="{'is-danger': errors.has('username')}"
-                    :message="errors.first('username')">
-            <b-input v-model="user.username" v-validate="'required'" name="username"/>
-          </b-field>
+        <validation-observer ref="form">
+          <form @submit.prevent="login">
+            <InputWithValidation
+              rules="required"
+              :label="$t('label.username')"
+              v-model="user.username"
+            />
 
-          <b-field  password-reveal
-                    :label="$t('label.password')"
-                    :type="{'is-danger': errors.has('password')}"
-                    :message="errors.first('password')">
-            <b-input v-model="user.password" password-reveal type="password" v-validate="'required'" name="password"/>
-          </b-field>
+            <InputWithValidation
+              password-reveal
+              rules="required"
+              type="password"
+              :label="$t('label.password')"
+              v-model="user.password"
+            />
 
-          <div class="buttons">
-            <button class="button is-primary is-fullwidth">
-              {{$t('button.login')}}
-            </button>
-            <router-link class="button is-light is-fullwidth" :to="{name: 'register'}">
-              {{$t('button.toggleRegister')}}
-            </router-link>
-          </div>
-        </form>
+            <div class="buttons">
+              <button class="button is-primary is-fullwidth">
+                {{$t('button.login')}}
+              </button>
+              <router-link class="button is-light is-fullwidth" :to="{name: 'register'}">
+                {{$t('button.toggleRegister')}}
+              </router-link>
+            </div>
+          </form>
+        </validation-observer>
 
         <div class="has-top-padding has-text-link">
           <router-link :to="{name: 'forgot-password'}">
@@ -44,15 +47,20 @@
 
 <script>
 import User from '@/utils/api/User';
+import { ValidationObserver } from 'vee-validate';
+import InputWithValidation from '@/components/form/InputWithValidation';
 
 export default {
   name: 'LoginPage',
-
+  
+  components: {
+    ValidationObserver,
+    InputWithValidation
+  },
+  
   data() {
     return {
       user : null,
-      confirmPassword:'',
-      forgotPasswordEmail: '',
       error: null,
       isLoading: true
     };
@@ -73,9 +81,16 @@ export default {
   methods: {
     async login() {
       this.isLoading = true;
-      let result = await this.validate();
+      this.error = null;
+
+      let result = await this.$refs.form.validate();
 
       if (!result) {
+        this.$buefy.toast.open({
+          message: this.$t('global.invalid-form'),
+          type: 'is-danger',
+          position: 'is-bottom'
+        });
         this.isLoading = false;
         return;
       }
@@ -102,20 +117,6 @@ export default {
         this.isLoading = false;
       }
     },
-
-    async validate() {
-      let result = await this.$validator.validateAll();
-
-      if (!result) {
-        this.$buefy.toast.open({
-          message: this.$t('global.invalid-form'),
-          type: 'is-danger',
-          position: 'is-bottom'
-        });
-      }
-
-      return result;
-    }
   },
 
   created() {
