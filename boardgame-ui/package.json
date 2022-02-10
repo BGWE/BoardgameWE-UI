@@ -40,7 +40,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.0.1",
     "i18n-csv2json-cli": "^1.0.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "onchange": "^6.1.0",
     "sass-loader": "^8.0.0",
     "vue-template-compiler": "^2.5.21",
